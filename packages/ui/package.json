@@ -1,6 +1,6 @@
 {
   "name": "@openassistant/ui",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Chat UI components for OpenAssistant",
   "author": "Xun Li<lixun910@gmail.com>",
   "license": "MIT",
