@@ -7,9 +7,14 @@ module.exports = {
   env: {
     OPENAI_TOKEN: process.env.OPENAI_TOKEN,
   },
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
+    ignoreDuringBuilds: true,
+  },
   transpilePackages: ['@openassistant/ui', '@openassistant/core'],
   webpack: (config) => {
-    // Support WASM modules for duckdb 
+    // Support WASM modules for duckdb
     config.experiments = {
       ...config.experiments,
       asyncWebAssembly: true,

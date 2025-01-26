@@ -31,7 +31,7 @@ export default function Button({
   onClick: () => void;
   small?: boolean;
   title?: string;
-}): JSX.Element {
+}): ReactNode {
   return (
     <button
       disabled={disabled}

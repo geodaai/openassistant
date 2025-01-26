@@ -16,7 +16,7 @@ import type {
 
 import { $applyNodeReplacement, createEditor, DecoratorNode } from 'lexical';
 import * as React from 'react';
-import { Suspense } from 'react';
+import { ReactNode, Suspense } from 'react';
 
 const ImageComponent = React.lazy(() => import('./ImageComponent'));
 
@@ -61,7 +61,7 @@ export type SerializedImageNode = Spread<
   SerializedLexicalNode
 >;
 
-export class ImageNode extends DecoratorNode<JSX.Element> {
+export class ImageNode extends DecoratorNode<ReactNode> {
   __src: string;
   __altText: string;
   __width: 'inherit' | number;
@@ -195,7 +195,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     return this.__altText;
   }
 
-  decorate(): JSX.Element {
+  decorate(): ReactNode {
     return (
       <Suspense fallback={null}>
         <ImageComponent

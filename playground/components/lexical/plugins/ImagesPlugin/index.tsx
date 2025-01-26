@@ -22,7 +22,7 @@ import {
   LexicalCommand,
   LexicalEditor,
 } from 'lexical';
-import { useEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import * as React from 'react';
 
 import {
@@ -137,7 +137,7 @@ export function InsertImageDialog({
 }: {
   activeEditor: LexicalEditor;
   onClose: () => void;
-}): JSX.Element {
+}): ReactNode {
   const [mode, setMode] = useState<null | 'url' | 'file'>(null);
   const hasModifier = useRef(false);
 
@@ -185,7 +185,7 @@ export default function ImagesPlugin({
   captionsEnabled,
 }: {
   captionsEnabled?: boolean;
-}): JSX.Element | null {
+}): ReactNode | null {
   const [editor] = useLexicalComposerContext();
 
   useEffect(() => {

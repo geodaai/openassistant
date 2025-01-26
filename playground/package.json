@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "next dev",
     "dev:local": "LOCAL=true next dev",
-    "build": "next build",
+    "build": "LOCAL=true next build",
     "start": "next start",
     "lint": "next lint",
     "clean": "rm -rf .next"
