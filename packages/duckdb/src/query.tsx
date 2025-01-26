@@ -1,3 +1,5 @@
+'use client';
+
 import {
   CallbackFunctionProps,
   CustomFunctionContext,
@@ -7,31 +9,56 @@ import {
 } from '@openassistant/core';
 
 import * as duckdb from '@duckdb/duckdb-wasm';
-import { queryDuckDBCallbackMessage, QueryDuckDBOutputData } from './queryTable';
+import {
+  queryDuckDBCallbackMessage,
+  QueryDuckDBOutputData,
+} from './queryTable';
 
 const JSDELIVR_BUNDLES = duckdb.getJsDelivrBundles();
 
 export let db: duckdb.AsyncDuckDB | null = null;
+let initializationPromise: Promise<void> | null = null;
 
 export async function initDuckDB(externalDB?: duckdb.AsyncDuckDB) {
+  // If already initializing, wait for that to complete
+  if (initializationPromise) {
+    await initializationPromise;
+    return;
+  }
+
   if (externalDB) {
     db = externalDB;
     return;
   }
 
-  if (db === null) {
-    // Select a bundle based on browser checks
-    const bundle = await duckdb.selectBundle(JSDELIVR_BUNDLES);
-    const worker_url = URL.createObjectURL(
-      new Blob([`importScripts("${bundle.mainWorker!}");`], {
-        type: 'text/javascript',
-      })
-    );
-    const worker = new Worker(worker_url);
-    const logger = new duckdb.ConsoleLogger();
-    db = new duckdb.AsyncDuckDB(logger, worker);
-    await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+  // If already initialized, return
+  if (db !== null) {
+    return;
   }
+
+  // Create a new initialization promise
+  initializationPromise = (async () => {
+    try {
+      // Select a bundle based on browser checks
+      const bundle = await duckdb.selectBundle(JSDELIVR_BUNDLES);
+      const worker_url = URL.createObjectURL(
+        new Blob([`importScripts("${bundle.mainWorker!}");`], {
+          type: 'text/javascript',
+        })
+      );
+      const worker = new Worker(worker_url);
+      const logger = new duckdb.ConsoleLogger();
+      db = new duckdb.AsyncDuckDB(logger, worker);
+      await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+    } catch (error) {
+      console.error('Failed to initialize DuckDB', error);
+    } finally {
+      // Clear the initialization promise
+      initializationPromise = null;
+    }
+  })();
+
+  await initializationPromise;
 }
 
 /**
@@ -119,6 +146,13 @@ export function queryDuckDBFunctionDefinition(
   };
 }
 
+/**
+ * The arguments of the queryDuckDB function.
+ * @param datasetName - The name of the original dataset.
+ * @param variableNames - The names of the variables to include in the query.
+ * @param sql - The SQL query to execute.
+ * @param dbTableName - The name of the table used in the sql query.
+ */
 type QueryDuckDBFunctionArgs = {
   datasetName: string;
   variableNames: string[];
@@ -126,6 +160,12 @@ type QueryDuckDBFunctionArgs = {
   dbTableName: string;
 };
 
+/**
+ * The result of the queryDuckDB function.
+ *
+ * @param success - Whether the function call is successful.
+ * @param details - The details of the function call execution.
+ */
 type QueryDuckDBOutputResult =
   | ErrorCallbackResult
   | {
@@ -133,21 +173,82 @@ type QueryDuckDBOutputResult =
       details: string;
     };
 
-async function queryDuckDBCallbackFunction({
+/**
+ * Type guard of QueryDuckDBFunctionArgs
+ */
+function isQueryDuckDBFunctionArgs(
+  args: unknown
+): args is QueryDuckDBFunctionArgs {
+  return (
+    typeof args === 'object' &&
+    args !== null &&
+    'datasetName' in args &&
+    'variableNames' in args &&
+    'sql' in args &&
+    'dbTableName' in args
+  );
+}
+
+function isQueryDuckDBFunctionContext(
+  context: unknown
+): context is QueryDuckDBFunctionContext {
+  return (
+    typeof context === 'object' && context !== null && 'getValues' in context
+  );
+}
+
+/**
+ * The callback function for the queryDuckDB function. When LLM calls the queryDuckDB function, it will be executed.
+ * The result will be returned as a reponse of the function call to the LLM.
+ *
+ * @param functionName - The name of the function.
+ * @param functionArgs - The arguments of the function.
+ * @param functionContext - The context of the function.
+ * @returns The result of the function.
+ */
+export async function queryDuckDBCallbackFunction({
   functionName,
   functionArgs,
   functionContext,
 }: CallbackFunctionProps): Promise<
   CustomFunctionOutputProps<QueryDuckDBOutputResult, QueryDuckDBOutputData>
 > {
-  const { datasetName, variableNames, sql, dbTableName } =
-    functionArgs as QueryDuckDBFunctionArgs;
-  const { getValues, onSelected } =
-    functionContext as QueryDuckDBFunctionContext;
+  // check the arguments passed by the LLM
+  if (!isQueryDuckDBFunctionArgs(functionArgs)) {
+    return {
+      type: 'error',
+      name: functionName,
+      result: {
+        success: false,
+        details: 'Invalid queryDuckDB function arguments.',
+      },
+    };
+  }
 
+  const { datasetName, variableNames, sql, dbTableName } = functionArgs;
+
+  // check the context passed by the app
+  if (!isQueryDuckDBFunctionContext(functionContext)) {
+    return {
+      type: 'error',
+      name: functionName,
+      result: {
+        success: false,
+        details: 'Invalid queryDuckDB function context.',
+      },
+    };
+  }
+
+  // get the context values
+  const { getValues, onSelected } = functionContext;
+
+  // if the variable names contain 'row_index', ignore it
+  // the row_index will be added later based on the columnData length
+  // the row_index is used to sync the selections of the query result table with the original dataset
   const variableNamesWithoutRowIndex = variableNames.filter(
     (name) => name !== 'row_index'
   );
+
   try {
     // Get values for each variable
     const columnData = variableNamesWithoutRowIndex.reduce((acc, varName) => {

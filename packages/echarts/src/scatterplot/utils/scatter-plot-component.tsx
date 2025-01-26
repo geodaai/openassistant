@@ -1,5 +1,5 @@
 import { ScatterplotOutputData } from '../callback-function';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useId, useMemo, useState } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import {
   Button,

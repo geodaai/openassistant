@@ -7,6 +7,7 @@ export type ScreenshotWrapperProps = {
   setScreenCaptured: (value: string) => void;
   setStartScreenCapture: (value: boolean) => void;
   saveScreenshot?: boolean;
+  className?: string;
 };
 
 export function ScreenshotWrapper({
@@ -15,6 +16,7 @@ export function ScreenshotWrapper({
   setScreenCaptured,
   setStartScreenCapture,
   saveScreenshot = false,
+  className,
 }: ScreenshotWrapperProps) {
   const [startX, setStartX] = useState(0);
   const [startY, setStartY] = useState(0);
@@ -237,7 +239,7 @@ export function ScreenshotWrapper({
       <div
         className={`min-w-100 relative flex w-screen ${
           startScreenCapture ? 'h-screen' : 'h-full'
-        } flex-row items-start border-none`}
+        } flex-row items-start border-none ${className}`}
       >
         {children}
       </div>

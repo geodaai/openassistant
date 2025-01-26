@@ -1,4 +1,4 @@
-import { numericFormatter } from '../../common/utils';
+import { numericFormatter } from '@openassistant/common';
 
 export type SimpleScatPlotDataProps = {
   variableX: string;

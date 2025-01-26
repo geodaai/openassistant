@@ -41,6 +41,7 @@ export type ScatterplotFunctionContext = {
   onSelected: OnSelectedCallback;
   filteredIndex?: number[];
   theme?: string;
+  isDraggable?: boolean;
 };
 
 /**

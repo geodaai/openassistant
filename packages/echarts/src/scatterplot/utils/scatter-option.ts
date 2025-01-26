@@ -1,4 +1,4 @@
-import { numericFormatter } from '../../common/utils';
+import { numericFormatter } from '@openassistant/common';
 import { LoessResult, RegressionResults } from '../../math/linear-regression';
 
 /**

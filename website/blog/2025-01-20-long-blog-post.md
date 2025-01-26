@@ -1,8 +1,8 @@
 ---
 slug: first-blog-post
-title: Create Beautiful Maps with OpenAssistant and KeplerGL
+title: GenAI - Create Beautiful Maps with OpenAssistant and KeplerGL
 authors: [XunLi]
-tags: [tutorial, openassistant, keplergl, mapping]
+tags: [tutorial, openassistant, keplergl, mapping, genai, LLM]
 ---
 
 Are you looking to create stunning maps from your data without writing complex visualization code? We're excited to introduce the KeplerGL plugin for OpenAssistant, which lets you generate beautiful maps through simple conversations with your AI assistant!

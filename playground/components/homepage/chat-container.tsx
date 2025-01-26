@@ -1,7 +1,11 @@
 'use client';
 
 import { cn } from '@nextui-org/react';
-import Assistant from '../chat/assistant';
+import dynamic from 'next/dynamic';
+
+const Assistant = dynamic(() => import('../chat/assistant'), {
+  ssr: false
+});
 
 export default function ChatContainer({
   className,

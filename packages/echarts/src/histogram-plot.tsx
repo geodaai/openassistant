@@ -19,8 +19,10 @@ import { TopLevelFormatterParams } from 'echarts/types/dist/shared';
 import { ECHARTS_DARK_THEME } from './echarts-theme';
 import { HistogramOuputData } from './histogram';
 import './index.css';
-import { ResizablePlotContainer } from './common/resizable-container';
-import { numericFormatter } from './common/utils';
+import {
+  ResizablePlotContainer,
+  numericFormatter,
+} from '@openassistant/common';
 
 echartsUse([
   BarChart,

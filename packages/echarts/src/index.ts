@@ -1,9 +1,6 @@
 export * from './histogram';
 export * from './histogram-plot';
 
-export * from './common/resizable-container';
-export * from './common/utils';
-
 export * from './math/linear-regression';
 
 export * from './scatterplot/definition';

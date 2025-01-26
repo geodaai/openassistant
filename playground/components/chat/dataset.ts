@@ -1,0 +1,60 @@
+export const SAMPLE_DATASETS = {
+  myVenues: [
+    {
+      location: 'New York',
+      latitude: 40.7128,
+      longitude: -74.006,
+      revenue: 12500000,
+      population: 8400000,
+    },
+    {
+      location: 'Los Angeles',
+      latitude: 34.0522,
+      longitude: -118.2437,
+      revenue: 9800000,
+      population: 3900000,
+    },
+    {
+      location: 'Chicago',
+      latitude: 41.8781,
+      longitude: -87.6298,
+      revenue: 7200000,
+      population: 2700000,
+    },
+    {
+      location: 'Houston',
+      latitude: 29.7604,
+      longitude: -95.3698,
+      revenue: 6800000,
+      population: 2300000,
+    },
+    {
+      location: 'Phoenix',
+      latitude: 33.4484,
+      longitude: -112.074,
+      revenue: 5400000,
+      population: 1600000,
+    },
+    {
+      location: 'Philadelphia',
+      latitude: 39.9526,
+      longitude: -75.1652,
+      revenue: 5900000,
+      population: 1580000,
+    },
+    {
+      location: 'San Antonio',
+      latitude: 29.4241,
+      longitude: -98.4936,
+      revenue: 4800000,
+      population: 1540000,
+    },
+    {
+      location: 'San Diego',
+      latitude: 32.7157,
+      longitude: -117.1611,
+      revenue: 5200000,
+      population: 1420000,
+    },
+  ],
+};
