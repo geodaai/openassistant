@@ -30,7 +30,7 @@ export default function useModal(): [
         closeOnClickOutside={closeOnClickOutside}
       >
         {typeof content === 'string' ? <span>{content}</span> : content}
-      </Modal>
+      </Modal> as ReactNode
     );
   }, [modalContent, onClose]);
 
