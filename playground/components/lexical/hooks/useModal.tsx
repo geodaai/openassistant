@@ -1,16 +1,16 @@
 import { useCallback, useMemo, useState } from 'react';
 import * as React from 'react';
-import type { ReactElement } from 'react';
+import type { ReactNode } from 'react';
 
 import Modal from '../ui/Modal';
 
 export default function useModal(): [
-  ReactElement | null,
-  (title: string, showModal: (onClose: () => void) => ReactElement) => void,
+  ReactNode | null,
+  (title: string, showModal: (onClose: () => void) => ReactNode) => void,
 ] {
   const [modalContent, setModalContent] = useState<null | {
     closeOnClickOutside: boolean;
-    content: ReactElement;
+    content: ReactNode;
     title: string;
   }>(null);
 
@@ -29,7 +29,7 @@ export default function useModal(): [
         title={title}
         closeOnClickOutside={closeOnClickOutside}
       >
-        {content}
+        {typeof content === 'string' ? <span>{content}</span> : content}
       </Modal>
     );
   }, [modalContent, onClose]);
@@ -38,7 +38,7 @@ export default function useModal(): [
     (
       title: string,
       // eslint-disable-next-line no-shadow
-      getContent: (onClose: () => void) => ReactElement,
+      getContent: (onClose: () => void) => ReactNode,
       closeOnClickOutside = false
     ) => {
       setModalContent({
