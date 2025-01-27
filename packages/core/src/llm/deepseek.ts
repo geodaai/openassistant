@@ -1,7 +1,6 @@
 import { ChatOpenAI, OpenAIClient } from '@langchain/openai';
 import { LangChainAssistant } from './langchain';
 import { SystemMessage } from '@langchain/core/messages';
-import { AudioToTextProps } from '../types';
 
 export class DeepSeekAssistant extends LangChainAssistant {
   protected aiModel: ChatOpenAI;
@@ -52,32 +51,7 @@ export class DeepSeekAssistant extends LangChainAssistant {
     DeepSeekAssistant.instance = null;
   }
 
-  public override async audioToText({
-    audioBlob,
-  }: AudioToTextProps): Promise<string> {
-    if (this.openAIClient === null) {
-      throw new Error('DeepSeekClient is not initialized');
-    }
-    if (!audioBlob) {
-      throw new Error('audioBlob is null');
-    }
-    if (!this.abortController) {
-      this.abortController = new AbortController();
-    }
-    // create File from the audioBlob
-    const file = new File([audioBlob], 'audio.webm');
-
-    const transcriptionResponse =
-      await this.openAIClient.audio.transcriptions.create(
-        {
-          file,
-          model: 'whisper-1',
-        },
-        {
-          signal: this.abortController.signal,
-        }
-      );
-
-    return transcriptionResponse.text;
+  public override async audioToText(): Promise<string> {
+    throw new Error('DeepSeekClient audioToText is not implemented');
   }
 }
