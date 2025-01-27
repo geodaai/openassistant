@@ -10,7 +10,7 @@ yarn add @openassistant/core @openassistant/ui @openassistant/duckdb
 
 ## Usage
 
-### Step 1: Setup the OpenAssistant in your application.
+### Step 1: Setup the OpenAssistant in your application
 
 If you already have the OpenAssistant setup in your application, you can skip this step.
 
@@ -112,7 +112,7 @@ const myDataContext = [
 addAdditionalContext({ context: JSON.stringify(myDataContext) });
 ```
 
-### Step 4: Add the DuckDB function to the OpenAssistant
+### Step 4: Register the DuckDB function to the OpenAssistant
 
 To use this plugin with LLM models, you just need to import the `queryDuckDBCallbackMessage` predefined function from the plugin and pass the proper function context to it.
 

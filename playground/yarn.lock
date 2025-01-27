@@ -777,7 +777,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@iconify/react@npm:^5.1.0, @iconify/react@npm:^5.2.0":
+"@iconify/react@npm:^5.1.0":
   version: 5.2.0
   resolution: "@iconify/react@npm:5.2.0"
   dependencies:
@@ -10136,6 +10136,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"geoda-wasm@npm:^0.0.5":
+  version: 0.0.5
+  resolution: "geoda-wasm@npm:0.0.5"
+  dependencies:
+    "@loaders.gl/schema": "npm:^4.1.0-alpha.4"
+    geojson: "npm:^0.5.0"
+  checksum: 72385ef9136486da4c02d42f796009cf59d17df3761b8e0730139222ff6171fd8889d1e52880f7315f5002a56fcc3389df517db2ac7a2e0768bd0ab87517141d
+  languageName: node
+  linkType: hard
+
 "geojson-types@npm:^2.0.1":
   version: 2.0.1
   resolution: "geojson-types@npm:2.0.1"
@@ -10150,7 +10160,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"geojson@npm:0.5.0":
+"geojson@npm:0.5.0, geojson@npm:^0.5.0":
   version: 0.5.0
   resolution: "geojson@npm:0.5.0"
   checksum: 7f821b9871d6095e2dcca3d7725e61f13dcf206ce83a1fc5ef746803ce49a5fd3d2d8e716c19dbf6d9ecd4153f4e09b4921a01e87c83ddcefa9e8579ecfe9264
@@ -12743,7 +12753,7 @@ __metadata:
   resolution: "playground@workspace:."
   dependencies:
     "@duckdb/duckdb-wasm": "npm:^1.29.0"
-    "@iconify/react": "npm:^5.2.0"
+    "@iconify/react": "npm:^5.1.0"
     "@kepler.gl/actions": "npm:^3.0.0"
     "@kepler.gl/components": "npm:^3.0.0"
     "@kepler.gl/constants": "npm:^3.0.0"
@@ -12753,8 +12763,15 @@ __metadata:
     "@kepler.gl/reducers": "npm:^3.0.0"
     "@kepler.gl/styles": "npm:^3.0.0"
     "@kepler.gl/utils": "npm:^3.0.0"
+    "@langchain/core": "npm:^0.3.26"
+    "@langchain/google-genai": "npm:^0.1.6"
+    "@langchain/ollama": "npm:^0.1.4"
+    "@langchain/openai": "npm:^0.3.16"
     "@lexical/react": "npm:^0.23.1"
+    "@loaders.gl/core": "npm:^4.3.3"
+    "@loaders.gl/schema": "npm:^4.3.3"
     "@next/eslint-plugin-next": "npm:^15.1.5"
+    "@nextui-org/theme": "npm:^2.4.4"
     "@openassistant/common": "npm:^0.0.5"
     "@openassistant/core": "npm:^0.0.6"
     "@openassistant/duckdb": "npm:^0.0.6"
@@ -12766,15 +12783,30 @@ __metadata:
     "@typescript-eslint/parser": "npm:^8.21.0"
     apache-arrow: "npm:^13.0.0"
     autoprefixer: "npm:^10.4.20"
+    axios: "npm:^1.7.9"
+    echarts: "npm:^5.5.1"
+    echarts-for-react: "npm:^3.0.2"
     eslint: "npm:^9.18.0"
     eslint-config-next: "npm:^15.1.5"
+    framer-motion: "npm:^11.15.0"
+    geoda-wasm: "npm:^0.0.5"
+    html2canvas: "npm:^1.4.1"
+    jstat: "npm:^1.9.6"
     lexical: "npm:^0.23.1"
     next: "npm:^14.1.0"
+    next-themes: "npm:^0.4.4"
     postcss: "npm:^8.5.1"
+    re-resizable: "npm:^6.10.3"
     react: "npm:^18.3.1"
+    react-audio-voice-recorder: "npm:^2.2.0"
     react-dom: "npm:^18.3.1"
     react-grid-layout: "npm:^1.5.0"
+    react-intl: "npm:^6.3.0"
+    react-palm: "npm:^3.3.8"
+    react-redux: "npm:^9.2.0"
+    react-virtualized-auto-sizer: "npm:^1.0.24"
     redux: "npm:^4.2.1"
+    simple-statistics: "npm:^7.8.7"
     styled-components: "npm:6.1.8"
     tailwindcss: "npm:^3.4.17"
     typescript: "npm:^5.7.3"

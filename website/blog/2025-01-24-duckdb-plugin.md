@@ -36,7 +36,7 @@ Instead of writing complex SQL queries, you can simply ask:
 
 And boom! 💥 Your AI assistant figures out the SQL, runs the query, and shows you the results!
 
-![Query Result](./images/duckdb-plugin-2-400.png)
+![Query Result](../images/duckdbPlugin-2-400.png)
 
 ## Let's Build Something Cool! 🛠️
 

@@ -13,7 +13,7 @@ import { histogramCallbackMessage, HistogramDataProps } from './histogram-plot';
  * @param variableName - The name of the variable.
  * @returns The values of the variable.
  */
-type GetValues = (datasetName: string, variableName: string) => number[];
+type GetValues = (datasetName: string, variableName: string) => Promise<number[]>;
 
 /**
  * The callback function can be used to sync the selections of the histogram plot with the original dataset.
@@ -116,14 +116,13 @@ function isHistogramFunctionArgs(data: unknown): data is HistogramFunctionArgs {
   );
 }
 
-function histogramCallbackFunction({
+async function histogramCallbackFunction({
   functionName,
   functionArgs,
   functionContext,
-}: CallbackFunctionProps): CustomFunctionOutputProps<
-  HistogramOutputResult,
-  HistogramOuputData
-> {
+}: CallbackFunctionProps): Promise<CustomFunctionOutputProps<
+    HistogramOutputResult, HistogramOuputData
+  >> {
   if (!isHistogramFunctionArgs(functionArgs)) {
     return {
       type: 'error',
@@ -154,7 +153,7 @@ function histogramCallbackFunction({
   let values;
 
   try {
-    values = getValues(datasetName, variableName);
+    values = await getValues(datasetName, variableName);
   } catch (error) {
     return {
       type: 'error',

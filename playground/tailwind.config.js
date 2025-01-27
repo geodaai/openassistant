@@ -7,6 +7,7 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx}',
     './node_modules/@openassistant/ui/dist/**/*.{js,ts,jsx,tsx}',
     './node_modules/@openassistant/echarts/dist/**/*.{js,ts,jsx,tsx}',
+    './node_modules/@openassistant/duckdb/dist/**/*.{js,ts,jsx,tsx}',
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {

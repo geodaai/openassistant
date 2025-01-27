@@ -4,8 +4,7 @@ import 'react-resizable/css/styles.css';
 import BoardItemContainer, { BoardItemProps } from './board-item';
 import { initEditorState } from '../lexical/lexical-editor';
 import { useState } from 'react';
-import { DroppedItem, isDroppedMessage } from './dropped-item';
-import { EditorState } from 'lexical';
+import { DroppedItem } from './dropped-item';
 import { ScatterplotOutputData } from '@openassistant/echarts';
 
 const ReactGridLayout = WidthProvider(RGL) as any;

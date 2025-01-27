@@ -33,6 +33,8 @@ module.exports = {
       ...config.resolve.alias,
       '@components': './components',
       '@app': './app',
+      'react$': path.resolve(__dirname, 'node_modules/react'),
+      'react-dom$': path.resolve(__dirname, 'node_modules/react-dom'),
       'styled-components': path.resolve(
         __dirname,
         'node_modules/styled-components'
@@ -59,8 +61,6 @@ module.exports = {
           '../packages/geoda/src'
         ),
       }),
-      // react: path.resolve(__dirname, 'node_modules/react'),
-      // 'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
     };
 
     // Add externals configuration, so Next.js won't bundle them

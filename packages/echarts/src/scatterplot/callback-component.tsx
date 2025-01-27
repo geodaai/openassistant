@@ -2,7 +2,7 @@ import { CustomFunctionCall } from '@openassistant/core';
 import { ScatterplotComponent } from './utils/scatter-plot-component';
 import { ScatterplotOutputData } from './callback-function';
 import { ExpandableContainer } from '@openassistant/common';
-import { useId, DragEvent } from 'react';
+import { DragEvent } from 'react';
 
 // type guard
 function isScatterplotOutputData(data: unknown): data is ScatterplotOutputData {
@@ -17,6 +17,10 @@ function isScatterplotOutputData(data: unknown): data is ScatterplotOutputData {
   );
 }
 
+function generateId() {
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}
+
 /**
  * ScatterplotCallbackComponent is a component that displays a scatterplot.
  * It is used to display the output of the scatterplot callback function.
@@ -26,7 +30,7 @@ function isScatterplotOutputData(data: unknown): data is ScatterplotOutputData {
 export function ScatterplotCallbackComponent(
   props: CustomFunctionCall
 ): JSX.Element | null {
-  const id = useId();
+  const id = generateId();
   const data = props.output.data as ScatterplotOutputData | undefined;
 
   if (!data || !isScatterplotOutputData(data)) {

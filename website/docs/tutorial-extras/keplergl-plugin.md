@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-import GitHubLogo from './img/keplerPlugin-1.png';
+# KeplerGL Plugin for OpenAssistant
 
-# KeplerGL AI Assistant Plugin
+import keplerPlugin from '../../images/keplerPlugin-1.png';
 
 Kepler.gl is a powerful tool for creating beautiful maps. With this plugin, your AI assistant can help you and your customers to create a map from your own data by just prompting the AI assistant.
 
@@ -35,7 +35,7 @@ You can use the AI assistant to create a map from this data by just asking the A
 Can you create a map using the data myVenues?
 ```
 
-<img src={GitHubLogo} width="400"/>
+<img src={keplerPlugin} width="400" alt="KeplerGL Plugin" />
 
 ## Let's see how to wire this up in your application
 
