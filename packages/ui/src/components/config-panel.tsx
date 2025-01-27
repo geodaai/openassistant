@@ -4,14 +4,21 @@ import { testApiKey } from '@openassistant/core';
 import { ChangeEvent, useState } from 'react';
 
 // Add a type for valid providers
-type Provider = 'openai' | 'google' | 'ollama';
+type Provider = 'openai' | 'google' | 'ollama' | 'deepseek';
 
 const PROVIDER_MODELS: Record<Provider, string[]> = {
+  deepseek: ['deepseek-chat', 'deepseek-reasoner'],
   openai: ['gpt-4o', 'gpt-4o-mini', 'gpt-3.5-turbo-0125', 'gpt-3.5-turbo'],
   google: ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-1.0-pro'],
   ollama: [
+    'deepseek-r1', // default 7b model
+    'deepseek-r1:14b',
+    'deepseek-r1:32b',
+    'deepseek-r1:70b',
+    'deepseek-r1:671b',
     'phi4',
     'qwen2.5-coder',
+    'llama3.3',
     'llama3.2',
     'llama3.1',
     'llama3.1:70b',
@@ -56,7 +63,13 @@ export type ConfigPanelProps = {
   initialConfig?: AiAssistantConfig;
   showStartChatButton?: boolean;
   showParameters?: boolean;
-  color?: "default" | "primary" | "secondary" | "success" | "warning" | "danger";
+  color?:
+    | 'default'
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'warning'
+    | 'danger';
   onConfigChange: (config: AiAssistantConfig) => void;
 };
 
@@ -131,29 +144,54 @@ export function ConfigPanel(props: ConfigPanelProps) {
 
   const onStartChat = async () => {
     setIsRunning(true);
-    const { success, service } = await testApiKey({
-      modelProvider: provider,
-      modelName: model,
-      apiKey: apiKey,
-      baseUrl: baseUrl,
-    });
-    const errorMessage = !success
-      ? service === 'ollama'
-        ? 'Connection failed: maybe invalid Ollama Base URL'
-        : 'Connection failed: maybe invalid API Key'
-      : '';
-    setConnectionError(!success);
-    setErrorMessage(errorMessage);
-    props.onConfigChange?.({
-      provider: provider,
-      model: model,
-      apiKey: apiKey,
-      baseUrl: baseUrl,
-      isReady: success,
-      temperature: temperature,
-      topP: topP,
-    });
-    setIsRunning(false);
+    try {
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(
+          () => reject(new Error('Connection timed out after 10 seconds')),
+          10000
+        );
+      });
+
+      const testResult = await Promise.race([
+        testApiKey({
+          modelProvider: provider,
+          modelName: model,
+          apiKey: apiKey,
+          baseUrl: baseUrl,
+        }),
+        timeoutPromise,
+      ]);
+
+      const { success, service } = testResult as {
+        success: boolean;
+        service: string;
+      };
+
+      const errorMessage = !success
+        ? service === 'ollama'
+          ? 'Connection failed: maybe invalid Ollama Base URL'
+          : 'Connection failed: maybe invalid API Key'
+        : '';
+
+      setConnectionError(!success);
+      setErrorMessage(errorMessage);
+      props.onConfigChange?.({
+        provider: provider,
+        model: model,
+        apiKey: apiKey,
+        baseUrl: baseUrl,
+        isReady: success,
+        temperature: temperature,
+        topP: topP,
+      });
+    } catch (error) {
+      setConnectionError(true);
+      setErrorMessage(
+        error instanceof Error ? error.message : 'Connection failed'
+      );
+    } finally {
+      setIsRunning(false);
+    }
   };
 
   return (
@@ -168,6 +206,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
         <SelectItem key="openai">OpenAI ChatGPT</SelectItem>
         <SelectItem key="google">Google Gemini</SelectItem>
         <SelectItem key="ollama">Ollama</SelectItem>
+        <SelectItem key="deepseek">DeepSeek</SelectItem>
       </Select>
       <Select
         label="LLM Model"
@@ -234,7 +273,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
         isLoading={isRunning}
         onClick={onStartChat}
         className="mt-4"
-        color={props.color || "primary"}
+        color={props.color || 'primary'}
       >
         Start Chat
       </Button>

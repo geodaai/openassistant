@@ -5,7 +5,7 @@ import {
   GetDatasetForCreateMapFunctionArgs,
 } from '@openassistant/keplergl';
 import { computeRegression } from '@openassistant/echarts';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { MessageModel, useAssistant } from '@openassistant/core';
 import { AiAssistant, AiAssistantConfig, ConfigPanel } from '@openassistant/ui';
 import { queryDuckDBFunctionDefinition } from '@openassistant/duckdb';
@@ -123,11 +123,6 @@ export default function Assistant({
     topP: 1.0,
   });
 
-  const onAiConfigChange = (config: AiAssistantConfig) => {
-    setAiConfig(config);
-    initializeAssistant();
-  };
-
   const assistantProps = useMemo(
     () => ({
       name: 'My AI Assistant',
@@ -156,10 +151,28 @@ When responding to user queries:
 ${JSON.stringify(dataContext)}`,
       functions: myFunctions,
     }),
-    [dataContext, myFunctions]
+    [
+      dataContext,
+      myFunctions,
+      aiConfig.provider,
+      aiConfig.model,
+      aiConfig.apiKey,
+    ]
   );
 
   const { initializeAssistant, apiKeyStatus } = useAssistant(assistantProps);
+
+  useEffect(() => {
+    if (aiConfig.isReady && apiKeyStatus === 'success') {
+      // initialize the assistant when the config is ready
+      console.log('new assistant props', assistantProps);
+      initializeAssistant();
+    }
+  }, [assistantProps, initializeAssistant, aiConfig, apiKeyStatus]);
+
+  const onAiConfigChange = (config: AiAssistantConfig) => {
+    setAiConfig(config);
+  };
 
   const historyMessages: MessageModel[] = [
     {

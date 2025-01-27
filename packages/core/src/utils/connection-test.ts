@@ -26,6 +26,8 @@ export async function testApiKey({
     return testOllamConnection(modelName, baseUrl);
   } else if (modelProviderLowerCase === 'anthropic') {
     return testAnthropicConnection(modelName, modelName);
+  } else if (modelProviderLowerCase === 'deepseek') {
+    return testDeepSeekConnection(apiKey, modelName);
   } else if (modelProviderLowerCase === 'phoenixai') {
     // TODO: implement PhoenixAI connection test
     return {
@@ -185,4 +187,48 @@ export async function testOllamConnection(
   }
 
   return results;
+}
+
+export async function testDeepSeekConnection(
+  apiKey: string,
+  modelName: string
+): Promise<ConnectionTestResult> {
+  const result: ConnectionTestResult = {
+    service: 'deepseek',
+    success: false,
+    message: '',
+  };
+
+  // Test DeepSeek connection
+  try {
+    await axios.post(
+      `https://api.deepseek.com/chat/completions`,
+      {
+        model: modelName,
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a helpful assistant.',
+          },
+          {
+            role: 'user',
+            content: 'Hello!',
+              },
+            ],
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+      }
+    );
+    result.success = true;
+    result.message = 'Connection successful';
+  } catch (error) {
+    result.success = false;
+    result.message = `${error}`;
+  }
+
+  return result;
 }

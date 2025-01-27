@@ -8,6 +8,7 @@ import {
 } from '../types';
 import { GoogleAssistant } from '../llm/google';
 import { OpenAIAssistant } from '../llm/openai';
+import { DeepSeekAssistant } from '../llm/deepseek';
 
 /**
  * Props for the Assistant UI and useAssistant hook.
@@ -81,8 +82,12 @@ export type SendImageMessageProps = {
   streamMessageCallback: StreamMessageCallback;
 };
 
-let assistant: OllamaAssistant | GoogleAssistant | OpenAIAssistant | null =
-  null;
+let assistant:
+  | OllamaAssistant
+  | GoogleAssistant
+  | OpenAIAssistant
+  | DeepSeekAssistant
+  | null = null;
 
 /**
  * A custom hook for managing an AI assistant.
@@ -305,6 +310,8 @@ function GetAssistantModelByProvider(provider: string) {
       return GoogleAssistant;
     case 'ollama':
       return OllamaAssistant;
+    case 'deepseek':
+      return DeepSeekAssistant;
     default:
       return OpenAIAssistant;
   }
