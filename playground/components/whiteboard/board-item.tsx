@@ -50,7 +50,6 @@ function BoardItem({ item }: { item: BoardItemProps }) {
       return (
         <QueryDuckDBComponent
           {...(content as QueryDuckDBOutputData)}
-          theme="light"
         />
       );
     case 'scatterplot':
