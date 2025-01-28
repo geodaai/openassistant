@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
 import Modal from '../ui/Modal';
 
 export default function useModal(): [
-  ReactNode | null,
+  ReactNode,
   (title: string, showModal: (onClose: () => void) => ReactNode) => void,
 ] {
   const [modalContent, setModalContent] = useState<null | {
@@ -30,14 +30,13 @@ export default function useModal(): [
         closeOnClickOutside={closeOnClickOutside}
       >
         {typeof content === 'string' ? <span>{content}</span> : content}
-      </Modal> as ReactNode
+      </Modal>
     );
   }, [modalContent, onClose]);
 
   const showModal = useCallback(
     (
       title: string,
-      // eslint-disable-next-line no-shadow
       getContent: (onClose: () => void) => ReactNode,
       closeOnClickOutside = false
     ) => {
