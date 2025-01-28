@@ -33,15 +33,16 @@ type OnSelectedCallback = (
  *
  * @param getValues - Get the values of two variables from the dataset. See {@link GetValues} for more details.
  * @param onSelected - The callback function can be used to sync the selections of the scatterplot with the original dataset. See {@link OnSelectedCallback} for more details.
- * @param theme - The theme of the scatterplot. The possible values are 'light' and 'dark'.
  * @param filteredIndex - The indices of the selected points.
+ * @param config - The configuration of the scatterplot.
+ * @param config.isDraggable - The flag to indicate if the scatterplot is draggable.
+ * @param config.theme - The theme of the scatterplot. The possible values are 'light' and 'dark'.
  */
 export type ScatterplotFunctionContext = {
   getValues: GetValues;
   onSelected: OnSelectedCallback;
   filteredIndex?: number[];
-  theme?: string;
-  isDraggable?: boolean;
+  config?: { isDraggable?: boolean; theme?: string };
 };
 
 /**

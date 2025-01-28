@@ -9,9 +9,16 @@ export type GetDatasetForCreateMapFunctionArgs = {
   datasetName: string;
 };
 
+/**
+ * The context for the createMap function.
+ * @param getDataset - The function to get the dataset.
+ * @param config - The configuration of the map.
+ * @param config.isDraggable - Whether the map is draggable.
+ * @param config.theme - The theme of the map.
+ */
 export type MapLayerFunctionContext = {
   getDataset: ({ datasetName }: GetDatasetForCreateMapFunctionArgs) => unknown;
-  isDraggable: boolean;
+  config?: { isDraggable?: boolean; theme?: string };
 };
 
 type ValueOf<T> = T[keyof T];

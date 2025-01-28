@@ -46,8 +46,6 @@ async function getScatterplotValuesFromDataset(
   }
 }
 
-const IS_DRAGGABLE = true;
-
 export default function Assistant({
   screenCaptured,
   setScreenCaptured,
@@ -79,6 +77,8 @@ export default function Assistant({
     ];
   }, []);
 
+  const componentConfig = { isDraggable: true, theme: 'light' };
+
   const myFunctions = useMemo(
     () => [
       createMapFunctionDefinition({
@@ -89,7 +89,7 @@ export default function Assistant({
           }
           return SAMPLE_DATASETS[datasetName];
         },
-        isDraggable: IS_DRAGGABLE,
+        config: componentConfig,
       }),
       queryDuckDBFunctionDefinition({
         getValues: (datasetName: string, variableName: string) => {
@@ -102,17 +102,15 @@ export default function Assistant({
             );
           }
         },
-        isDraggable: IS_DRAGGABLE,
+        config: componentConfig,
       }),
       histogramFunctionDefinition({
         getValues: getValuesFromMyDatasets,
-        theme: 'light',
-        isDraggable: IS_DRAGGABLE,
+        config: componentConfig,
       }),
       scatterplotFunctionDefinition({
         getValues: getScatterplotValuesFromDataset,
-        theme: 'light',
-        isDraggable: IS_DRAGGABLE,
+        config: componentConfig,
       }),
     ],
     [SAMPLE_DATASETS]

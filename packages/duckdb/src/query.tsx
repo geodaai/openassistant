@@ -83,7 +83,9 @@ type QueryDuckDBFunctionContext = {
   getValues: (datasetName: string, variableName: string) => unknown[];
   duckDB?: duckdb.AsyncDuckDB;
   onSelected?: OnSelectedCallback;
-  isDraggable?: boolean;
+  config: {
+    isDraggable?: boolean;
+  };
 };
 
 type ValueOf<T> = T[keyof T];
@@ -241,7 +243,7 @@ export async function queryDuckDBCallbackFunction({
   }
 
   // get the context values
-  const { getValues, onSelected, isDraggable } = functionContext;
+  const { getValues, onSelected, config } = functionContext;
 
   // if the variable names contain 'row_index', ignore it
   // the row_index will be added later based on the columnData length
@@ -279,7 +281,7 @@ export async function queryDuckDBCallbackFunction({
         sql,
         dbTableName,
         onSelected,
-        isDraggable,
+        isDraggable: Boolean(config.isDraggable),
       },
     };
   } catch (error) {

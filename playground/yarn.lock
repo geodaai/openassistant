@@ -4058,9 +4058,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openassistant/common@npm:^0.0.5":
-  version: 0.0.5
-  resolution: "@openassistant/common@npm:0.0.5"
+"@openassistant/common@npm:^0.0.6":
+  version: 0.0.6
+  resolution: "@openassistant/common@npm:0.0.6"
   dependencies:
     "@iconify/react": "npm:^5.1.0"
     "@nextui-org/react": "npm:^2.6.10"
@@ -4069,13 +4069,13 @@ __metadata:
   peerDependencies:
     react: ">=18.2"
     react-dom: ">=18.2"
-  checksum: ca80503f178859ab14807d0bdd43aef69aa9b49f40e37191542ed39d12bcd509d47069e4c57de0dd2a711bb09e47d16ac5f3d96e8e7325b3b00cd27b77cf533c
+  checksum: 89d4b1a195746b6b41f083bf0f0e498e5c4c69e2d232071ad03ef28f2bfd89bbe29831eda83011b04da86d01ff9259c7a401e95dcf7ec2aae9f5283eb390ffc4
   languageName: node
   linkType: hard
 
-"@openassistant/core@npm:^0.0.6":
-  version: 0.0.6
-  resolution: "@openassistant/core@npm:0.0.6"
+"@openassistant/core@npm:^0.0.7":
+  version: 0.0.7
+  resolution: "@openassistant/core@npm:0.0.7"
   dependencies:
     "@langchain/core": "npm:^0.3.26"
     "@langchain/google-genai": "npm:^0.1.6"
@@ -4084,13 +4084,13 @@ __metadata:
     axios: "npm:^1.7.9"
   peerDependencies:
     react: ">=18.2"
-  checksum: f066487d1c29f51bb12c5dc3c5317f39111204cc0d2510827e1cc4413a9b3fa304283354a3e80df1745de2c93f5d44334efb5fca85f52f2a8bceb1a0f4697770
+  checksum: e84f36d662d36719f6753e140cfcb6d793322bd9a5a00dcdbcdfe86b6163b79e9cc2cc72d47f77369770571d381804c5aea89bcd5c35a525af7027d4f5d259e3
   languageName: node
   linkType: hard
 
-"@openassistant/duckdb@npm:^0.0.6":
-  version: 0.0.6
-  resolution: "@openassistant/duckdb@npm:0.0.6"
+"@openassistant/duckdb@npm:^0.0.7":
+  version: 0.0.7
+  resolution: "@openassistant/duckdb@npm:0.0.7"
   dependencies:
     "@duckdb/duckdb-wasm": "npm:^1.29.0"
     "@nextui-org/react": "npm:^2.6.8"
@@ -4101,13 +4101,13 @@ __metadata:
     "@openassistant/core": "*"
     react: ">=18.2"
     react-dom: ">=18.2"
-  checksum: 66b4072218b376f31bcfe926c5854062ad588b0f5277912c78187976c5a4ba32cf3d79bbf7be7abd97eec3bf1ae9a39eed27f6f95dac90093b2d6443deba4bde
+  checksum: 16ae64450e1e398e08948a9c4d71dc149dd0468bb2e08365943daf0242896a39c767a8a117aafb417783011d0d4682b7906449da188cdce16e430b27425cb601
   languageName: node
   linkType: hard
 
-"@openassistant/echarts@npm:^0.0.6":
-  version: 0.0.6
-  resolution: "@openassistant/echarts@npm:0.0.6"
+"@openassistant/echarts@npm:^0.0.7":
+  version: 0.0.7
+  resolution: "@openassistant/echarts@npm:0.0.7"
   dependencies:
     "@iconify/react": "npm:^5.1.0"
     "@nextui-org/react": "npm:^2.6.10"
@@ -4125,13 +4125,13 @@ __metadata:
     "@openassistant/core": "*"
     react: ">=18.2"
     react-dom: ">=18.2"
-  checksum: d07bd87b43ed7a3d9362459a30465a7aa8cc1f4aa91949ccee47be81d515abce9593d82de03dd5c33a4e4b9e76e3943b087506e8b26a11d59c6c2e151f76a070
+  checksum: d6528f7e0f54d8de551f2da453220c38454205784256826c76fdd55abc1319566158c57b2b647a2450587a707c059ba50c9ba22efeb7930586f536891758429b
   languageName: node
   linkType: hard
 
-"@openassistant/keplergl@npm:^0.0.6":
-  version: 0.0.6
-  resolution: "@openassistant/keplergl@npm:0.0.6"
+"@openassistant/keplergl@npm:^0.0.7":
+  version: 0.0.7
+  resolution: "@openassistant/keplergl@npm:0.0.7"
   dependencies:
     "@kepler.gl/actions": "npm:^3.0.0"
     "@kepler.gl/components": "npm:^3.0.0"
@@ -4150,16 +4150,17 @@ __metadata:
     react-virtualized-auto-sizer: "npm:^1.0.25"
     redux: "npm:^4.2.1"
   peerDependencies:
+    "@openassistant/common": "*"
     "@openassistant/core": "*"
     react: ">=18"
     react-dom: ">=18"
-  checksum: ee527d2d5db6354a9ca36332eea588bbef71b9ef69fa536ab93182830644a2f8f1e0b67ebb4f5640c71dd2becf8a4695bea2aa543a5f25121f1ad975ba2ddb43
+  checksum: 67040558ae114a21563fa9b4bb4c05aebbc73d1bf0937adc687aae80a171ed1bd5c6b0e9bd56020d67d14bdb26f1e7eb81771f4dfe4238ff3547e9d3ab1374d8
   languageName: node
   linkType: hard
 
-"@openassistant/ui@npm:^0.0.6":
-  version: 0.0.6
-  resolution: "@openassistant/ui@npm:0.0.6"
+"@openassistant/ui@npm:^0.0.8":
+  version: 0.0.8
+  resolution: "@openassistant/ui@npm:0.0.8"
   dependencies:
     "@iconify/react": "npm:^5.1.0"
     "@nextui-org/react": "npm:^2.6.10"
@@ -4172,7 +4173,7 @@ __metadata:
     "@openassistant/core": "*"
     react: ">=18.2"
     react-dom: ">=18.2"
-  checksum: 6d306311e36dfd37c2985791f49c6e56c529ff93861523d9456ae7ee4bdcfe6665396d4209ad83b2f2d9f4b1e9f32315cf9fe14179005f427e274f76e1d7e825
+  checksum: b85e31373b900254226d539e669c3531a7984ed108d998587145dd84c1d46e990dd2591b677b9c679bc98232a53fbe5e4f336002cb291f9efd0c626fea93a0d3
   languageName: node
   linkType: hard
 
@@ -12772,12 +12773,12 @@ __metadata:
     "@loaders.gl/schema": "npm:^4.3.3"
     "@next/eslint-plugin-next": "npm:^15.1.5"
     "@nextui-org/theme": "npm:^2.4.4"
-    "@openassistant/common": "npm:^0.0.5"
-    "@openassistant/core": "npm:^0.0.6"
-    "@openassistant/duckdb": "npm:^0.0.6"
-    "@openassistant/echarts": "npm:^0.0.6"
-    "@openassistant/keplergl": "npm:^0.0.6"
-    "@openassistant/ui": "npm:^0.0.6"
+    "@openassistant/common": "npm:^0.0.6"
+    "@openassistant/core": "npm:^0.0.7"
+    "@openassistant/duckdb": "npm:^0.0.7"
+    "@openassistant/echarts": "npm:^0.0.7"
+    "@openassistant/keplergl": "npm:^0.0.7"
+    "@openassistant/ui": "npm:^0.0.8"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
     "@types/react-grid-layout": "npm:^1"

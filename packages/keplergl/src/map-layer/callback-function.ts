@@ -77,7 +77,7 @@ export async function CreateMapCallbackFunction({
 
   try {
     // get the dataset from the function context
-    const { getDataset, isDraggable } = functionContext;
+    const { getDataset, config } = functionContext;
 
     const dataContent = getDataset({ datasetName });
 
@@ -111,7 +111,7 @@ export async function CreateMapCallbackFunction({
       data: {
         datasetName,
         datasetForKepler,
-        isDraggable,
+        isDraggable: Boolean(config?.isDraggable),
       },
     };
   } catch (error) {

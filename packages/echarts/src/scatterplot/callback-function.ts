@@ -149,8 +149,7 @@ export async function ScatterplotCallbackFunction({
     };
   }
 
-  const { getValues, filteredIndex, onSelected, theme, isDraggable } =
-    functionContext;
+  const { getValues, filteredIndex, onSelected, config } = functionContext;
 
   let values: { x: number[]; y: number[] };
 
@@ -197,10 +196,10 @@ export async function ScatterplotCallbackFunction({
         onSelected,
         filteredIndex,
         regressionResults,
-        theme,
+        theme: config?.theme || 'dark',
         showLoess: false,
         showRegressionLine: true,
-        isDraggable,
+        isDraggable: Boolean(config?.isDraggable),
       },
     };
   } catch (error) {
