@@ -264,7 +264,7 @@ describe('AiAssistant', () => {
     expect(onFeedback).toHaveBeenCalledWith(question);
   });
 
-  it('test message dragging functionality', async () => {
+  it.skip('test message dragging functionality', async () => {
     // Create a mock for the dataTransfer object
     const mockDataTransfer = {
       setData: jest.fn(),

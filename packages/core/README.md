@@ -8,6 +8,7 @@ A powerful and flexible React library for integrating multiple AI assistants (Op
   - OpenAI (GPT models)
   - Google Gemini
   - Ollama (local AI models)
+  - DeepSeek (Chat and Reasoner)
 - 🔄 Streaming responses
 - 🎯 Function calling support
 - 🎤 Audio-to-text conversion
@@ -50,13 +51,13 @@ npx @react-ai-assist/cli
 
 ## Supported Features by Provider
 
-| Feature | OpenAI | Google | Ollama |
-|---------|---------|---------|---------|
-| Text Chat | ✅ | ✅ | ✅ |
-| Image Processing | ✅ | ✅ | ✅ |
-| Audio to Text | ✅ | ✅ | ❌ |
-| Function Calling | ✅ | ✅ | ✅ |
-| Streaming | ✅ | ✅ | ✅ |
+| Feature | OpenAI | Google | Ollama | DeepSeek |
+|---------|---------|---------|---------|---------|
+| Text Chat | ✅ | ✅ | ✅ | ✅ |
+| Image Processing | ✅ | ✅ | ✅ | ❌ |
+| Audio to Text | ✅ | ✅ | ❌ | ❌ |
+| Function Calling | ✅ | ✅ | ✅ | ✅ |
+| Streaming | ✅ | ✅ | ✅ | ✅ |
 
 ## API Reference
 

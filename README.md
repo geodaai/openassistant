@@ -15,6 +15,7 @@ Check out the following examples using OpenAssistant in action:
 ## 🌟 Features
 
 - 🤖 **Multiple AI Provider Support**
+  - DeepSeek (Chat and Reasoner)
   - OpenAI (GPT models)
   - Google Gemini
   - Ollama (local AI models)
