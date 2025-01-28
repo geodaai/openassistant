@@ -30,11 +30,13 @@ type OnSelectedCallback = (
  * @param getValues - Get the values of a variable from the dataset. See {@link GetValues} for more details.
  * @param onSelected - The callback function can be used to sync the selections of the histogram plot with the original dataset. See {@link OnSelectedCallback} for more details.
  * @param theme - The theme of the histogram plot. The possible values are 'light' and 'dark'.
+ * @param isDraggable - Whether the histogram plot is draggable e.g. to a dashboard.
  */
 export type HistogramFunctionContext = {
   getValues: GetValues;
   onSelected?: OnSelectedCallback;
   theme?: string;
+  isDraggable?: boolean;
 };
 
 type ValueOf<T> = T[keyof T];
@@ -87,13 +89,15 @@ type HistogramFunctionArgs = {
   numberOfBins: number;
 };
 
-export type HistogramOuputData = {
+export type HistogramOutputData = {
   datasetName: string;
   variableName: string;
   histogramData: HistogramDataProps[];
   barDataIndexes: number[][];
   onSelected?: (datasetName: string, selectedIndices: number[]) => void;
   theme?: string;
+  isExpanded?: boolean;
+  isDraggable?: boolean;
 };
 
 type HistogramOutputResult =
@@ -121,7 +125,7 @@ async function histogramCallbackFunction({
   functionArgs,
   functionContext,
 }: CallbackFunctionProps): Promise<CustomFunctionOutputProps<
-    HistogramOutputResult, HistogramOuputData
+    HistogramOutputResult, HistogramOutputData
   >> {
   if (!isHistogramFunctionArgs(functionArgs)) {
     return {
@@ -147,7 +151,7 @@ async function histogramCallbackFunction({
     };
   }
 
-  const { getValues, onSelected, theme } =
+  const { getValues, onSelected, theme, isDraggable } =
     functionContext as HistogramFunctionContext;
 
   let values;
@@ -187,6 +191,7 @@ async function histogramCallbackFunction({
         barDataIndexes,
         onSelected,
         theme,
+        isDraggable,
       },
     };
   } catch (error) {

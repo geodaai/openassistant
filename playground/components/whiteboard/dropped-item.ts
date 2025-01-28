@@ -1,35 +1,46 @@
-import { ScatterplotOutputData } from "@openassistant/echarts/dist/scatterplot/callback-function";
+import {
+  ScatterplotOutputData,
+  HistogramOutputData,
+} from '@openassistant/echarts';
+import { CreateMapOutputData } from '@openassistant/keplergl';
+import { QueryDuckDBOutputData } from '@openassistant/duckdb';
 
 type DroppedMessage = {
   id: string;
   type: 'text';
-  message: string;
+  data: string;
 };
 
 type DroppedTable = {
   id: string;
-  type: 'table';
-  table: string;
+  type: 'query';
+  data: QueryDuckDBOutputData;
 };
 
 type DroppedScatterPlot = {
   id: string;
   type: 'scatterplot';
-  message: ScatterplotOutputData;
+  data: ScatterplotOutputData;
+};
+
+type DroppedHistogram = {
+  id: string;
+  type: 'histogram';
+  data: HistogramOutputData;
 };
 
 type DroppedMap = {
   id: string;
   type: 'map';
-  data: string;
+  data: CreateMapOutputData;
 };
 
 export type DroppedItem =
   | DroppedMessage
   | DroppedTable
   | DroppedScatterPlot
-  | DroppedMap;
-
+  | DroppedMap
+  | DroppedHistogram;
 
 export function isDroppedMessage(item: DroppedItem): item is DroppedMessage {
   return item.type === 'text';

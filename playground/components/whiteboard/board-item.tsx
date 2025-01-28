@@ -5,11 +5,21 @@ import { CustomLexicalEditor } from '../lexical/lexical-editor';
 import {
   ScatterplotOutputData,
   ScatterplotComponent,
+  HistogramComponent,
+  HistogramOutputData,
 } from '@openassistant/echarts';
+import {
+  KeplerGlComponentWithProvider,
+  CreateMapOutputData,
+} from '@openassistant/keplergl';
+import {
+  QueryDuckDBComponent,
+  QueryDuckDBOutputData,
+} from '@openassistant/duckdb';
 
 export type BoardItemProps = {
   id: string;
-  type: 'text' | 'table' | 'scatterplot' | 'histogram' | 'map';
+  type: 'text' | 'query' | 'scatterplot' | 'histogram' | 'map';
   content: unknown;
 };
 
@@ -36,8 +46,13 @@ function BoardItem({ item }: { item: BoardItemProps }) {
           initialState={content as EditorState}
         />
       );
-    // case 'table':
-    //   return <TableComponent />;
+    case 'query':
+      return (
+        <QueryDuckDBComponent
+          {...(content as QueryDuckDBOutputData)}
+          theme="light"
+        />
+      );
     case 'scatterplot':
       return (
         <ScatterplotComponent
@@ -45,10 +60,20 @@ function BoardItem({ item }: { item: BoardItemProps }) {
           theme="light"
         />
       );
-    // case 'histogram':
-    //   return <HistogramComponent />;
-    // case 'map':
-    //   return <MapComponent />;
+    case 'histogram':
+      return (
+        <HistogramComponent
+          {...(content as HistogramOutputData)}
+          theme="light"
+        />
+      );
+    case 'map':
+      return (
+        <KeplerGlComponentWithProvider
+          {...(content as CreateMapOutputData)}
+          theme="light"
+        />
+      );
     default:
       return null;
   }

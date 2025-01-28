@@ -5,7 +5,11 @@ import {
 } from '@openassistant/core';
 import { CreateMapOutputData } from './callback-component';
 import { MapLayerFunctionContext } from './definition';
-import { FileCacheItem, processFileData, ProcessFileDataContent } from '@kepler.gl/processors';
+import {
+  FileCacheItem,
+  processFileData,
+  ProcessFileDataContent,
+} from '@kepler.gl/processors';
 
 type CreateMapLayerFunctionArgs = {
   datasetName: string;
@@ -42,10 +46,9 @@ export async function CreateMapCallbackFunction({
   functionName,
   functionArgs,
   functionContext,
-}: CallbackFunctionProps): Promise<CustomFunctionOutputProps<
-  CreateMapOutputResult,
-  CreateMapOutputData
-  >> {
+}: CallbackFunctionProps): Promise<
+  CustomFunctionOutputProps<CreateMapOutputResult, CreateMapOutputData>
+> {
   // check if the function arguments are valid
   if (!isMapLayerFunctionArgs(functionArgs)) {
     return {
@@ -74,7 +77,7 @@ export async function CreateMapCallbackFunction({
 
   try {
     // get the dataset from the function context
-    const { getDataset } = functionContext;
+    const { getDataset, isDraggable } = functionContext;
 
     const dataContent = getDataset({ datasetName });
 
@@ -108,6 +111,7 @@ export async function CreateMapCallbackFunction({
       data: {
         datasetName,
         datasetForKepler,
+        isDraggable,
       },
     };
   } catch (error) {

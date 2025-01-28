@@ -204,21 +204,6 @@ export function AiAssistant(props: AiAssistantProps) {
       : props.userAvatar;
   };
 
-  const onMessageDragStart = (
-    e: React.DragEvent<HTMLDivElement>,
-    index: number,
-    message: string
-  ) => {
-    e.dataTransfer.setData(
-      'text/plain',
-      JSON.stringify({
-        id: `message-${index}`,
-        type: 'text',
-        message,
-      })
-    );
-  };
-
   return (
     <ChatContainer theme={props.theme || 'light'}>
       <div
@@ -257,9 +242,8 @@ export function AiAssistant(props: AiAssistantProps) {
                         : 'success'
                   }
                   onFeedback={reportQuestion}
-                  draggable={props.isMessageDraggable || false}
+                  isMessageDraggable={props.isMessageDraggable || false}
                   unselectable="on"
-                  onDragStart={(e) => onMessageDragStart(e, i, messageElement)}
                   githubIssueLink={props.githubIssueLink}
                 />
               );

@@ -142,6 +142,9 @@ export class ImageNode extends DecoratorNode<ReactNode> {
     this.__maxWidth = maxWidth;
     this.__width = width || 'inherit';
     this.__height = height || 'inherit';
+    this.__caption = createEditor();
+    this.__showCaption = false;
+    this.__captionsEnabled = false;
   }
 
   exportJSON(): SerializedImageNode {

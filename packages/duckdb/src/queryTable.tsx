@@ -31,22 +31,45 @@ export type QueryDuckDBOutputData = {
     columnName: string,
     selectedValues: unknown[]
   ) => void;
+  isDraggable?: boolean;
 };
 
 export function queryDuckDBCallbackMessage(
   props: CustomFunctionCall
 ): JSX.Element | null {
+  const data = props.output.data as QueryDuckDBOutputData;
+
+  if (!data) {
+    return null;
+  }
+
+  // const onDragStart = (e: DragEvent<HTMLButtonElement>) => {
+  //   e.dataTransfer.setData(
+  //     'text/plain',
+  //     JSON.stringify({
+  //       id: `query-${id}`,
+  //       type: 'query',
+  //       data: data,
+  //     })
+  //   );
+  // };
+
   return (
     <div className="mt-4">
-      <QueryDuckDBComponent {...props} />
+      <QueryDuckDBComponent {...data} />
     </div>
   );
 }
 
-function QueryDuckDBComponent({
-  output,
-}: CustomFunctionCall): JSX.Element | null {
-  const data = output.data as QueryDuckDBOutputData;
+export function QueryDuckDBComponent({
+  db,
+  columnData,
+  variableNames,
+  datasetName,
+  sql,
+  dbTableName,
+  onSelected,
+}: QueryDuckDBOutputData): JSX.Element | null {
   const queryInProgress = useRef<Promise<void> | null>(null);
 
   // sync selections by
@@ -84,21 +107,15 @@ function QueryDuckDBComponent({
       // Create a new promise for this query
       queryInProgress.current = (async () => {
         try {
-          if (
-            data &&
-            data.db &&
-            data.columnData &&
-            data.dbTableName &&
-            data.sql
-          ) {
+          if (db && columnData && dbTableName && sql) {
             // use double quotes for the table name
-            const safeDbTableName = `${data.dbTableName}`;
+            const safeDbTableName = `${dbTableName}`;
 
             // Create Arrow Table from column data with explicit type
-            const arrowTable: ArrowTable = tableFromArrays(data.columnData);
+            const arrowTable: ArrowTable = tableFromArrays(columnData);
 
             // connect to the database
-            const conn = await data.db.connect();
+            const conn = await db.connect();
 
             // drop the table if it exists
             await conn.query(`DROP TABLE IF EXISTS ${safeDbTableName}`);
@@ -108,7 +125,7 @@ function QueryDuckDBComponent({
             await conn.insertArrowTable(arrowTable, { name: safeDbTableName });
 
             // Execute the provided SQL query
-            const arrowResult = await conn.query(data.sql);
+            const arrowResult = await conn.query(sql);
 
             const result = arrowResult.toArray().map((row) => row.toJSON());
             setQueryResult(result);
@@ -138,7 +155,7 @@ function QueryDuckDBComponent({
     setSyncSelection(e.target.checked);
     if (e.target.checked === false) {
       if (syncSelectionBy) {
-        data?.onSelected?.(data.datasetName, syncSelectionBy, []);
+        onSelected?.(datasetName, syncSelectionBy, []);
       }
     }
   };
@@ -154,7 +171,7 @@ function QueryDuckDBComponent({
       );
       // get the value of the syncSelectionBy variable
       const syncSelectionByValue = syncSelectionBy
-        ? data.columnData[syncSelectionBy]
+        ? columnData[syncSelectionBy]
         : null;
       // filter syncSelectionByValue with selectedRows
       const filteredSyncSelectionByValue = syncSelectionByValue
@@ -162,14 +179,21 @@ function QueryDuckDBComponent({
         : null;
       // if filteredSyncSelectionByValue is not null, call the onSelected callback
       if (filteredSyncSelectionByValue && syncSelectionBy) {
-        data?.onSelected?.(
-          data.datasetName,
+        onSelected?.(
+          datasetName,
           syncSelectionBy,
           filteredSyncSelectionByValue
         );
       }
     }
-  }, [selectedKeys, syncSelection, syncSelectionBy, data]);
+  }, [
+    selectedKeys,
+    syncSelection,
+    syncSelectionBy,
+    columnData,
+    onSelected,
+    datasetName,
+  ]);
 
   return error ? (
     <div>
@@ -230,7 +254,7 @@ function QueryDuckDBComponent({
           ))}
         </TableBody>
       </Table>
-      {data?.onSelected && (
+      {onSelected && (
         <div className="flex flex-row gap-2">
           <Checkbox onChange={onSyncSelection}>sync selections by</Checkbox>
           <div className="flex-1">
@@ -239,7 +263,7 @@ function QueryDuckDBComponent({
               onChange={onSyncSelectionBy}
               aria-label="Select column for synchronization"
             >
-              {data.variableNames.map((name) => (
+              {variableNames.map((name) => (
                 <SelectItem key={name}>{name}</SelectItem>
               ))}
             </Select>

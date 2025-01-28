@@ -11,11 +11,17 @@ export type GetDatasetForCreateMapFunctionArgs = {
 
 export type MapLayerFunctionContext = {
   getDataset: ({ datasetName }: GetDatasetForCreateMapFunctionArgs) => unknown;
+  isDraggable: boolean;
 };
 
 type ValueOf<T> = T[keyof T];
 export type MapLayerFunctionContextValues = ValueOf<MapLayerFunctionContext>;
 
+/**
+ * createMapFunctionDefinition is a function that creates a map function definition.
+ * @param context - The context for the function. See {@link CustomFunctionContext} for more information.
+ * @returns The map function definition.
+ */
 export function createMapFunctionDefinition(
   context: CustomFunctionContext<MapLayerFunctionContextValues>
 ): RegisterFunctionCallingProps {

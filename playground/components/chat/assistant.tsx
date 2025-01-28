@@ -4,7 +4,6 @@ import {
   createMapFunctionDefinition,
   GetDatasetForCreateMapFunctionArgs,
 } from '@openassistant/keplergl';
-import { computeRegression } from '@openassistant/echarts';
 import { useMemo, useState, useEffect } from 'react';
 import { MessageModel, useAssistant } from '@openassistant/core';
 import { AiAssistant, AiAssistantConfig, ConfigPanel } from '@openassistant/ui';
@@ -47,6 +46,8 @@ async function getScatterplotValuesFromDataset(
   }
 }
 
+const IS_DRAGGABLE = true;
+
 export default function Assistant({
   screenCaptured,
   setScreenCaptured,
@@ -88,6 +89,7 @@ export default function Assistant({
           }
           return SAMPLE_DATASETS[datasetName];
         },
+        isDraggable: IS_DRAGGABLE,
       }),
       queryDuckDBFunctionDefinition({
         getValues: (datasetName: string, variableName: string) => {
@@ -100,14 +102,17 @@ export default function Assistant({
             );
           }
         },
+        isDraggable: IS_DRAGGABLE,
       }),
       histogramFunctionDefinition({
         getValues: getValuesFromMyDatasets,
         theme: 'light',
+        isDraggable: IS_DRAGGABLE,
       }),
       scatterplotFunctionDefinition({
         getValues: getScatterplotValuesFromDataset,
         theme: 'light',
+        isDraggable: IS_DRAGGABLE,
       }),
     ],
     [SAMPLE_DATASETS]
@@ -165,7 +170,6 @@ ${JSON.stringify(dataContext)}`,
   useEffect(() => {
     if (aiConfig.isReady && apiKeyStatus === 'success') {
       // initialize the assistant when the config is ready
-      console.log('new assistant props', assistantProps);
       initializeAssistant();
     }
   }, [assistantProps, initializeAssistant, aiConfig, apiKeyStatus]);

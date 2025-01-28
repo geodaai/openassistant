@@ -9,3 +9,11 @@ export const numericFormatter = (value: number): string => {
     maximumFractionDigits: 1,
   }).format(value);
 };
+
+/**
+ * Generates a random ID, which is a string of 13 characters
+ * @returns A random ID
+ */
+export function generateId() {
+  return Math.random().toString(36).substring(2, 15)
+}

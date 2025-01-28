@@ -1,7 +1,7 @@
 import { CustomFunctionCall } from '@openassistant/core';
 import { ScatterplotComponent } from './utils/scatter-plot-component';
 import { ScatterplotOutputData } from './callback-function';
-import { ExpandableContainer } from '@openassistant/common';
+import { ExpandableContainer, generateId } from '@openassistant/common';
 import { DragEvent } from 'react';
 
 // type guard
@@ -15,10 +15,6 @@ function isScatterplotOutputData(data: unknown): data is ScatterplotOutputData {
     'yVariableName' in data &&
     'datasetName' in data
   );
-}
-
-function generateId() {
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }
 
 /**

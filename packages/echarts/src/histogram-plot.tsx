@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState, DragEvent } from 'react';
 import { CustomFunctionCall } from '@openassistant/core';
 import { EChartsOption } from 'echarts';
 import ReactEChartsCore from 'echarts-for-react';
@@ -17,10 +17,11 @@ import {
 import { CanvasRenderer } from 'echarts/renderers';
 import { TopLevelFormatterParams } from 'echarts/types/dist/shared';
 import { ECHARTS_DARK_THEME } from './echarts-theme';
-import { HistogramOuputData } from './histogram';
+import { HistogramOutputData } from './histogram';
 import './index.css';
 import {
-  ResizablePlotContainer,
+  ExpandableContainer,
+  generateId,
   numericFormatter,
 } from '@openassistant/common';
 
@@ -38,34 +39,55 @@ echartsRegisterTheme('dark', ECHARTS_DARK_THEME);
 export function histogramCallbackMessage(
   props: CustomFunctionCall
 ): JSX.Element | null {
-  const data = props.output.data as HistogramOuputData | undefined;
+  const id = generateId();
+  const data = props.output.data as HistogramOutputData | undefined;
 
   if (!data?.variableName || !data?.histogramData || !data?.barDataIndexes) {
     return null;
   }
 
+  const onDragStart = (e: DragEvent<HTMLButtonElement>) => {
+    e.dataTransfer.setData(
+      'text/plain',
+      JSON.stringify({
+        id: `histogram-${id}`,
+        type: 'histogram',
+        data: data,
+      })
+    );
+
+    // prevent the event from propagating
+    e.stopPropagation();
+  };
+
   return (
-    <ResizablePlotContainer>
-      <HistogramComponent {...props} />
-    </ResizablePlotContainer>
+    <ExpandableContainer
+      defaultWidth={600}
+      defaultHeight={800}
+      draggable={data.isDraggable || false}
+      onDragStart={onDragStart}
+    >
+      <HistogramComponent {...data} />
+    </ExpandableContainer>
   );
 }
 
 export function HistogramComponent({
-  output,
-}: CustomFunctionCall): JSX.Element | null {
-  const data = output.data as HistogramOuputData | undefined;
-
+  datasetName,
+  histogramData,
+  barDataIndexes,
+  variableName,
+  onSelected,
+  theme,
+}: HistogramOutputData): JSX.Element | null {
   // get chart option by calling getChartOption only once
   const option = useMemo(() => {
     try {
-      return data
-        ? getHistogramChartOption(null, data.histogramData, data.barDataIndexes)
-        : {};
+      return getHistogramChartOption(null, histogramData, barDataIndexes);
     } catch {
       return {};
     }
-  }, [data]);
+  }, [histogramData, barDataIndexes]);
 
   const eChartsRef = useRef<ReactEChartsCore>(null);
   // track if the chart has been rendered, so we can update the chart later
@@ -93,8 +115,8 @@ export function HistogramComponent({
 
         // get selected ids from brushed bars
         const filteredIndex =
-          data && brushed.length > 0
-            ? brushed.map((idx: number) => data.barDataIndexes[idx]).flat()
+          brushed.length > 0
+            ? brushed.map((idx: number) => barDataIndexes[idx]).flat()
             : [];
 
         // check if this plot is in state.plots
@@ -105,19 +127,19 @@ export function HistogramComponent({
             const chartInstance = chart.getEchartsInstance();
             const updatedOption = getHistogramChartOption(
               null,
-              data?.histogramData ?? [],
-              data?.barDataIndexes ?? []
+              histogramData ?? [],
+              barDataIndexes ?? []
             );
             chartInstance.setOption(updatedOption);
           }
         }
         // Dispatch action to highlight selected in other components
-        data?.onSelected?.(data?.datasetName ?? '', filteredIndex);
+        onSelected?.(datasetName ?? '', filteredIndex);
       },
     };
-  }, [data]);
+  }, [datasetName, onSelected, histogramData, barDataIndexes]);
 
-  if (!data?.variableName || !data?.histogramData || !data?.barDataIndexes) {
+  if (!variableName || !histogramData || !barDataIndexes) {
     return null;
   }
 
@@ -131,10 +153,10 @@ export function HistogramComponent({
           >
             <div className="flex-col items-start p-2">
               <p className="text-tiny font-bold uppercase">
-                {data?.variableName}
+                {variableName}
               </p>
               <small className="truncate text-default-500">
-                {data?.variableName}
+                {variableName}
               </small>
             </div>
             <div style={{ height: '100%' }} className="py-2 flex-grow">
@@ -144,7 +166,7 @@ export function HistogramComponent({
                 lazyUpdate={true}
                 style={{ height: '100%', width: '100%' }}
                 ref={eChartsRef}
-                theme={data?.theme || 'dark'}
+                theme={theme || 'dark'}
                 onEvents={bindEvents}
                 onChartReady={() => {
                   setRendered(true);

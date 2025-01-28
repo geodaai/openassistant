@@ -5,7 +5,12 @@ import BoardItemContainer, { BoardItemProps } from './board-item';
 import { initEditorState } from '../lexical/lexical-editor';
 import { useState } from 'react';
 import { DroppedItem } from './dropped-item';
-import { ScatterplotOutputData } from '@openassistant/echarts';
+import {
+  ScatterplotOutputData,
+  HistogramOutputData,
+} from '@openassistant/echarts';
+import { CreateMapOutputData } from '@openassistant/keplergl';
+import { QueryDuckDBOutputData } from '@openassistant/duckdb';
 
 const ReactGridLayout = WidthProvider(RGL) as any;
 
@@ -55,7 +60,7 @@ export default function WhiteBoard({
         {
           id: droppedItem.id,
           type: 'text',
-          content: initEditorState(droppedItem.message as string),
+          content: initEditorState(droppedItem.data as string),
         },
       ]);
     } else if (droppedItem.type === 'scatterplot') {
@@ -64,7 +69,34 @@ export default function WhiteBoard({
         {
           id: droppedItem.id,
           type: 'scatterplot',
-          content: droppedItem.message as ScatterplotOutputData,
+          content: droppedItem.data as ScatterplotOutputData,
+        },
+      ]);
+    } else if (droppedItem.type === 'histogram') {
+      setGridItems([
+        ...gridItems,
+        {
+          id: droppedItem.id,
+          type: 'histogram',
+          content: droppedItem.data as HistogramOutputData,
+        },
+      ]);
+    } else if (droppedItem.type === 'map') {
+      setGridItems([
+        ...gridItems,
+        {
+          id: droppedItem.id,
+          type: 'map',
+          content: droppedItem.data as CreateMapOutputData,
+        },
+      ]);
+    } else if (droppedItem.type === 'query') {
+      setGridItems([
+        ...gridItems,
+        {
+          id: droppedItem.id,
+          type: 'query',
+          content: droppedItem.data as QueryDuckDBOutputData,
         },
       ]);
     }

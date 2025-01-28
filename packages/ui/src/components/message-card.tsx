@@ -35,6 +35,7 @@ export type MessageCardProps = HTMLAttributes<HTMLDivElement> & {
   onFeedback?: (index: number) => void;
   onAttemptFeedback?: (feedback: 'like' | 'dislike' | 'same') => void;
   githubIssueLink?: string;
+  isMessageDraggable?: boolean;
 };
 
 const MessageCard = forwardRef<HTMLDivElement, MessageCardProps>(
@@ -54,6 +55,7 @@ const MessageCard = forwardRef<HTMLDivElement, MessageCardProps>(
       onAttemptFeedback,
       messageClassName,
       githubIssueLink,
+      isMessageDraggable = false,
       ...props
     },
     ref
@@ -126,6 +128,24 @@ const MessageCard = forwardRef<HTMLDivElement, MessageCardProps>(
       },
       [onAttemptFeedback]
     );
+
+    const onMessageDragStart = (
+      e: React.DragEvent<HTMLButtonElement>,
+      index: number,
+      message: string | ReactNode
+    ) => {
+      // when message is string
+      if (typeof message === 'string') {
+        e.dataTransfer.setData(
+          'text/plain',
+          JSON.stringify({
+            id: `message-${index}`,
+            type: 'text',
+            data: message,
+          })
+        );
+      }
+    };
 
     return (
       <div {...props} ref={ref} className="flex gap-3">
@@ -211,6 +231,22 @@ const MessageCard = forwardRef<HTMLDivElement, MessageCardProps>(
             >
               {showFeedback && !hasFailed && status !== 'pending' && (
                 <div className="">
+                  <Tooltip content="Drag to move">
+                    <Button
+                      isIconOnly
+                      radius="full"
+                      size="sm"
+                      variant="light"
+                      data-testid="drag-button"
+                      draggable={isMessageDraggable}
+                      onDragStart={(e) => onMessageDragStart(e, index, message)}
+                    >
+                      <Icon
+                        className="text-gray-600 dark:text-gray-400"
+                        icon="basil:move-outline"
+                      />
+                    </Button>
+                  </Tooltip>
                   <Tooltip content="Copy Text">
                     <Button
                       isIconOnly

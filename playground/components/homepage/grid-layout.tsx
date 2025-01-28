@@ -4,7 +4,7 @@ import { INTRODUCTION_LEXICAL } from '../whiteboard/constant';
 import WhiteBoard from '../whiteboard/board';
 
 export default function GridLayout() {
-  const defaultLayout: Layout[] = [{ i: 'i-welcome', x: 0, y: 0, w: 18, h: 10 }];
+  const defaultLayout: Layout[] = [{ i: 'i-welcome', x: 0, y: 0, w: 18, h: 16 }];
 
   const defaultItems: BoardItemProps[] = [
     {
