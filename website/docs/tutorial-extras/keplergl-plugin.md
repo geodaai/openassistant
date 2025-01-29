@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# KeplerGL Plugin for OpenAssistant
+# Map Plugin using Kepler.gl
 
 import keplerPlugin from '../../images/keplerPlugin-1.png';
 

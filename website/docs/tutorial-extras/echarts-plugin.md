@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# ECharts Plugin for OpenAssistant
+# Plot Plugin using ECharts
 
 import histogramPlugin from '../../images/histogram-1-400.png';
 

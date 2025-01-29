@@ -12,6 +12,12 @@ import {
   codeTailwind,
   codeVoiceToText,
   testData,
+  codeFunctionCalling,
+  codeMyFunction,
+  codeHistogram,
+  codeSampleDataset,
+  codeMap,
+  codeSQL,
 } from './code-content';
 
 type FeatureItem = {
@@ -125,7 +131,11 @@ export const highlightFeatures: HighlightFeature[] = [
         code: [
           {
             title: 'page.tsx',
-            content: codeGetStarted,
+            content: codeFunctionCalling,
+          },
+          {
+            title: 'my-function.ts',
+            content: codeMyFunction,
           },
         ],
       },
@@ -147,11 +157,11 @@ export const highlightFeatures: HighlightFeature[] = [
         code: [
           {
             title: 'page.tsx',
-            content: codeGetStarted,
+            content: codeMap,
           },
           {
-            title: 'test-data.json',
-            content: testData,
+            title: 'my-datasets.ts',
+            content: codeSampleDataset,
           },
         ],
       },
@@ -163,7 +173,11 @@ export const highlightFeatures: HighlightFeature[] = [
         code: [
           {
             title: 'page.tsx',
-            content: codeGetStarted,
+            content: codeHistogram,
+          },
+          {
+            title: 'test-data.json',
+            content: codeSampleDataset,
           },
         ],
       },
@@ -175,7 +189,11 @@ export const highlightFeatures: HighlightFeature[] = [
         code: [
           {
             title: 'page.tsx',
-            content: codeGetStarted,
+            content: codeSQL,
+          },
+          {
+            title: 'my-datasets.ts',
+            content: codeSampleDataset,
           },
         ],
       },

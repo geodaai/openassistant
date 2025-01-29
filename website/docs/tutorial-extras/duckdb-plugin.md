@@ -2,7 +2,7 @@
 sidebar_position: 4
 ---
 
-# DuckDB Plugin for OpenAssistant
+# SQL Plugin using DuckDB
 
 import duckdbPlugin from '../../images/duckdbPlugin-2-400.png';
 
