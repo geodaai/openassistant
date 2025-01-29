@@ -14,7 +14,7 @@ Quick start guide to add the AI assistant UI to your React application.
 First, install the required packages:
 
 ```bash
-yarn add @openassistant/core @openassistant/ui @nextui-org/react framer-motion
+yarn add @openassistant/core @openassistant/ui @nextui-org/react framer-motion html2canvas
 ```
 
 ## Basic Setup

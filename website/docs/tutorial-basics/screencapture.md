@@ -4,19 +4,16 @@ sidebar_position: 3
 
 # Screen Capture Within your Application
 
+import screencapture from '../../static/img/screenshot-dark.png';
+
 The Screen Capture feature enables users to take screenshots within your application and ask questions about specific UI elements or issues. This guide will walk you through the implementation and usage.
 
-## Features
-
-- **Interactive Screenshot Selection**: Click and drag to capture any part of your application
-- **Seamless Integration**: Works with both static content and WebGL canvases
-- **Accessibility Support**: Includes ARIA labels and keyboard navigation
-- **Error Handling**: Built-in error management with user-friendly messages
+<img src={screencapture} alt="Screen Capture" width={400} />
 
 ## Installation
 
 ```bash
-npm install @openassistant/core @openassistant/ui
+yarn add @openassistant/core @openassistant/ui @nextui-org/react framer-motion html2canvas
 ```
 
 ## Basic Implementation
