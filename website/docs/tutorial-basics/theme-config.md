@@ -52,6 +52,7 @@ You can force a specific theme using the `forcedTheme` prop:
 ```
 
 <img src={assistantDark} alt="Assistant UI" width={400} />
+
 ## Theme Provider Options
 
 The `ThemeProvider` component accepts several props to customize its behavior:

@@ -446,5 +446,3 @@ Enable or disable the display of parameter sliders (`temperature` and `topP`):
 ```
 
 The `ConfigPanel` component offers a comprehensive solution for managing AI Assistant configurations within your React application. By following this tutorial, you can effectively integrate, customize, and utilize the `ConfigPanel` to enhance the usability and functionality of your AI-powered features.
-
-For further customization and advanced usage, refer to the [ConfigPanel Source Code](./packages/ui/src/components/config-panel.tsx) and explore additional props and functionalities as needed.
