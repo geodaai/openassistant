@@ -6,7 +6,7 @@ import {
   RegisterFunctionCallingProps,
 } from '../types';
 
-export class AbstractAssistant {
+export abstract class AbstractAssistant {
   /**
    * Get instance using singleton pattern
    */

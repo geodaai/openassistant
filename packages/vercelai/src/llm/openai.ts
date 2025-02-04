@@ -16,6 +16,7 @@ export class OpenAIAssistant extends VercelAiClient {
   protected static instance: OpenAIAssistant | null = null;
 
   protected openaiClient: OpenAI | null = null;
+
   protected static checkModel() {
     if (!OpenAIAssistant.model || OpenAIAssistant.model.trim() === '') {
       throw new Error('LLM is not configured. Please call configure() first.');

@@ -1,10 +1,17 @@
 import { openai } from "@ai-sdk/openai";
-import { VoiceHandler } from '@openassistant/vercelai';
+import {
+  WhisperVoiceHandler,
+  GeminiVoiceHandler,
+} from '@openassistant/vercelai';
 
-const handler = new VoiceHandler({
+const whisperHandler = new WhisperVoiceHandler({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+const geminiHandler = new GeminiVoiceHandler({
+  apiKey: process.env.GEMINI_API_KEY,
+});
+
 export async function POST(req: Request) {
-  return handler.processRequest(req);
+  return whisperHandler.processRequest(req);
 }

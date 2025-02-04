@@ -1,5 +1,5 @@
 import { CoreMessage, LanguageModel, Message, streamText, ToolSet } from 'ai';
-import { convertOpenAIToolsToVercelTools } from '../lib/tools';
+import { convertOpenAIToolsToVercelTools } from './tool-utils';
 
 /**
  * Abstract class for handling token management in chat interactions
@@ -118,7 +118,6 @@ export class ChatHandler extends TokenHandler {
 
     if (message) {
       if (imageBase64) {
-        console.log('imageBase64', imageBase64);
         this.messageHistory.push({
           role: message.role,
           content: [

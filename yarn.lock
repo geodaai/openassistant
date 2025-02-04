@@ -22,6 +22,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ai-sdk/google@npm:^1.1.8":
+  version: 1.1.8
+  resolution: "@ai-sdk/google@npm:1.1.8"
+  dependencies:
+    "@ai-sdk/provider": "npm:1.0.7"
+    "@ai-sdk/provider-utils": "npm:2.1.6"
+  peerDependencies:
+    zod: ^3.0.0
+  checksum: da702c16e68fb2f92c71559b0f14f17d2a8e4e262dbc88cdeebf1b92da18a1888b5a3825e283cdc9b015fdf4fb529a6112be6608e68f360f3a678dd1b70caa25
+  languageName: node
+  linkType: hard
+
 "@ai-sdk/openai@npm:^1.1.5":
   version: 1.1.5
   resolution: "@ai-sdk/openai@npm:1.1.5"
@@ -51,12 +63,38 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ai-sdk/provider-utils@npm:2.1.6":
+  version: 2.1.6
+  resolution: "@ai-sdk/provider-utils@npm:2.1.6"
+  dependencies:
+    "@ai-sdk/provider": "npm:1.0.7"
+    eventsource-parser: "npm:^3.0.0"
+    nanoid: "npm:^3.3.8"
+    secure-json-parse: "npm:^2.7.0"
+  peerDependencies:
+    zod: ^3.0.0
+  peerDependenciesMeta:
+    zod:
+      optional: true
+  checksum: 48804ab8aba51e1a47d1f17d5f1f4a4617837ef633eebc4159db36b683e96b7603b166bdff871fc84d6d4e40075a89d67fa7f2bb56bd6a2b13904618bed621d4
+  languageName: node
+  linkType: hard
+
 "@ai-sdk/provider@npm:1.0.6":
   version: 1.0.6
   resolution: "@ai-sdk/provider@npm:1.0.6"
   dependencies:
     json-schema: "npm:^0.4.0"
   checksum: 3ca3881396a26dfd634fe3ecda1b5de7456076a92dfa2fd836aeec01a28a4af9cbe26ace37793132517739a74e181e6c5a90032ebb9d21a29e10182543dd4563
+  languageName: node
+  linkType: hard
+
+"@ai-sdk/provider@npm:1.0.7":
+  version: 1.0.7
+  resolution: "@ai-sdk/provider@npm:1.0.7"
+  dependencies:
+    json-schema: "npm:^0.4.0"
+  checksum: 75b56a82a1d837e40fd5c35fecf0bf74f1b05e2d0f93cc6a57f90defd4d8eb6f903c170e37644f4271c27cac59bb65716369c94c07de4269d54b1d53f50431a4
   languageName: node
   linkType: hard
 
@@ -8906,6 +8944,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@openassistant/vercelai@workspace:packages/vercelai"
   dependencies:
+    "@ai-sdk/google": "npm:^1.1.8"
     "@ai-sdk/openai": "npm:^1.1.5"
     "@ai-sdk/react": "npm:^1.1.7"
     ai: "npm:^4.1.12"

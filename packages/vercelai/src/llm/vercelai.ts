@@ -88,6 +88,9 @@ type ConfigureProps = {
   chatEndpoint?: string;
 };
 
+/**
+ * Vercel AI Assistant for Server Side
+ */
 export class VercelAi extends AbstractAssistant {
   protected static chatEndpoint = '';
   protected static instructions = '';
