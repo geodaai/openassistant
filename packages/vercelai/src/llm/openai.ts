@@ -4,7 +4,7 @@ import {
   OpenAIProvider,
 } from '@ai-sdk/openai';
 import { OpenAI } from 'openai';
-import { VercelAiClient } from './vercelai-client';
+import { VercelAiClient, VercelAiClientConfigureProps } from './vercelai-client';
 import { AudioToTextProps } from '../types';
 
 /**
@@ -29,6 +29,11 @@ export class OpenAIAssistant extends VercelAiClient {
     }
   }
 
+  public static override configure(config: VercelAiClientConfigureProps) {
+    // call parent configure
+    super.configure(config);
+  }
+  
   private constructor() {
     super();
 
@@ -64,6 +69,11 @@ export class OpenAIAssistant extends VercelAiClient {
     OpenAIAssistant.instance = null;
   }
 
+  /**
+   * Override the audioToText method to use OpenAI Whisper
+   * @param audioBlob - The audio blob to transcribe
+   * @returns The transcribed text
+   */
   public override async audioToText({
     audioBlob,
   }: AudioToTextProps): Promise<string> {

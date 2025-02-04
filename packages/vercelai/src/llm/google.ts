@@ -4,9 +4,7 @@ import {
   createGoogleGenerativeAI,
 } from '@ai-sdk/google';
 
-import { VercelAiClient } from './vercelai-client';
-import { AudioToTextProps } from 'src/types';
-import { generateText } from 'ai';
+import { VercelAiClient, VercelAiClientConfigureProps } from './vercelai-client';
 
 /**
  * Google Gemini Assistant LLM for Client only
@@ -28,6 +26,11 @@ export class GoogleAIAssistant extends VercelAiClient {
     }
   }
 
+  public static override configure(config: VercelAiClientConfigureProps) {
+    // call parent configure
+    super.configure(config);
+  }
+  
   private constructor() {
     super();
 
@@ -57,43 +60,5 @@ export class GoogleAIAssistant extends VercelAiClient {
     // need to reset the instance so getInstance doesn't return the same instance
     this.providerInstance = null;
     GoogleAIAssistant.instance = null;
-  }
-
-  public override async audioToText({
-    audioBlob,
-  }: AudioToTextProps): Promise<string> {
-    if (!this.llm) {
-      throw new Error('LLM is not configured. Please call configure() first.');
-    }
-    if (!audioBlob) {
-      throw new Error('audioBlob is null');
-    }
-    if (!this.abortController) {
-      this.abortController = new AbortController();
-    }
-
-    const file = new File([audioBlob], 'audio.webm');
-
-    const response = await generateText({
-      model: this.llm,
-      messages: [
-        {
-          role: 'user',
-          content: [
-            {
-              type: 'text',
-              text: 'Translating audio to text, and return plain text based on the following schema: {text: content}',
-            },
-            {
-              type: 'file',
-              data: file,
-              mimeType: 'audio/webm',
-            },
-          ],
-        },
-      ],
-    });
-
-    return response.text;
   }
 }

@@ -8,23 +8,14 @@ import {
   RegisterFunctionCallingProps,
   StreamMessageCallback,
 } from '../types';
-import { ReactNode } from 'react';
 import { tiktokenCounter } from '../utils/token-counter';
-import {
-  CoreMessage,
-  LanguageModelUsage,
-  Message,
-  streamText,
-  Tool,
-  ToolCall,
-  ToolSet,
-} from 'ai';
+import { ReactNode } from 'react';
+import { Message, Tool, ToolCall, ToolSet } from 'ai';
 import {
   callChatApi,
   extractMaxToolInvocationStep,
   generateId,
 } from '@ai-sdk/ui-utils';
-import { openai } from '@ai-sdk/openai';
 
 /**
 Check if the message is an assistant message with completed tool calls.
@@ -380,6 +371,11 @@ export class VercelAi extends AbstractAssistant {
     return { customMessage, toolResult: lastOutput.result };
   }
 
+  /**
+   * audioToText method to use API endpoint for audio transcription
+   * @param audioBlob - The audio blob to transcribe
+   * @returns The transcribed text
+   */
   public override async audioToText({
     audioBlob,
   }: AudioToTextProps): Promise<string> {

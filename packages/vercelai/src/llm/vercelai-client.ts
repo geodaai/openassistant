@@ -1,11 +1,11 @@
-import { StreamMessageCallback } from '../types';
+import { AudioToTextProps, StreamMessageCallback } from '../types';
 import { ReactNode } from 'react';
-import { LanguageModel, Message, streamText } from 'ai';
+import { generateText, LanguageModel, Message, streamText } from 'ai';
 import { extractMaxToolInvocationStep } from '@ai-sdk/ui-utils';
 import { shouldTriggerNextRequest, VercelAi } from './vercelai';
 import { convertOpenAIToolsToVercelTools } from '../lib/tool-utils';
 
-type ConfigureProps = {
+export type VercelAiClientConfigureProps = {
   apiKey?: string;
   model?: string;
   instructions?: string;
@@ -21,6 +21,7 @@ type ConfigureProps = {
  */
 export abstract class VercelAiClient extends VercelAi {
   protected static apiKey = '';
+
   protected static model = '';
 
   protected llm: LanguageModel | null = null;
@@ -31,7 +32,7 @@ export abstract class VercelAiClient extends VercelAi {
     super();
   }
 
-  public static override configure(config: ConfigureProps) {
+  public static override configure(config: VercelAiClientConfigureProps) {
     if (config.apiKey) VercelAiClient.apiKey = config.apiKey;
     if (config.model) VercelAiClient.model = config.model;
     if (config.instructions) VercelAiClient.instructions = config.instructions;
@@ -47,6 +48,12 @@ export abstract class VercelAiClient extends VercelAi {
     this.llm = null;
   }
 
+  /**
+   * Trigger the request to the Vercel AI API
+   * Override the triggerRequest method to call LLM with Vercel AI SDK from local e.g. browser
+   * @param streamMessageCallback - The callback function to stream the message
+   * @returns The custom message
+   */
   protected async triggerRequest({
     streamMessageCallback,
   }: {
@@ -118,12 +125,14 @@ export abstract class VercelAiClient extends VercelAi {
           deltaMessage: messageContent,
           customMessage,
         });
-      } else if (chunk.type === 'tool-call') {
-        console.log('tool-call', chunk);
       } else if (chunk.type === 'reasoning') {
-        console.log('reasoning', chunk);
+        messageContent += chunk.textDelta;
+        streamMessageCallback({
+          deltaMessage: messageContent,
+          customMessage,
+        }); 
       } else if (chunk.type === 'error') {
-        console.log('error', chunk);
+        throw new Error(`Error from Vercel AI API: ${chunk.error}`);
       }
     }
 
@@ -136,5 +145,43 @@ export abstract class VercelAiClient extends VercelAi {
     }
 
     return { customMessage };
+  }
+
+  public override async audioToText({
+    audioBlob,
+  }: AudioToTextProps): Promise<string> {
+    if (!this.llm) {
+      throw new Error('LLM is not configured. Please call configure() first.');
+    }
+    if (!audioBlob) {
+      throw new Error('audioBlob is null');
+    }
+    if (!this.abortController) {
+      this.abortController = new AbortController();
+    }
+
+    const file = new File([audioBlob], 'audio.webm');
+
+    const response = await generateText({
+      model: this.llm,
+      messages: [
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: 'Translating audio to text, and return plain text based on the following schema: {text: content}',
+            },
+            {
+              type: 'file',
+              data: file,
+              mimeType: 'audio/webm',
+            },
+          ],
+        },
+      ],
+    });
+
+    return response.text;
   }
 }
