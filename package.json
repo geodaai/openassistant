@@ -10,6 +10,7 @@
     "packages/echarts",
     "packages/common",
     "packages/keplergl",
+    "packages/vercelai",
     "website"
   ],
   "scripts": {

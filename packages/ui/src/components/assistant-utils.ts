@@ -2,7 +2,7 @@ import {
   MessageModel,
   SendImageMessageProps,
   SendTextMessageProps,
-} from '@openassistant/core';
+} from '@openassistant/vercelai';
 import React from 'react';
 
 export async function sendTextMessageHandler({

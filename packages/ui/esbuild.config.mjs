@@ -59,6 +59,11 @@ const serverConfig = {
     '.jpg': 'file',
     '.svg': 'file',
     '.css': 'css',
+    '.wasm': 'file',
+  },
+  alias: {
+    react: '../../node_modules/react',
+    'react-dom': '../../node_modules/react-dom',
   },
   plugins: [
     tailwindPlugin({

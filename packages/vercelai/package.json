@@ -1,0 +1,42 @@
+{
+  "name": "@openassistant/vercelai",
+  "version": "0.0.1",
+  "author": "Xun Li<lixun910@gmail.com>",
+  "description": "Core library using Vercel AI SDK for OpenAssistant",
+  "main": "src/index.ts",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs.js"
+    }
+  },
+  "scripts": {
+    "test": "node --experimental-vm-modules ../../node_modules/.bin/jest --coverage",
+    "build": "node esbuild.config.mjs",
+    "prepublishOnly": "yarn build"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "dependencies": {
+    "@ai-sdk/openai": "^1.1.5",
+    "@ai-sdk/react": "^1.1.7",
+    "ai": "^4.1.12",
+    "axios": "^1.7.9",
+    "js-tiktoken": "^1.0.16"
+  },
+  "peerDependencies": {
+    "react": ">=18.2"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "package.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
