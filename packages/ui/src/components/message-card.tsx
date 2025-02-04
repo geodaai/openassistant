@@ -17,7 +17,7 @@ import {
 } from '@nextui-org/react';
 import { useClipboard } from '@nextui-org/use-clipboard';
 import { Icon } from '@iconify/react';
-import { MessagePayload } from '@openassistant/vercelai';
+import { MessagePayload } from '@openassistant/core';
 
 export type MessageCardProps = HTMLAttributes<HTMLDivElement> & {
   index: number;

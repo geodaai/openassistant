@@ -1,8 +1,8 @@
 {
   "name": "@openassistant/core",
-  "version": "0.0.7",
+  "version": "1.0.0",
   "author": "Xun Li<lixun910@gmail.com>",
-  "description": "Core library for OpenAssistant",
+  "description": "Core library using Vercel AI SDK for OpenAssistant",
   "main": "src/index.ts",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
@@ -18,14 +18,27 @@
     "build": "node esbuild.config.mjs",
     "prepublishOnly": "yarn build"
   },
-  "keywords": [],
+  "keywords": [
+    "vercelai",
+    "openassistant",
+    "ai",
+    "llm",
+    "language model"
+  ],
   "license": "MIT",
   "dependencies": {
-    "@langchain/core": "^0.3.26",
-    "@langchain/google-genai": "^0.1.6",
-    "@langchain/ollama": "^0.1.4",
-    "@langchain/openai": "^0.3.16",
-    "axios": "^1.7.9"
+    "@ai-sdk/deepseek": "^0.1.8",
+    "@ai-sdk/google": "^1.1.8",
+    "@ai-sdk/openai": "^1.1.5",
+    "@ai-sdk/react": "^1.1.7",
+    "@ai-sdk/ui-utils": "^1.1.8",
+    "@ai-sdk/xai": "^1.1.8",
+    "ai": "^4.1.12",
+    "axios": "^1.7.9",
+    "js-tiktoken": "^1.0.16",
+    "ollama-ai-provider": "^1.2.0",
+    "openai": "^4.82.0",
+    "zod": "^3.24.1"
   },
   "peerDependencies": {
     "react": ">=18.2"
@@ -38,6 +51,5 @@
   ],
   "publishConfig": {
     "access": "public"
-  },
-  "gitHead": "d79ee3046ad7f103054a1856c808684fa64e8017"
+  }
 }

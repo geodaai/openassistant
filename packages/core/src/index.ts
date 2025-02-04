@@ -1,18 +1,25 @@
-export { OllamaAssistant } from './llm/ollama';
+export * from './llm/openai';
 
-export { GoogleAssistant } from './llm/google';
+export * from './llm/deepseek';
 
-export { OpenAIAssistant } from './llm/openai';
+export * from './llm/google';
 
-export { DeepSeekAssistant } from './llm/deepseek';
+export * from './llm/grok';
+
+export * from './llm/ollama';
+
+export * from './llm/vercelai';
+
+export * from './llm/vercelai-client';
+
+export * from './lib/chat-handler';
+
+export * from './lib/voice-handler';
+
+export * from './lib/tool-utils';
 
 export * from './types';
 
 export * from './hooks/use-assistant';
 
-export {
-  testApiKey,
-  testOpenAIChatGPTConnection,
-  testGeminiConnection,
-  testOllamConnection,
-} from './utils/connection-test';
+export * from './utils/connection-test';

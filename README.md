@@ -12,6 +12,13 @@ Check out the following examples using OpenAssistant in action:
 |----|----|
 | [<img width="215" alt="Screenshot 2024-12-08 at 9 12 22 PM" src="https://github.com/user-attachments/assets/edc11aee-8945-434b-bec9-cc202fee547c">](https://kepler.gl) | [<img width="240" alt="Screenshot 2024-12-08 at 9 13 43 PM" src="https://github.com/user-attachments/assets/de418af5-7663-48fb-9410-74b4750bc944">](https://geoda.ai) |
 
+
+<video width="100%" controls>
+  <source src="https://location.foursquare.com/wp-content/uploads/sites/2/2025/01/kepler-gl-ai-assistant_7f53ec.mp4" type="video/mp4">
+</video>
+
+[[Source]](https://location.foursquare.com/resources/blog/products/foursquare-brings-enterprise-grade-spatial-analytics-to-your-browser-with-kepler-gl-3-1/)
+
 ## 🌟 Features
 
 - 🤖 **Multiple AI Provider Support**
@@ -19,6 +26,12 @@ Check out the following examples using OpenAssistant in action:
   - OpenAI (GPT models)
   - Google Gemini
   - Ollama (local AI models)
+  - XAI Grok
+  - Anthropic Claude*
+  - AWS Bedrock*
+  - Azure OpenAI*
+> * via server API only
+
 - 🎯 **Advanced Capabilities**
   - Take screenshot to ask [[Demo]](https://geoda.ai/img/highlight-screenshot.mp4)
   - Talk to ask [[Demo]](https://geoda.ai/img/highlight-ai-talk.mp4)
@@ -207,10 +220,12 @@ The CLI will help you set up the components and required dependencies.
 Your project have these dependencies:
 
 - react
-- @langchain/core
-- @langchain/google-genai
-- @langchain/ollama
-- @langchain/openai
+- @ai-sdk/deepseek
+- @ai-sdk/google
+- @ai-sdk/openai
+- @ai-sdk/xai
+- ollama-ai-provider
+- openai
 - html2canvas
 - next-themes
 - @nextui-org/react

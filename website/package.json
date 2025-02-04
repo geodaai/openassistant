@@ -29,7 +29,7 @@
     "@loaders.gl/schema": "^4.3.3",
     "@mdx-js/react": "^3.0.0",
     "@nextui-org/react": "^2.6.11",
-    "@openassistant/core": "0.0.5",
+    "@openassistant/core": "^1.0.0",
     "@openassistant/keplergl": "0.0.5",
     "assert": "^2.1.0",
     "clsx": "^2.0.0",

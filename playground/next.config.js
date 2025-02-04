@@ -46,11 +46,8 @@ module.exports = {
           __dirname,
           '../packages/common/src'
         ),
-        '@openassistant/vercelai': path.resolve(
-          __dirname,
-          '../packages/vercelai/src'
-        ),
         '@openassistant/ui': path.resolve(__dirname, '../packages/ui/src'),
+        '@openassistant/core': path.resolve(__dirname, '../packages/core/src'),
         '@openassistant/echarts': path.resolve(
           __dirname,
           '../packages/echarts/src'

@@ -24,7 +24,7 @@ export abstract class VercelAiClient extends VercelAi {
 
   protected static model = '';
 
-  protected llm: LanguageModel | null = null;
+  public llm: LanguageModel | null = null;
 
   protected static instance: VercelAiClient | null = null;
 

@@ -6,11 +6,11 @@ import {
   RegisterFunctionCallingProps,
 } from '../types';
 
-export class AbstractAssistant {
+export abstract class AbstractAssistant {
   /**
    * Get instance using singleton pattern
    */
-  public async getInstance(): Promise<AbstractAssistant> {
+  public static async getInstance(): Promise<AbstractAssistant> {
     throw new Error('Method not implemented.');
   }
 

@@ -1,5 +1,5 @@
 import { openai } from '@ai-sdk/openai';
-import { ChatHandler } from '@openassistant/vercelai';
+import { ChatHandler } from '@openassistant/core';
 
 // Create a chat handler instance to handle the chat requests using a specific LLM model
 const handler = new ChatHandler({

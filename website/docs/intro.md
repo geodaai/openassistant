@@ -23,10 +23,11 @@ npm install @openassistant/core @openassistant/ui
 The following dependencies are required and should be installed in your project:
 
 <li> react </li>
-<li> @langchain/core </li>
-<li> @langchain/google-genai </li>
-<li> @langchain/ollama </li>
-<li> @langchain/openai </li>
+<li> @ai-sdk/core </li>
+<li> @ai-sdk/google </li>
+<li> @ai-sdk/openai </li>
+<li> @ai-sdk/xai </li>
+<li> ollama-ai-provider </li>
 <li> html2canvas </li>
 <li> next-themes </li>
 <li> @nextui-org/react </li>

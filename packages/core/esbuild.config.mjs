@@ -5,10 +5,14 @@ const baseConfig = createBaseConfig({
   entryPoints: ['src/index.ts'],
   external: [
     'react',
-    '@langchain/core',
-    '@langchain/google-genai',
-    '@langchain/ollama',
-    '@langchain/openai',
+    '@ai-sdk/deepseek',
+    '@ai-sdk/google',
+    '@ai-sdk/openai',
+    '@ai-sdk/xai',
+    'ollama-ai-provider',
+    'js-tiktoken',
+    'openai',
+    'zod',
   ],
   plugins: [dtsPlugin()],
 });

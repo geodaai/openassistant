@@ -1,4 +1,4 @@
-# React AI Assist Core
+# React AI Assist Core using Vercel AI SDK
 
 A powerful and flexible React library for integrating multiple AI assistants (OpenAI, Google Gemini, and Ollama) into your applications.
 
@@ -30,10 +30,12 @@ The following peer dependencies are required:
 ```json
 {
   "react": "^18 || ^19",
-  "@langchain/core": "^0.3.26",
-  "@langchain/google-genai": "^0.1.6",
-  "@langchain/ollama": "^0.1.4",
-  "@langchain/openai": "^0.3.16"
+  "@ai-sdk/deepseek": "^0.1.8",
+  "@ai-sdk/google": "^1.1.8",
+  "@ai-sdk/openai": "^1.1.5",
+  "@ai-sdk/xai": "^1.1.8",
+  "ollama-ai-provider": "^1.2.0",
+  "openai": "^1.1.5",
 }
 ```
 

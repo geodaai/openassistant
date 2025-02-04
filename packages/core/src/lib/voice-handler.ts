@@ -1,6 +1,9 @@
 import { OpenAI } from 'openai';
-import { GenerativeModel, GoogleGenerativeAI } from '@google/generative-ai';
 import { Buffer } from 'buffer';
+import { GetAssistantModelByProvider } from './model-utils';
+import { generateText } from 'ai';
+import { VercelAiClient } from '../llm/vercelai-client';
+
 /**
  * Handles voice transcription requests using OpenAI Whisper
  */
@@ -57,15 +60,34 @@ export class WhisperVoiceHandler {
 /**
  * Handles voice transcription requests using Google Gemini
  */
-export class GeminiVoiceHandler {
-  private client: GoogleGenerativeAI;
-  private model: GenerativeModel;
+export class VoiceHandler {
+  private model: VercelAiClient | null = null;
 
-  constructor({ apiKey }: { apiKey: string }) {
-    this.client = new GoogleGenerativeAI(apiKey);
-    this.model = this.client.getGenerativeModel({
-      model: 'gemini-1.5-flash',
+  constructor({
+    provider,
+    apiKey,
+    model,
+  }: {
+    provider: string;
+    apiKey: string;
+    model: string;
+  }) {
+    const AssistantModel = GetAssistantModelByProvider({
+      provider,
     });
+
+    AssistantModel.configure({
+      apiKey,
+      model,
+      temperature: 0,
+    });
+
+    this.model = null; // Initialize as null
+    this.initialize(AssistantModel); // Call initialize without await
+  }
+
+  private async initialize(AssistantModel) {
+    this.model = await AssistantModel.getInstance();
   }
 
   private async readAudioFile(audioFile: File): Promise<string> {
@@ -85,26 +107,41 @@ export class GeminiVoiceHandler {
       });
     }
 
+    if (!this.model || !this.model.llm) {
+      return new Response(JSON.stringify({ error: 'Model not initialized' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
     try {
       // read audio file as base64
-      const base64AudioFile = await this.readAudioFile(audioFile);
+      // const base64AudioFile = await this.readAudioFile(audioFile);
 
-      const result = await this.model.generateContent([
-        {
-          inlineData: {
-            mimeType: 'audio/wav',
-            data: base64AudioFile,
+      const response = await generateText({
+        model: this.model.llm,
+        messages: [
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'text',
+                text: 'Translating audio to text, and return plain text based on the following schema: {text: content}',
+              },
+              {
+                type: 'file',
+                data: audioFile,
+                mimeType: 'audio/webm',
+              },
+            ],
           },
-        },
-        {
-          text: 'Translating audio to text, and return plain text based on the following schema: {text: content}',
-        },
-      ]);
+        ],
+      });
 
       let transcript = '';
 
       // get transcript from the result
-      const content = result.response.text();
+      const content = response.text;
 
       console.log('content', content);
 

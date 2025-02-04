@@ -13,7 +13,7 @@ const baseConfig = createBaseConfig({
   external: [
     'react',
     'react-dom',
-    '@langchain',
+    '@ai-sdk',
     'html2canvas',
     '@openassistant/core',
     '@nextui-org',
@@ -43,7 +43,7 @@ const fullBundleConfig = {
   external: [
     'react',
     'react-dom',
-    '@langchain',
+    '@ai-sdk',
     'html2canvas',
     '@openassistant/core',
   ],

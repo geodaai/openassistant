@@ -3,7 +3,7 @@ import {
   MessageModel,
   useAssistant,
   UseAssistantProps,
-} from '@openassistant/vercelai';
+} from '@openassistant/core';
 import MessageCard from './message-card';
 import PromptInputWithBottomActions from './prompt-input-with-bottom-actions';
 import { ChatContainer } from './chat-container';
@@ -34,6 +34,7 @@ import {
  * @param fontSize - The font size of the assistant.
  */
 export type AiAssistantProps = UseAssistantProps & {
+  chatEndpoint?: string;
   theme?: 'dark' | 'light';
   welcomeMessage: string;
   historyMessages?: MessageModel[];

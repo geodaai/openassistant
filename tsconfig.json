@@ -20,7 +20,6 @@
       "@openassistant/core": ["./packages/core/src"],
       "@openassistant/echarts": ["./packages/echarts/src"],
       "@openassistant/common": ["./packages/common/src"],
-      "@openassistant/vercelai": ["./packages/vercelai/src"]
     }
   },
   "exclude": [

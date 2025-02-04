@@ -1,35 +1,60 @@
-import { ChatOpenAI, OpenAIClient } from '@langchain/openai';
-import { LangChainAssistant } from './langchain';
-import { SystemMessage } from '@langchain/core/messages';
+import {
+  createOpenAI,
+  OpenAIProviderSettings,
+  OpenAIProvider,
+} from '@ai-sdk/openai';
+import { OpenAI } from 'openai';
+import { VercelAiClient, VercelAiClientConfigureProps } from './vercelai-client';
 import { AudioToTextProps } from '../types';
 
-export class OpenAIAssistant extends LangChainAssistant {
-  protected aiModel: ChatOpenAI;
-
-  protected openAIClient: OpenAIClient;
+/**
+ * OpenAI Assistant LLM for Client only
+ */
+export class OpenAIAssistant extends VercelAiClient {
+  protected providerInstance: OpenAIProvider | null = null;
 
   protected static instance: OpenAIAssistant | null = null;
 
+  protected openaiClient: OpenAI | null = null;
+
+  protected static checkModel() {
+    if (!OpenAIAssistant.model || OpenAIAssistant.model.trim() === '') {
+      throw new Error('LLM is not configured. Please call configure() first.');
+    }
+  }
+
+  protected static checkApiKey() {
+    if (!OpenAIAssistant.apiKey || OpenAIAssistant.apiKey.trim() === '') {
+      throw new Error('LLM is not configured. Please call configure() first.');
+    }
+  }
+
+  public static override configure(config: VercelAiClientConfigureProps) {
+    // call parent configure
+    super.configure(config);
+  }
+  
   private constructor() {
     super();
 
-    // Initialize openai instance
-    this.aiModel = new ChatOpenAI({
-      model: OpenAIAssistant.model,
-      apiKey: OpenAIAssistant.apiKey,
-    });
+    if (OpenAIAssistant.apiKey) {
+      // only apiKey is provided, so we can create the openai LLM instance in the client
+      const options: OpenAIProviderSettings = {
+        apiKey: OpenAIAssistant.apiKey,
+      };
 
-    // add system message from instructions
-    this.messages.push(new SystemMessage(OpenAIAssistant.instructions));
+      // Initialize openai instance
+      this.providerInstance = createOpenAI(options);
 
-    // bind tools, NOTE: can't use bind() here, it will cause error
-    this.llm = this.aiModel.bindTools(OpenAIAssistant.tools);
+      // create a language model from the provider instance
+      this.llm = this.providerInstance(OpenAIAssistant.model);
 
-    // initialize openAI client
-    this.openAIClient = new OpenAIClient({
-      apiKey: OpenAIAssistant.apiKey,
-      dangerouslyAllowBrowser: true,
-    });
+      // create a openai client instance for whisper transcription
+      this.openaiClient = new OpenAI({
+        apiKey: OpenAIAssistant.apiKey,
+        dangerouslyAllowBrowser: true,
+       });
+    }
   }
 
   public static async getInstance(): Promise<OpenAIAssistant> {
@@ -42,13 +67,20 @@ export class OpenAIAssistant extends LangChainAssistant {
   public override restart() {
     super.restart();
     // need to reset the instance so getInstance doesn't return the same instance
+    this.providerInstance = null;
+    this.openaiClient = null;
     OpenAIAssistant.instance = null;
   }
 
+  /**
+   * Override the audioToText method to use OpenAI Whisper
+   * @param audioBlob - The audio blob to transcribe
+   * @returns The transcribed text
+   */
   public override async audioToText({
     audioBlob,
   }: AudioToTextProps): Promise<string> {
-    if (this.openAIClient === null) {
+    if (this.openaiClient === null) {
       throw new Error('OpenAIClient is not initialized');
     }
     if (!audioBlob) {
@@ -57,20 +89,19 @@ export class OpenAIAssistant extends LangChainAssistant {
     if (!this.abortController) {
       this.abortController = new AbortController();
     }
-    // create File from the audioBlob
+
     const file = new File([audioBlob], 'audio.webm');
 
-    const transcriptionResponse =
-      await this.openAIClient.audio.transcriptions.create(
-        {
-          file,
-          model: 'whisper-1',
-        },
-        {
-          signal: this.abortController.signal,
-        }
-      );
+    const response = await this.openaiClient.audio.transcriptions.create(
+      {
+        file,
+        model: 'whisper-1',
+      },
+      {
+        signal: this.abortController.signal,
+      }
+    );
 
-    return transcriptionResponse.text;
+    return response.text;
   }
 }

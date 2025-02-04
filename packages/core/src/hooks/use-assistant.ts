@@ -1,19 +1,20 @@
+'use client';
+
 import { useState } from 'react';
-import { OllamaAssistant } from '../llm/ollama';
 import {
   CallbackFunction,
   CustomFunctionContext,
   CustomMessageCallback,
   StreamMessageCallback,
 } from '../types';
-import { GoogleAssistant } from '../llm/google';
-import { OpenAIAssistant } from '../llm/openai';
-import { DeepSeekAssistant } from '../llm/deepseek';
+import { VercelAi } from '../llm/vercelai';
+import { GetAssistantModelByProvider } from '../lib/model-utils';
 
 /**
  * Props for the Assistant UI and useAssistant hook.
  *
  * @param name - The name of the assistant.
+ * @param chatEndpoint - The chat endpoint that handles the chat requests, e.g. '/api/chat'. This is required for server-side support. If not provided, the chat will be handled by the client.
  * @param modelProvider - The model provider.
  * @param model - The model.
  * @param apiKey - The API key.
@@ -32,6 +33,7 @@ import { DeepSeekAssistant } from '../llm/deepseek';
  * @param functions.callbackMessage - The message of the callback function. See {@link CustomMessageCallback} for more details.
  */
 export type UseAssistantProps = {
+  chatEndpoint?: string;
   name: string;
   modelProvider: string;
   model: string;
@@ -82,12 +84,7 @@ export type SendImageMessageProps = {
   streamMessageCallback: StreamMessageCallback;
 };
 
-let assistant:
-  | OllamaAssistant
-  | GoogleAssistant
-  | OpenAIAssistant
-  | DeepSeekAssistant
-  | null = null;
+let assistant: VercelAi | null = null;
 
 /**
  * A custom hook for managing an AI assistant.
@@ -96,21 +93,10 @@ let assistant:
  * @param {UseAssistantProps} props - Configuration options for the assistant.
  * @returns {Object} An object containing methods to interact with the assistant and its current status.
  */
-export function useAssistant({
-  modelProvider,
-  model,
-  apiKey,
-  baseUrl,
-  temperature,
-  topP,
-  instructions,
-  functions,
-  name,
-  description,
-  version,
-}: UseAssistantProps) {
+export function useAssistant(props: UseAssistantProps) {
   /**
-   * The status of the API key.
+   * The status of the API key. Used only for client-side support.
+   *
    * 'failed' - The API key is invalid.
    * 'success' - The API key is valid.
    */
@@ -121,23 +107,31 @@ export function useAssistant({
    */
   const initializeAssistant = async () => {
     try {
-      const AssistantModel = GetAssistantModelByProvider(modelProvider);
+      if (!props.chatEndpoint && (!props.model || !props.modelProvider)) {
+        throw new Error(
+          'Either chatEndpoint or both model and modelProvider must be provided.'
+        );
+      }
+
+      const AssistantModel = GetAssistantModelByProvider({
+        provider: props.modelProvider,
+        chatEndpoint: props.chatEndpoint,
+      });
 
       // configure the assistant model
       AssistantModel.configure({
-        model,
-        apiKey,
-        baseUrl,
-        instructions,
-        temperature,
-        topP,
-        name,
-        description,
-        version,
+        chatEndpoint: props.chatEndpoint,
+        model: props.model,
+        apiKey: props.apiKey,
+        instructions: props.instructions,
+        temperature: props.temperature,
+        topP: props.topP,
+        description: props.description,
+        version: props.version,
       });
 
       // register custom functions
-      functions.forEach((func) => {
+      props.functions.forEach((func) => {
         AssistantModel.registerFunctionCalling({
           name: func.name,
           description: func.description,
@@ -215,6 +209,7 @@ export function useAssistant({
     message,
     streamMessageCallback,
   }: SendImageMessageProps) => {
+    await checkLLMInstance();
     await assistant?.processImageMessage({
       imageMessage: imageBase64String,
       textMessage: message,
@@ -228,6 +223,7 @@ export function useAssistant({
    * @returns {Promise<string>} The transcribed text.
    */
   const audioToText = async (audioBlob: Blob) => {
+    await checkLLMInstance();
     return await assistant?.audioToText({ audioBlob });
   };
 
@@ -295,24 +291,4 @@ export function useAssistant({
      */
     apiKeyStatus,
   };
-}
-
-/**
- * Returns the appropriate Assistant model based on the provider.
- * @param {string} provider - The name of the AI provider.
- * @returns {typeof OllamaAssistant | typeof GoogleAssistant | typeof GPTAssistant} The assistant model class.
- */
-function GetAssistantModelByProvider(provider: string) {
-  switch (provider.toLowerCase()) {
-    case 'openai':
-      return OpenAIAssistant;
-    case 'google':
-      return GoogleAssistant;
-    case 'ollama':
-      return OllamaAssistant;
-    case 'deepseek':
-      return DeepSeekAssistant;
-    default:
-      return OpenAIAssistant;
-  }
 }

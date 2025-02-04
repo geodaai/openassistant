@@ -24,16 +24,17 @@ function App() {
 
 The following dependencies are required:
 
-- @langchain/core
-- @langchain/google-genai
-- @langchain/ollama
-- @langchain/openai
+- @ai-sdk/core
+- @ai-sdk/google
+- @ai-sdk/openai
+- @ai-sdk/xai
+- ollama-ai-provider
 - html2canvas
 
 ### Installation
 
 ```bash
-npm install @openassistant/ui @langchain/core @langchain/google-genai @langchain/ollama @langchain/openai html2canvas 
+yarn add @openassistant/ui @ai-sdk/core @ai-sdk/google @ai-sdk/openai @ai-sdk/xai ollama-ai-provider html2canvas 
 ```
 
 ### Using the source files directly
@@ -57,10 +58,11 @@ The CLI will prompt you for:
 
 You will need to install the following dependencies:
 
-- @langchain/core
-- @langchain/google-genai
-- @langchain/ollama
-- @langchain/openai
+- @ai-sdk/core
+- @ai-sdk/google
+- @ai-sdk/openai
+- @ai-sdk/xai
+- ollama-ai-provider
 - html2canvas
 - react-audio-voice-recorder
 - @nextui-org/react
@@ -68,7 +70,7 @@ You will need to install the following dependencies:
 - next-themes
 
 ```bash
-npm install @langchain/core @langchain/google-genai @langchain/ollama @langchain/openai html2canvas @nextui-org/react framer-motion next-themes react-audio-voice-recorder
+yarn add @ai-sdk/core @ai-sdk/google @ai-sdk/openai @ai-sdk/xai ollama-ai-provider html2canvas @nextui-org/react framer-motion next-themes react-audio-voice-recorder
 ```
 
 You will need to add the following to your `tailwind.config.js`:

@@ -1,16 +1,8 @@
-import { encodingForModel } from '@langchain/core/utils/tiktoken';
-import {
-  BaseMessage,
-  HumanMessage,
-  AIMessage,
-  ToolMessage,
-  SystemMessage,
-  MessageContent,
-  AIMessageChunk,
-} from '@langchain/core/messages';
+import { encodingForModel } from './tiktoken';
+import { Message } from 'ai';
 
 async function strTokenCounter(
-  messageContent: MessageContent
+  messageContent: string | { function_call: { name: string; arguments: string } }
 ): Promise<number> {
   const encoding = await encodingForModel('gpt-4');
 
@@ -18,25 +10,11 @@ async function strTokenCounter(
     return encoding.encode(messageContent).length;
   }
 
-  // Handle array of content
-  if (Array.isArray(messageContent)) {
-    let totalTokens = 0;
-
-    for (const content of messageContent) {
-      if (content.type === 'text') {
-        totalTokens += encoding.encode(content.text || '').length;
-      } else if ('functionCall' in content) {
-        // Handle function calls by counting name and stringified args
-        const functionCall = content.functionCall;
-        totalTokens += encoding.encode(functionCall.name).length;
-        totalTokens += encoding.encode(
-          JSON.stringify(functionCall.args)
-        ).length;
-      }
-      // Add other content types as needed
-    }
-
-    return totalTokens;
+  // Handle function calls
+  if ('function_call' in messageContent) {
+    const functionCall = messageContent.function_call;
+    return encoding.encode(functionCall.name).length + 
+           encoding.encode(functionCall.arguments).length;
   }
 
   throw new Error(
@@ -44,34 +22,26 @@ async function strTokenCounter(
   );
 }
 
-export async function tiktokenCounter(
-  messages: BaseMessage[]
-): Promise<number> {
+export async function tiktokenCounter(messages: Message[]): Promise<number> {
   let numTokens = 3; // every reply is primed with <|start|>assistant<|message|>
   const tokensPerMessage = 3;
   const tokensPerName = 1;
 
   for (const msg of messages) {
-    let role: string;
-    if (msg instanceof HumanMessage) {
-      role = 'user';
-    } else if (msg instanceof AIMessage || msg instanceof AIMessageChunk) {
-      role = 'assistant';
-    } else if (msg instanceof ToolMessage) {
-      role = 'tool';
-    } else if (msg instanceof SystemMessage) {
-      role = 'system';
-    } else {
-      throw new Error(`Unsupported message type ${msg.constructor.name}`);
+    numTokens += tokensPerMessage +
+                 (await strTokenCounter(msg.role)) +
+                 (await strTokenCounter(msg.content));
+
+    if (msg.id) {
+      numTokens += tokensPerName + (await strTokenCounter(msg.id));
     }
 
-    numTokens +=
-      tokensPerMessage +
-      (await strTokenCounter(role)) +
-      (await strTokenCounter(msg.content));
-
-    if (msg.name) {
-      numTokens += tokensPerName + (await strTokenCounter(msg.name));
+    // Handle function calls if present
+    if (msg.toolInvocations) {
+      numTokens += await strTokenCounter({ function_call: {
+        name: msg.toolInvocations[0].toolName,
+        arguments: msg.toolInvocations[0].args
+      }});
     }
   }
   return numTokens;

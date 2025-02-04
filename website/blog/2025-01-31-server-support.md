@@ -11,7 +11,7 @@ OpenAssistant is a powerful tool for building AI-powered applications. However, 
 
 Since version 0.1.0, OpenAssistant is not just a frontend framework, it also enanbles developers to build full-stack applications by providing built-in server-side support.
 
-With API routes provided by OpenAssistant/vercelai, OpenAssistant allows you to build your own AI Assistant that can assist your users to use your backend services with ease.
+With API routes provided by OpenAssistant/core, OpenAssistant allows you to build your own AI Assistant that can assist your users to use your backend services with ease.
 
 In this blog post, we will walk you through the steps to build a simple AI Assistant that can assist your users to use your backend services.
 
@@ -39,7 +39,7 @@ function App() {
 
 ```ts
 // app/api/chat/route.ts
-import { ChatHandler } from '@openassistant/vercelai';
+import { ChatHandler } from '@openassistant/core';
 // you can use any LLM provider you want
 import { openai } from '@ai-sdk/openai';
 

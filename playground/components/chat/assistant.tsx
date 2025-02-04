@@ -5,7 +5,7 @@ import {
   GetDatasetForCreateMapFunctionArgs,
 } from '@openassistant/keplergl';
 import { useMemo, useState, useEffect } from 'react';
-import { MessageModel, useAssistant } from '@openassistant/vercelai';
+import { MessageModel, useAssistant } from '@openassistant/core';
 import { AiAssistant, AiAssistantConfig, ConfigPanel } from '@openassistant/ui';
 import { queryDuckDBFunctionDefinition } from '@openassistant/duckdb';
 import {
@@ -211,7 +211,7 @@ Please select your prefered LLM model and use your API key to start the chat.
   return (
     <AiAssistant
       {...assistantProps}
-      chatEndpoint='/api/chat'
+      // chatEndpoint='/api/chat'
       historyMessages={historyMessages}
       isMessageDraggable={true}
       enableVoice={true}
