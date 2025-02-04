@@ -209,6 +209,7 @@ export function useAssistant(props: UseAssistantProps) {
     message,
     streamMessageCallback,
   }: SendImageMessageProps) => {
+    await checkLLMInstance();
     await assistant?.processImageMessage({
       imageMessage: imageBase64String,
       textMessage: message,
@@ -222,6 +223,7 @@ export function useAssistant(props: UseAssistantProps) {
    * @returns {Promise<string>} The transcribed text.
    */
   const audioToText = async (audioBlob: Blob) => {
+    await checkLLMInstance();
     return await assistant?.audioToText({ audioBlob });
   };
 

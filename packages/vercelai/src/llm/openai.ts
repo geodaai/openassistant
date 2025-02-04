@@ -3,7 +3,9 @@ import {
   OpenAIProviderSettings,
   OpenAIProvider,
 } from '@ai-sdk/openai';
+import { OpenAI } from 'openai';
 import { VercelAiClient } from './vercelai-client';
+import { AudioToTextProps } from '../types';
 
 /**
  * OpenAI Assistant LLM for Client only
@@ -13,6 +15,7 @@ export class OpenAIAssistant extends VercelAiClient {
 
   protected static instance: OpenAIAssistant | null = null;
 
+  protected openaiClient: OpenAI | null = null;
   protected static checkModel() {
     if (!OpenAIAssistant.model || OpenAIAssistant.model.trim() === '') {
       throw new Error('LLM is not configured. Please call configure() first.');
@@ -39,6 +42,9 @@ export class OpenAIAssistant extends VercelAiClient {
 
       // create a language model from the provider instance
       this.llm = this.providerInstance(OpenAIAssistant.model);
+
+      // create a openai client instance for whisper transcription
+      this.openaiClient = new OpenAI({ apiKey: OpenAIAssistant.apiKey });
     }
   }
 
@@ -53,6 +59,35 @@ export class OpenAIAssistant extends VercelAiClient {
     super.restart();
     // need to reset the instance so getInstance doesn't return the same instance
     this.providerInstance = null;
+    this.openaiClient = null;
     OpenAIAssistant.instance = null;
+  }
+
+  public override async audioToText({
+    audioBlob,
+  }: AudioToTextProps): Promise<string> {
+    if (this.openaiClient === null) {
+      throw new Error('OpenAIClient is not initialized');
+    }
+    if (!audioBlob) {
+      throw new Error('audioBlob is null');
+    }
+    if (!this.abortController) {
+      this.abortController = new AbortController();
+    }
+
+    const file = new File([audioBlob], 'audio.webm');
+
+    const response = await this.openaiClient.audio.transcriptions.create(
+      {
+        file,
+        model: 'whisper-1',
+      },
+      {
+        signal: this.abortController.signal,
+      }
+    );
+
+    return response.text;
   }
 }

@@ -1,19 +1,30 @@
 import { AbstractAssistant } from './assistant';
 import {
+  AudioToTextProps,
   CustomFunctionOutputProps,
   CustomFunctions,
+  ProcessImageMessageProps,
   ProcessMessageProps,
   RegisterFunctionCallingProps,
   StreamMessageCallback,
 } from '../types';
 import { ReactNode } from 'react';
 import { tiktokenCounter } from '../utils/token-counter';
-import { LanguageModelUsage, Message, Tool, ToolCall, ToolSet } from 'ai';
+import {
+  CoreMessage,
+  LanguageModelUsage,
+  Message,
+  streamText,
+  Tool,
+  ToolCall,
+  ToolSet,
+} from 'ai';
 import {
   callChatApi,
   extractMaxToolInvocationStep,
   generateId,
 } from '@ai-sdk/ui-utils';
+import { openai } from '@ai-sdk/openai';
 
 /**
 Check if the message is an assistant message with completed tool calls.
@@ -49,17 +60,19 @@ export function shouldTriggerNextRequest(
   return Boolean(
     // ensure there is a last message:
     lastMessage &&
-    // ensure we actually have new messages (to prevent infinite loops in case of errors):
-    (messages.length > messageCount ||
-      extractMaxToolInvocationStep(lastMessage.toolInvocations) !== maxStep) &&
-    // check if the feature is enabled:
-    maxSteps > 1 &&
-    // check that next step is possible:
-    isAssistantMessageWithCompletedToolCalls(lastMessage) &&
-    // check that assistant has not answered yet:
-    !lastMessage.content && // empty string or undefined
-    // limit the number of automatic steps:
-    (extractMaxToolInvocationStep(lastMessage.toolInvocations) ?? 0) < maxSteps
+      // ensure we actually have new messages (to prevent infinite loops in case of errors):
+      (messages.length > messageCount ||
+        extractMaxToolInvocationStep(lastMessage.toolInvocations) !==
+          maxStep) &&
+      // check if the feature is enabled:
+      maxSteps > 1 &&
+      // check that next step is possible:
+      isAssistantMessageWithCompletedToolCalls(lastMessage) &&
+      // check that assistant has not answered yet:
+      !lastMessage.content && // empty string or undefined
+      // limit the number of automatic steps:
+      (extractMaxToolInvocationStep(lastMessage.toolInvocations) ?? 0) <
+        maxSteps
   );
 }
 
@@ -83,6 +96,7 @@ export class VercelAi extends AbstractAssistant {
   protected static topP = 0.8;
   protected static description = '';
   protected static maxTokens = 128000; // 128k tokens
+  protected static hasInitializedServer = false;
 
   protected messages: Message[] = [];
   protected static customFunctions: CustomFunctions = {};
@@ -165,13 +179,13 @@ export class VercelAi extends AbstractAssistant {
 
   protected async trimMessages() {
     // Avoid creating a copy if not needed
-    if (await tiktokenCounter(this.messages) <= VercelAi.maxTokens) {
+    if ((await tiktokenCounter(this.messages)) <= VercelAi.maxTokens) {
       return this.messages;
     }
 
     const updatedMessages = this.messages.slice(0);
     let totalTokens = await tiktokenCounter(updatedMessages);
-    
+
     while (totalTokens > VercelAi.maxTokens && updatedMessages.length > 0) {
       updatedMessages.shift();
       totalTokens = await tiktokenCounter(updatedMessages);
@@ -179,9 +193,22 @@ export class VercelAi extends AbstractAssistant {
     return updatedMessages;
   }
 
+  public override async processImageMessage({
+    imageMessage,
+    textMessage,
+    streamMessageCallback,
+  }: ProcessImageMessageProps): Promise<void> {
+    await this.processTextMessage({
+      textMessage,
+      streamMessageCallback,
+      imageMessage,
+    });
+  }
+
   public override async processTextMessage({
     textMessage,
     streamMessageCallback,
+    imageMessage,
   }: ProcessMessageProps) {
     if (!this.abortController) {
       this.abortController = new AbortController();
@@ -189,7 +216,7 @@ export class VercelAi extends AbstractAssistant {
 
     if (textMessage) {
       this.messages.push({
-        id: this.messages.length.toString(),
+        id: generateId(),
         role: 'user',
         content: textMessage,
       });
@@ -197,6 +224,7 @@ export class VercelAi extends AbstractAssistant {
 
     const { customMessage } = await this.triggerRequest({
       streamMessageCallback,
+      imageMessage,
     });
 
     const lastMessage = this.messages[this.messages.length - 1];
@@ -209,35 +237,45 @@ export class VercelAi extends AbstractAssistant {
 
   protected async triggerRequest({
     streamMessageCallback,
+    imageMessage,
   }: {
     streamMessageCallback: StreamMessageCallback;
+    imageMessage?: string;
   }) {
     /**
      * Maximum number of sequential LLM calls (steps), e.g. when you use tool calls. Must be at least 1.
      * A maximum number is required to prevent infinite loops in the case of misconfigured tools.
      * By default, it's set to 1, which means that only a single LLM call is made.
      */
-    const maxSteps = 4; // why is this 4?
+    const maxSteps = 4;
     const messageCount = this.messages.length;
     const maxStep = extractMaxToolInvocationStep(
       this.messages[this.messages.length - 1]?.toolInvocations
     );
 
     let customMessage: ReactNode | null = null;
+    const lastMessage = this.messages[this.messages.length - 1];
 
     // call the chat api with new message
     await callChatApi({
       api: VercelAi.chatEndpoint,
       body: {
-        messages: this.messages,
-        tools: VercelAi.tools,
-        instructions: VercelAi.instructions,
+        message: lastMessage,
+        // attach image with text message if provided
+        ...(imageMessage ? { imageBase64: imageMessage } : {}),
+        // Only send tools and instructions on first request
+        ...(VercelAi.hasInitializedServer
+          ? {}
+          : {
+              tools: VercelAi.tools,
+              instructions: VercelAi.instructions,
+            }),
       },
       streamProtocol: 'data',
       credentials: 'include',
       headers: {},
       fetch: undefined,
-      lastMessage: this.messages[this.messages.length - 1],
+      lastMessage: lastMessage,
       generateId: () => generateId(),
       abortController: () => this.abortController,
       restoreMessagesOnFailure: () => {},
@@ -263,16 +301,11 @@ export class VercelAi extends AbstractAssistant {
           });
         }
       },
-      onFinish: (
-        message: Message,
-        options: {
-          usage: LanguageModelUsage;
-        }
-      ) => {
+      onFinish: (message: Message) => {
+        // Mark server as initialized after first request
+        VercelAi.hasInitializedServer = true;
         // add the final message to the messages array
         this.messages.push(message);
-        // save the usage
-        console.log('usage', options.usage);
       },
     });
 
@@ -342,5 +375,31 @@ export class VercelAi extends AbstractAssistant {
 
     // return the tool result
     return { customMessage, toolResult: lastOutput.result };
+  }
+
+  public override async audioToText({
+    audioBlob,
+  }: AudioToTextProps): Promise<string> {
+    if (!audioBlob) {
+      throw new Error('audioBlob is null');
+    }
+    if (!this.abortController) {
+      this.abortController = new AbortController();
+    }
+    const formData = new FormData();
+    formData.append('file', audioBlob, 'audio.webm');
+    // formData.append('model', 'whisper-1');
+
+    const response = await fetch('/api/voice', {
+      method: 'POST',
+      body: formData,
+    });
+
+    // get response text from server (non-streaming)
+    const text = await response.text();
+
+    //  parse the text to get the transcription
+    const transcription = JSON.parse(text).transcript;
+    return transcription;
   }
 }

@@ -6,6 +6,8 @@ export * from './llm/vercelai-client';
 
 export * from './lib/chat-handler';
 
+export * from './lib/voice-handler';
+
 export * from './lib/tools';
 
 export * from './types';

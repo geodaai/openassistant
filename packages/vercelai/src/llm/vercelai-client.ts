@@ -1,5 +1,6 @@
-import { StreamMessageCallback } from '../types';
+import { AudioToTextProps, StreamMessageCallback } from '../types';
 import { ReactNode } from 'react';
+import { OpenAI } from 'openai';
 import { LanguageModel, Message, streamText } from 'ai';
 import { extractMaxToolInvocationStep } from '@ai-sdk/ui-utils';
 import { shouldTriggerNextRequest, VercelAi } from './vercelai';
@@ -16,6 +17,9 @@ type ConfigureProps = {
   maxTokens?: number;
 };
 
+/**
+ * Vercel AI Client for Client only
+ */
 export class VercelAiClient extends VercelAi {
   protected static apiKey = '';
   protected static model = '';
@@ -133,5 +137,32 @@ export class VercelAiClient extends VercelAi {
     }
 
     return { customMessage };
+  }
+
+  public override async audioToText({
+    audioBlob,
+  }: AudioToTextProps): Promise<string> {
+    if (!audioBlob) {
+      throw new Error('audioBlob is null');
+    }
+    if (!this.abortController) {
+      this.abortController = new AbortController();
+    }
+
+    const formData = new FormData();
+    formData.append('file', audioBlob, 'audio.webm');
+    // formData.append('model', 'whisper-1');
+
+    const response = await fetch('/api/voice', {
+      method: 'POST',
+      body: formData,
+    });
+
+    // get response text from server (non-streaming)
+    const text = await response.text();
+
+    //  parse the text to get the transcription
+    const transcription = JSON.parse(text).transcript;
+    return transcription;
   }
 }

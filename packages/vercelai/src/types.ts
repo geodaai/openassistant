@@ -219,7 +219,7 @@ export type ProcessMessageProps = {
 /**
  * Type of ProcessImageMessageProps
  *
- * @param imageMessage The image message to be processed
+ * @param imageMessage The image message to be processed, it can be a base64 string or a URL
  * @param textMessage The text message to be processed
  * @param streamMessageCallback The stream message callback to stream the message back to the UI
  */

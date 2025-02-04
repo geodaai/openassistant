@@ -1,4 +1,4 @@
-import { LanguageModel, Message, streamText, ToolSet } from 'ai';
+import { CoreMessage, LanguageModel, Message, streamText, ToolSet } from 'ai';
 import { convertOpenAIToolsToVercelTools } from '../lib/tools';
 
 /**
@@ -35,7 +35,7 @@ abstract class TokenHandler {
    * @param {number} tokenLimit - Maximum allowed tokens
    */
   protected trimMessagesByTokenLimit(
-    messages: Message[],
+    messages: Array<CoreMessage | Message>,
     messageTokenCount: number[],
     tokenLimit: number
   ) {
@@ -77,6 +77,7 @@ export class ChatHandler extends TokenHandler {
   private model: LanguageModel;
   private tools?: ToolSet;
   private instructions?: string;
+  private messageHistory: Array<CoreMessage | Message> = [];
 
   /**
    * @param {Object} config - Configuration object
@@ -105,22 +106,56 @@ export class ChatHandler extends TokenHandler {
    * @returns {Promise<Response>} Streaming response
    */
   async processRequest(req: Request): Promise<Response> {
-    const { messages, tools, instructions } = await req.json();
+    const { message, imageBase64, tools, instructions } = await req.json();
+    
+    // Only update tools and instructions if provided (first time)
+    if (tools) {
+      this.tools = convertOpenAIToolsToVercelTools(tools);
+    }
+    if (instructions) {
+      this.instructions = instructions;
+    }
+
+    if (message) {
+      if (imageBase64) {
+        console.log('imageBase64', imageBase64);
+        this.messageHistory.push({
+          role: message.role,
+          content: [
+            { type: 'text', text: message.content },
+            { type: 'image', image: imageBase64 },
+          ],
+        });
+      } else {
+        this.messageHistory.push(message);
+      }
+    }
 
     this.trimMessagesByTokenLimit(
-      messages,
+      this.messageHistory,
       this.messageTokenCount,
       this.tokenLimit
     );
 
     const result = streamText({
       model: this.model,
-      system: this.instructions || instructions,
-      messages,
-      tools: tools ? convertOpenAIToolsToVercelTools(tools) : this.tools,
+      system: this.instructions,
+      messages: this.messageHistory as CoreMessage[],
+      tools: this.tools,
       onFinish: (event) => this.handleStreamFinish(event),
     });
 
+    for await (const chunk of result.fullStream) {
+      if (chunk.type === 'error') {
+        console.error('API server error:', chunk);
+      }
+    }
     return result.toDataStreamResponse();
+  }
+
+  clearHistory(): void {
+    this.messageHistory = [];
+    this.messageTokenCount = [];
+    this.previousTotalTokens.value = 0;
   }
 }
