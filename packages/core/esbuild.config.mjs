@@ -10,7 +10,6 @@ const baseConfig = createBaseConfig({
     '@ai-sdk/openai',
     '@ai-sdk/xai',
     'ollama-ai-provider',
-    'js-tiktoken',
     'openai',
     'zod',
   ],

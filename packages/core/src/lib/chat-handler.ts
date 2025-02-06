@@ -1,83 +1,32 @@
-import { CoreMessage, LanguageModel, Message, streamText, ToolSet } from 'ai';
+import {
+  CoreMessage,
+  LanguageModel,
+  Message,
+  streamText,
+  ToolCall,
+  ToolInvocation,
+  ToolSet,
+} from 'ai';
 import { convertOpenAIToolsToVercelTools } from './tool-utils';
+import { proceedToolCall } from '../utils/toolcall';
+import { CustomFunctions } from '../types';
+import { tiktokenCounterPerMessage } from '../utils/token-counter';
+import { trimMessages } from '../utils/trim-messages';
 
 /**
- * Abstract class for handling token management in chat interactions
+ * Chat handler class to manage chat requests and responses
  */
-abstract class TokenHandler {
-  // token count for each message, stored using the usage.totalTokens returned by the streamText function
-  protected messageTokenCount: number[] = [];
-  // total tokens used so far
-  protected previousTotalTokens: { value: number } = { value: 0 };
-  // maximum number of tokens allowed
-  protected tokenLimit: number;
-
-  /**
-   * @param {number} tokenLimit - Maximum number of tokens allowed (default: 128K)
-   */
-  constructor(tokenLimit: number = 128 * 1024) {
-    this.tokenLimit = tokenLimit;
-  }
-
-  /**
-   * Calculates the total number of tokens from an array of token counts
-   * @param {number[]} messageTokenCount - Array of token counts per message
-   * @returns {number} Total token count
-   */
-  protected calculateTotalTokens(messageTokenCount: number[]): number {
-    return messageTokenCount.reduce((acc, curr) => acc + curr, 0);
-  }
-
-  /**
-   * Removes oldest messages until total token count is within limit
-   * @param {Message[]} messages - Array of chat messages
-   * @param {number[]} messageTokenCount - Array of token counts per message
-   * @param {number} tokenLimit - Maximum allowed tokens
-   */
-  protected trimMessagesByTokenLimit(
-    messages: Array<CoreMessage | Message>,
-    messageTokenCount: number[],
-    tokenLimit: number
-  ) {
-    while (
-      this.calculateTotalTokens(messageTokenCount) > tokenLimit &&
-      messages.length > 1
-    ) {
-      messages.shift();
-      messageTokenCount.shift();
-    }
-  }
-
-  /**
-   * Handles stream completion event and updates token counts
-   * @param {Object} event - Stream completion event
-   * @param {Object} event.usage - Token usage information
-   * @param {number} event.usage.totalTokens - Total tokens used
-   */
-  protected handleStreamFinish(event: { usage: { totalTokens: number } }) {
-    const currentMessageTokens =
-      event.usage.totalTokens - this.previousTotalTokens.value;
-    this.messageTokenCount.push(currentMessageTokens);
-    this.previousTotalTokens.value = event.usage.totalTokens;
-  }
-
-  /**
-   * Abstract method to process incoming requests
-   * @param {Request} req - Incoming request object
-   * @returns {Promise<Response>} Response promise
-   */
-  abstract processRequest(req: Request): Promise<Response>;
-}
-
-/**
- * Handles chat-specific token management and request processing
- * @extends TokenHandler
- */
-export class ChatHandler extends TokenHandler {
+export class ChatHandler {
   private model: LanguageModel;
+  // tools registered at server side
   private tools?: ToolSet;
+  private toolFunctions: CustomFunctions = {};
+  // tools registered at client side
+  private localTools?: ToolSet;
   private instructions?: string;
   private messageHistory: Array<CoreMessage | Message> = [];
+  private maxTokens: number;
+  private messageTokenCount: number[] = [];
 
   /**
    * @param {Object} config - Configuration object
@@ -89,15 +38,17 @@ export class ChatHandler extends TokenHandler {
     model,
     tools,
     instructions,
+    maxTokens = 128 * 1024,
   }: {
     model: LanguageModel;
     tools?: ToolSet;
     instructions?: string;
+    maxTokens?: number;
   }) {
-    super(128 * 1024);
     this.model = model;
     this.tools = tools;
     this.instructions = instructions;
+    this.maxTokens = maxTokens;
   }
 
   /**
@@ -107,18 +58,23 @@ export class ChatHandler extends TokenHandler {
    */
   async processRequest(req: Request): Promise<Response> {
     const { message, imageBase64, tools, instructions } = await req.json();
-    
-    // Only update tools and instructions if provided (first time)
+
+    // update tools and instructions if provided (first time)
     if (tools) {
-      this.tools = convertOpenAIToolsToVercelTools(tools);
+      this.localTools = convertOpenAIToolsToVercelTools(tools);
     }
+
+    // combine server side and client side tools
+    const combinedTools = { ...this.tools, ...this.localTools };
+
+    // update instructions if provided
     if (instructions) {
       this.instructions = instructions;
     }
 
     if (message) {
       if (imageBase64) {
-        this.messageHistory.push({
+        this.addMessageToHistory({
           role: message.role,
           content: [
             { type: 'text', text: message.content },
@@ -126,35 +82,96 @@ export class ChatHandler extends TokenHandler {
           ],
         });
       } else {
-        this.messageHistory.push(message);
+        this.addMessageToHistory(message);
       }
     }
 
-    this.trimMessagesByTokenLimit(
-      this.messageHistory,
-      this.messageTokenCount,
-      this.tokenLimit
-    );
+    // trim the history by token limit
+    // await this.trimHistoryByTokenLimit();
 
     const result = streamText({
       model: this.model,
       system: this.instructions,
       messages: this.messageHistory as CoreMessage[],
-      tools: this.tools,
-      onFinish: (event) => this.handleStreamFinish(event),
+      tools: combinedTools,
+      onFinish: async ({ text, toolCalls, response }) => {
+        // handle server side tool calls
+        const responseMsg = response.messages[response.messages.length - 1];
+        const toolInvocations: ToolInvocation[] = [];
+        for (const toolCall of toolCalls) {
+          const toolInvocation = await this.handleToolCall({ toolCall });
+          if (toolInvocation) {
+            toolInvocations.push(toolInvocation);
+          }
+        }
+        if (toolInvocations.length > 0 || text.length > 0) {
+          // add final message to history messages array
+          const message: Message = {
+            id: responseMsg.id,
+            role: responseMsg.role as 'assistant',
+            content: text,
+            toolInvocations,
+          };
+          this.addMessageToHistory(message);
+        }
+      },
     });
 
-    for await (const chunk of result.fullStream) {
-      if (chunk.type === 'error') {
-        console.error('API server error:', chunk);
-      }
-    }
     return result.toDataStreamResponse();
+  }
+
+  async addMessageToHistory(message: Message | CoreMessage) {
+    this.messageHistory.push(message);
+    this.messageTokenCount.push(await tiktokenCounterPerMessage(message));
+  }
+
+  async handleToolCall({
+    toolCall,
+  }: {
+    toolCall: ToolCall<string, unknown>;
+  }): Promise<ToolInvocation | null> {
+    // handle server side tool call
+    // check if tool call is registered at server side
+    const functionName = toolCall.toolName;
+
+    if (this.tools?.[functionName]) {
+      const result = await proceedToolCall({
+        toolCall,
+        customFunctions: this.toolFunctions,
+      });
+
+      return {
+        toolCallId: toolCall.toolCallId,
+        result: result.toolResult,
+        state: 'result',
+        toolName: toolCall.toolName,
+        args: toolCall.args,
+      };
+    }
+
+    return null;
+  }
+
+  async trimHistoryByTokenLimit(): Promise<void> {
+    // get the total token count
+    const totalTokens = this.messageTokenCount.reduce(
+      (acc, curr) => acc + curr,
+      0
+    );
+
+    // if total tokens exceed the max tokens, trim the history
+    if (totalTokens > this.maxTokens) {
+      this.messageHistory = await trimMessages({
+        messages: this.messageHistory,
+        instructions: this.instructions || '',
+        tools: this.tools || {},
+        maxTokens: this.maxTokens,
+      });
+    }
   }
 
   clearHistory(): void {
     this.messageHistory = [];
     this.messageTokenCount = [];
-    this.previousTotalTokens.value = 0;
   }
 }

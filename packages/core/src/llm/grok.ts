@@ -1,10 +1,9 @@
-import {
-  XaiProvider,
-  XaiProviderSettings,
-  createXai
-} from '@ai-sdk/xai';
+import { XaiProvider, XaiProviderSettings, createXai } from '@ai-sdk/xai';
 
-import { VercelAiClient, VercelAiClientConfigureProps } from './vercelai-client';
+import {
+  VercelAiClient,
+  VercelAiClientConfigureProps,
+} from './vercelai-client';
 
 /**
  * XAi Grok Assistant LLM for Client only
@@ -30,7 +29,7 @@ export class XaiAssistant extends VercelAiClient {
     // call parent configure
     super.configure(config);
   }
-  
+
   private constructor() {
     super();
 

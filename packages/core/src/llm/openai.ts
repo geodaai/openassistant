@@ -4,7 +4,10 @@ import {
   OpenAIProvider,
 } from '@ai-sdk/openai';
 import { OpenAI } from 'openai';
-import { VercelAiClient, VercelAiClientConfigureProps } from './vercelai-client';
+import {
+  VercelAiClient,
+  VercelAiClientConfigureProps,
+} from './vercelai-client';
 import { AudioToTextProps } from '../types';
 
 /**
@@ -33,7 +36,7 @@ export class OpenAIAssistant extends VercelAiClient {
     // call parent configure
     super.configure(config);
   }
-  
+
   private constructor() {
     super();
 
@@ -41,6 +44,7 @@ export class OpenAIAssistant extends VercelAiClient {
       // only apiKey is provided, so we can create the openai LLM instance in the client
       const options: OpenAIProviderSettings = {
         apiKey: OpenAIAssistant.apiKey,
+        compatibility: 'strict', // strict mode, enable when using the OpenAI API
       };
 
       // Initialize openai instance
@@ -53,7 +57,7 @@ export class OpenAIAssistant extends VercelAiClient {
       this.openaiClient = new OpenAI({
         apiKey: OpenAIAssistant.apiKey,
         dangerouslyAllowBrowser: true,
-       });
+      });
     }
   }
 

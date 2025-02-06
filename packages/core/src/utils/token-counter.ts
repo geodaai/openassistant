@@ -1,20 +1,16 @@
-import { encodingForModel } from './tiktoken';
-import { Message } from 'ai';
+import { encodingForModel } from '@langchain/core/utils/tiktoken';
+import { Tiktoken } from 'js-tiktoken/lite';
+import { CoreMessage, Message, ToolInvocation } from 'ai';
 
-async function strTokenCounter(
-  messageContent: string | { function_call: { name: string; arguments: string } }
-): Promise<number> {
-  const encoding = await encodingForModel('gpt-4');
+let cachedEncoding: Tiktoken | null = null;
 
-  if (typeof messageContent === 'string') {
-    return encoding.encode(messageContent).length;
+async function strTokenCounter(messageContent: string): Promise<number> {
+  if (!cachedEncoding) {
+    cachedEncoding = await encodingForModel('gpt-4');
   }
 
-  // Handle function calls
-  if ('function_call' in messageContent) {
-    const functionCall = messageContent.function_call;
-    return encoding.encode(functionCall.name).length + 
-           encoding.encode(functionCall.arguments).length;
+  if (typeof messageContent === 'string') {
+    return cachedEncoding.encode(messageContent).length;
   }
 
   throw new Error(
@@ -22,27 +18,48 @@ async function strTokenCounter(
   );
 }
 
-export async function tiktokenCounter(messages: Message[]): Promise<number> {
+export async function tiktokenCounter(messages: Array<Message | CoreMessage>): Promise<number> {
+  let numTokens = 0;
+  for (const msg of messages) {
+    numTokens += await tiktokenCounterPerMessage(msg);
+  }
+  return numTokens;
+}
+
+export async function tiktokenCounterPerMessage(
+  msg: Message | CoreMessage
+): Promise<number> {
   let numTokens = 3; // every reply is primed with <|start|>assistant<|message|>
   const tokensPerMessage = 3;
   const tokensPerName = 1;
 
-  for (const msg of messages) {
-    numTokens += tokensPerMessage +
-                 (await strTokenCounter(msg.role)) +
-                 (await strTokenCounter(msg.content));
-
-    if (msg.id) {
-      numTokens += tokensPerName + (await strTokenCounter(msg.id));
-    }
-
-    // Handle function calls if present
-    if (msg.toolInvocations) {
-      numTokens += await strTokenCounter({ function_call: {
-        name: msg.toolInvocations[0].toolName,
-        arguments: msg.toolInvocations[0].args
-      }});
+  numTokens += tokensPerMessage;
+  numTokens += await strTokenCounter(msg.role);
+  if (typeof msg.content === 'string') {
+    numTokens += await strTokenCounter(msg.content);
+  } else if (typeof msg.content === 'object' && 'type' in msg.content) {
+    if (msg.content.type === 'text' && 'text' in msg.content) {
+      numTokens += await strTokenCounter(msg.content.text as string);
+    } else if (msg.content.type === 'image' && 'image' in msg.content) {
+      numTokens += await strTokenCounter(msg.content.image as string);
     }
   }
+
+  if ('id' in msg && msg.id) {
+    numTokens += tokensPerName + (await strTokenCounter(msg.id));
+  }
+
+  // Handle function calls if present
+  if ('toolInvocations' in msg && msg.toolInvocations) {
+    for (const toolInvocation of msg.toolInvocations) {
+      const { toolName, args } = toolInvocation as ToolInvocation;
+      numTokens += await strTokenCounter(toolName);
+      numTokens += await strTokenCounter(JSON.stringify(args));
+      if (toolInvocation.state === 'result') {
+        numTokens += await strTokenCounter(toolInvocation.result);
+      }
+    }
+  }
+
   return numTokens;
 }

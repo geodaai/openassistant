@@ -4,7 +4,10 @@ import {
   createGoogleGenerativeAI,
 } from '@ai-sdk/google';
 
-import { VercelAiClient, VercelAiClientConfigureProps } from './vercelai-client';
+import {
+  VercelAiClient,
+  VercelAiClientConfigureProps,
+} from './vercelai-client';
 
 /**
  * Google Gemini Assistant LLM for Client only
@@ -30,7 +33,7 @@ export class GoogleAIAssistant extends VercelAiClient {
     // call parent configure
     super.configure(config);
   }
-  
+
   private constructor() {
     super();
 

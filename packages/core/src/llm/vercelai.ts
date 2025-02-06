@@ -1,14 +1,12 @@
 import { AbstractAssistant } from './assistant';
 import {
   AudioToTextProps,
-  CustomFunctionOutputProps,
   CustomFunctions,
   ProcessImageMessageProps,
   ProcessMessageProps,
   RegisterFunctionCallingProps,
   StreamMessageCallback,
 } from '../types';
-import { tiktokenCounter } from '../utils/token-counter';
 import { ReactNode } from 'react';
 import { Message, Tool, ToolCall, ToolSet } from 'ai';
 import {
@@ -16,7 +14,7 @@ import {
   extractMaxToolInvocationStep,
   generateId,
 } from '@ai-sdk/ui-utils';
-
+import { proceedToolCall } from '../utils/toolcall';
 /**
 Check if the message is an assistant message with completed tool calls.
 The message must have at least one tool invocation and all tool invocations
@@ -80,7 +78,7 @@ type ConfigureProps = {
 };
 
 /**
- * Vercel AI Assistant for Server Side
+ * Vercel AI Assistant for Server only.
  */
 export class VercelAi extends AbstractAssistant {
   protected static chatEndpoint = '';
@@ -171,22 +169,6 @@ export class VercelAi extends AbstractAssistant {
     this.messages = [];
   }
 
-  protected async trimMessages() {
-    // Avoid creating a copy if not needed
-    if ((await tiktokenCounter(this.messages)) <= VercelAi.maxTokens) {
-      return this.messages;
-    }
-
-    const updatedMessages = this.messages.slice(0);
-    let totalTokens = await tiktokenCounter(updatedMessages);
-
-    while (totalTokens > VercelAi.maxTokens && updatedMessages.length > 0) {
-      updatedMessages.shift();
-      totalTokens = await tiktokenCounter(updatedMessages);
-    }
-    return updatedMessages;
-  }
-
   public override async processImageMessage({
     imageMessage,
     textMessage,
@@ -254,6 +236,7 @@ export class VercelAi extends AbstractAssistant {
     await callChatApi({
       api: VercelAi.chatEndpoint,
       body: {
+        // only send the last message
         message: lastMessage,
         // attach image with text message if provided
         ...(imageMessage ? { imageBase64: imageMessage } : {}),
@@ -281,8 +264,9 @@ export class VercelAi extends AbstractAssistant {
       }: {
         toolCall: ToolCall<string, unknown>;
       }) => {
-        const result = await this.proceedToolCall({
+        const result = await proceedToolCall({
           toolCall,
+          customFunctions: VercelAi.customFunctions,
         });
         customMessage = result.customMessage;
         return JSON.stringify(result.toolResult);
@@ -310,65 +294,6 @@ export class VercelAi extends AbstractAssistant {
     }
 
     return { customMessage };
-  }
-
-  protected async proceedToolCall({
-    toolCall,
-  }: {
-    toolCall: ToolCall<string, unknown>;
-  }) {
-    // only one ToolCall allowed
-    const functionOutput: CustomFunctionOutputProps<unknown, unknown>[] = [];
-    let customMessage: ReactNode | null = null;
-
-    const functionName = toolCall.toolName;
-    const functionArgs = toolCall.args as Record<string, unknown>;
-
-    try {
-      // get the registered function, context and callback message
-      const { func, context, callbackMessage } =
-        VercelAi.customFunctions[functionName];
-
-      // execute the function
-      const output = await func({
-        functionName,
-        functionArgs: functionArgs,
-        functionContext: context,
-        previousOutput: functionOutput,
-      });
-
-      // store the output
-      functionOutput.push({
-        ...output,
-        name: functionName,
-        args: functionArgs,
-        customMessageCallback: callbackMessage,
-      });
-    } catch (err) {
-      // make sure to return something back to openai when the function execution fails
-      functionOutput.push({
-        type: 'errorOutput',
-        name: functionName,
-        args: functionArgs,
-        result: {
-          success: false,
-          details: `The function "${functionName}" is not executed. The error message is: ${err}`,
-        },
-      });
-    }
-
-    // add custom reponse message from last functionOutput
-    const lastOutput = functionOutput[functionOutput.length - 1];
-    if (lastOutput.customMessageCallback) {
-      customMessage = lastOutput.customMessageCallback({
-        functionName: lastOutput.name,
-        functionArgs: lastOutput.args || {},
-        output: lastOutput,
-      });
-    }
-
-    // return the tool result
-    return { customMessage, toolResult: lastOutput.result };
   }
 
   /**

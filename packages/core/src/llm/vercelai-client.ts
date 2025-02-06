@@ -1,9 +1,18 @@
 import { AudioToTextProps, StreamMessageCallback } from '../types';
 import { ReactNode } from 'react';
-import { generateText, LanguageModel, Message, streamText } from 'ai';
+import {
+  generateText,
+  LanguageModel,
+  LanguageModelUsage,
+  Message,
+  streamText,
+  Tool,
+} from 'ai';
 import { extractMaxToolInvocationStep } from '@ai-sdk/ui-utils';
 import { shouldTriggerNextRequest, VercelAi } from './vercelai';
 import { convertOpenAIToolsToVercelTools } from '../lib/tool-utils';
+import { tiktokenCounter } from '../utils/token-counter';
+import { proceedToolCall } from '../utils/toolcall';
 
 export type VercelAiClientConfigureProps = {
   apiKey?: string;
@@ -17,13 +26,17 @@ export type VercelAiClientConfigureProps = {
 };
 
 /**
- * Abstract Vercel AI Client for Client only
+ * Abstract Vercel AI Client for Client only. This class is extended from VercelAi class.
+ * However, it overrides the triggerRequest method to call LLM using Vercel AI SDK
+ * directly from local e.g. browser instead of POST request to API endpoint.
+ *
+ * It has a protected property llm: LanguageModel | null = null;
+ * which is initialized in the constructor.
+ *
  */
 export abstract class VercelAiClient extends VercelAi {
   protected static apiKey = '';
-
   protected static model = '';
-
   public llm: LanguageModel | null = null;
 
   protected static instance: VercelAiClient | null = null;
@@ -48,11 +61,52 @@ export abstract class VercelAiClient extends VercelAi {
     this.llm = null;
   }
 
+  protected async trimMessages() {
+    let totalTokens = await tiktokenCounter(this.messages);
+
+    // add token for the system message
+    totalTokens += await tiktokenCounter([
+      { role: 'system', content: VercelAi.instructions, id: 'system' },
+    ]);
+
+    // add token for the tools
+    if (VercelAi.tools) {
+      totalTokens += await tiktokenCounter(
+        Object.values(VercelAi.tools).map((tool: Tool) => ({
+          role: 'assistant',
+          content: JSON.stringify(tool.parameters),
+          id: 'tool',
+        }))
+      );
+    }
+
+    if (totalTokens <= VercelAi.maxTokens) {
+      return this.messages;
+    }
+    // make a copy of the messages array
+    const updatedMessages = this.messages.slice(0);
+
+    if (totalTokens > VercelAi.maxTokens) {
+      // remove one message at a time
+      while (updatedMessages.length > 0) {
+        const removedMessage = updatedMessages.shift();
+        const remainingTokens = await tiktokenCounter([removedMessage!]);
+        totalTokens -= remainingTokens;
+
+        if (totalTokens <= VercelAi.maxTokens) {
+          break;
+        }
+      }
+    }
+
+    return updatedMessages;
+  }
+
   /**
    * Trigger the request to the Vercel AI API
    * Override the triggerRequest method to call LLM with Vercel AI SDK from local e.g. browser
    * @param streamMessageCallback - The callback function to stream the message
-   * @returns The custom message
+   * @returns The custom message and the tokens used
    */
   protected async triggerRequest({
     streamMessageCallback,
@@ -67,6 +121,11 @@ export abstract class VercelAiClient extends VercelAi {
 
     let messageContent: string = '';
     let customMessage: ReactNode | null = null;
+    const tokensUsed: LanguageModelUsage = {
+      promptTokens: 0,
+      completionTokens: 0,
+      totalTokens: 0,
+    };
 
     const maxSteps = 4;
     const messageCount = this.messages.length;
@@ -87,7 +146,7 @@ export abstract class VercelAiClient extends VercelAi {
       topP: VercelAiClient.topP,
       maxSteps,
       abortSignal: this.abortController?.signal,
-      onFinish: async ({ toolCalls, response }) => {
+      onFinish: async ({ toolCalls, response, usage }) => {
         // response messages could be CoreAssistantMessage | CoreToolMessage
         const responseMsg = response.messages[response.messages.length - 1];
 
@@ -101,7 +160,10 @@ export abstract class VercelAiClient extends VercelAi {
 
         // handle tool calls
         for (const toolCall of toolCalls) {
-          const result = await this.proceedToolCall({ toolCall });
+          const result = await proceedToolCall({
+            toolCall,
+            customFunctions: VercelAi.customFunctions,
+          });
           customMessage = result.customMessage;
           message.toolInvocations = [
             {
@@ -114,7 +176,14 @@ export abstract class VercelAiClient extends VercelAi {
           ];
         }
 
+        // add the response message to the messages array
         this.messages?.push(message);
+
+        // NOTE: some providers will not return usage values, we still need to count the token usage
+        // safely handle potentially undefined usage values
+        tokensUsed.promptTokens = usage?.promptTokens || 0;
+        tokensUsed.completionTokens = usage?.completionTokens || 0;
+        tokensUsed.totalTokens = usage?.totalTokens || 0;
       },
     });
 
@@ -130,7 +199,7 @@ export abstract class VercelAiClient extends VercelAi {
         streamMessageCallback({
           deltaMessage: messageContent,
           customMessage,
-        }); 
+        });
       } else if (chunk.type === 'error') {
         throw new Error(`Error from Vercel AI API: ${chunk.error}`);
       }
@@ -144,7 +213,7 @@ export abstract class VercelAiClient extends VercelAi {
       await this.triggerRequest({ streamMessageCallback });
     }
 
-    return { customMessage };
+    return { customMessage, tokensUsed };
   }
 
   public override async audioToText({

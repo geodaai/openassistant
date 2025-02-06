@@ -3,7 +3,10 @@ import {
   DeepSeekProviderSettings,
   DeepSeekProvider,
 } from '@ai-sdk/deepseek';
-import { VercelAiClient, VercelAiClientConfigureProps } from './vercelai-client';
+import {
+  VercelAiClient,
+  VercelAiClientConfigureProps,
+} from './vercelai-client';
 
 /**
  * DeepSeek Assistant LLM for Client only
