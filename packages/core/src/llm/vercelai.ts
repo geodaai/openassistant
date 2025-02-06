@@ -8,8 +8,9 @@ import {
   StreamMessageCallback,
 } from '../types';
 import { ReactNode } from 'react';
-import { Message, Tool, ToolCall, ToolSet } from 'ai';
+import { Tool, ToolCall, ToolSet } from 'ai';
 import {
+  Message,
   callChatApi,
   extractMaxToolInvocationStep,
   generateId,

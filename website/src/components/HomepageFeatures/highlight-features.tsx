@@ -1,7 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { Card, CardBody, Image } from '@nextui-org/react';
 import { Icon } from '@iconify/react';
-import { AiAssistantConfig, ConfigPanel } from '@openassistant/ui';
 import { useColorMode } from '@docusaurus/theme-common';
 import { CodeBlock } from './code-block';
 import {
@@ -11,7 +10,6 @@ import {
   codeScreenCapture,
   codeTailwind,
   codeVoiceToText,
-  testData,
   codeFunctionCalling,
   codeMyFunction,
   codeHistogram,
@@ -201,15 +199,7 @@ export const highlightFeatures: HighlightFeature[] = [
   },
 ];
 
-export function HighlightFeatureComponent({
-  title,
-  items,
-  aiConfig,
-  onAiConfigChange,
-}: HighlightFeature & {
-  aiConfig: AiAssistantConfig;
-  onAiConfigChange: (config: AiAssistantConfig) => void;
-}) {
+export function HighlightFeatureComponent({ title, items }: HighlightFeature) {
   const { setColorMode } = useColorMode();
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -250,19 +240,11 @@ export function HighlightFeatureComponent({
         <div className="w-[340px] min-w-[340px] sm:w-[500px] sm:min-w-[500px]">
           <Card>
             <CardBody className="p-4 flex justify-center items-center">
-              {['LLM Models'].includes(items[selectedIndex].iconLabel) ? (
-                <ConfigPanel
-                  initialConfig={aiConfig}
-                  onConfigChange={onAiConfigChange}
-                  color="default"
-                />
-              ) : (
-                <Image
-                  src={items[selectedIndex].image}
-                  alt="screenshot"
-                  className="rounded-none w-full"
-                />
-              )}
+              <Image
+                src={items[selectedIndex].image}
+                alt="screenshot"
+                className="rounded-none w-full"
+              />
             </CardBody>
           </Card>
         </div>

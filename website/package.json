@@ -17,20 +17,8 @@
   "dependencies": {
     "@docusaurus/core": "3.7.0",
     "@docusaurus/preset-classic": "3.7.0",
-    "@kepler.gl/actions": "^3.0.0",
-    "@kepler.gl/components": "^3.0.0",
-    "@kepler.gl/constants": "^3.0.0",
-    "@kepler.gl/layers": "^3.0.0",
-    "@kepler.gl/processors": "^3.0.0",
-    "@kepler.gl/reducers": "^3.0.0",
-    "@kepler.gl/styles": "^3.0.0",
-    "@kepler.gl/utils": "^3.0.0",
-    "@loaders.gl/core": "^4.3.3",
-    "@loaders.gl/schema": "^4.3.3",
     "@mdx-js/react": "^3.0.0",
     "@nextui-org/react": "^2.6.11",
-    "@openassistant/core": "^1.0.0",
-    "@openassistant/keplergl": "0.0.5",
     "assert": "^2.1.0",
     "clsx": "^2.0.0",
     "framer-motion": "^11.17.0",
@@ -38,10 +26,7 @@
     "process": "^0.11.10",
     "react": "^18.3.1",
     "react-code-blocks": "^0.1.6",
-    "react-dom": "^18.3.1",
-    "react-intl": "^6.3.0",
-    "react-palm": "^3.3.8",
-    "react-redux": "^9.2.0"
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.7.0",
@@ -58,10 +43,7 @@
   },
   "resolutions": {
     "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "react-redux": "9.2.0",
-    "react-palm": "3.3.8",
-    "styled-components": "6.1.8"
+    "react-dom": "18.3.1"
   },
   "browserslist": {
     "production": [

@@ -7,7 +7,6 @@ import Layout from '@theme/Layout';
 import HomepageFeatures from '@site/src/components/HomepageFeatures';
 
 import styles from './index.module.css';
-import { AiAssistantConfig } from '@openassistant/ui';
 import { Link } from '@nextui-org/react';
 
 function HomepageHeader() {
@@ -68,29 +67,12 @@ function HomepageHeader() {
 }
 
 function HomeContent() {
-  const [aiConfig, setAiConfig] = useState<AiAssistantConfig>({
-    isReady: false,
-    provider: 'openai',
-    model: 'gpt-4o',
-    apiKey: '',
-    baseUrl: 'http://127.0.0.1:11434',
-    temperature: 0.8,
-    topP: 1.0,
-  });
-
-  const onAiConfigChange = (config: AiAssistantConfig) => {
-    setAiConfig(config);
-  };
-
   return (
     <div>
       <div className="relative">
         <HomepageHeader />
         <main className="items-center flex justify-center">
-          <HomepageFeatures
-            aiConfig={aiConfig}
-            onAiConfigChange={onAiConfigChange}
-          />
+          <HomepageFeatures />
         </main>
       </div>
     </div>

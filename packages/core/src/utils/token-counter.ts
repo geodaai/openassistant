@@ -1,6 +1,7 @@
 import { encodingForModel } from '@langchain/core/utils/tiktoken';
 import { Tiktoken } from 'js-tiktoken/lite';
-import { CoreMessage, Message, ToolInvocation } from 'ai';
+import { CoreMessage, ToolInvocation } from 'ai';
+import { Message } from '@ai-sdk/ui-utils';
 
 let cachedEncoding: Tiktoken | null = null;
 

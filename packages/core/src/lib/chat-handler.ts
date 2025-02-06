@@ -1,12 +1,12 @@
 import {
   CoreMessage,
   LanguageModel,
-  Message,
   streamText,
   ToolCall,
   ToolInvocation,
   ToolSet,
 } from 'ai';
+import { Message } from '@ai-sdk/ui-utils';
 import { convertOpenAIToolsToVercelTools } from './tool-utils';
 import { proceedToolCall } from '../utils/toolcall';
 import { CustomFunctions } from '../types';

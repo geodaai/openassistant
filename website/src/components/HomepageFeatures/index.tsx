@@ -1,4 +1,3 @@
-import { type ReactNode } from 'react';
 import clsx from 'clsx';
 // import Heading from '@theme/Heading';
 import styles from './styles.module.css';
@@ -7,27 +6,13 @@ import {
   highlightFeatures,
   HighlightFeatureComponent,
 } from './highlight-features';
-import { AiAssistantConfig } from '@openassistant/ui';
 import { QuickStart } from './quick-start';
 
-export type HomepageFeaturesProps = {
-  aiConfig: AiAssistantConfig;
-  onAiConfigChange: (config: AiAssistantConfig) => void;
-};
-
-export default function HomepageFeatures({
-  aiConfig,
-  onAiConfigChange,
-}: HomepageFeaturesProps): ReactNode {
+export default function HomepageFeatures() {
   return (
     <section className={clsx(styles.features, 'flex flex-col gap-4 !p-0')}>
       {highlightFeatures.map((feature, index) => (
-        <HighlightFeatureComponent
-          aiConfig={aiConfig}
-          onAiConfigChange={onAiConfigChange}
-          key={index}
-          {...feature}
-        />
+        <HighlightFeatureComponent key={index} {...feature} />
       ))}
       <AllFeatures />
       <QuickStart />

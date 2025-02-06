@@ -1,5 +1,6 @@
 import { tiktokenCounter } from './token-counter';
-import { Message, Tool, ToolSet, CoreMessage } from 'ai';
+import { Tool, ToolSet, CoreMessage } from 'ai';
+import { Message } from '@ai-sdk/ui-utils';
 
 export async function trimMessages({
   messages,

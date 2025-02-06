@@ -1,6 +1,6 @@
 {
   "name": "@openassistant/ui",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Chat UI components for OpenAssistant",
   "author": "Xun Li<lixun910@gmail.com>",
   "license": "MIT",
@@ -46,7 +46,7 @@
     "tailwindcss": "^3.4.17"
   },
   "peerDependencies": {
-    "@openassistant/core": "^1.0.0",
+    "@openassistant/core": "^0.1.0",
     "react": ">=18.2",
     "react-dom": ">=18.2"
   },

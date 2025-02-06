@@ -1,5 +1,4 @@
 import { OpenAI } from 'openai';
-import { Buffer } from 'buffer';
 import { GetAssistantModelByProvider } from './model-utils';
 import { generateText } from 'ai';
 import { VercelAiClient } from '../llm/vercelai-client';
@@ -90,12 +89,6 @@ export class VoiceHandler {
     this.model = await AssistantModel.getInstance();
   }
 
-  private async readAudioFile(audioFile: File): Promise<string> {
-    const arrayBuffer = await audioFile.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    return buffer.toString('base64');
-  }
-
   async processRequest(req: Request): Promise<Response> {
     const formData = await req.formData();
     const audioFile = formData.get('file');
@@ -115,9 +108,6 @@ export class VoiceHandler {
     }
 
     try {
-      // read audio file as base64
-      // const base64AudioFile = await this.readAudioFile(audioFile);
-
       const response = await generateText({
         model: this.model.llm,
         messages: [
@@ -142,8 +132,6 @@ export class VoiceHandler {
 
       // get transcript from the result
       const content = response.text;
-
-      console.log('content', content);
 
       // define the regex pattern to find the json object in content
       const pattern = /{[^{}]*}/;

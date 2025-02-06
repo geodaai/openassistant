@@ -4,11 +4,10 @@ import {
   generateText,
   LanguageModel,
   LanguageModelUsage,
-  Message,
   streamText,
   Tool,
 } from 'ai';
-import { extractMaxToolInvocationStep } from '@ai-sdk/ui-utils';
+import { Message, extractMaxToolInvocationStep } from '@ai-sdk/ui-utils';
 import { shouldTriggerNextRequest, VercelAi } from './vercelai';
 import { convertOpenAIToolsToVercelTools } from '../lib/tool-utils';
 import { tiktokenCounter } from '../utils/token-counter';
