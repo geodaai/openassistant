@@ -4,7 +4,6 @@ import {
   generateText,
   LanguageModel,
   LanguageModelUsage,
-  LanguageModelV1,
   streamText,
   Tool,
 } from 'ai';
