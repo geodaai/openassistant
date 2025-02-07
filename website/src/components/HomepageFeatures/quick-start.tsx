@@ -147,15 +147,14 @@ export function QuickStart() {
                 </h4>
                 <ol className="list-decimal ml-6 mb-4">
                   <li>
-                    Click the &quot;Screenshot to Ask&quot; button in the chat interface
+                    Click the &quot;Screenshot to Ask&quot; button in the chat
+                    interface
                   </li>
                   <li>
                     A semi-transparent overlay will appear, and the chat
                     interface will be disabled.
                   </li>
-                  <li>
-                    Click and drag to select the area you want to capture
-                  </li>
+                  <li>Click and drag to select the area you want to capture</li>
                   <li>Release to complete the capture</li>
                   <li>
                     The screenshot will be displayed in the chat interface

@@ -1,7 +1,6 @@
 import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
-import aliasPlugin from './plugins/alias';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -40,8 +39,7 @@ const config: Config = {
 
   // Correct webpack configuration syntax for Docusaurus
   // clientModules: [require.resolve('./src/client-modules/webpack-fallback.ts')],
-  plugins: ['docusaurus-node-polyfills', aliasPlugin],
-
+  plugins: ['docusaurus-node-polyfills'],
 
   presets: [
     [

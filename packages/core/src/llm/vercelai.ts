@@ -11,6 +11,7 @@ import { ReactNode } from 'react';
 import { Tool, ToolCall, ToolSet } from 'ai';
 import {
   Message,
+  UIMessage,
   callChatApi,
   extractMaxToolInvocationStep,
   generateId,
@@ -196,6 +197,7 @@ export class VercelAi extends AbstractAssistant {
         id: generateId(),
         role: 'user',
         content: textMessage,
+        parts: [{ type: 'text', text: textMessage }],
       });
     }
 
@@ -253,7 +255,7 @@ export class VercelAi extends AbstractAssistant {
       credentials: 'include',
       headers: {},
       fetch: undefined,
-      lastMessage: lastMessage,
+      lastMessage: lastMessage as UIMessage,
       generateId: () => generateId(),
       abortController: () => this.abortController,
       restoreMessagesOnFailure: () => {},

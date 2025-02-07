@@ -9,6 +9,8 @@ const baseConfig = createBaseConfig({
     '@ai-sdk/google',
     '@ai-sdk/openai',
     '@ai-sdk/xai',
+    '@ai-sdk/react',
+    '@ai-sdk/ui-utils',
     'ollama-ai-provider',
     'openai',
     'zod',
