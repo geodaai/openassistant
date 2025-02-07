@@ -31,7 +31,6 @@
     "@kepler.gl/utils": "^3.0.0",
     "@lexical/react": "^0.23.1",
     "@loaders.gl/core": "^4.3.3",
-    "@loaders.gl/parquet": "^4.3.3",
     "@loaders.gl/schema": "^4.3.3",
     "@nextui-org/theme": "^2.4.4",
     "@openassistant/common": "^0.0.6",
@@ -65,7 +64,8 @@
     "react-virtualized-auto-sizer": "^1.0.24",
     "redux": "^4.2.1",
     "simple-statistics": "^7.8.7",
-    "styled-components": "6.1.8"
+    "styled-components": "6.1.8",
+    "thrift": "^0.21.0"
   },
   "resolutions": {
     "react": "18.3.1",
@@ -76,6 +76,7 @@
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
     "@types/react-grid-layout": "^1",
+    "@types/thrift": "^0",
     "@types/ws": "^8",
     "@typescript-eslint/eslint-plugin": "^8.21.0",
     "@typescript-eslint/parser": "^8.21.0",
