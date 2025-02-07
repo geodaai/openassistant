@@ -18,8 +18,9 @@ export * from './lib/voice-handler';
 
 export * from './lib/tool-utils';
 
+export * from './lib/model-utils';
+
 export * from './types';
 
 export * from './hooks/use-assistant';
 
-export * from './utils/connection-test';

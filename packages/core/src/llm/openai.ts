@@ -9,32 +9,38 @@ import {
   VercelAiClientConfigureProps,
 } from './vercelai-client';
 import { AudioToTextProps } from '../types';
+import { testConnection } from '../utils/connection-test';
+
+const DEFAULT_OPENAI_BASE_URL = 'https://api.openai.com/v1';
 
 /**
  * OpenAI Assistant LLM for Client only
  */
 export class OpenAIAssistant extends VercelAiClient {
+  protected static baseURL = DEFAULT_OPENAI_BASE_URL;
+
   protected providerInstance: OpenAIProvider | null = null;
 
   protected static instance: OpenAIAssistant | null = null;
 
   protected openaiClient: OpenAI | null = null;
 
-  protected static checkModel() {
-    if (!OpenAIAssistant.model || OpenAIAssistant.model.trim() === '') {
-      throw new Error('LLM is not configured. Please call configure() first.');
-    }
-  }
-
-  protected static checkApiKey() {
-    if (!OpenAIAssistant.apiKey || OpenAIAssistant.apiKey.trim() === '') {
-      throw new Error('LLM is not configured. Please call configure() first.');
-    }
-  }
-
   public static override configure(config: VercelAiClientConfigureProps) {
     // call parent configure
     super.configure(config);
+  }
+
+  public static async testConnection(
+    apiKey: string,
+    model: string
+  ): Promise<boolean> {
+    const oai = createOpenAI({
+      apiKey,
+      baseURL: OpenAIAssistant.baseURL,
+      compatibility:
+        OpenAIAssistant.baseURL === DEFAULT_OPENAI_BASE_URL ? 'strict' : 'compatible',
+    });
+    return await testConnection(oai(model));
   }
 
   private constructor() {
@@ -44,6 +50,7 @@ export class OpenAIAssistant extends VercelAiClient {
       // only apiKey is provided, so we can create the openai LLM instance in the client
       const options: OpenAIProviderSettings = {
         apiKey: OpenAIAssistant.apiKey,
+        baseURL: OpenAIAssistant.baseURL,
         compatibility: 'strict', // strict mode, enable when using the OpenAI API
       };
 
@@ -56,6 +63,7 @@ export class OpenAIAssistant extends VercelAiClient {
       // create a openai client instance for whisper transcription
       this.openaiClient = new OpenAI({
         apiKey: OpenAIAssistant.apiKey,
+        baseURL: OpenAIAssistant.baseURL,
         dangerouslyAllowBrowser: true,
       });
     }

@@ -8,30 +8,26 @@ import {
   VercelAiClient,
   VercelAiClientConfigureProps,
 } from './vercelai-client';
+import { testConnection } from '../utils/connection-test';
 
 /**
  * Google Gemini Assistant LLM for Client only
  */
 export class GoogleAIAssistant extends VercelAiClient {
+  protected static baseURL = 'https://generativelanguage.googleapis.com/v1beta';
+
   protected providerInstance: GoogleGenerativeAIProvider | null = null;
 
   protected static instance: GoogleAIAssistant | null = null;
 
-  protected static checkModel() {
-    if (!GoogleAIAssistant.model || GoogleAIAssistant.model.trim() === '') {
-      throw new Error('LLM is not configured. Please call configure() first.');
-    }
-  }
-
-  protected static checkApiKey() {
-    if (!GoogleAIAssistant.apiKey || GoogleAIAssistant.apiKey.trim() === '') {
-      throw new Error('LLM is not configured. Please call configure() first.');
-    }
-  }
-
   public static override configure(config: VercelAiClientConfigureProps) {
     // call parent configure
     super.configure(config);
+  }
+
+  public static async testConnection(apiKey: string, model: string): Promise<boolean> {
+    const llm = createGoogleGenerativeAI({ apiKey });
+    return await testConnection(llm(model));
   }
 
   private constructor() {
@@ -41,6 +37,7 @@ export class GoogleAIAssistant extends VercelAiClient {
       // only apiKey is provided, so we can create the openai LLM instance in the client
       const options: GoogleGenerativeAIProviderSettings = {
         apiKey: GoogleAIAssistant.apiKey,
+        baseURL: GoogleAIAssistant.baseURL,
       };
 
       // Initialize openai instance

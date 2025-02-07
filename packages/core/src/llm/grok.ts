@@ -4,30 +4,25 @@ import {
   VercelAiClient,
   VercelAiClientConfigureProps,
 } from './vercelai-client';
+import { testConnection } from '../utils/connection-test';
 
 /**
  * XAi Grok Assistant LLM for Client only
  */
 export class XaiAssistant extends VercelAiClient {
+  protected static baseURL = 'https://api.grok.com/v1';
   protected providerInstance: XaiProvider | null = null;
 
   protected static instance: XaiAssistant | null = null;
 
-  protected static checkModel() {
-    if (!XaiAssistant.model || XaiAssistant.model.trim() === '') {
-      throw new Error('LLM is not configured. Please call configure() first.');
-    }
-  }
-
-  protected static checkApiKey() {
-    if (!XaiAssistant.apiKey || XaiAssistant.apiKey.trim() === '') {
-      throw new Error('LLM is not configured. Please call configure() first.');
-    }
-  }
-
   public static override configure(config: VercelAiClientConfigureProps) {
     // call parent configure
     super.configure(config);
+  }
+
+  public static async testConnection(apiKey: string, model: string): Promise<boolean> {
+    const llm = createXai({ apiKey });
+    return await testConnection(llm(model));
   }
 
   private constructor() {
@@ -37,6 +32,7 @@ export class XaiAssistant extends VercelAiClient {
       // only apiKey is provided, so we can create the openai LLM instance in the client
       const options: XaiProviderSettings = {
         apiKey: XaiAssistant.apiKey,
+        baseURL: XaiAssistant.baseURL,
       };
 
       // Initialize openai instance

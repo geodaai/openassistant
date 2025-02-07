@@ -35,7 +35,6 @@
     "@ai-sdk/xai": "^1.1.8",
     "@langchain/core": "^0.3.38",
     "ai": "^4.1.12",
-    "axios": "^1.7.9",
     "ollama-ai-provider": "^1.2.0",
     "openai": "^4.82.0",
     "zod": "^3.24.1"

@@ -3,6 +3,7 @@ import {
   VercelAiClient,
   VercelAiClientConfigureProps,
 } from './vercelai-client';
+import { testConnection } from '../utils/connection-test';
 
 type ConfigureProps = {
   baseURL?: string;
@@ -11,24 +12,26 @@ type ConfigureProps = {
  * Ollama Assistant LLM for Client only
  */
 export class OllamaAssistant extends VercelAiClient {
+  protected static baseURL: string = 'http://127.0.0.1:11434';
+  protected static instance: OllamaAssistant | null = null;
   protected providerInstance: OllamaProvider | null = null;
 
-  protected static instance: OllamaAssistant | null = null;
-
-  protected static baseURL: string = 'http://127.0.0.1:11434';
-
-  protected static checkModel() {
-    if (!OllamaAssistant.model || OllamaAssistant.model.trim() === '') {
-      throw new Error('LLM is not configured. Please call configure() first.');
-    }
-  }
-
-  protected static checkApiKey() {
+  protected static checkBaseURL() {
     if (!OllamaAssistant.baseURL || OllamaAssistant.baseURL.trim() === '') {
       throw new Error(
         'Base URL is not configured for Ollama. Please call configure() first.'
       );
     }
+  }
+
+  public static async testConnection(
+    apiKey: string,
+    model: string
+  ): Promise<boolean> {
+    const llm = createOllama({
+      baseURL: OllamaAssistant.baseURL,
+    });
+    return await testConnection(llm(model));
   }
 
   public static override configure(config: ConfigureProps) {

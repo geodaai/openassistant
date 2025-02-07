@@ -1,34 +1,14 @@
 import { Button, Input, SelectItem, Slider } from '@nextui-org/react';
 import { Select } from '@nextui-org/react';
-import { testApiKey } from '@openassistant/core';
-import { ChangeEvent, useState } from 'react';
+import {
+  GetAssistantModelByProvider,
+  VercelAiClient,
+} from '@openassistant/core';
+import { ChangeEvent, useEffect, useState } from 'react';
+import PROVIDER_MODELS from '../config/models.json';
 
 // Add a type for valid providers
-type Provider = 'openai' | 'google' | 'ollama' | 'deepseek';
-
-const PROVIDER_MODELS: Record<Provider, string[]> = {
-  deepseek: ['deepseek-chat', 'deepseek-reasoner'],
-  openai: ['gpt-4o', 'gpt-4o-mini', 'gpt-3.5-turbo-0125', 'gpt-3.5-turbo'],
-  google: ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-1.0-pro'],
-  ollama: [
-    'deepseek-r1', // default 7b model
-    'deepseek-r1:14b',
-    'deepseek-r1:32b',
-    'deepseek-r1:70b',
-    'deepseek-r1:671b',
-    'phi4',
-    'qwen2.5-coder',
-    'llama3.3',
-    'llama3.2',
-    'llama3.1',
-    'llama3.1:70b',
-    'qwen2',
-    'llava',
-    'mistral',
-    'gemma2',
-    'phi3.5',
-  ],
-};
+type Provider = keyof typeof PROVIDER_MODELS;
 
 /**
  * The configuration for the AI Assistant.
@@ -46,9 +26,9 @@ export type AiAssistantConfig = {
   provider: Provider;
   model: string;
   apiKey: string;
-  baseUrl: string;
   temperature: number;
   topP: number;
+  baseUrl?: string;
 };
 
 /**
@@ -59,7 +39,7 @@ export type AiAssistantConfig = {
  * @property {function} onConfigChange - The function to call when the configuration changes.
  */
 export type ConfigPanelProps = {
-  defaultProviderModels?: Record<Provider, string[]>;
+  defaultProviderModels?: Record<Provider, { name: string; models: string[] }>;
   initialConfig?: AiAssistantConfig;
   showStartChatButton?: boolean;
   showParameters?: boolean;
@@ -71,6 +51,7 @@ export type ConfigPanelProps = {
     | 'warning'
     | 'danger';
   onConfigChange: (config: AiAssistantConfig) => void;
+  connectionTimeout?: number;
 };
 
 /**
@@ -81,7 +62,7 @@ export type ConfigPanelProps = {
  */
 export function ConfigPanel(props: ConfigPanelProps) {
   const defaultProviderModels = props.defaultProviderModels || PROVIDER_MODELS;
-
+  const connectionTimeout = props.connectionTimeout || 10000;
   const [provider, setProvider] = useState(
     props.initialConfig?.provider || 'openai'
   );
@@ -93,12 +74,20 @@ export function ConfigPanel(props: ConfigPanelProps) {
     props.initialConfig?.temperature || 0.8
   );
   const [topP, setTopP] = useState(props.initialConfig?.topP || 0.8);
-  const [baseUrl, setBaseUrl] = useState(
-    props.initialConfig?.baseUrl || 'http://localhost:11434'
-  );
+  const [baseUrl, setBaseUrl] = useState(props.initialConfig?.baseUrl);
   const [connectionError, setConnectionError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isRunning, setIsRunning] = useState(false);
+  const [llm, setLLM] = useState<typeof VercelAiClient | null>(null);
+
+  useEffect(() => {
+    // get the AssistantModel class based on the provider
+    const selectedLLM = GetAssistantModelByProvider({
+      provider: provider,
+      // all the client-side AssistantModel classes extend VercelAiClient
+    }) as unknown as typeof VercelAiClient;
+    setLLM(selectedLLM);
+  }, [provider]);
 
   const onAiProviderSelect = (
     value: string | number | boolean | object | null
@@ -147,18 +136,16 @@ export function ConfigPanel(props: ConfigPanelProps) {
     try {
       const timeoutPromise = new Promise((_, reject) => {
         setTimeout(
-          () => reject(new Error('Connection timed out after 10 seconds')),
-          10000
+          () =>
+            reject(
+              new Error(`Connection timed out after ${connectionTimeout}ms`)
+            ),
+          connectionTimeout
         );
       });
 
       const testResult = await Promise.race([
-        testApiKey({
-          modelProvider: provider,
-          modelName: model,
-          apiKey: apiKey,
-          baseUrl: baseUrl,
-        }),
+        llm?.testConnection(apiKey, model),
         timeoutPromise,
       ]);
 
@@ -179,10 +166,10 @@ export function ConfigPanel(props: ConfigPanelProps) {
         provider: provider,
         model: model,
         apiKey: apiKey,
-        baseUrl: baseUrl,
         isReady: success,
         temperature: temperature,
         topP: topP,
+        ...(baseUrl && { baseUrl: baseUrl }),
       });
     } catch (error) {
       setConnectionError(true);
@@ -203,48 +190,46 @@ export function ConfigPanel(props: ConfigPanelProps) {
         className="max-w-full"
         onSelectionChange={onAiProviderSelect}
       >
-        <SelectItem key="openai">OpenAI ChatGPT</SelectItem>
-        <SelectItem key="google">Google Gemini</SelectItem>
-        <SelectItem key="ollama">Ollama</SelectItem>
-        <SelectItem key="deepseek">DeepSeek</SelectItem>
+        {Object.keys(PROVIDER_MODELS).map((provider) => (
+          <SelectItem key={provider}>
+            {PROVIDER_MODELS[provider].name}
+          </SelectItem>
+        ))}
       </Select>
       <Select
         label="LLM Model"
         placeholder="Select LLM model"
         className="max-w-full"
         onSelectionChange={onLLMModelSelect}
-        isInvalid={!defaultProviderModels[provider].includes(model)}
+        isInvalid={!defaultProviderModels[provider].models.includes(model)}
         selectedKeys={model ? [model] : []}
       >
-        {defaultProviderModels[provider].map((model) => (
+        {defaultProviderModels[provider].models.map((model) => (
           <SelectItem key={model}>{model}</SelectItem>
         ))}
       </Select>
       {connectionError && (
         <div className="text-red-500 text-sm">{errorMessage}</div>
       )}
-      {provider !== 'ollama' ? (
-        <Input
-          type="string"
-          label="API Key"
-          defaultValue="Enter your OpenAI key here"
-          className="max-w-full"
-          onChange={onApiKeyChange}
-          value={apiKey || ''}
-          required
-          isInvalid={connectionError || apiKey.length === 0}
-        />
-      ) : (
-        <Input
-          type="string"
-          label="Base URL"
-          defaultValue="http://127.0.0.1:11434"
-          placeholder="Enter your Ollama API URL here"
-          className="max-w-full"
-          required
-          onChange={onBaseUrlChange}
-        />
-      )}
+      <Input
+        type="string"
+        label="API Key"
+        defaultValue="Enter your API token here"
+        className="max-w-full"
+        onChange={onApiKeyChange}
+        value={apiKey || ''}
+        required
+        isInvalid={connectionError || apiKey.length === 0}
+      />
+      <Input
+        type="string"
+        label="Base URL"
+        defaultValue={baseUrl || llm?.getBaseURL() || ''}
+        placeholder="Enter base URL here"
+        className="max-w-full"
+        required
+        onChange={onBaseUrlChange}
+      />
       {props.showParameters && (
         <>
           <Slider

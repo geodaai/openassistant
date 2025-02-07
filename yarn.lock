@@ -7711,7 +7711,6 @@ __metadata:
     "@ai-sdk/xai": "npm:^1.1.8"
     "@langchain/core": "npm:^0.3.38"
     ai: "npm:^4.1.12"
-    axios: "npm:^1.7.9"
     ollama-ai-provider: "npm:^1.2.0"
     openai: "npm:^4.82.0"
     zod: "npm:^3.24.1"
@@ -13111,7 +13110,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.7.4, axios@npm:^1.7.9":
+"axios@npm:^1.7.4":
   version: 1.7.9
   resolution: "axios@npm:1.7.9"
   dependencies:

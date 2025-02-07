@@ -86,4 +86,11 @@ export abstract class AbstractAssistant {
   public async addAdditionalContext(props: { context: string, callback?: () => void }) {
     throw new Error('Method not implemented.');
   }
+
+  /**
+   * Test connection
+   */
+  public static async testConnection(apiKey: string, model: string): Promise<boolean> {
+    throw new Error('Method not implemented.');
+  }
 }

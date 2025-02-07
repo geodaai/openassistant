@@ -17,6 +17,7 @@ import {
   generateId,
 } from '@ai-sdk/ui-utils';
 import { proceedToolCall } from '../utils/toolcall';
+
 /**
 Check if the message is an assistant message with completed tool calls.
 The message must have at least one tool invocation and all tool invocations
@@ -67,7 +68,7 @@ export function shouldTriggerNextRequest(
   );
 }
 
-type ConfigureProps = {
+type VercelAiConfigureProps = {
   apiKey?: string;
   model?: string;
   instructions?: string;
@@ -113,7 +114,7 @@ export class VercelAi extends AbstractAssistant {
     return VercelAi.instance;
   }
 
-  public static override configure(config: ConfigureProps) {
+  public static override configure(config: VercelAiConfigureProps) {
     if (!config.chatEndpoint) {
       throw new Error('chatEndpoint is required');
     }

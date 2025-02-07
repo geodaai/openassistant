@@ -4,6 +4,7 @@ import {
   generateText,
   LanguageModel,
   LanguageModelUsage,
+  LanguageModelV1,
   streamText,
   Tool,
 } from 'ai';
@@ -22,6 +23,7 @@ export type VercelAiClientConfigureProps = {
   description?: string;
   version?: string;
   maxTokens?: number;
+  baseURL?: string;
 };
 
 /**
@@ -29,16 +31,41 @@ export type VercelAiClientConfigureProps = {
  * However, it overrides the triggerRequest method to call LLM using Vercel AI SDK
  * directly from local e.g. browser instead of POST request to API endpoint.
  *
- * It has a protected property llm: LanguageModel | null = null;
- * which is initialized in the constructor.
+ * It has a protected property llm: LanguageModel | null = null, which is initialized in the constructor.
+ * It also has a protected static properties which are for client-side support:
+ * - apiKey: string = '';
+ * - model: string = '';
+ * - baseURL: string = '';
+ *
+ * These properties are initialized in the configure method.
+ *
+ * The constructor is protected, so it cannot be instantiated directly.
  *
  */
 export abstract class VercelAiClient extends VercelAi {
   protected static apiKey = '';
   protected static model = '';
+  protected static baseURL = '';
+
   public llm: LanguageModel | null = null;
 
   protected static instance: VercelAiClient | null = null;
+
+  public static getBaseURL() {
+    return VercelAiClient.baseURL;
+  }
+
+  protected static checkModel() {
+    if (!VercelAiClient.model || VercelAiClient.model.trim() === '') {
+      throw new Error('LLM is not configured. Please call configure() first.');
+    }
+  }
+
+  protected static checkApiKey() {
+    if (!VercelAiClient.apiKey || VercelAiClient.apiKey.trim() === '') {
+      throw new Error('LLM is not configured. Please call configure() first.');
+    }
+  }
 
   protected constructor() {
     super();
@@ -51,6 +78,7 @@ export abstract class VercelAiClient extends VercelAi {
     if (config.temperature) VercelAiClient.temperature = config.temperature;
     if (config.topP) VercelAiClient.topP = config.topP;
     if (config.description) VercelAiClient.description = config.description;
+    if (config.baseURL) VercelAiClient.baseURL = config.baseURL;
   }
 
   public override restart() {

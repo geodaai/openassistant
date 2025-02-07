@@ -7,30 +7,29 @@ import {
   VercelAiClient,
   VercelAiClientConfigureProps,
 } from './vercelai-client';
+import { testConnection } from '../utils/connection-test';
 
 /**
  * DeepSeek Assistant LLM for Client only
  */
 export class DeepSeekAssistant extends VercelAiClient {
+  protected static baseURL = 'https://api.deepseek.com/v1';
+
   protected providerInstance: DeepSeekProvider | null = null;
 
   protected static instance: DeepSeekAssistant | null = null;
 
-  protected static checkModel() {
-    if (!DeepSeekAssistant.model || DeepSeekAssistant.model.trim() === '') {
-      throw new Error('LLM is not configured. Please call configure() first.');
-    }
-  }
-
-  protected static checkApiKey() {
-    if (!DeepSeekAssistant.apiKey || DeepSeekAssistant.apiKey.trim() === '') {
-      throw new Error('LLM is not configured. Please call configure() first.');
-    }
-  }
-
   public static override configure(config: VercelAiClientConfigureProps) {
     // call parent configure
     super.configure(config);
+  }
+
+  public static async testConnection(
+    apiKey: string,
+    model: string
+  ): Promise<boolean> {
+    const ds = createDeepSeek({ apiKey });
+    return await testConnection(ds(model));
   }
 
   private constructor() {
@@ -40,6 +39,7 @@ export class DeepSeekAssistant extends VercelAiClient {
       // only apiKey is provided, so we can create the openai LLM instance in the client
       const options: DeepSeekProviderSettings = {
         apiKey: DeepSeekAssistant.apiKey,
+        baseURL: DeepSeekAssistant.baseURL,
       };
 
       // Initialize openai instance
