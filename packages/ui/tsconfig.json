@@ -12,10 +12,10 @@
     "declarationDir": "./dist",
     "emitDeclarationOnly": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
   },
   "references": [{ "path": "../core" }],
-  "include": ["src/**/*", "src/config/*.json"],
+  "include": ["src/**/*"],
   "exclude": [
     "node_modules",
     "../../node_modules",

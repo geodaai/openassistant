@@ -6,11 +6,11 @@ describe('AbstractAssistant', () => {
   let assistant: AbstractAssistant;
 
   beforeEach(() => {
-    assistant = new AbstractAssistant();
+    assistant = new class extends AbstractAssistant {}();
   });
 
   test('getInstance should throw an error', async () => {
-    await expect(assistant.getInstance()).rejects.toThrow(
+    await expect(AbstractAssistant.getInstance()).rejects.toThrow(
       'Method not implemented.'
     );
   });

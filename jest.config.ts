@@ -1,5 +1,9 @@
 import type { Config } from '@jest/types';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const commonModuleNameMapper = {
   'react-audio-voice-recorder': path.join(

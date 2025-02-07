@@ -5,10 +5,10 @@ import {
   VercelAiClient,
 } from '@openassistant/core';
 import { ChangeEvent, useEffect, useState } from 'react';
-import PROVIDER_MODELS from '../config/models.json';
+import { MODEL_PROVIDERS } from '../config/constants';
 
 // Add a type for valid providers
-type Provider = keyof typeof PROVIDER_MODELS;
+type Provider = keyof typeof MODEL_PROVIDERS;
 
 /**
  * The configuration for the AI Assistant.
@@ -61,7 +61,7 @@ export type ConfigPanelProps = {
  * @returns {JSX.Element} The rendered ConfigPanel component.
  */
 export function ConfigPanel(props: ConfigPanelProps) {
-  const defaultProviderModels = props.defaultProviderModels || PROVIDER_MODELS;
+  const defaultProviderModels = props.defaultProviderModels || MODEL_PROVIDERS;
   const connectionTimeout = props.connectionTimeout || 10000;
   const [provider, setProvider] = useState(
     props.initialConfig?.provider || 'openai'
@@ -190,9 +190,9 @@ export function ConfigPanel(props: ConfigPanelProps) {
         className="max-w-full"
         onSelectionChange={onAiProviderSelect}
       >
-        {Object.keys(PROVIDER_MODELS).map((provider) => (
+        {Object.keys(MODEL_PROVIDERS).map((provider) => (
           <SelectItem key={provider}>
-            {PROVIDER_MODELS[provider].name}
+            {MODEL_PROVIDERS[provider].name}
           </SelectItem>
         ))}
       </Select>
