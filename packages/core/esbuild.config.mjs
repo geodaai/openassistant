@@ -13,6 +13,8 @@ const baseConfig = createBaseConfig({
     '@ai-sdk/ui-utils',
     'ollama-ai-provider',
     'openai',
+    'p-retry',
+    'p-queue',
   ],
   plugins: [dtsPlugin()],
 });

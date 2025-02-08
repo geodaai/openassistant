@@ -78,6 +78,7 @@ type VercelAiConfigureProps = {
   version?: string;
   maxTokens?: number;
   chatEndpoint?: string;
+  voiceEndpoint?: string;
 };
 
 /**
@@ -85,6 +86,7 @@ type VercelAiConfigureProps = {
  */
 export class VercelAi extends AbstractAssistant {
   protected static chatEndpoint = '';
+  protected static voiceEndpoint = '';
   protected static instructions = '';
   protected static additionalContext = '';
   protected static temperature = 1.0;
@@ -318,7 +320,7 @@ export class VercelAi extends AbstractAssistant {
     formData.append('file', audioBlob, 'audio.webm');
     // formData.append('model', 'whisper-1');
 
-    const response = await fetch('/api/voice', {
+    const response = await fetch(VercelAi.voiceEndpoint, {
       method: 'POST',
       body: formData,
     });

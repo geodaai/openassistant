@@ -1,17 +1,18 @@
-import { Provider } from 'react-redux';
-
-import AutoSizer from 'react-virtualized-auto-sizer';
-import { CreateMapOutputData } from '../callback-component';
-import { KeplerState, MAP_ID, store } from './keplergl-provider';
-import { RootContext } from '@kepler.gl/components';
 import { useEffect, useRef } from 'react';
+import { Provider } from 'react-redux';
+import AutoSizer from 'react-virtualized-auto-sizer';
 import { useDispatch, useSelector } from 'react-redux';
-import { addDataToMap } from '@kepler.gl/actions';
-import { KeplerMiniMap } from './keplergl-mini-map';
-import { theme as keplerTheme } from '@kepler.gl/styles';
-import { messages } from '@kepler.gl/localization';
 import { ThemeProvider } from 'styled-components';
 import { IntlProvider } from 'react-intl';
+
+import { RootContext } from '@kepler.gl/components';
+import { addDataToMap } from '@kepler.gl/actions';
+import { theme as keplerTheme } from '@kepler.gl/styles';
+import { messages } from '@kepler.gl/localization';
+
+import { KeplerMiniMap } from './keplergl-mini-map';
+import { CreateMapOutputData } from '../callback-component';
+import { KeplerState, MAP_ID, store } from './keplergl-provider';
 
 export function KeplerGlComponentWithProvider(props: CreateMapOutputData) {
   const rootNode = useRef<HTMLDivElement>(null);

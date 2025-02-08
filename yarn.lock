@@ -4439,7 +4439,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kepler.gl/processors@npm:3.1.0, @kepler.gl/processors@npm:^3.0.0":
+"@kepler.gl/processors@npm:3.1.0":
   version: 3.1.0
   resolution: "@kepler.gl/processors@npm:3.1.0"
   dependencies:
@@ -7785,7 +7785,6 @@ __metadata:
     "@kepler.gl/constants": "npm:^3.0.0"
     "@kepler.gl/layers": "npm:^3.0.0"
     "@kepler.gl/localization": "npm:^3.0.0"
-    "@kepler.gl/processors": "npm:^3.0.0"
     "@kepler.gl/reducers": "npm:^3.0.0"
     "@kepler.gl/styles": "npm:^3.0.0"
     "@kepler.gl/utils": "npm:^3.0.0"

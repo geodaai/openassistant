@@ -12,36 +12,49 @@ module.exports = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
-  transpilePackages: ['@openassistant/ui', '@openassistant/core'],
+  // transpilePackages: ['@openassistant/ui', '@openassistant/core'],
   webpack: (config) => {
+    config.optimization = {
+      ...config.optimization,
+      minimize: true,
+    };
+
     // Support WASM modules for duckdb
     config.experiments = {
       ...config.experiments,
       asyncWebAssembly: true,
       topLevelAwait: true,
     };
+
+    // Support WASM modules for parquet-wasm
     config.module.rules.push({
-      test: /\.wasm/,
+      test: /\.wasm$/,
+      // type: 'webassembly/async',
       type: 'asset/resource',
-      // type: 'webassembly/async'
       generator: {
-        // specify the output location of the wasm files
-        filename: 'static/[name][ext]',
+        filename:
+          process.env.NODE_ENV === 'production'
+            ? 'server/app/[name][ext]'
+            : 'server/vendor-chunks/[name][ext]',
       },
     });
+
+    // Resolve aliases for different versions of dependencies
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@components': './components',
-      '@app': './app',
-      'react$': path.resolve(__dirname, 'node_modules/react'),
+      react$: path.resolve(__dirname, 'node_modules/react'),
       'react-dom$': path.resolve(__dirname, 'node_modules/react-dom'),
       'styled-components': path.resolve(
         __dirname,
         'node_modules/styled-components'
       ),
-      // Only add @openassistant/common alias when running with --local flag
-      ...(process.env.LOCAL === 'true' && {
-        'apache-arrow': path.resolve(__dirname, 'node_modules/apache-arrow'),
+      'apache-arrow': path.resolve(__dirname, 'node_modules/apache-arrow'),
+    };
+
+    // Only add @openassistant/common alias when running with --local flag
+    if (process.env.LOCAL === 'true') {
+      config.resolve.alias = {
+        ...config.resolve.alias,
         '@openassistant/common': path.resolve(
           __dirname,
           '../packages/common/src'
@@ -60,15 +73,17 @@ module.exports = {
           __dirname,
           '../packages/geoda/src'
         ),
-      }),
+      };
+    }
+
+    // Fix Critical dependency: the request of a dependency is an expression
+    config.module = {
+      ...config.module,
+      exprContextCritical: false,
     };
 
     // Add externals configuration, so Next.js won't bundle them
-    // config.externals = [
-    //   ...config.externals,
-    //   '@loaders.gl/draco',
-    //   '@loaders.gl/worker-utils'
-    // ];
+    config.externals = [...config.externals, 'wbg'];
 
     return config;
   },
