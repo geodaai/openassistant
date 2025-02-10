@@ -1,6 +1,6 @@
 {
   "name": "@openassistant/duckdb",
-  "version": "0.0.7",
+  "version": "0.1.4",
   "description": "The duckdb SQL query addon for OpenAssistant",
   "author": "Xun Li<lixun910@gmail.com>",
   "license": "MIT",

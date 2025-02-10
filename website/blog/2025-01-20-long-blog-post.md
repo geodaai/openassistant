@@ -1,11 +1,13 @@
 ---
 slug: first-blog-post
-title: GenAI - Create Beautiful Maps with OpenAssistant and KeplerGL
+title: Build AI Assistant with Map Visualization Capabilities
 authors: [XunLi]
 tags: [tutorial, openassistant, keplergl, mapping, genai, LLM]
 ---
 
-Are you looking to create stunning maps from your data without writing complex visualization code? We're excited to introduce the KeplerGL plugin for OpenAssistant, which lets you generate beautiful maps through simple conversations with your AI assistant!
+We're excited to introduce the KeplerGL plugin for OpenAssistant, which lets your AI assistant to create beautiful maps through simple conversations with LLM model!
+
+![KeplerGL Map](./images/keplerPlugin-1.png)
 
 <!--truncate-->
 
@@ -34,6 +36,7 @@ const myDatasets = {
 ```
 
 With the KeplerGL plugin, you can simply ask your AI assistant:
+
 > "Can you create a map using the data myVenues?"
 
 And voilà! The assistant will generate a map visualization for you.
@@ -54,7 +57,8 @@ const assistantProps = {
   modelProvider: 'openai',
   model: 'gpt-4',
   apiKey: 'your-api-key',
-  instructions: "You are a data and map analyst. You can help users to create a map from a dataset.",
+  instructions:
+    'You are a data and map analyst. You can help users to create a map from a dataset.',
   functions: [], // We'll add the mapping functions later
 };
 ```
@@ -86,10 +90,10 @@ import { createMapFunctionDefinition } from '@openassistant/keplergl';
 
 const myFunctions = [
   createMapFunctionDefinition({
-    getDataset: ({datasetName}) => {
+    getDataset: ({ datasetName }) => {
       return myDatasets[datasetName];
     },
-  })
+  }),
 ];
 ```
 
@@ -105,6 +109,7 @@ return <AiAssistant {...assistantProps} />;
 ## Start Creating Maps!
 
 That's it! Now you can start a conversation with your AI assistant and create maps by simply asking. Try prompts like:
+
 - "Create a map showing all venues"
 - "Show me a map of revenue by location"
 - "Visualize the population distribution"
@@ -114,5 +119,3 @@ That's it! Now you can start a conversation with your AI assistant and create ma
 We're continuously working on improving the KeplerGL plugin with more features and configuration options. Stay tuned for updates that will bring even more mapping capabilities to your AI assistant!
 
 Want to learn more? Check out our [detailed documentation](/docs/tutorial-extras/keplergl-plugin) for advanced configurations and examples.
-
-Happy mapping with OpenAssistant! 🗺️

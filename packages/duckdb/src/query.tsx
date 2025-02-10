@@ -281,7 +281,7 @@ export async function queryDuckDBCallbackFunction({
         sql,
         dbTableName,
         onSelected,
-        isDraggable: Boolean(config.isDraggable),
+        isDraggable: Boolean(config?.isDraggable),
       },
     };
   } catch (error) {

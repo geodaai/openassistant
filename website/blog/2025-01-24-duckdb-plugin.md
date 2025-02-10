@@ -5,7 +5,9 @@ authors: [XunLi]
 tags: [tutorial, openassistant, duckdb, database, sql, LLM, beginner-friendly]
 ---
 
-Ever wished you could just chat with your data like you're talking to a friend? Imagine your users can ask "Hey, which city has the highest revenue?" and getting an instant answer from your data! With our new DuckDB plugin for OpenAssistant, you can do exactly that! 🚀
+Ever wished users can query their data with natural language like "Hey, which city has the highest revenue?" and getting an instant answer from your data! With our new DuckDB plugin for OpenAssistant, your AI Assistant can do exactly that! 🚀
+
+![Query Result](../images/duckdbPlugin-2-400.png)
 
 <!--truncate-->
 

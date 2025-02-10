@@ -12,7 +12,7 @@ type ConfigureProps = {
  * Ollama Assistant LLM for Client only
  */
 export class OllamaAssistant extends VercelAiClient {
-  protected static baseURL: string = 'http://127.0.0.1:11434';
+  protected static baseURL: string = 'http://127.0.0.1:11434/api';
   protected static instance: OllamaAssistant | null = null;
   protected providerInstance: OllamaProvider | null = null;
 

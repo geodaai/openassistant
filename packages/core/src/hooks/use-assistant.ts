@@ -34,6 +34,7 @@ import { GetAssistantModelByProvider } from '../lib/model-utils';
  */
 export type UseAssistantProps = {
   chatEndpoint?: string;
+  voiceEndpoint?: string;
   name: string;
   modelProvider: string;
   model: string;
@@ -121,6 +122,7 @@ export function useAssistant(props: UseAssistantProps) {
       // configure the assistant model
       AssistantModel.configure({
         chatEndpoint: props.chatEndpoint,
+        voiceEndpoint: props.voiceEndpoint,
         model: props.model,
         apiKey: props.apiKey,
         instructions: props.instructions,
@@ -128,6 +130,7 @@ export function useAssistant(props: UseAssistantProps) {
         topP: props.topP,
         description: props.description,
         version: props.version,
+        ...(props.baseUrl ? { baseURL: props.baseUrl } : {}),
       });
 
       // register custom functions

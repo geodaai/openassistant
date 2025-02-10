@@ -121,6 +121,7 @@ export class VercelAi extends AbstractAssistant {
       throw new Error('chatEndpoint is required');
     }
     VercelAi.chatEndpoint = config.chatEndpoint;
+    if (config.voiceEndpoint) VercelAi.voiceEndpoint = config.voiceEndpoint;
     if (config.instructions) VercelAi.instructions = config.instructions;
     if (config.temperature) VercelAi.temperature = config.temperature;
     if (config.topP) VercelAi.topP = config.topP;
@@ -316,6 +317,10 @@ export class VercelAi extends AbstractAssistant {
     if (!this.abortController) {
       this.abortController = new AbortController();
     }
+    if (!VercelAi.voiceEndpoint || VercelAi.voiceEndpoint === '') {
+      throw new Error('voiceEndpoint is not set');
+    }
+
     const formData = new FormData();
     formData.append('file', audioBlob, 'audio.webm');
     // formData.append('model', 'whisper-1');
