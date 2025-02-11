@@ -1,25 +1,27 @@
 export const MODEL_PROVIDERS = {
   deepseek: {
     name: 'DeepSeek',
-    models: ['deepseek-chat', 'deepseek-reasoner'],
+    models: ['deepseek-chat'],
   },
   openai: {
     name: 'OpenAI',
     models: [
+      'gpt-o1',
+      'gpt-o1-preview',
+      'gpt-o1-mini',
+      'gpt-4o',
+      'gpt-4o-mini',
       'gpt-3.5-turbo',
       'gpt-3.5-turbo-0125',
-      'gpt-4',
-      'gpt-4-turbo',
-      'gpt-4-32k',
     ],
   },
   google: {
     name: 'Google',
     models: [
-      'gemini-pro',
-      'gemini-pro-vision',
+      'gemini-2.0-flash',
+      'gemini-1.5-flash',
       'gemini-1.5-pro',
-      'gemini-1.5-pro-vision',
+      'gemini-1.0-pro'
     ],
   },
   ollama: {

@@ -15,9 +15,6 @@ import { MapState } from '@kepler.gl/types';
 import { getCenterAndZoomFromBounds } from '@kepler.gl/utils';
 import { KeplerState, MAP_ID } from './keplergl-provider';
 
-// For inject customized component to kepler.gl
-const MapContainer = appInjector.get(MapContainerFactory);
-
 // disable all map controls
 const initialMapUiState = {
   mapControls: Object.keys(uiStateUpdaters.DEFAULT_MAP_CONTROLS).reduce(
@@ -60,6 +57,9 @@ export function KeplerMiniMap({
   mapHeight,
   mapWidth,
 }: KeplerMiniMapProps) {
+  // For inject customized component to kepler.gl
+  const MapContainer = appInjector.get(MapContainerFactory);
+
   const dispatch = useDispatch();
 
   // get kepler state

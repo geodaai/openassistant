@@ -1884,6 +1884,7 @@ __metadata:
   dependencies:
     "@chromatic-com/storybook": "npm:^3.2.3"
     "@nextui-org/theme": "npm:^2.4.4"
+    "@opentelemetry/api": "npm:^1.9.0"
     "@storybook/addon-essentials": "npm:^8.4.7"
     "@storybook/addon-interactions": "npm:^8.4.7"
     "@storybook/addon-onboarding": "npm:^8.4.7"
@@ -1903,6 +1904,13 @@ __metadata:
     typescript: "npm:^5.0.4"
   languageName: unknown
   linkType: soft
+
+"@opentelemetry/api@npm:^1.9.0":
+  version: 1.9.0
+  resolution: "@opentelemetry/api@npm:1.9.0"
+  checksum: 10/a607f0eef971893c4f2ee2a4c2069aade6ec3e84e2a1f5c2aac19f65c5d9eeea41aa72db917c1029faafdd71789a1a040bdc18f40d63690e22ccae5d7070f194
+  languageName: node
+  linkType: hard
 
 "@pkgjs/parseargs@npm:^0.11.0":
   version: 0.11.0

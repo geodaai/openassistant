@@ -68,7 +68,7 @@ export function KeplerGlComponent(
 
   return (
     <>
-      {keplerState?.visState?.layers?.length > 0 && (
+      {keplerState?.visState?.layers?.length > 0 && keplerState?.uiState && (
         <div style={{ width: `${props.width}px`, height: `${props.height}px` }}>
           <IntlProvider locale="en" messages={keplerMessages}>
             <KeplerMiniMap

@@ -9,6 +9,10 @@ const nextConfig = {
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
+      '@openassistant/common': path.resolve(
+        __dirname,
+        '../packages/common/src/index.ts'
+      ),
       '@openassistant/echarts': path.resolve(
         __dirname,
         '../packages/echarts/src/index.ts'

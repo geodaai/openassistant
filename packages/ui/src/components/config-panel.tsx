@@ -78,16 +78,6 @@ export function ConfigPanel(props: ConfigPanelProps) {
   const [connectionError, setConnectionError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isRunning, setIsRunning] = useState(false);
-  const [llm, setLLM] = useState<typeof VercelAiClient | null>(null);
-
-  useEffect(() => {
-    // get the AssistantModel class based on the provider
-    const selectedLLM = GetAssistantModelByProvider({
-      provider: provider,
-      // all the client-side AssistantModel classes extend VercelAiClient
-    }) as unknown as typeof VercelAiClient;
-    setLLM(selectedLLM);
-  }, [provider]);
 
   const onAiProviderSelect = (
     value: string | number | boolean | object | null
@@ -131,6 +121,10 @@ export function ConfigPanel(props: ConfigPanelProps) {
     setErrorMessage('');
   };
 
+  const AssistantModel = GetAssistantModelByProvider({
+    provider: provider,
+  }) as unknown as typeof VercelAiClient;
+
   const onStartChat = async () => {
     setIsRunning(true);
     try {
@@ -143,19 +137,14 @@ export function ConfigPanel(props: ConfigPanelProps) {
           connectionTimeout
         );
       });
-
-      const testResult = await Promise.race([
-        llm?.testConnection(apiKey, model),
+      
+      const success = (await Promise.race([
+        AssistantModel?.testConnection(apiKey, model),
         timeoutPromise,
-      ]);
-
-      const { success, service } = testResult as {
-        success: boolean;
-        service: string;
-      };
+      ])) as boolean;
 
       const errorMessage = !success
-        ? service === 'ollama'
+        ? provider === 'ollama'
           ? 'Connection failed: maybe invalid Ollama Base URL'
           : 'Connection failed: maybe invalid API Key'
         : '';
@@ -224,7 +213,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
       <Input
         type="string"
         label="Base URL"
-        defaultValue={baseUrl || llm?.getBaseURL() || ''}
+        defaultValue={baseUrl || AssistantModel?.getBaseURL() || ''}
         placeholder="Enter base URL here"
         className="max-w-full"
         required

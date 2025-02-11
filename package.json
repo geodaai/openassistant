@@ -23,6 +23,7 @@
     "website:start": "cd website && yarn start"
   },
   "devDependencies": {
+    "@opentelemetry/api": "^1.9.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.2",
     "@testing-library/react": "^16.0.1",

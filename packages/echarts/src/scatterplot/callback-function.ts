@@ -7,7 +7,7 @@ import { ScatterplotFunctionContext } from './definition';
 import {
   computeRegression,
   ComputeRegressionResult,
-} from './utils/scatter-regression';
+} from './component/scatter-regression';
 
 /**
  * The arguments of the scatterplot function.
