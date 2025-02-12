@@ -9,19 +9,23 @@
   "author": "Xun Li <lixun910@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "@deck.gl/core": "^9.0.0",
-    "@deck.gl/layers": "^9.0.0",
-    "@deck.gl/react": "^9.0.0",
-    "@deck.gl/widgets": "^9.0.0",
+    "@deck.gl/core": "^9.1.1",
+    "@deck.gl/layers": "^9.1.1",
+    "@deck.gl/react": "^9.1.1",
+    "@deck.gl/widgets": "^9.1.1",
     "@nextui-org/react": "^2.6.10",
-    "@openassistant/core": "0.1.4",
+    "@openassistant/core": "0.1.5",
     "@openassistant/duckdb": "0.1.4",
     "@openassistant/echarts": "0.1.4",
-    "@openassistant/ui": "0.1.4",
+    "@openassistant/ui": "0.1.5",
     "ollama-ai-provider": "^1.2.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-map-gl": "^8.0.1"
+  },
+  "resolutions": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.0",

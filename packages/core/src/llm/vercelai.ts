@@ -175,6 +175,10 @@ export class VercelAi extends AbstractAssistant {
     this.messages = [];
   }
 
+  public static getBaseURL() {
+    throw new Error('No base URL for VercelAi. It is a server-side only class.');
+  }
+
   public override async processImageMessage({
     imageMessage,
     textMessage,

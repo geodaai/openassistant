@@ -1,8 +1,11 @@
 import { Button, Input, SelectItem, Slider } from '@nextui-org/react';
 import { Select } from '@nextui-org/react';
-import { GetAssistantModelByProvider } from '@openassistant/core';
+import {
+  GetAssistantModelByProvider,
+  VercelAiClient,
+} from '@openassistant/core';
 import { ChangeEvent, useState } from 'react';
-import { MODEL_PROVIDERS } from '../config/constants';
+import { MODEL_PROVIDERS } from './constants';
 import { Icon } from '@iconify/react';
 
 // Add a type for valid providers
@@ -83,12 +86,10 @@ export function ConfigPanel(props: ConfigPanelProps) {
   ) => {
     if (value && typeof value === 'object' && 'currentKey' in value) {
       const selectedProvider = value.currentKey as Provider;
-      if (selectedProvider in defaultProviderModels) {
-        setProvider(selectedProvider);
-        setModel(defaultProviderModels[selectedProvider][0]);
-        setConnectionError(false);
-        setErrorMessage('');
-      }
+      setProvider(selectedProvider);
+      setModel(defaultProviderModels[selectedProvider][0]);
+      setConnectionError(false);
+      setErrorMessage('');
     }
   };
 
@@ -125,7 +126,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
 
   const AssistantModel = GetAssistantModelByProvider({
     provider: provider,
-  });
+  }) as unknown as typeof VercelAiClient;
 
   const onStartChat = async () => {
     setIsRunning(true);
@@ -139,7 +140,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
           connectionTimeout
         );
       });
-
+      
       const success = (await Promise.race([
         AssistantModel?.testConnection(apiKey, model),
         timeoutPromise,
@@ -193,10 +194,10 @@ export function ConfigPanel(props: ConfigPanelProps) {
         placeholder="Select LLM model"
         className="max-w-full"
         onSelectionChange={onLLMModelSelect}
-        isInvalid={!defaultProviderModels[provider]?.models.includes(model)}
+        isInvalid={!defaultProviderModels[provider].models.includes(model)}
         selectedKeys={model ? [model] : []}
       >
-        {defaultProviderModels[provider]?.models.map((model) => (
+        {defaultProviderModels[provider].models.map((model) => (
           <SelectItem key={model}>{model}</SelectItem>
         ))}
       </Select>
@@ -213,7 +214,9 @@ export function ConfigPanel(props: ConfigPanelProps) {
         required
         isInvalid={connectionError || apiKey.length === 0}
         endContent={
-          !keyError && <Icon icon="mdi:check" className="text-green-500" />
+          !keyError && (
+            <Icon icon="mdi:check" className="text-green-500" />
+          )
         }
       />
       <Input
@@ -251,7 +254,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
       )}
       <Button
         isLoading={isRunning}
-        onPress={onStartChat}
+        onClick={onStartChat}
         className="mt-4"
         color={props.color || 'primary'}
       >

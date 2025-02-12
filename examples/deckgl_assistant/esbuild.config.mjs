@@ -24,6 +24,7 @@ const config = {
   },
   define: {
     'process.env.NODE_ENV': isStart ? '"development"' : '"production"',
+    'process.env.OPENAI_TOKEN': JSON.stringify(process.env.OPENAI_TOKEN || ''),
   },
   jsx: 'automatic',
   alias: {

@@ -15,12 +15,19 @@ export class XaiAssistant extends VercelAiClient {
 
   protected static instance: XaiAssistant | null = null;
 
+  public static getBaseURL() {
+    return XaiAssistant.baseURL;
+  }
+
   public static override configure(config: VercelAiClientConfigureProps) {
     // call parent configure
     super.configure(config);
   }
 
-  public static async testConnection(apiKey: string, model: string): Promise<boolean> {
+  public static async testConnection(
+    apiKey: string,
+    model: string
+  ): Promise<boolean> {
     const llm = createXai({ apiKey });
     return await testConnection(llm(model));
   }

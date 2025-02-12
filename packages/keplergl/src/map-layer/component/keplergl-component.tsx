@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useRef } from 'react';
 import { Provider } from 'react-redux';
 import AutoSizer from 'react-virtualized-auto-sizer';

@@ -21,10 +21,14 @@ export function BoxplotComponent(props: BoxplotOutputData): JSX.Element | null {
     props.setIsExpanded?.(!props.isExpanded);
   }, [showMore, props]);
 
-  const createTableCells = (metric: string, boxplot: BoxplotDataProps) => {
+  const createTableCells = (
+    metric: string,
+    boxplot: BoxplotDataProps,
+    index: number
+  ) => {
     const tableCells: JSX.Element[] = [];
     tableCells.push(<TableCell key="metric-label">{metric}</TableCell>);
-    boxplot.boxData.forEach((data, index) => {
+    boxplot.boxData.forEach((data) => {
       tableCells.push(
         <TableCell key={data.name}>{data.value[index].toFixed(4)}</TableCell>
       );
@@ -35,9 +39,9 @@ export function BoxplotComponent(props: BoxplotOutputData): JSX.Element | null {
   const generateStatsRows = (boxplot: BoxplotDataProps) => {
     const metrics = ['Min', 'Q1', 'Median', 'Q3', 'Max'];
 
-    return metrics.map((metric) => (
-      <TableRow key={`${metric.toLowerCase()}-stats`}>
-        {createTableCells(metric, boxplot)}
+    return metrics.map((metric, index) => (
+      <TableRow key={`${metric.toLowerCase()}-stats-${index}`}>
+        {createTableCells(metric, boxplot, index)}
       </TableRow>
     ));
   };
