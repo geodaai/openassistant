@@ -1,7 +1,8 @@
 import { ReactNode, DragEvent } from 'react';
 import { CustomFunctionCall } from '@openassistant/core';
 import { ExpandableContainer } from '@openassistant/common';
-import { BoxplotComponent, BoxplotOutputData } from './component/box-plot';
+import { BoxplotComponent } from './component/box-plot-component';
+import { BoxplotOutputData } from './component/box-plot';
 
 export function BoxplotCallbackMessage(
   props: CustomFunctionCall

@@ -30,6 +30,7 @@ export function ScatterplotComponent({
   onSelected,
   theme,
   isExpanded = false,
+  setIsExpanded,
 }: ScatterplotOutputData): JSX.Element | null {
   const [showMore, setShowMore] = useState(isExpanded);
 
@@ -63,7 +64,8 @@ export function ScatterplotComponent({
 
   const handleMorePress = useCallback(() => {
     setShowMore(!showMore);
-  }, [showMore]);
+    setIsExpanded?.(!isExpanded);
+  }, [showMore, isExpanded, setIsExpanded]);
 
   const generateRegressionRows = (
     type: string,
@@ -143,31 +145,33 @@ export function ScatterplotComponent({
               </div>
             </div>
             <div className="footer text-xs">
-              <div className="flex w-full justify-end">
-                <Button
-                  size="sm"
-                  variant="light"
-                  startContent={
-                    <Icon
-                      icon="material-symbols-light:query-stats"
-                      width="18"
-                      height="18"
-                    />
-                  }
-                  endContent={
-                    showMore && (
+              {!isExpanded && (
+                <div className="flex w-full justify-end">
+                  <Button
+                    size="sm"
+                    variant="light"
+                    startContent={
                       <Icon
-                        icon="solar:alt-arrow-up-line-duotone"
+                        icon="material-symbols-light:query-stats"
                         width="18"
                         height="18"
                       />
-                    )
-                  }
-                  onPress={handleMorePress}
-                >
-                  More
-                </Button>
-              </div>
+                    }
+                    endContent={
+                      showMore && (
+                        <Icon
+                          icon="solar:alt-arrow-up-line-duotone"
+                          width="18"
+                          height="18"
+                        />
+                      )
+                    }
+                    onPress={handleMorePress}
+                  >
+                    More
+                  </Button>
+                </div>
+              )}
               {showMore && regression && (
                 <div className="w-full text-tiny">
                   <div className="mb-2">

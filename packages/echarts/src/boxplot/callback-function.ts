@@ -53,7 +53,7 @@ export async function boxplotCallbackFunction({
   }
 
   const { boundIQR: inputIQR, variableNames, datasetName } = functionArgs;
-  const { getValues, config, onSelected } = functionContext as BoxplotFunctionContext;
+  const { getValues, config } = functionContext as BoxplotFunctionContext;
 
   if (!variableNames || !datasetName) {
     return {
@@ -92,7 +92,6 @@ export async function boxplotCallbackFunction({
       boundIQR,
       theme: config?.theme,
       isDraggable: config?.isDraggable,
-      onSelected,
     };
 
     return {

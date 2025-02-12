@@ -20,6 +20,9 @@
       "@/*": [
         "./src/*"
       ],
+      "@openassistant/common": [
+        "../packages/common/src"
+      ],
       "@openassistant/echarts": [
         "../packages/echarts/src"
       ],

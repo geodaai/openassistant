@@ -17,7 +17,6 @@ import { ECHARTS_DARK_THEME } from '../../echarts-theme';
 import { BoxplotDataProps, CreateBoxplotProps } from './utils';
 import { getBoxPlotChartOption } from './boxplot-option';
 import { onBrushSelected } from '../../echarts-updater';
-import { OnSelectedCallback } from '../definition';
 import { useBrushLink } from '@openassistant/common';
 
 // Register the required components
@@ -43,13 +42,13 @@ export type BoxplotOutputData = {
   theme?: string;
   isExpanded?: boolean;
   isDraggable?: boolean;
-  onSelected?: OnSelectedCallback;
+  setIsExpanded?: (isExpanded: boolean) => void;
 } & CreateBoxplotProps;
 
 /**
  * The react component of a box plot using eCharts
  */
-export const BoxplotComponent = (props: BoxplotOutputData) => {
+export const Boxplot = (props: BoxplotOutputData) => {
   const { id, datasetName, variables, data: rawData, theme, boxplot } = props;
   const seriesIndex = variables.map((_, i) => i);
 

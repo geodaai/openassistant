@@ -19,5 +19,6 @@ export * from './boxplot/definition';
 export * from './boxplot/callback-function';
 export * from './boxplot/callback-component';
 export * from './boxplot/component/box-plot';
+export * from './boxplot/component/box-plot-component';
 export * from './boxplot/component/boxplot-option';
 export * from './boxplot/component/utils';

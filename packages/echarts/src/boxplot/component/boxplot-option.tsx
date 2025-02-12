@@ -135,34 +135,10 @@ export function getBoxPlotChartOption({
     yAxis,
     xAxis,
     series,
-    // dataZoom: [
-    //   {
-    //     type: 'inside'
-    //   },
-    //   {
-    //     type: 'slider',
-    //     height: 15,
-    //     bottom: 25,
-    //     fillerColor: 'rgba(255,255,255,0.1)'
-    //   }
-    // ],
-    // tooltip: {
-    //   trigger: 'item',
-    //   axisPointer: {
-    //     type: 'shadow',
-    //   },
-    //   confine: true,
-    //   // extraCssText: 'z-index: 9999;'
-    //   // formatter: function (params: any) {
-    //   //   // ids that associated with the bar
-    //   //   const range = params[1].data.label;
-    //   //   const count = params[1].value;
-    //   //   return `Range: ${range}<br/> # Observations: ${count}`;
-    //   // }
-    // },
     brush: {
       toolbox: ['rect', 'keep', 'clear'],
       xAxisIndex: 0,
+      throttleType: 'debounce',
       brushLink: scatterSeries.map((_, index) => index),
       seriesIndex: scatterSeries.map((_, index) => index),
     },

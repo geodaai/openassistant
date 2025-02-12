@@ -4,7 +4,7 @@ import {
   GetAssistantModelByProvider,
   VercelAiClient,
 } from '@openassistant/core';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { MODEL_PROVIDERS } from '../config/constants';
 
 // Add a type for valid providers

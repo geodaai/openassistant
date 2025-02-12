@@ -71,6 +71,7 @@ export type ScatterplotOutputData = {
   showLoess?: boolean;
   showRegressionLine?: boolean;
   isExpanded?: boolean;
+  setIsExpanded?: (isExpanded: boolean) => void;
   isDraggable?: boolean;
 };
 
