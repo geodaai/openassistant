@@ -9,6 +9,7 @@ export type BoxPlotChartOptionProps = {
   }>;
   meanPoint: [string, number][];
   theme: string;
+  isExpanded: boolean;
 };
 
 export function getBoxPlotChartOption({
@@ -16,6 +17,7 @@ export function getBoxPlotChartOption({
   boxData,
   meanPoint,
   theme,
+  isExpanded,
 }: BoxPlotChartOptionProps): EChartsOption {
   // build box plot data using rawData in the form of [value, index]
   const pointsData = Object.values(rawData)?.map(
@@ -34,18 +36,12 @@ export function getBoxPlotChartOption({
       symbol: data.length > 1000 ? 'rect' : 'circle',
       itemStyle: {
         color: 'lightblue',
+        borderColor: '#aaa',
       },
       // highlight
       emphasis: {
         focus: 'series' as const,
         symbolSize: 6,
-        itemStyle: {
-          color: 'red',
-          borderWidth: 1,
-        },
-      },
-      selectedMode: 'multiple',
-      select: {
         itemStyle: {
           color: 'red',
           borderWidth: 1,
@@ -141,16 +137,17 @@ export function getBoxPlotChartOption({
     brush: {
       toolbox: ['rect', 'keep', 'clear'],
       xAxisIndex: 0,
-      brushLink: 'all'
+      brushLink: scatterSeries.map((_, index) => index),
+      seriesIndex: scatterSeries.map((_, index) => index),
     },
     grid: [
       {
         left: '3%',
         right: '5%',
-        top: '20%',
+        top: isExpanded ? '5%' : '20%',
         bottom: '0%',
         containLabel: true,
-        height: 'auto',
+        height: isExpanded ? '90%' : 'auto',
       },
     ],
     // avoid flickering when brushing

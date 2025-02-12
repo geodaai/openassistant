@@ -1,6 +1,6 @@
 import { EChartsOption } from 'echarts';
 import { numericFormatter } from '@openassistant/common';
-import { TopLevelFormatterParams } from 'echarts/types/dist/shared';
+import { TopLevelFormatterParams, CallbackDataParams } from 'echarts/types/dist/shared';
 
 export type HistogramDataProps = {
   bin: number;
@@ -98,9 +98,8 @@ export function getHistogramChartOption(
       label: {
         show: false,
         position: [0, -15],
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        formatter: function (params: any): string {
-          return params.value.toString();
+        formatter: function (params: CallbackDataParams): string {
+          return params.value as number + '';
         },
       },
     },

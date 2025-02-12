@@ -60,8 +60,9 @@ export const BoxplotComponent = (props: BoxplotOutputData) => {
       boxData: boxplot.boxData,
       meanPoint: boxplot.meanPoint,
       theme: theme || 'dark',
+      isExpanded: props.isExpanded || false,
     });
-  }, [boxplot.boxData, boxplot.meanPoint, rawData, theme]);
+  }, [boxplot.boxData, boxplot.meanPoint, props.isExpanded, rawData, theme]);
 
   const eChartsRef = useRef<ReactEChartsCore>(null);
   // track if the chart has been rendered, so we can update the chart later
@@ -76,7 +77,11 @@ export const BoxplotComponent = (props: BoxplotOutputData) => {
         `Chart One (${componentId}) received update for ${sourceDataId}:`,
         highlightedRows
       );
-      if (eChartsRef.current && highlightedRows && componentId !== sourceDataId) {
+      if (
+        eChartsRef.current &&
+        highlightedRows &&
+        componentId !== sourceDataId
+      ) {
         const chartInstance = eChartsRef.current?.getEchartsInstance();
         chartInstance?.dispatchAction({ type: 'downplay' });
         if (highlightedRows.length < Object.values(rawData)[0].length) {
