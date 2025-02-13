@@ -76,25 +76,34 @@ export type CustomFunctionContext<C> = {
 export type CustomFunctionContextCallback<C> = () => CustomFunctionContext<C>;
 
 /**
- * Type of Custom function output props
+ * Properties for custom function output
  * 
- * @template R The type of the result send back to LLM
- * @template D The type of the data used by custom message callback
- * @param type The type of the function, e.g. 'custom' used for type guarding
- * @param name The name of the function, e.g. createMap, createPlot etc.
- * @param args The args of the function, e.g. {datasetId: '123', variable: 'income'}
- * @param isIntermediate The flag indicate if the custom function is a intermediate step
- * @param result The result of the function run, it will be sent back to LLM as response of function calling
- * @param data The data of the function run, it will be used by customMessageCallback() to create the custom message e.g. plot, map etc.
- * @param customMessageCallback The callback function to create custom message e.g. plot/map if needed
+ * @template R - Type of the result sent back to LLM
+ * @template D - Type of the data used by custom message callback
+ * 
+ * Example:
+ * ```ts
+ * const customFunctionOutput: CustomFunctionOutputProps<string, string> = {
+ *   type: 'custom',
+ *   name: 'createMap',
+ *   args: { datasetId: '123', variable: 'income' },
+ * };
+ * ```
  */
 export type CustomFunctionOutputProps<R, D> = {
+  /** Type of the function, used for type guarding (e.g. 'custom') */
   type: string;
+  /** Name of the function (e.g. createMap, createPlot) */
   name: string;
+  /** Arguments passed to the function (e.g. `{datasetId: '123', variable: 'income'}`) */
   args?: Record<string, unknown>;
+  /** Indicates if this is an intermediate step in a multi-step function execution */
   isIntermediate?: boolean;
+  /** Result of the function execution, sent back to LLM as response */
   result: R;
+  /** Additional data used by customMessageCallback to create UI elements (e.g. plot, map) */
   data?: D;
+  /** Callback function to create custom UI elements like plots or maps */
   customMessageCallback?: CustomMessageCallback;
 };
 

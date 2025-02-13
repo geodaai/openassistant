@@ -22,7 +22,6 @@ A powerful and flexible React library for integrating multiple AI assistants (Op
 npm install @react-ai-assist/core
 ```
 
-
 ### Peer Dependencies
 
 The following peer dependencies are required:
@@ -39,7 +38,6 @@ The following peer dependencies are required:
 }
 ```
 
-
 ## Usage
 
 ### Basic Example
@@ -49,7 +47,6 @@ use with `@react-ai-assist/cli` to create chat UI with AI Assist.
 ```bash
 npx @react-ai-assist/cli
 ```
-
 
 ## Supported Features by Provider
 
@@ -65,7 +62,7 @@ npx @react-ai-assist/cli
 
 ### useAssistant Hook
 
-The main hook for interacting with AI assistants. See [UseAssistantProps documentation](src/hooks/use-assistant.ts) for detailed configuration options.
+The main hook for interacting with AI assistants. See [UseAssistantProps documentation](_media/use-assistant.ts) for detailed configuration options.
 
 ```typescript
 const assistant = useAssistant({
@@ -82,7 +79,6 @@ instructions: string;
 functions?: Array<FunctionDefinition>;
 });
 ```
-
 
 ## License
 

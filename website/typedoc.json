@@ -1,0 +1,7 @@
+{
+  "sidebar": {
+    "autoConfiguration": true,
+    "pretty": false,
+    "deprecatedItemClassName": "typedoc-sidebar-item-deprecated"
+  }
+}

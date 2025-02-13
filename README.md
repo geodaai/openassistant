@@ -10,11 +10,11 @@ Unlike general-purpose chatbot library, OpenAssistant takes a different approach
 Check out the following examples using OpenAssistant in action:
 | kepler.gl AI Assistant (kepler.gl) | GeoDa.AI AI Assistant (geoda.ai) |
 |----|----|
-| [<img width="215" alt="Screenshot 2024-12-08 at 9 12 22 PM" src="https://github.com/user-attachments/assets/edc11aee-8945-434b-bec9-cc202fee547c">](https://kepler.gl) | [<img width="240" alt="Screenshot 2024-12-08 at 9 13 43 PM" src="https://github.com/user-attachments/assets/de418af5-7663-48fb-9410-74b4750bc944">](https://geoda.ai) |
+| [<img width="215" alt="Screenshot 2024-12-08 at 9 12 22 PM" src="https://github.com/user-attachments/assets/edc11aee-8945-434b-bec9-cc202fee547c" />](https://kepler.gl) | [<img width="240" alt="Screenshot 2024-12-08 at 9 13 43 PM" src="https://github.com/user-attachments/assets/de418af5-7663-48fb-9410-74b4750bc944" />](https://geoda.ai) |
 
 
 <video width="100%" controls>
-  <source src="https://location.foursquare.com/wp-content/uploads/sites/2/2025/01/kepler-gl-ai-assistant_7f53ec.mp4" type="video/mp4">
+  <source src="https://location.foursquare.com/wp-content/uploads/sites/2/2025/01/kepler-gl-ai-assistant_7f53ec.mp4" type="video/mp4" />
 </video>
 
 [[Source]](https://location.foursquare.com/resources/blog/products/foursquare-brings-enterprise-grade-spatial-analytics-to-your-browser-with-kepler-gl-3-1/)

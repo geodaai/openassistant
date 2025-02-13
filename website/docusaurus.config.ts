@@ -10,7 +10,7 @@ const config: Config = {
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://openassistant.io',
+  url: 'https://openassistant-doc.vercel.app',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -39,7 +39,33 @@ const config: Config = {
 
   // Correct webpack configuration syntax for Docusaurus
   // clientModules: [require.resolve('./src/client-modules/webpack-fallback.ts')],
-  plugins: ['docusaurus-node-polyfills'],
+  plugins: [
+    'docusaurus-node-polyfills',
+    [
+      'docusaurus-plugin-typedoc',
+      {
+        id: 'common',
+        entryPoints: [
+          '../packages/common/src/index.ts',
+        ],
+        tsconfig: '../packages/common/tsconfig.json',
+        out: 'docs/common',
+        watch: true,
+      },
+    ],
+    [
+      'docusaurus-plugin-typedoc',
+      {
+        id: 'core',
+        entryPoints: [
+          '../packages/core/src/index.ts',
+        ],
+        tsconfig: '../packages/core/tsconfig.json',
+        out: 'docs/core',
+        watch: true,
+      },
+    ],
+  ],
 
   presets: [
     [

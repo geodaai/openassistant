@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
+    "typedoc": "docusaurus generate-typedoc",
     "start": "docusaurus start",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
@@ -36,8 +37,11 @@
     "@types/react": "^18.3.1",
     "autoprefixer": "^10.4.20",
     "docusaurus-node-polyfills": "^1.0.0",
+    "docusaurus-plugin-typedoc": "^1.2.3",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
+    "typedoc": "^0.27.7",
+    "typedoc-plugin-markdown": "^4.4.2",
     "typescript": "~5.6.2",
     "webpack": "^5.97.1"
   },
