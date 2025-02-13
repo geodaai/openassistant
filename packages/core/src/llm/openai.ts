@@ -25,6 +25,10 @@ export class OpenAIAssistant extends VercelAiClient {
 
   protected openaiClient: OpenAI | null = null;
 
+  public static getBaseURL() {
+    return OpenAIAssistant.baseURL;
+  }
+
   public static override configure(config: VercelAiClientConfigureProps) {
     // call parent configure
     super.configure(config);
@@ -38,7 +42,9 @@ export class OpenAIAssistant extends VercelAiClient {
       apiKey,
       baseURL: OpenAIAssistant.baseURL,
       compatibility:
-        OpenAIAssistant.baseURL === DEFAULT_OPENAI_BASE_URL ? 'strict' : 'compatible',
+        OpenAIAssistant.baseURL === DEFAULT_OPENAI_BASE_URL
+          ? 'strict'
+          : 'compatible',
     });
     return await testConnection(oai(model));
   }

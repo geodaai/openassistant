@@ -85,6 +85,7 @@ export class VoiceHandler {
     this.initialize(AssistantModel); // Call initialize without await
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async initialize(AssistantModel) {
     this.model = await AssistantModel.getInstance();
   }

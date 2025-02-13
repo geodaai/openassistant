@@ -41,6 +41,7 @@ export function getSimpleScatterChartOption(
         data: seriesData,
         type: 'scatter',
         symbolSize: 6,
+        symbol: seriesData.length > 1000 ? 'rect' : 'circle',
         itemStyle: {
           color: 'none',
           borderColor: '#aaa',

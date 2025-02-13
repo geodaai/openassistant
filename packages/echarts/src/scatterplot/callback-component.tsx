@@ -1,5 +1,5 @@
 import { CustomFunctionCall } from '@openassistant/core';
-import { ScatterplotComponent } from './utils/scatter-plot-component';
+import { ScatterplotComponent } from './component/scatter-plot-component';
 import { ScatterplotOutputData } from './callback-function';
 import { ExpandableContainer, generateId } from '@openassistant/common';
 import { DragEvent } from 'react';

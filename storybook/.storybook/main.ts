@@ -9,6 +9,7 @@ import path, { join, dirname } from 'path';
 function getAbsolutePath(value: string): any {
   return dirname(require.resolve(join(value, 'package.json')));
 }
+
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   addons: [
@@ -22,5 +23,20 @@ const config: StorybookConfig = {
     options: {},
   },
   staticDirs: ['../public'],
+  webpackFinal: async (config) => {
+    if (!config.resolve) config.resolve = {};
+
+    const opentelemetryApiPath = path.resolve(
+      process.cwd(),
+      'node_modules/@opentelemetry/api'
+    );
+    console.log('opentelemetryApiPath', opentelemetryApiPath);
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@opentelemetry/api': opentelemetryApiPath,
+    };
+    return config;
+  },
 };
+
 export default config;

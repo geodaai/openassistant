@@ -1,11 +1,9 @@
 import { Button, Input, SelectItem, Slider } from '@nextui-org/react';
 import { Select } from '@nextui-org/react';
-import {
-  GetAssistantModelByProvider,
-  VercelAiClient,
-} from '@openassistant/core';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { GetAssistantModelByProvider } from '@openassistant/core';
+import { ChangeEvent, useState } from 'react';
 import { MODEL_PROVIDERS } from '../config/constants';
+import { Icon } from '@iconify/react';
 
 // Add a type for valid providers
 type Provider = keyof typeof MODEL_PROVIDERS;
@@ -76,28 +74,21 @@ export function ConfigPanel(props: ConfigPanelProps) {
   const [topP, setTopP] = useState(props.initialConfig?.topP || 0.8);
   const [baseUrl, setBaseUrl] = useState(props.initialConfig?.baseUrl);
   const [connectionError, setConnectionError] = useState(false);
+  const [keyError, setKeyError] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const [isRunning, setIsRunning] = useState(false);
-  const [llm, setLLM] = useState<typeof VercelAiClient | null>(null);
-
-  useEffect(() => {
-    // get the AssistantModel class based on the provider
-    const selectedLLM = GetAssistantModelByProvider({
-      provider: provider,
-      // all the client-side AssistantModel classes extend VercelAiClient
-    }) as unknown as typeof VercelAiClient;
-    setLLM(selectedLLM);
-  }, [provider]);
 
   const onAiProviderSelect = (
     value: string | number | boolean | object | null
   ) => {
     if (value && typeof value === 'object' && 'currentKey' in value) {
       const selectedProvider = value.currentKey as Provider;
-      setProvider(selectedProvider);
-      setModel(defaultProviderModels[selectedProvider][0]);
-      setConnectionError(false);
-      setErrorMessage('');
+      if (selectedProvider in defaultProviderModels) {
+        setProvider(selectedProvider);
+        setModel(defaultProviderModels[selectedProvider][0]);
+        setConnectionError(false);
+        setErrorMessage('');
+      }
     }
   };
 
@@ -115,6 +106,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
     // reset previous key error if any
     setConnectionError(false);
     setErrorMessage('');
+    setKeyError(false);
   };
 
   const onTemperatureChange = (value: number | number[]) => {
@@ -131,6 +123,10 @@ export function ConfigPanel(props: ConfigPanelProps) {
     setErrorMessage('');
   };
 
+  const AssistantModel = GetAssistantModelByProvider({
+    provider: provider,
+  });
+
   const onStartChat = async () => {
     setIsRunning(true);
     try {
@@ -144,22 +140,18 @@ export function ConfigPanel(props: ConfigPanelProps) {
         );
       });
 
-      const testResult = await Promise.race([
-        llm?.testConnection(apiKey, model),
+      const success = (await Promise.race([
+        AssistantModel?.testConnection(apiKey, model),
         timeoutPromise,
-      ]);
-
-      const { success, service } = testResult as {
-        success: boolean;
-        service: string;
-      };
+      ])) as boolean;
 
       const errorMessage = !success
-        ? service === 'ollama'
+        ? provider === 'ollama'
           ? 'Connection failed: maybe invalid Ollama Base URL'
           : 'Connection failed: maybe invalid API Key'
         : '';
 
+      setKeyError(!success);
       setConnectionError(!success);
       setErrorMessage(errorMessage);
       props.onConfigChange?.({
@@ -201,10 +193,10 @@ export function ConfigPanel(props: ConfigPanelProps) {
         placeholder="Select LLM model"
         className="max-w-full"
         onSelectionChange={onLLMModelSelect}
-        isInvalid={!defaultProviderModels[provider].models.includes(model)}
+        isInvalid={!defaultProviderModels[provider]?.models.includes(model)}
         selectedKeys={model ? [model] : []}
       >
-        {defaultProviderModels[provider].models.map((model) => (
+        {defaultProviderModels[provider]?.models.map((model) => (
           <SelectItem key={model}>{model}</SelectItem>
         ))}
       </Select>
@@ -220,11 +212,14 @@ export function ConfigPanel(props: ConfigPanelProps) {
         value={apiKey || ''}
         required
         isInvalid={connectionError || apiKey.length === 0}
+        endContent={
+          !keyError && <Icon icon="mdi:check" className="text-green-500" />
+        }
       />
       <Input
         type="string"
         label="Base URL"
-        defaultValue={baseUrl || llm?.getBaseURL() || ''}
+        defaultValue={baseUrl || AssistantModel?.getBaseURL() || ''}
         placeholder="Enter base URL here"
         className="max-w-full"
         required
@@ -256,7 +251,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
       )}
       <Button
         isLoading={isRunning}
-        onClick={onStartChat}
+        onPress={onStartChat}
         className="mt-4"
         color={props.color || 'primary'}
       >

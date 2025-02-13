@@ -20,12 +20,19 @@ export class GoogleAIAssistant extends VercelAiClient {
 
   protected static instance: GoogleAIAssistant | null = null;
 
+  public static getBaseURL() {
+    return GoogleAIAssistant.baseURL;
+  }
+
   public static override configure(config: VercelAiClientConfigureProps) {
     // call parent configure
     super.configure(config);
   }
 
-  public static async testConnection(apiKey: string, model: string): Promise<boolean> {
+  public static async testConnection(
+    apiKey: string,
+    model: string
+  ): Promise<boolean> {
     const llm = createGoogleGenerativeAI({ apiKey });
     return await testConnection(llm(model));
   }

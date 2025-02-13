@@ -19,6 +19,10 @@ export class DeepSeekAssistant extends VercelAiClient {
 
   protected static instance: DeepSeekAssistant | null = null;
 
+  public static getBaseURL() {
+    return DeepSeekAssistant.baseURL;
+  }
+
   public static override configure(config: VercelAiClientConfigureProps) {
     // call parent configure
     super.configure(config);

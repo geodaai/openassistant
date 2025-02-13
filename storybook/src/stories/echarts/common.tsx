@@ -1,4 +1,4 @@
-import { ResizablePlotContainer } from '@openassistant/echarts';
+import { ResizablePlotContainer } from '@openassistant/common';
 import { ThemeProvider } from 'next-themes';
 
 export function ResizableThemeWrapper({

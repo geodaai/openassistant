@@ -2,9 +2,11 @@ import { useState } from 'react';
 import DeckGL from '@deck.gl/react';
 import { ScatterplotLayer } from '@deck.gl/layers';
 import { Map } from 'react-map-gl/maplibre';
-import { SAMPLE_DATASETS } from './dataset';
+import '@deck.gl/widgets/stylesheet.css';
 
-import { AiAssistant } from '@openassistant/ui';
+import { SAMPLE_DATASETS } from './dataset';
+import { AiAssistantWidget } from './ai-assistant-widgets';
+
 import { histogramFunctionDefinition } from '@openassistant/echarts';
 import {
   CallbackFunctionProps,
@@ -226,24 +228,22 @@ Fields:
 
   return (
     <div className="flex flex-row w-screen h-screen">
-      <div className="w-[550px] h-[800px] m-4">
-        <AiAssistant
-          name="My Assistant"
-          apiKey="your-api-key"
-          version="v1"
-          modelProvider="openai"
-          model="gpt-4o"
-          welcomeMessage="Hello, how can I help you today?"
-          instructions={instructions}
-          functions={functionTools}
-        />
-      </div>
       <div className="deckgl h-full w-full">
         <DeckGL
           initialViewState={initialViewState}
           controller={true}
           layers={layers}
           style={{ position: 'relative' }}
+          widgets={[
+            new AiAssistantWidget({
+              modelProvider: 'openai',
+              model: 'gpt-4o',
+              apiKey: process.env.OPENAI_TOKEN || '',
+              welcomeMessage: 'Hello, how can I help you today?',
+              instructions,
+              functionTools,
+            }),
+          ]}
         >
           <Map reuseMaps mapStyle={mapStyle} />
         </DeckGL>

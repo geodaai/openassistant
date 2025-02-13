@@ -1,3 +1,5 @@
+'use client';
+
 import { CustomFunctionCall } from '@openassistant/core';
 import { KeplerGlComponentWithProvider } from './component/keplergl-component';
 import { FileCacheItem } from '@kepler.gl/processors';

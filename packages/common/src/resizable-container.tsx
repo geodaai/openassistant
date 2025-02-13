@@ -4,10 +4,12 @@ export function ResizablePlotContainer({
   children,
   defaultWidth,
   defaultHeight = 380,
+  handlePosition = 'bottomRight',
 }: {
   children: JSX.Element;
   defaultWidth?: number;
   defaultHeight?: number;
+  handlePosition?: 'bottomRight' | 'bottomLeft' | 'topRight' | 'topLeft';
 }) {
   return (
     <div className="w-full mt-4 mb-8">
@@ -20,7 +22,7 @@ export function ResizablePlotContainer({
         maxHeight={800}
         enable={{ bottom: true, bottomRight: true, right: false }}
         handleComponent={{
-          bottomRight: (
+          [handlePosition]: (
             <div className="group absolute bottom-0 right-0 h-6 w-6 cursor-se-resize">
               <div className="flex h-full w-full items-center justify-center transition-colors hover:bg-gray-100/10">
                 <svg

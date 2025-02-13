@@ -51,7 +51,7 @@ export abstract class VercelAiClient extends VercelAi {
   protected static instance: VercelAiClient | null = null;
 
   public static getBaseURL() {
-    return VercelAiClient.baseURL;
+    throw new Error('No base URL for VercelAiClient. It is an abstract class.');
   }
 
   protected static checkModel() {

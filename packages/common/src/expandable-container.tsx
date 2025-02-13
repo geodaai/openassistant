@@ -37,7 +37,11 @@ export function ExpandableContainer({
           isExpanded ? ' border border-default-200 p-1' : ''
         }`}
       >
-        {!isExpanded && children}
+        {!isExpanded &&
+          cloneElement(children, {
+            isExpanded: false,
+            setIsExpanded: setIsExpanded,
+          })}
         <div className="group absolute top-0 right-0 mt-2 mr-2 cursor-pointer flex flex-row">
           <Button
             isIconOnly
@@ -75,28 +79,36 @@ export function ExpandableContainer({
               </Button>
             </PopoverTrigger>
             <PopoverContent>
-              <div className="h-3 w-full" {...moveProps}></div>
-              <ResizablePlotContainer
-                defaultHeight={defaultHeight}
-                defaultWidth={defaultWidth}
-              >
-                <div className="h-full w-full relative">
-                  {cloneElement(children, { isExpanded: true })}
-                  <Button
-                    className="absolute top-0 right-0"
-                    isIconOnly
-                    size="sm"
-                    variant="light"
-                    onClick={onExpandComponent}
+              {isExpanded && (
+                <>
+                  <ResizablePlotContainer
+                    defaultHeight={defaultHeight}
+                    defaultWidth={defaultWidth}
                   >
-                    <Icon
-                      icon="material-symbols:close"
-                      width="16"
-                      height="16"
-                    />
-                  </Button>
-                </div>
-              </ResizablePlotContainer>
+                    <div className="h-full w-full relative mb-2">
+                      {cloneElement(children, { isExpanded: true })}
+                      <div
+                        className="absolute top-0 right-0 flex flex-row justify-end gap-2 cursor-move w-full"
+                        {...moveProps}
+                      >
+                        <Button
+                          isIconOnly
+                          size="sm"
+                          variant="light"
+                          onClick={onExpandComponent}
+                        >
+                          <Icon
+                            icon="material-symbols:close"
+                            width="16"
+                            height="16"
+                          />
+                        </Button>
+                      </div>
+                    </div>
+                  </ResizablePlotContainer>
+                  <div className="w-full h-4"></div>
+                </>
+              )}
             </PopoverContent>
           </Popover>
         </div>

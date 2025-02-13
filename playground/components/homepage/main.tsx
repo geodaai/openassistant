@@ -1,3 +1,5 @@
+'use client';
+
 import ChatContainer from './chat-container';
 import GridLayout from './grid-layout';
 

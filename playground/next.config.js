@@ -23,7 +23,7 @@ module.exports = {
     config.experiments = {
       ...config.experiments,
       asyncWebAssembly: true,
-      topLevelAwait: true,
+      // topLevelAwait: true,
     };
 
     // Support WASM modules for parquet-wasm
@@ -31,19 +31,16 @@ module.exports = {
       test: /\.wasm$/,
       // type: 'webassembly/async',
       type: 'asset/resource',
-      generator: {
-        filename:
-          process.env.NODE_ENV === 'production'
-            ? 'server/app/[name][ext]'
-            : 'server/vendor-chunks/[name][ext]',
-      },
+      // generator: {
+      //   filename: 'static/wasm/[name][ext]',
+      // },
     });
 
     // Resolve aliases for different versions of dependencies
     config.resolve.alias = {
       ...config.resolve.alias,
-      react$: path.resolve(__dirname, 'node_modules/react'),
-      'react-dom$': path.resolve(__dirname, 'node_modules/react-dom'),
+      // react: path.resolve(__dirname, 'node_modules/react'),
+      // 'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
       'styled-components': path.resolve(
         __dirname,
         'node_modules/styled-components'
@@ -83,7 +80,7 @@ module.exports = {
     };
 
     // Add externals configuration, so Next.js won't bundle them
-    config.externals = [...config.externals, 'wbg'];
+    // config.externals = [...config.externals, 'wbg'];
 
     return config;
   },

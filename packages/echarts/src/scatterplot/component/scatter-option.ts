@@ -210,21 +210,22 @@ export function getScatterplotChartOption({
         data: seriesData,
         type: 'scatter',
         symbolSize: 0,
+        symbol: seriesData.length > 1000 ? 'rect' : 'circle',
         itemStyle: {
-          color: 'red',
+          color: 'lightblue',
           borderColor: '#555',
           opacity: 0.9,
           borderWidth: 0,
         },
         // highlight
-        // emphasis: {
-        //   // focus: 'series',
-        //   symbolSize: 6,
-        //   itemStyle: {
-        //     color: 'red',
-        //     borderWidth: 1
-        //   }
-        // },
+        emphasis: {
+          // focus: 'series',
+          symbolSize: 6,
+          itemStyle: {
+            color: 'red',
+            borderWidth: 1
+          }
+        },
         animationDelay: 0,
       },
       ...createRegressionSeries(),

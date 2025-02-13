@@ -1,3 +1,5 @@
+'use client';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
@@ -14,9 +16,6 @@ import { wrapTo } from '@kepler.gl/actions';
 import { MapState } from '@kepler.gl/types';
 import { getCenterAndZoomFromBounds } from '@kepler.gl/utils';
 import { KeplerState, MAP_ID } from './keplergl-provider';
-
-// For inject customized component to kepler.gl
-const MapContainer = appInjector.get(MapContainerFactory);
 
 // disable all map controls
 const initialMapUiState = {
@@ -60,6 +59,9 @@ export function KeplerMiniMap({
   mapHeight,
   mapWidth,
 }: KeplerMiniMapProps) {
+  // For inject customized component to kepler.gl
+  const MapContainer = appInjector.get(MapContainerFactory);
+
   const dispatch = useDispatch();
 
   // get kepler state

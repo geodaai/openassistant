@@ -24,6 +24,10 @@ export class OllamaAssistant extends VercelAiClient {
     }
   }
 
+  public static getBaseURL() {
+    return OllamaAssistant.baseURL;
+  }
+
   public static async testConnection(
     apiKey: string,
     model: string

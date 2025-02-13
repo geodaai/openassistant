@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { HistogramComponent } from '@openassistant/echarts';
+import {
+  HistogramComponent,
+  HistogramCallbackMessage,
+} from '@openassistant/echarts';
 import { ResizableThemeWrapper } from './common';
+
 const meta: Meta<typeof HistogramComponent> = {
   title: 'Charts/Histogram',
   component: HistogramComponent,
@@ -49,7 +53,7 @@ const output = {
 export const Default: Story = {
   render: () => (
     <ResizableThemeWrapper forcedTheme="light">
-      <HistogramComponent
+      <HistogramCallbackMessage
         functionName="histogram"
         functionArgs={{}}
         output={{
@@ -75,7 +79,7 @@ export const Default: Story = {
 export const Dark: Story = {
   render: () => (
     <ResizableThemeWrapper forcedTheme="dark">
-      <HistogramComponent
+      <HistogramCallbackMessage
         functionName="histogram"
         functionArgs={{}}
         output={{
