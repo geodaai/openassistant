@@ -2,21 +2,17 @@ import { numericFormatter } from '@openassistant/common';
 import { EChartsOption } from 'echarts';
 import { YAXisOption, XAXisOption } from 'echarts/types/dist/shared';
 import * as echarts from 'echarts';
+import { BoxplotDataProps } from './utils';
 
 export type BoxPlotChartOptionProps = {
   rawData: { [key: string]: number[] };
-  boxData: Array<{
-    name: string;
-    value: [number, number, number, number, number];
-  }>;
-  meanPoint: [string, number][];
   theme: string;
   isExpanded: boolean;
-};
+} & BoxplotDataProps;
 
 export function getBoxPlotChartOption({
   rawData,
-  boxData,
+  boxplots,
   meanPoint,
   theme,
   isExpanded,
@@ -60,7 +56,13 @@ export function getBoxPlotChartOption({
     ...scatterSeries,
     {
       type: 'boxplot' as const,
-      data: boxData,
+      data: boxplots.map((boxplot) => [
+        boxplot.low,
+        boxplot.q1,
+        boxplot.q2,
+        boxplot.q3,
+        boxplot.high,
+      ]),
       itemStyle: {
         borderColor: theme === 'dark' ? 'white' : 'black',
         color: '#DB631C',
@@ -105,7 +107,7 @@ export function getBoxPlotChartOption({
         }
       : {
           formatter: function (d: string, i: number) {
-            return boxData[i]?.name ?? '';
+            return boxplots[i]?.name ?? '';
           },
         },
   } as YAXisOption;
@@ -115,7 +117,7 @@ export function getBoxPlotChartOption({
     axisLabel: isExpanded
       ? {
           formatter: function (d: string, i: number) {
-            return boxData[i]?.name ?? '';
+            return boxplots[i]?.name ?? '';
           },
         }
       : {

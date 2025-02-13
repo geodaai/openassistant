@@ -38,7 +38,7 @@ export type BoxplotOutputData = {
   id: string;
   datasetName: string;
   variables: string[];
-  boxplot: BoxplotDataProps;
+  boxplotData: BoxplotDataProps;
   theme?: string;
   isExpanded?: boolean;
   isDraggable?: boolean;
@@ -49,19 +49,19 @@ export type BoxplotOutputData = {
  * The react component of a box plot using eCharts
  */
 export const Boxplot = (props: BoxplotOutputData) => {
-  const { id, datasetName, variables, data: rawData, theme, boxplot } = props;
+  const { id, datasetName, variables, data: rawData, theme, boxplotData } = props;
   const seriesIndex = variables.map((_, i) => i);
 
   // get chart option by calling getChartOption only once
   const option = useMemo(() => {
     return getBoxPlotChartOption({
       rawData,
-      boxData: boxplot.boxData,
-      meanPoint: boxplot.meanPoint,
+      boxplots: boxplotData.boxplots,
+      meanPoint: boxplotData.meanPoint,
       theme: theme || 'dark',
       isExpanded: props.isExpanded || false,
     });
-  }, [boxplot.boxData, boxplot.meanPoint, props.isExpanded, rawData, theme]);
+  }, [boxplotData, props.isExpanded, rawData, theme]);
 
   const eChartsRef = useRef<ReactEChartsCore>(null);
   // track if the chart has been rendered, so we can update the chart later
@@ -77,6 +77,7 @@ export const Boxplot = (props: BoxplotOutputData) => {
         highlightedRows
       );
       if (
+        rendered &&
         eChartsRef.current &&
         highlightedRows &&
         componentId !== sourceDataId

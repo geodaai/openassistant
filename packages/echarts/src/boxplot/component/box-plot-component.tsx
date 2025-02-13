@@ -11,7 +11,7 @@ import {
 } from '@nextui-org/react';
 import { Icon } from '@iconify/react';
 import { Boxplot, BoxplotOutputData } from './box-plot';
-import { BoxplotDataProps } from 'src';
+import { BoxplotDataProps } from './utils';
 
 export function BoxplotComponent(props: BoxplotOutputData): JSX.Element | null {
   const [showMore, setShowMore] = useState(props.isExpanded);
@@ -21,27 +21,23 @@ export function BoxplotComponent(props: BoxplotOutputData): JSX.Element | null {
     props.setIsExpanded?.(!props.isExpanded);
   }, [showMore, props]);
 
-  const createTableCells = (
-    metric: string,
-    boxplot: BoxplotDataProps,
-    index: number
-  ) => {
+  const createTableCells = (metric: string, boxplotData: BoxplotDataProps) => {
     const tableCells: JSX.Element[] = [];
     tableCells.push(<TableCell key="metric-label">{metric}</TableCell>);
-    boxplot.boxData.forEach((data) => {
+    boxplotData.boxplots.forEach((boxplot) => {
       tableCells.push(
-        <TableCell key={data.name}>{data.value[index].toFixed(4)}</TableCell>
+        <TableCell key={boxplot.name}>{boxplot[metric].toFixed(4)}</TableCell>
       );
     });
     return tableCells;
   };
 
-  const generateStatsRows = (boxplot: BoxplotDataProps) => {
-    const metrics = ['Min', 'Q1', 'Median', 'Q3', 'Max'];
+  const generateStatsRows = (boxplotData: BoxplotDataProps) => {
+    const metrics = ['low', 'q1', 'q2', 'q3', 'high', 'mean', 'std', 'iqr'];
 
     return metrics.map((metric, index) => (
       <TableRow key={`${metric.toLowerCase()}-stats-${index}`}>
-        {createTableCells(metric, boxplot, index)}
+        {createTableCells(metric, boxplotData)}
       </TableRow>
     ));
   };
@@ -112,7 +108,9 @@ export function BoxplotComponent(props: BoxplotOutputData): JSX.Element | null {
                         ))}
                       </>
                     </TableHeader>
-                    <TableBody>{generateStatsRows(props.boxplot)}</TableBody>
+                    <TableBody>
+                      {generateStatsRows(props.boxplotData)}
+                    </TableBody>
                   </Table>
                 </div>
               )}

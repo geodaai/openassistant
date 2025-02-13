@@ -9,7 +9,7 @@ export function BoxplotCallbackMessage(
 ): ReactNode | null {
   const outputData = props.output.data as BoxplotOutputData | undefined;
 
-  if (!outputData?.boundIQR || !outputData.boxplot || !outputData.data) {
+  if (!outputData?.boundIQR || !outputData.boxplotData || !outputData.data) {
     return null;
   }
 
