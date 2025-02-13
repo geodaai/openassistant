@@ -19,7 +19,7 @@ type BoxplotOutputResult =
   | {
       success: boolean;
       boundIQR: number;
-      boxplot: BoxplotDataProps;
+      boxplotData: BoxplotDataProps;
     };
 
 /**
@@ -77,7 +77,7 @@ export async function boxplotCallbackFunction({
     });
 
     // create boxplot data
-    const boxplot: BoxplotDataProps = createBoxplot({
+    const boxplotData: BoxplotDataProps = createBoxplot({
       data,
       boundIQR: boundIQR || 1.5,
     });
@@ -87,7 +87,7 @@ export async function boxplotCallbackFunction({
       id: generateId(),
       datasetName,
       variables: variableNames,
-      boxplot,
+      boxplotData,
       data,
       boundIQR,
       theme: config?.theme,
@@ -100,7 +100,7 @@ export async function boxplotCallbackFunction({
       result: {
         success: true,
         boundIQR,
-        boxplot,
+        boxplotData,
       },
       data: outputData,
     };
