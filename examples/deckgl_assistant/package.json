@@ -19,6 +19,7 @@
     "@openassistant/echarts": "0.1.5",
     "@openassistant/ui": "0.1.5",
     "ollama-ai-provider": "^1.2.0",
+    "preact": "^10.25.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-map-gl": "^8.0.1"

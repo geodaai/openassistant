@@ -5580,6 +5580,7 @@ __metadata:
     ollama-ai-provider: "npm:^1.2.0"
     open: "npm:^10.1.0"
     postcss: "npm:^8.4.49"
+    preact: "npm:^10.25.4"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     react-map-gl: "npm:^8.0.1"
@@ -8292,7 +8293,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preact@npm:^10.17.0":
+"preact@npm:^10.17.0, preact@npm:^10.25.4":
   version: 10.25.4
   resolution: "preact@npm:10.25.4"
   checksum: 8b377438912965b45786d1dbfdd532157294a79bebc611b242d708317574403554ab37e34c613a3e9e862685c04695343f1426a38e12258e1e9ebafc0d7e4c5d

@@ -1,6 +1,6 @@
 import { Deck, Widget, WidgetPlacement } from '@deck.gl/core';
 import { MessageModel, UseAssistantProps } from '@openassistant/core';
-import { AiAssistant, ConfigPanel } from '@openassistant/ui';
+import { AiAssistant, AiAssistantConfig, ConfigPanel } from '@openassistant/ui';
 // import { ConfigPanel } from './config-panel';
 import { createRoot } from 'react-dom/client';
 
@@ -199,6 +199,7 @@ export class AiAssistantWidget implements Widget<AiAssistantWidgetProps> {
           temperature={this.temperature}
           topP={this.topP}
           baseUrl={this.baseUrl}
+          enableVoice={true}
           chatEndpoint={this.chatEndpoint}
           voiceEndpoint={this.voiceEndpoint}
           theme={this.theme}
@@ -226,7 +227,14 @@ export class AiAssistantWidget implements Widget<AiAssistantWidgetProps> {
                             temperature: this.temperature,
                             topP: this.topP,
                           }}
-                          onConfigChange={() => {}}
+                          onConfigChange={(config: AiAssistantConfig) => {
+                            this.modelProvider = config.provider;
+                            this.model = config.model;
+                            this.apiKey = config.apiKey;
+                            this.temperature = config.temperature;
+                            this.topP = config.topP;
+                            this.baseUrl = config.baseUrl || '';
+                          }}
                         />
                       </div>
                     ),
