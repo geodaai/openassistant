@@ -1,6 +1,6 @@
 import { numericFormatter } from '@openassistant/common';
 import { EChartsOption } from 'echarts';
-import { YAXisOption, XAXisOption, TooltipOption } from 'echarts/types/dist/shared';
+import { YAXisOption, XAXisOption } from 'echarts/types/dist/shared';
 import * as echarts from 'echarts';
 
 export type BoxPlotChartOptionProps = {
@@ -131,16 +131,15 @@ export function getBoxPlotChartOption({
     axisLine: { show: !isExpanded },
   } as XAXisOption;
 
-  const tooltip =
-    {
-      trigger: 'item',
-      formatter: (params: echarts.DefaultLabelFormatterCallbackParams) => {
-        if (params && params.componentSubType === 'scatter' && params.value) {
-          return `${numericFormatter(params.value[0])}`;
-        }
-      },
-    };
-  
+  const tooltip = {
+    trigger: 'item',
+    formatter: (params: echarts.DefaultLabelFormatterCallbackParams) => {
+      if (params && params.componentSubType === 'scatter' && params.value) {
+        return `${numericFormatter(params.value[0])}`;
+      }
+    },
+  };
+
   // build option for echarts
   const option: EChartsOption = {
     yAxis,

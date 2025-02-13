@@ -2333,9 +2333,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openassistant/core@file:/Users/xun/github/openassistant/packages/core/openassistant-core-0.1.4.tgz::locator=deckgl-assistant-example%40workspace%3A.":
-  version: 0.1.4
-  resolution: "@openassistant/core@file:/Users/xun/github/openassistant/packages/core/openassistant-core-0.1.4.tgz#/Users/xun/github/openassistant/packages/core/openassistant-core-0.1.4.tgz::hash=7fbf63&locator=deckgl-assistant-example%40workspace%3A."
+"@openassistant/core@npm:0.1.5":
+  version: 0.1.5
+  resolution: "@openassistant/core@npm:0.1.5"
   dependencies:
     "@ai-sdk/deepseek": "npm:^0.1.8"
     "@ai-sdk/google": "npm:^1.1.8"
@@ -2350,13 +2350,13 @@ __metadata:
     zod: "npm:^3.24.1"
   peerDependencies:
     react: ">=18.2"
-  checksum: b2f02db5906edfb9dc6dfbfccc25424d6af7294d7d7c54864d8554f3edce99a1a897874743a9e8f4aeeeb424aaa73fe8d166257bf4953abf18da16f1b7394798
+  checksum: 14e0c6033bf1c50864d97d890b80e8ba4aaab0cc83916309c8b8bef799f5ba1e0ce2c855e25db33103e557ffa13efb3cca4fa84cf0ad7dee00e3a274eb2c8135
   languageName: node
   linkType: hard
 
-"@openassistant/duckdb@npm:0.1.4":
-  version: 0.1.4
-  resolution: "@openassistant/duckdb@npm:0.1.4"
+"@openassistant/duckdb@npm:0.1.5":
+  version: 0.1.5
+  resolution: "@openassistant/duckdb@npm:0.1.5"
   dependencies:
     "@duckdb/duckdb-wasm": "npm:^1.29.0"
     "@nextui-org/react": "npm:^2.6.8"
@@ -2367,13 +2367,13 @@ __metadata:
     "@openassistant/core": "*"
     react: ">=18.2"
     react-dom: ">=18.2"
-  checksum: d564a1349486b0d9496cc277ec78773b53161c3d976b807f37ac6443b50753710be7966eb55856eb3ffd029569713818117dc9722659e858c550e7b44873e49e
+  checksum: e1264129107cf7126dfd94a4f5d60548e9e8238e4764cf1f8f8792fe055db1e9868f3300119a1fecbc1ac7b7863a17de53781de601a68e0434bcdc34ee67828d
   languageName: node
   linkType: hard
 
-"@openassistant/echarts@npm:0.1.4":
-  version: 0.1.4
-  resolution: "@openassistant/echarts@npm:0.1.4"
+"@openassistant/echarts@npm:0.1.5":
+  version: 0.1.5
+  resolution: "@openassistant/echarts@npm:0.1.5"
   dependencies:
     "@iconify/react": "npm:^5.1.0"
     "@nextui-org/react": "npm:^2.6.10"
@@ -2391,13 +2391,13 @@ __metadata:
     "@openassistant/core": "*"
     react: ">=18.2"
     react-dom: ">=18.2"
-  checksum: 179217e003f00318c3abb6b893cdc6b6ea18ceb96dec1e464ec13a953d042ae5bfd754cc247975eb1ea0bb550a31ff85ce7cf8a6bd43abf48f0864837518daf3
+  checksum: bf8347bb054b35523e1a4c915c36198112e7696ca05e9450f6c8d4a5d3933c1d4ba693a5dac3f917168215ef0c4fdd9428c616f4a494894c40fcdd1b4bef3a88
   languageName: node
   linkType: hard
 
-"@openassistant/ui@file:/Users/xun/github/openassistant/packages/ui/openassistant-ui-0.1.4.tgz::locator=deckgl-assistant-example%40workspace%3A.":
-  version: 0.1.4
-  resolution: "@openassistant/ui@file:/Users/xun/github/openassistant/packages/ui/openassistant-ui-0.1.4.tgz#/Users/xun/github/openassistant/packages/ui/openassistant-ui-0.1.4.tgz::hash=81f9ec&locator=deckgl-assistant-example%40workspace%3A."
+"@openassistant/ui@npm:0.1.5":
+  version: 0.1.5
+  resolution: "@openassistant/ui@npm:0.1.5"
   dependencies:
     "@iconify/react": "npm:^5.1.0"
     "@nextui-org/react": "npm:^2.6.10"
@@ -2410,7 +2410,7 @@ __metadata:
     "@openassistant/core": ^0.1.0
     react: ">=18.2"
     react-dom: ">=18.2"
-  checksum: 5d98d9aa02d37b79d3de886bac5dcc504a2a2d19f8c7d7d787c7e233a59feed8b5fd9eb4e264c4e18e84830b886cc75cf72f23a37ba05ed364cc6c2646307b25
+  checksum: e864821db1d2e8508f456911acda06ab732313d1831783a40ce138aef570f02e6f3cb784aaab510eb714c5fc65294fdefb44c854b4ba5905ed7692e546a5e267
   languageName: node
   linkType: hard
 
@@ -5567,10 +5567,10 @@ __metadata:
     "@deck.gl/react": "npm:^9.1.1"
     "@deck.gl/widgets": "npm:^9.1.1"
     "@nextui-org/react": "npm:^2.6.10"
-    "@openassistant/core": /Users/xun/github/openassistant/packages/core/openassistant-core-0.1.4.tgz
-    "@openassistant/duckdb": "npm:0.1.4"
-    "@openassistant/echarts": "npm:0.1.4"
-    "@openassistant/ui": /Users/xun/github/openassistant/packages/ui/openassistant-ui-0.1.4.tgz
+    "@openassistant/core": "npm:0.1.5"
+    "@openassistant/duckdb": "npm:0.1.5"
+    "@openassistant/echarts": "npm:0.1.5"
+    "@openassistant/ui": "npm:0.1.5"
     "@types/react": "npm:^18.2.0"
     "@types/react-dom": "npm:^18.2.0"
     autoprefixer: "npm:^10.4.20"
