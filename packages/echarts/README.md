@@ -169,7 +169,7 @@ Create a histogram of the 'revenue' variable?
 ```
 
 The LLM models will understand that the `histogramFunctionDefinition` is the function to call, 
-and the arguments are {datasetName: 'myVenues', variableName: 'revenue'}.
+and the arguments are `{datasetName: 'myVenues', variableName: 'revenue'}`.
 
 > Tip: Becuase you shared the meta data of your dataset with the assistant, the LLM models will know that 'revenue' belongs
 to the 'myVenues' dataset. So, even you don't mention the dataset name in the prompt, the LLM models will know which dataset to use.

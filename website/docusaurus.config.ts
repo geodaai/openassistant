@@ -45,9 +45,7 @@ const config: Config = {
       'docusaurus-plugin-typedoc',
       {
         id: 'common',
-        entryPoints: [
-          '../packages/common/src/index.ts',
-        ],
+        entryPoints: ['../packages/common/src/index.ts'],
         tsconfig: '../packages/common/tsconfig.json',
         out: 'docs/common',
         watch: true,
@@ -57,11 +55,19 @@ const config: Config = {
       'docusaurus-plugin-typedoc',
       {
         id: 'core',
-        entryPoints: [
-          '../packages/core/src/index.ts',
-        ],
+        entryPoints: ['../packages/core/src/index.ts'],
         tsconfig: '../packages/core/tsconfig.json',
         out: 'docs/core',
+        watch: true,
+      },
+    ],
+    [
+      'docusaurus-plugin-typedoc',
+      {
+        id: 'echarts',
+        entryPoints: ['../packages/echarts/src/index.ts'],
+        tsconfig: '../packages/echarts/tsconfig.json',
+        out: 'docs/echarts',
         watch: true,
       },
     ],
