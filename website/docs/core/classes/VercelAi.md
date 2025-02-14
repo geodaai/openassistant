@@ -44,7 +44,7 @@ Add additional context to the conversation, so LLM can understand the context be
 
 > **audioToText**(`audioBlob`): `Promise`\<`string`\>
 
-Defined in: [llm/vercelai.ts:311](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/vercelai.ts#L311)
+Defined in: [llm/vercelai.ts:315](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/vercelai.ts#L315)
 
 audioToText method to use API endpoint for audio transcription
 
@@ -90,7 +90,7 @@ Close the LLM instance
 
 > **processImageMessage**(`__namedParameters`): `Promise`\<`void`\>
 
-Defined in: [llm/vercelai.ts:178](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/vercelai.ts#L178)
+Defined in: [llm/vercelai.ts:182](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/vercelai.ts#L182)
 
 Process image message
 
@@ -114,7 +114,7 @@ Process image message
 
 > **processTextMessage**(`__namedParameters`): `Promise`\<`void`\>
 
-Defined in: [llm/vercelai.ts:190](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/vercelai.ts#L190)
+Defined in: [llm/vercelai.ts:194](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/vercelai.ts#L194)
 
 Process text message
 
@@ -215,6 +215,18 @@ Configure the LLM instance
 #### Overrides
 
 `AbstractAssistant.configure`
+
+***
+
+### getBaseURL()
+
+> `static` **getBaseURL**(): `void`
+
+Defined in: [llm/vercelai.ts:178](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/vercelai.ts#L178)
+
+#### Returns
+
+`void`
 
 ***
 

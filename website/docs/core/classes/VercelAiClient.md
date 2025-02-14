@@ -114,7 +114,7 @@ Close the LLM instance
 
 > **processImageMessage**(`__namedParameters`): `Promise`\<`void`\>
 
-Defined in: [llm/vercelai.ts:178](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/vercelai.ts#L178)
+Defined in: [llm/vercelai.ts:182](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/vercelai.ts#L182)
 
 Process image message
 
@@ -138,7 +138,7 @@ Process image message
 
 > **processTextMessage**(`__namedParameters`): `Promise`\<`void`\>
 
-Defined in: [llm/vercelai.ts:190](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/vercelai.ts#L190)
+Defined in: [llm/vercelai.ts:194](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/vercelai.ts#L194)
 
 Process text message
 
@@ -244,13 +244,17 @@ Configure the LLM instance
 
 ### getBaseURL()
 
-> `static` **getBaseURL**(): `string`
+> `static` **getBaseURL**(): `void`
 
 Defined in: [llm/vercelai-client.ts:53](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/vercelai-client.ts#L53)
 
 #### Returns
 
-`string`
+`void`
+
+#### Overrides
+
+[`VercelAi`](VercelAi.md).[`getBaseURL`](VercelAi.md#getbaseurl)
 
 ***
 

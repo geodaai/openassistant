@@ -98,7 +98,7 @@ Close the LLM instance
 
 > **processImageMessage**(`__namedParameters`): `Promise`\<`void`\>
 
-Defined in: [llm/vercelai.ts:178](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/vercelai.ts#L178)
+Defined in: [llm/vercelai.ts:182](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/vercelai.ts#L182)
 
 Process image message
 
@@ -122,7 +122,7 @@ Process image message
 
 > **processTextMessage**(`__namedParameters`): `Promise`\<`void`\>
 
-Defined in: [llm/vercelai.ts:190](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/vercelai.ts#L190)
+Defined in: [llm/vercelai.ts:194](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/vercelai.ts#L194)
 
 Process text message
 
@@ -146,7 +146,7 @@ Process text message
 
 > **restart**(): `void`
 
-Defined in: [llm/google.ts:58](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/google.ts#L58)
+Defined in: [llm/google.ts:65](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/google.ts#L65)
 
 Restart the chat
 
@@ -206,7 +206,7 @@ Voice to text
 
 > `static` **configure**(`config`): `void`
 
-Defined in: [llm/google.ts:23](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/google.ts#L23)
+Defined in: [llm/google.ts:27](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/google.ts#L27)
 
 Configure the LLM instance
 
@@ -230,13 +230,13 @@ Configure the LLM instance
 
 > `static` **getBaseURL**(): `string`
 
-Defined in: [llm/vercelai-client.ts:53](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/vercelai-client.ts#L53)
+Defined in: [llm/google.ts:23](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/google.ts#L23)
 
 #### Returns
 
 `string`
 
-#### Inherited from
+#### Overrides
 
 [`VercelAiClient`](VercelAiClient.md).[`getBaseURL`](VercelAiClient.md#getbaseurl)
 
@@ -246,7 +246,7 @@ Defined in: [llm/vercelai-client.ts:53](https://github.com/GeoDaCenter/openassis
 
 > `static` **getInstance**(): `Promise`\<[`GoogleAIAssistant`](GoogleAIAssistant.md)\>
 
-Defined in: [llm/google.ts:51](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/google.ts#L51)
+Defined in: [llm/google.ts:58](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/google.ts#L58)
 
 Get instance using singleton pattern
 
@@ -288,7 +288,7 @@ Register custom function for function calling
 
 > `static` **testConnection**(`apiKey`, `model`): `Promise`\<`boolean`\>
 
-Defined in: [llm/google.ts:28](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/google.ts#L28)
+Defined in: [llm/google.ts:32](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/llm/google.ts#L32)
 
 Test connection
 

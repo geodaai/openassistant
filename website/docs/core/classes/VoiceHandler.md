@@ -38,7 +38,7 @@ Defined in: [lib/voice-handler.ts:65](https://github.com/GeoDaCenter/openassista
 
 > **processRequest**(`req`): `Promise`\<`Response`\>
 
-Defined in: [lib/voice-handler.ts:92](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/lib/voice-handler.ts#L92)
+Defined in: [lib/voice-handler.ts:93](https://github.com/GeoDaCenter/openassistant/blob/d3d47c677c43fcc70dca2b232c88b920fa91a250/packages/core/src/lib/voice-handler.ts#L93)
 
 #### Parameters
 
