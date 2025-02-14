@@ -95,6 +95,7 @@ export async function parallelCoordinateCallbackFunction({
       data: {
         id: generateId(),
         datasetName,
+        variables: variableNames,
         pcp,
         rawData,
         theme: config?.theme,

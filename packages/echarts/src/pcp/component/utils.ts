@@ -14,5 +14,3 @@ export type ParallelCoordinateDataProps = Array<{
   /** The standard deviation of values in this dimension */
   std: number;
 }>;
-
-

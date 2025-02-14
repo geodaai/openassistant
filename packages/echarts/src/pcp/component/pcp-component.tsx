@@ -12,16 +12,35 @@ import {
 import { Icon } from '@iconify/react';
 import { ParallelCoordinateOutputData, ParallelCoordinatePlot } from './pcp';
 
+/**
+ * Props for the ParallelCoordinateComponent, extending ParallelCoordinateOutputData
+ * which contains the data and configuration for the parallel coordinate plot
+ * 
+ * This component is used with the callback-component which is part of the LLM function
+ * tool to visualize the parallel coordinate plot and its statistics. See definition of
+ * callback-component in the LLM function tool documentation for more details.
+ * 
+ */
 export function ParallelCoordinateComponent(
   props: ParallelCoordinateOutputData
 ): JSX.Element | null {
   const [showMore, setShowMore] = useState(props.isExpanded);
 
+  /**
+   * Handles the press event for the "More" button
+   * Toggles the expanded state and calls the parent's setIsExpanded callback if provided
+   */
   const handleMorePress = useCallback(() => {
     setShowMore(!showMore);
     props.setIsExpanded?.(!props.isExpanded);
   }, [showMore, props]);
 
+  /**
+   * Creates table cells for a given metric and its corresponding data values
+   * @param metric - The name of the metric (e.g., 'min', 'max', 'mean', 'std')
+   * @param pcpData - Array of numeric values for the metric across all variables
+   * @returns Array of JSX table cells containing the metric label and values
+   */
   const createTableCells = (metric: string, pcpData: number[]) => {
     const tableCells: JSX.Element[] = [];
     tableCells.push(<TableCell key="metric-label">{metric}</TableCell>);
@@ -35,6 +54,11 @@ export function ParallelCoordinateComponent(
     return tableCells;
   };
 
+  /**
+   * Generates table rows for statistics (min, max, mean, std)
+   * Each row contains cells with the statistic values for each variable
+   * @returns Array of JSX table rows containing statistics
+   */
   const generateStatsRows = () => {
     const metrics = ['min', 'max', 'mean', 'std'];
     return metrics.map((metric, index) => (

@@ -29,7 +29,7 @@ type GetValues = (
  */
 export type ParallelCoordinateFunctionContext = {
   getValues: GetValues;
-  config?: { isDraggable?: boolean; theme?: string };
+  config?: { isDraggable?: boolean; theme?: string; isExpanded?: boolean };
 };
 
 type ValueOf<T> = T[keyof T];
@@ -46,7 +46,7 @@ type ParallelCoordinateFunctionContextValues =
  *   ...otherFunctions,
  *   parallelCoordinateFunctionDefinition({
  *     getValues: async (dataset, variable) => [1, 2, 3],
- *     config: { theme: 'light' }
+ *     config: { theme: 'light', isExpanded: true }
  *   }),
  * ];
  */

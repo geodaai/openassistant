@@ -49,7 +49,14 @@ export type BoxplotOutputData = {
  * The react component of a box plot using eCharts
  */
 export const Boxplot = (props: BoxplotOutputData) => {
-  const { id, datasetName, variables, data: rawData, theme, boxplotData } = props;
+  const {
+    id,
+    datasetName,
+    variables,
+    data: rawData,
+    theme,
+    boxplotData,
+  } = props;
   const seriesIndex = variables.map((_, i) => i);
 
   // get chart option by calling getChartOption only once
@@ -91,8 +98,6 @@ export const Boxplot = (props: BoxplotOutputData) => {
             dataIndex: highlightedRows,
             ...(seriesIndex ? { seriesIndex } : {}),
           });
-          // const updatedOption = getChartOption(filteredIndexes, props);
-          // chartInstance.setOption(updatedOption, true);
         }
       }
     },
