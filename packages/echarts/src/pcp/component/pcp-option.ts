@@ -61,23 +61,27 @@ export type PcpChartOptionProps = {
 export function createParallelCoordinateOption(
   props: PcpChartOptionProps
 ): EChartsOption {
-  const variableNames = Object.keys(props.rawData);
+  // create label for each variable
+  const parallelAxis = props.pcp.map((pcp, index) => ({
+    dim: index,
+    // each label is composed as variableName\n[min, max]\nmean: mean\nstd: std
+    name: `${pcp.name}
+[${numericFormatter(pcp.min)}, ${numericFormatter(pcp.max)}]
+mean: ${numericFormatter(pcp.mean)}
+std: ${numericFormatter(pcp.std)}`,
+  }));
 
   // get the longest label length of variableNames
   const maxLabelLength = Math.max(
-    ...variableNames.map(
-      (name) =>
+    ...parallelAxis.map(
+      (label) =>
         // Use echarts.format.getTextRect to get accurate text dimensions
-        echarts.format.getTextRect(name).width
+        echarts.format.getTextRect(label.name).width
     )
   );
+
   // Add some padding (e.g., 20px) to ensure text doesn't get cut off
   const maxLabelPixel = maxLabelLength + 20;
-
-  const axis = variableNames.map((variable, index) => ({
-    dim: index,
-    name: variable,
-  }));
 
   // transpose the raw data so eCharts can render it
   let dataRowWise: number[][] = [];
@@ -98,33 +102,26 @@ export function createParallelCoordinateOption(
   // build option for echarts
   const option: EChartsOption = {
     parallel: {
-      left: '5%',
-      right: `${maxLabelPixel}px`,
-      top: '23%',
-      bottom: '15%',
+      right: '5%',
+      left: `${maxLabelPixel}px`,
+      top: '40px',
+      bottom: '30px',
       layout: 'vertical',
       parallelAxisDefault: {
         axisLabel: {
           formatter: numericFormatter,
         },
+        nameLocation: 'start' as const,
       },
     },
     brush: {
-      toolbox: ['rect', 'keep', 'clear'],
+      toolbox: ['clear'],
       brushLink: 'all',
-      inBrush: {
-        color: '#0096C7',
-        opacity: 0.8,
-      },
-      outOfBrush: {
-        opacity: 0.5,
-      },
     },
-    parallelAxis: axis,
+    parallelAxis,
     series: {
       type: 'parallel',
       lineStyle: {
-        width: 0.5,
         opacity: 0.8,
         color: 'lightblue',
       },
@@ -134,9 +131,12 @@ export function createParallelCoordinateOption(
         focus: 'series',
         lineStyle: {
           color: 'red',
-          opacity: 0.5,
+          opacity: 1,
         },
       },
+      // When perform brush selection, the unselected lines will be set as this transparency rate (which could darken those lines).
+      inactiveOpacity: 0.4,
+      activeOpacity: 1.0,
     },
     grid: [
       {
@@ -150,6 +150,38 @@ export function createParallelCoordinateOption(
     ],
     // avoid flickering when brushing
     progressive: 0,
+    animation: false,
+    // draggable element
+    // graphic: {
+    //   elements: [
+    //     {
+    //       type: 'group',
+    //       left: maxLabelPixel,
+    //       draggable: 'vertical',
+    //       ondrag: function (params) {
+    //         const pointInPixel = [params.offsetX, params.offsetY];
+    //         // const pointInGrid = echarts.convertFromPixel('grid', pointInPixel);
+
+    //         console.log('pointInGrid', pointInPixel);
+    //         // const d = document.getElementById('value2');
+    //         // d.style.left = params.offsetX + 'px';
+    //         // d.innerHTML = point[1];
+    //       },
+    //       children: [
+    //         {
+    //           type: 'circle',
+    //           top: '10px',
+    //           shape: {
+    //             r: 4,
+    //           },
+    //           style: {
+    //             stroke: 'none',
+    //           },
+    //         },
+    //       ],
+    //     },
+    //   ],
+    // },
   };
   return option;
 }

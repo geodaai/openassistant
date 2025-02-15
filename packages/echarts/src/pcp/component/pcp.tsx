@@ -123,6 +123,8 @@ export function ParallelCoordinatePlot(props: ParallelCoordinateOutputData) {
           // clear any highlighted if no data is brushed
           if (chartInstance && brushed.length === 0) {
             chartInstance.dispatchAction({ type: 'downplay' });
+            // clear the selection area on axis by just re-rendering the chart
+            chartInstance.setOption(option);
           }
           handleBrushSelection(chartInstance, brushed, datasetName, brush);
         }
@@ -131,7 +133,7 @@ export function ParallelCoordinatePlot(props: ParallelCoordinateOutputData) {
         setRendered(true);
       },
     }),
-    [datasetName, brush]
+    [datasetName, brush, option]
   );
 
   return useMemo(

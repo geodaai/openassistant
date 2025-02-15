@@ -7,6 +7,7 @@ import { generateId } from '@openassistant/common';
 import { ParallelCoordinateOutputData } from './component/pcp';
 import { ParallelCoordinateDataProps } from './component/utils';
 import { ParallelCoordinateFunctionContext } from './definition';
+import { processParallelCoordinateData } from './component/utils';
 
 type ParallelCoordinateFunctionArgs = {
   variableNames: string[];
@@ -67,23 +68,12 @@ export async function parallelCoordinateCallbackFunction({
 
   try {
     const rawData = {};
-    const pcp: ParallelCoordinateDataProps = [];
     variableNames.forEach(async (variable) => {
       const values = await getValues(datasetName, variable);
-      // get min, max, mean and std of the values
-      const min = Math.min(...values);
-      const max = Math.max(...values);
-      const mean =
-        values.reduce((sum, value) => sum + value, 0) / values.length;
-      const std = Math.sqrt(
-        values.reduce((sum, value) => sum + Math.pow(value - mean, 2), 0) /
-          (values.length - 1)
-      );
-      pcp.push({ name: variable, min, max, mean, std });
       rawData[variable] = values;
     });
 
-    // create data for rendering the boxplot component
+    const pcp = processParallelCoordinateData(rawData);
 
     return {
       type: 'boxplot',

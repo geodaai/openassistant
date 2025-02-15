@@ -75,6 +75,13 @@ export function getSimpleScatterChartOption(
       toolbox: ['rect', 'polygon', 'clear'],
       xAxisIndex: 0,
       yAxisIndex: 0,
+      inBrush: {
+        opacity: 1.0,
+        color: 'red',
+      },
+      outOfBrush: {
+        opacity: 0.4,
+      },
     },
     grid: {
       left: '3%',

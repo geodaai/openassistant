@@ -47,12 +47,6 @@ export function BoxplotComponent(props: BoxplotOutputData): JSX.Element | null {
       {({ height, width }) => (
         <div style={{ height, width }} className="relative">
           <div className="h-full w-full flex flex-col rounded-lg gap-2 p-6 text-gray-900 shadow-secondary-1 dark:bg-gray-950 dark:text-gray-100">
-            <div className="flex-col items-start p-2">
-              <p className="text-tiny font-bold uppercase">Boxplot</p>
-              <small className="truncate text-default-500">
-                {props.variables.join(', ')}
-              </small>
-            </div>
             <div className="relative h-full py-2 flex-grow dark:bg-black">
               <div className="absolute left-0 top-0 h-full w-full">
                 <Boxplot {...props} />

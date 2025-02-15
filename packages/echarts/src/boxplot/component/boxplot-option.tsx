@@ -167,6 +167,7 @@ export function getBoxPlotChartOption({
     tooltip: tooltip as echarts.TooltipComponentOption,
     // avoid flickering when brushing
     progressive: 0,
+    animation: false,
   };
   return option;
 }
