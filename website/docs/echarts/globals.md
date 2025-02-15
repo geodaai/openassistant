@@ -11,6 +11,7 @@
 - [ComputeRegressionProps](type-aliases/ComputeRegressionProps.md)
 - [ComputeRegressionResult](type-aliases/ComputeRegressionResult.md)
 - [CreateBoxplotProps](type-aliases/CreateBoxplotProps.md)
+- [GetValues](type-aliases/GetValues.md)
 - [HistogramDataProps](type-aliases/HistogramDataProps.md)
 - [HistogramFunctionContext](type-aliases/HistogramFunctionContext.md)
 - [HistogramOutputData](type-aliases/HistogramOutputData.md)

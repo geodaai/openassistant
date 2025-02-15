@@ -2,7 +2,7 @@
 
 > **BoxplotComponent**(`props`): `null` \| `Element`
 
-Defined in: [boxplot/component/box-plot-component.tsx:16](https://github.com/GeoDaCenter/openassistant/blob/f1f258826ab8e671a18170ebc60cc2939607e736/packages/echarts/src/boxplot/component/box-plot-component.tsx#L16)
+Defined in: [boxplot/component/box-plot-component.tsx:16](https://github.com/GeoDaCenter/openassistant/blob/2c73424721a2d454352fbebfbd647d2c7c73df8b/packages/echarts/src/boxplot/component/box-plot-component.tsx#L16)
 
 ## Parameters
 

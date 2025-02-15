@@ -4,20 +4,7 @@ import {
 } from '@openassistant/core';
 import { ParallelCoordinateCallbackMessage } from './callback-component';
 import { parallelCoordinateCallbackFunction } from './callback-function';
-
-/**
- * Function signature for retrieving variable values from a dataset.
- *
- * @note Users should implement this function to retrieve the values of a variable from their own dataset e.g. database.
- *
- * @param datasetName - Name of the target dataset
- * @param variableName - Name of the variable to retrieve
- * @returns Promise containing an array of numeric values
- */
-type GetValues = (
-  datasetName: string,
-  variableName: string
-) => Promise<number[]>;
+import { GetValues } from '../histogram/definition';
 
 /**
  * Configuration context for the parallel coordinate visualization

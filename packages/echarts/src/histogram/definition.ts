@@ -6,12 +6,15 @@ import { HistogramCallbackMessage } from './callback-component';
 import { histogramCallbackFunction } from './callback-function';
 
 /**
- * The function of getting the values of a variable from the dataset.
- * @param datasetName - The name of the dataset.
- * @param variableName - The name of the variable.
- * @returns The values of the variable.
+ * Function signature for retrieving variable values from a dataset.
+ *
+ * @note Users should implement this function to retrieve the values of a variable from their own dataset e.g. database.
+ *
+ * @param datasetName - Name of the target dataset
+ * @param variableName - Name of the variable to retrieve
+ * @returns Promise containing an array of numeric values
  */
-type GetValues = (
+export type GetValues = (
   datasetName: string,
   variableName: string
 ) => Promise<number[]>;
