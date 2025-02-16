@@ -7,15 +7,16 @@ import { BubbleChartOutputData } from './component/bubble-chart';
 import { BubbleChartComponent } from './component/bubble-chart-component';
 
 function isBubbleChartOutputData(
-  data: unknown
-): data is BubbleChartOutputResult {
+  outputData: unknown
+): outputData is BubbleChartOutputResult {
   return (
-    typeof data === 'object' &&
-    data !== null &&
-    'datasetName' in data &&
-    'variableX' in data &&
-    'variableY' in data &&
-    'variableSize' in data
+    typeof outputData === 'object' &&
+    outputData !== null &&
+    'datasetName' in outputData &&
+    outputData['data'] &&
+    'variableX' in outputData['data'] &&
+    'variableY' in outputData['data'] &&
+    'variableSize' in outputData['data']
   );
 }
 

@@ -99,17 +99,24 @@ export function BubbleChart(props: BubbleChartOutputData): JSX.Element | null {
     () => ({
       brushSelected: function (params) {
         if (eChartsRef.current) {
-          console.log('brushSelected: params = ', params);
-          const chartInstance = eChartsRef.current.getEchartsInstance();
-          // @ts-expect-error todo: will fix later getModel() is private
-          const series = chartInstance.getModel().getSeries()[0];
-          const brushed: number[] = series.getRawIndicesByActiveState('active');
-
-          // clear any highlighted if no data is brushed
-          if (chartInstance && brushed.length === 0) {
-            chartInstance.dispatchAction({ type: 'downplay' });
+          const eChart = eChartsRef.current?.getEchartsInstance();
+          const brushed: number[] = [];
+          const brushComponent = params.batch[0];
+          for (let sIdx = 0; sIdx < brushComponent.selected.length; sIdx++) {
+            const rawIndices = brushComponent.selected[sIdx].dataIndex;
+            // merge rawIndices to brushed
+            brushed.push(...rawIndices);
           }
-          handleBrushSelection(chartInstance, brushed, datasetName, brush);
+          console.log('brushed', brushed);
+          // check if brushed.length is 0 after 100ms, since brushSelected may return empty array for some reason?!
+          setTimeout(() => {
+            if (eChart && brushed.length === 0) {
+              // clear any highlighted if no data is brushed
+              eChart.dispatchAction({ type: 'downplay' });
+            }
+          }, 100);
+
+          handleBrushSelection(eChart, brushed, datasetName, brush);
         }
       },
       rendered: function () {
