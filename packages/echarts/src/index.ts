@@ -36,3 +36,7 @@ export * from './bubble-chart/callback-component';
 export * from './bubble-chart/component/bubble-chart';
 export * from './bubble-chart/component/bubble-chart-component';
 export * from './bubble-chart/component/bubble-chart-option';
+
+export * from './math/linear-regression';
+export * from './echarts-updater';
+export * from './echarts-theme';

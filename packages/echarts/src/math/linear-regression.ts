@@ -12,6 +12,34 @@ export function standardize(data: number[]): number[] {
   return data.map((value) => (value - meanValue) / stdValue);
 }
 
+export type SimpleLinearRegressionResult = {
+  slope: number;
+  intercept: number;
+};
+
+export function simpleLinearRegression(
+  xData: number[],
+  yData: number[]
+): SimpleLinearRegressionResult {
+  const n = xData.length;
+  let sumX = 0,
+    sumY = 0,
+    sumXY = 0,
+    sumXX = 0;
+
+  for (let i = 0; i < n; i++) {
+    sumX += xData[i];
+    sumY += yData[i];
+    sumXY += xData[i] * yData[i];
+    sumXX += xData[i] * xData[i];
+  }
+
+  const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+  const intercept = (sumY - slope * sumX) / n;
+
+  return { slope, intercept };
+}
+
 /**
  * The results of the linear regression.
  *

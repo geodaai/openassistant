@@ -54,7 +54,7 @@ export function ScatterplotCallbackComponent(
       draggable={data.isDraggable || false}
       onDragStart={onDragStart}
     >
-      <ScatterplotComponent {...data} />
+      <ScatterplotComponent {...data} id={id} />
     </ExpandableContainer>
   );
 }

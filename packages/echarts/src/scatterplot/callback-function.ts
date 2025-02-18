@@ -46,6 +46,7 @@ type ScatterplotOutputResult =
 /**
  * The data of the scatterplot function.
  *
+ * @param id - The id of the scatterplot.
  * @param datasetName - The name of the dataset.
  * @param xVariableName - The name of the x variable.
  * @param yVariableName - The name of the y variable.
@@ -59,6 +60,7 @@ type ScatterplotOutputResult =
  * @param showRegressionLine - Whether to show the regression line.
  */
 export type ScatterplotOutputData = {
+  id?: string;
   datasetName: string;
   xVariableName: string;
   yVariableName: string;

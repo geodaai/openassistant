@@ -1,18 +1,15 @@
 import { ToolCall } from 'ai';
-import { ReactNode } from 'react';
 import { CustomFunctionOutputProps, CustomFunctions } from '../types';
 
 export async function proceedToolCall({
   toolCall,
   customFunctions,
+  previousOutput,
 }: {
   toolCall: ToolCall<string, unknown>;
   customFunctions: CustomFunctions;
+  previousOutput: CustomFunctionOutputProps<unknown, unknown>[];
 }) {
-  // only one ToolCall allowed
-  const functionOutput: CustomFunctionOutputProps<unknown, unknown>[] = [];
-  let customMessage: ReactNode | null = null;
-
   const functionName = toolCall.toolName;
   const functionArgs = toolCall.args as Record<string, unknown>;
 
@@ -25,19 +22,18 @@ export async function proceedToolCall({
       functionName,
       functionArgs: functionArgs,
       functionContext: context,
-      previousOutput: functionOutput,
+      previousOutput,
     });
 
-    // store the output
-    functionOutput.push({
+    return {
       ...output,
       name: functionName,
       args: functionArgs,
       customMessageCallback: callbackMessage,
-    });
+    };
   } catch (err) {
     // make sure to return something back to openai when the function execution fails
-    functionOutput.push({
+    return {
       type: 'errorOutput',
       name: functionName,
       args: functionArgs,
@@ -45,19 +41,6 @@ export async function proceedToolCall({
         success: false,
         details: `The function "${functionName}" is not executed. The error message is: ${err}`,
       },
-    });
+    };
   }
-
-  // add custom reponse message from last functionOutput
-  const lastOutput = functionOutput[functionOutput.length - 1];
-  if (lastOutput.customMessageCallback) {
-    customMessage = lastOutput.customMessageCallback({
-      functionName: lastOutput.name,
-      functionArgs: lastOutput.args || {},
-      output: lastOutput,
-    });
-  }
-
-  // return the tool result
-  return { customMessage, toolResult: lastOutput.result };
 }

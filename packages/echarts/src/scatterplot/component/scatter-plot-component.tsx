@@ -20,6 +20,7 @@ import {
 } from './scatter-regression';
 
 export function ScatterplotComponent({
+  id,
   datasetName,
   filteredIndex,
   regressionResults: regression,
@@ -133,6 +134,7 @@ export function ScatterplotComponent({
               </div>
               <div className="absolute left-0 top-0 h-full w-full">
                 <SimpleScatterPlot
+                  id={id}
                   datasetName={datasetName}
                   variableX={xVariableName}
                   xData={xData}

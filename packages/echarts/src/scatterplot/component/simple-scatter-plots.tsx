@@ -8,8 +8,11 @@ import {
 import { LineChart, ScatterChart } from 'echarts/charts';
 import ReactEChartsCore from 'echarts-for-react/lib/core';
 import { CanvasRenderer } from 'echarts/renderers';
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
+import { useBrushLink } from '@openassistant/common';
+
 import { getSimpleScatterChartOption } from './simple-chart-option';
+import { handleBrushSelection } from '../../echarts-updater';
 
 // Register the required ECharts components
 echarts.use([
@@ -23,6 +26,7 @@ echarts.use([
 ]);
 
 type SimpleScatterPlotProps = {
+  id?: string;
   datasetName: string;
   variableX: string;
   xData: number[];
@@ -34,17 +38,46 @@ type SimpleScatterPlotProps = {
 };
 
 export function SimpleScatterPlot({
+  id,
   datasetName,
   variableX,
   xData,
   variableY,
   yData,
   theme = 'dark',
-  onSelected,
-  setFilteredIndexes,
 }: SimpleScatterPlotProps) {
   // ref for the echarts instance
   const eChartsRef = useRef<ReactEChartsCore>(null);
+  const [rendered, setRendered] = useState(false);
+
+  // link when other components update
+  const { brush, componentId } = useBrushLink({
+    defaultDataId: datasetName,
+    componentId: id,
+    onLink: (highlightedRows, sourceDataId) => {
+      console.log(
+        `Chart One (${componentId}) received update for ${sourceDataId}:`,
+        highlightedRows
+      );
+      if (
+        rendered &&
+        eChartsRef.current &&
+        highlightedRows &&
+        componentId !== sourceDataId
+      ) {
+        const chartInstance = eChartsRef.current?.getEchartsInstance();
+        // cancel current highlight
+        chartInstance?.dispatchAction({ type: 'downplay' });
+        // highlight the new rows
+        if (highlightedRows.length < xData.length) {
+          chartInstance?.dispatchAction({
+            type: 'highlight',
+            dataIndex: highlightedRows,
+          });
+        }
+      }
+    },
+  });
 
   // get chart option by calling getChartOption only once
   const option = useMemo(() => {
@@ -79,14 +112,13 @@ export function SimpleScatterPlot({
           }
         }, 100);
 
-        // Debounce the onSelected callback
-        onSelected?.(datasetName || '', brushed);
-        if (setFilteredIndexes) {
-          setFilteredIndexes(brushed);
-        }
+        handleBrushSelection(eChart, brushed, datasetName, brush);
+      },
+      rendered: function () {
+        setRendered(true);
       },
     }),
-    [onSelected, datasetName, setFilteredIndexes]
+    [brush, datasetName]
   );
 
   return (

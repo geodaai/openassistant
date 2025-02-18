@@ -1,4 +1,8 @@
-import { AudioToTextProps, StreamMessageCallback } from '../types';
+import {
+  AudioToTextProps,
+  CustomFunctionOutputProps,
+  StreamMessageCallback,
+} from '../types';
 import { ReactNode } from 'react';
 import {
   generateText,
@@ -185,21 +189,38 @@ export abstract class VercelAiClient extends VercelAi {
         };
 
         // handle tool calls
+        const functionOutput: CustomFunctionOutputProps<unknown, unknown>[] =
+          [];
+
         for (const toolCall of toolCalls) {
-          const result = await proceedToolCall({
+          const output = await proceedToolCall({
             toolCall,
             customFunctions: VercelAi.customFunctions,
+            previousOutput: functionOutput,
           });
-          customMessage = result.customMessage;
+
+          // append output to functionOutput so it can be used by next function
+          functionOutput.push(output);
+
           message.toolInvocations = [
             {
               toolCallId: toolCall.toolCallId,
-              result: result.toolResult,
+              result: output.result,
               state: 'result',
               toolName: toolCall.toolName,
               args: toolCall.args,
             },
           ];
+        }
+
+        // add custom reponse message from last functionOutput
+        const lastOutput = functionOutput[functionOutput.length - 1];
+        if (lastOutput.customMessageCallback) {
+          customMessage = lastOutput.customMessageCallback({
+            functionName: lastOutput.name,
+            functionArgs: lastOutput.args || {},
+            output: lastOutput,
+          });
         }
 
         // add the response message to the messages array
