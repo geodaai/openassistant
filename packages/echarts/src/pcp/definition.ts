@@ -62,7 +62,7 @@ type ParallelCoordinateFunctionContextValues =
  * the LLM will confirm with you to create a parallel coordinate chart to examine the relationship among the variables.
  * :::
  *
- * @param context - The context object used by the parallel coordinate function. See [ParallelCoordinateFunctionContext](../type-aliases/ParallelCoordinateFunctionContext) for more details.
+ * @param context - The context object used by the parallel coordinate function. See [ParallelCoordinateFunctionContext](../type-aliases/ParallelCoordinateFunctionContext.md) for more details.
  * 
  * :::note
  * You are responsible to provide the context object, which are `getValues` and `config` as shown in the example above, to the parallel coordinate function.

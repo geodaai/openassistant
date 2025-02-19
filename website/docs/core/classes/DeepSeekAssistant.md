@@ -1,6 +1,6 @@
 # Class: DeepSeekAssistant
 
-Defined in: [llm/deepseek.ts:15](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/llm/deepseek.ts#L15)
+Defined in: [llm/deepseek.ts:15](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/deepseek.ts#L15)
 
 DeepSeek Assistant LLM for Client only
 
@@ -14,7 +14,7 @@ DeepSeek Assistant LLM for Client only
 
 > **llm**: `null` \| `LanguageModelV1` = `null`
 
-Defined in: [llm/vercelai-client.ts:53](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/llm/vercelai-client.ts#L53)
+Defined in: [llm/vercelai-client.ts:53](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai-client.ts#L53)
 
 #### Inherited from
 
@@ -26,7 +26,7 @@ Defined in: [llm/vercelai-client.ts:53](https://github.com/GeoDaCenter/openassis
 
 > **addAdditionalContext**(`__namedParameters`): `Promise`\<`void`\>
 
-Defined in: [llm/vercelai.ts:162](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/llm/vercelai.ts#L162)
+Defined in: [llm/vercelai.ts:162](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai.ts#L162)
 
 Add additional context to the conversation, so LLM can understand the context better
 
@@ -52,7 +52,7 @@ Add additional context to the conversation, so LLM can understand the context be
 
 > **audioToText**(`audioBlob`): `Promise`\<`string`\>
 
-Defined in: [llm/vercelai-client.ts:266](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/llm/vercelai-client.ts#L266)
+Defined in: [llm/vercelai-client.ts:266](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai-client.ts#L266)
 
 audioToText method to use API endpoint for audio transcription
 
@@ -80,7 +80,7 @@ The transcribed text
 
 > **close**(): `Promise`\<`void`\>
 
-Defined in: [llm/assistant.ts:30](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/llm/assistant.ts#L30)
+Defined in: [llm/assistant.ts:30](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/assistant.ts#L30)
 
 Close the LLM instance
 
@@ -98,7 +98,7 @@ Close the LLM instance
 
 > **processImageMessage**(`__namedParameters`): `Promise`\<`void`\>
 
-Defined in: [llm/vercelai.ts:182](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/llm/vercelai.ts#L182)
+Defined in: [llm/vercelai.ts:182](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai.ts#L182)
 
 Process image message
 
@@ -122,7 +122,7 @@ Process image message
 
 > **processTextMessage**(`__namedParameters`): `Promise`\<`void`\>
 
-Defined in: [llm/vercelai.ts:194](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/llm/vercelai.ts#L194)
+Defined in: [llm/vercelai.ts:194](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai.ts#L194)
 
 Process text message
 
@@ -146,7 +146,7 @@ Process text message
 
 > **restart**(): `void`
 
-Defined in: [llm/deepseek.ts:64](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/llm/deepseek.ts#L64)
+Defined in: [llm/deepseek.ts:64](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/deepseek.ts#L64)
 
 Restart the chat
 
@@ -164,7 +164,7 @@ Restart the chat
 
 > **stop**(): `void`
 
-Defined in: [llm/vercelai.ts:166](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/llm/vercelai.ts#L166)
+Defined in: [llm/vercelai.ts:166](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai.ts#L166)
 
 Stop processing
 
@@ -182,7 +182,7 @@ Stop processing
 
 > **translateVoiceToText**(`audioBlob`): `Promise`\<`string`\>
 
-Defined in: [llm/assistant.ts:58](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/llm/assistant.ts#L58)
+Defined in: [llm/assistant.ts:58](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/assistant.ts#L58)
 
 Voice to text
 
@@ -206,7 +206,7 @@ Voice to text
 
 > `static` **configure**(`config`): `void`
 
-Defined in: [llm/deepseek.ts:26](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/llm/deepseek.ts#L26)
+Defined in: [llm/deepseek.ts:26](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/deepseek.ts#L26)
 
 Configure the LLM instance
 
@@ -230,7 +230,7 @@ Configure the LLM instance
 
 > `static` **getBaseURL**(): `string`
 
-Defined in: [llm/deepseek.ts:22](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/llm/deepseek.ts#L22)
+Defined in: [llm/deepseek.ts:22](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/deepseek.ts#L22)
 
 #### Returns
 
@@ -246,7 +246,7 @@ Defined in: [llm/deepseek.ts:22](https://github.com/GeoDaCenter/openassistant/bl
 
 > `static` **getInstance**(): `Promise`\<[`DeepSeekAssistant`](DeepSeekAssistant.md)\>
 
-Defined in: [llm/deepseek.ts:57](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/llm/deepseek.ts#L57)
+Defined in: [llm/deepseek.ts:57](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/deepseek.ts#L57)
 
 Get instance using singleton pattern
 
@@ -264,7 +264,7 @@ Get instance using singleton pattern
 
 > `static` **registerFunctionCalling**(`__namedParameters`): `void`
 
-Defined in: [llm/vercelai.ts:132](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/llm/vercelai.ts#L132)
+Defined in: [llm/vercelai.ts:132](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai.ts#L132)
 
 Register custom function for function calling
 
@@ -288,7 +288,7 @@ Register custom function for function calling
 
 > `static` **testConnection**(`apiKey`, `model`): `Promise`\<`boolean`\>
 
-Defined in: [llm/deepseek.ts:31](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/llm/deepseek.ts#L31)
+Defined in: [llm/deepseek.ts:31](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/deepseek.ts#L31)
 
 Test connection
 

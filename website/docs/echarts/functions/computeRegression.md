@@ -2,7 +2,7 @@
 
 > **computeRegression**(`__namedParameters`): [`ComputeRegressionResult`](../type-aliases/ComputeRegressionResult.md)
 
-Defined in: [scatterplot/component/scatter-regression.ts:45](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/echarts/src/scatterplot/component/scatter-regression.ts#L45)
+Defined in: [scatterplot/component/scatter-regression.ts:45](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/echarts/src/scatterplot/component/scatter-regression.ts#L45)
 
 Compute the regression for the scatterplot. If filteredIndex is provided, compute the regression for the selected points and the unselected points.
 Otherwise, only the regression for all points is computed.

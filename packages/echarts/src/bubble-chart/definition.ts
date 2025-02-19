@@ -61,7 +61,7 @@ export type BubbleChartFunctionContextValues =
  * and optionally, bubble color can represent a fourth variable.
  * :::
  *
- * @param context - The context object used by the bubble chart function. See [BubbleChartFunctionContext](../type-aliases/BubbleChartFunctionContext) for more details.
+ * @param context - The context object used by the bubble chart function. See [BubbleChartFunctionContext](../type-aliases/BubbleChartFunctionContext.md) for more details.
  *
  * :::note
  * You are responsible to provide the context object, which are `getValues` and `config` as shown in the example above, to the bubble chart function.

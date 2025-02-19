@@ -2,7 +2,7 @@
 
 > **bubbleChartFunctionDefinition**(`context`): `RegisterFunctionCallingProps`
 
-Defined in: [bubble-chart/definition.ts:72](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/echarts/src/bubble-chart/definition.ts#L72)
+Defined in: [bubble-chart/definition.ts:72](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/echarts/src/bubble-chart/definition.ts#L72)
 
 ## Summary
 
@@ -48,7 +48,7 @@ and optionally, bubble color can represent a fourth variable.
 
 `CustomFunctionContext`\<[`BubbleChartFunctionContextValues`](../type-aliases/BubbleChartFunctionContextValues.md)\>
 
-The context object used by the bubble chart function. See [BubbleChartFunctionContext](../type-aliases/BubbleChartFunctionContext) for more details.
+The context object used by the bubble chart function. See [BubbleChartFunctionContext](../type-aliases/BubbleChartFunctionContext.md) for more details.
 
 :::note
 You are responsible to provide the context object, which are `getValues` and `config` as shown in the example above, to the bubble chart function.

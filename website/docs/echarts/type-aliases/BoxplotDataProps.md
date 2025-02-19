@@ -2,7 +2,7 @@
 
 > **BoxplotDataProps**: `object`
 
-Defined in: [boxplot/component/utils.ts:27](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/echarts/src/boxplot/component/utils.ts#L27)
+Defined in: [boxplot/component/utils.ts:27](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/echarts/src/boxplot/component/utils.ts#L27)
 
 ## Type declaration
 

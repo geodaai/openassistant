@@ -2,9 +2,13 @@
 
 > **GetValues**: (`datasetName`, `variableName`) => `Promise`\<`number`[]\>
 
-Defined in: [histogram/definition.ts:17](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/echarts/src/histogram/definition.ts#L17)
+Defined in: [histogram/definition.ts:19](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/echarts/src/histogram/definition.ts#L19)
 
 Function signature for retrieving variable values from a dataset.
+
+:::note
+Users should implement this function to retrieve the values of a variable from their own dataset e.g. database.
+:::
 
 ## Parameters
 
@@ -25,7 +29,3 @@ Name of the variable to retrieve
 `Promise`\<`number`[]\>
 
 Promise containing an array of numeric values
-
-## Note
-
-Users should implement this function to retrieve the values of a variable from their own dataset e.g. database.

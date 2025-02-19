@@ -1,6 +1,6 @@
 # Class: VoiceHandler
 
-Defined in: [lib/voice-handler.ts:62](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/lib/voice-handler.ts#L62)
+Defined in: [lib/voice-handler.ts:62](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/lib/voice-handler.ts#L62)
 
 Handles voice transcription requests using Google Gemini
 
@@ -10,7 +10,7 @@ Handles voice transcription requests using Google Gemini
 
 > **new VoiceHandler**(`__namedParameters`): [`VoiceHandler`](VoiceHandler.md)
 
-Defined in: [lib/voice-handler.ts:65](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/lib/voice-handler.ts#L65)
+Defined in: [lib/voice-handler.ts:65](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/lib/voice-handler.ts#L65)
 
 #### Parameters
 
@@ -38,7 +38,7 @@ Defined in: [lib/voice-handler.ts:65](https://github.com/GeoDaCenter/openassista
 
 > **processRequest**(`req`): `Promise`\<`Response`\>
 
-Defined in: [lib/voice-handler.ts:93](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/lib/voice-handler.ts#L93)
+Defined in: [lib/voice-handler.ts:93](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/lib/voice-handler.ts#L93)
 
 #### Parameters
 
