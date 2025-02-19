@@ -2,7 +2,7 @@
 
 > **useShiftDrag**(): `object`
 
-Defined in: [hooks/use-shift-drag.tsx:3](https://github.com/GeoDaCenter/openassistant/blob/f1f258826ab8e671a18170ebc60cc2939607e736/packages/common/src/hooks/use-shift-drag.tsx#L3)
+Defined in: [hooks/use-shift-drag.tsx:3](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/common/src/hooks/use-shift-drag.tsx#L3)
 
 ## Returns
 

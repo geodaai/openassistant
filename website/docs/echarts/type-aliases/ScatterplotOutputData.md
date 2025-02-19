@@ -2,7 +2,7 @@
 
 > **ScatterplotOutputData**: `object`
 
-Defined in: [scatterplot/callback-function.ts:61](https://github.com/GeoDaCenter/openassistant/blob/2c73424721a2d454352fbebfbd647d2c7c73df8b/packages/echarts/src/scatterplot/callback-function.ts#L61)
+Defined in: [scatterplot/callback-function.ts:62](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/echarts/src/scatterplot/callback-function.ts#L62)
 
 The data of the scatterplot function.
 
@@ -15,6 +15,10 @@ The data of the scatterplot function.
 ### filteredIndex?
 
 > `optional` **filteredIndex**: `number`[]
+
+### id?
+
+> `optional` **id**: `string`
 
 ### isDraggable?
 
@@ -87,6 +91,10 @@ The data of the scatterplot function.
 ### yVariableName
 
 > **yVariableName**: `string`
+
+## Param
+
+The id of the scatterplot.
 
 ## Param
 

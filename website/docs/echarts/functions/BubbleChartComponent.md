@@ -2,7 +2,7 @@
 
 > **BubbleChartComponent**(`props`): `null` \| `Element`
 
-Defined in: bubble-chart/component/bubble-chart-component.tsx:31
+Defined in: [bubble-chart/component/bubble-chart-component.tsx:31](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/echarts/src/bubble-chart/component/bubble-chart-component.tsx#L31)
 
 A React component that renders an interactive bubble chart visualization.
 

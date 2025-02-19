@@ -1,6 +1,6 @@
 # Class: ChatHandler
 
-Defined in: [lib/chat-handler.ts:19](https://github.com/GeoDaCenter/openassistant/blob/f1f258826ab8e671a18170ebc60cc2939607e736/packages/core/src/lib/chat-handler.ts#L19)
+Defined in: [lib/chat-handler.ts:19](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/lib/chat-handler.ts#L19)
 
 Chat handler class to manage chat requests and responses
 
@@ -10,7 +10,7 @@ Chat handler class to manage chat requests and responses
 
 > **new ChatHandler**(`config`): [`ChatHandler`](ChatHandler.md)
 
-Defined in: [lib/chat-handler.ts:37](https://github.com/GeoDaCenter/openassistant/blob/f1f258826ab8e671a18170ebc60cc2939607e736/packages/core/src/lib/chat-handler.ts#L37)
+Defined in: [lib/chat-handler.ts:37](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/lib/chat-handler.ts#L37)
 
 #### Parameters
 
@@ -50,7 +50,7 @@ Optional tools configuration
 
 > **addMessageToHistory**(`message`): `Promise`\<`void`\>
 
-Defined in: [lib/chat-handler.ts:123](https://github.com/GeoDaCenter/openassistant/blob/f1f258826ab8e671a18170ebc60cc2939607e736/packages/core/src/lib/chat-handler.ts#L123)
+Defined in: [lib/chat-handler.ts:136](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/lib/chat-handler.ts#L136)
 
 #### Parameters
 
@@ -68,7 +68,7 @@ Defined in: [lib/chat-handler.ts:123](https://github.com/GeoDaCenter/openassista
 
 > **clearHistory**(): `void`
 
-Defined in: [lib/chat-handler.ts:173](https://github.com/GeoDaCenter/openassistant/blob/f1f258826ab8e671a18170ebc60cc2939607e736/packages/core/src/lib/chat-handler.ts#L173)
+Defined in: [lib/chat-handler.ts:189](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/lib/chat-handler.ts#L189)
 
 #### Returns
 
@@ -80,11 +80,15 @@ Defined in: [lib/chat-handler.ts:173](https://github.com/GeoDaCenter/openassista
 
 > **handleToolCall**(`__namedParameters`): `Promise`\<`null` \| `ToolInvocation`\>
 
-Defined in: [lib/chat-handler.ts:128](https://github.com/GeoDaCenter/openassistant/blob/f1f258826ab8e671a18170ebc60cc2939607e736/packages/core/src/lib/chat-handler.ts#L128)
+Defined in: [lib/chat-handler.ts:141](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/lib/chat-handler.ts#L141)
 
 #### Parameters
 
 ##### \_\_namedParameters
+
+###### previousOutput?
+
+[`CustomFunctionOutputProps`](../type-aliases/CustomFunctionOutputProps.md)\<`unknown`, `unknown`\>[]
 
 ###### toolCall
 
@@ -100,7 +104,7 @@ Defined in: [lib/chat-handler.ts:128](https://github.com/GeoDaCenter/openassista
 
 > **processRequest**(`req`): `Promise`\<`Response`\>
 
-Defined in: [lib/chat-handler.ts:59](https://github.com/GeoDaCenter/openassistant/blob/f1f258826ab8e671a18170ebc60cc2939607e736/packages/core/src/lib/chat-handler.ts#L59)
+Defined in: [lib/chat-handler.ts:59](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/lib/chat-handler.ts#L59)
 
 Processes chat requests, managing message history and token limits
 
@@ -124,7 +128,7 @@ Streaming response
 
 > **trimHistoryByTokenLimit**(): `Promise`\<`void`\>
 
-Defined in: [lib/chat-handler.ts:155](https://github.com/GeoDaCenter/openassistant/blob/f1f258826ab8e671a18170ebc60cc2939607e736/packages/core/src/lib/chat-handler.ts#L155)
+Defined in: [lib/chat-handler.ts:171](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/core/src/lib/chat-handler.ts#L171)
 
 #### Returns
 

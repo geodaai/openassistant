@@ -29,6 +29,11 @@
 - [ScatterplotFunctionContext](type-aliases/ScatterplotFunctionContext.md)
 - [ScatterplotFunctionContextValues](type-aliases/ScatterplotFunctionContextValues.md)
 - [ScatterplotOutputData](type-aliases/ScatterplotOutputData.md)
+- [SimpleLinearRegressionResult](type-aliases/SimpleLinearRegressionResult.md)
+
+## Variables
+
+- [ECHARTS\_DARK\_THEME](variables/ECHARTS_DARK_THEME.md)
 
 ## Functions
 
@@ -51,11 +56,13 @@
 - [createParallelCoordinateOption](functions/createParallelCoordinateOption.md)
 - [getBoxPlotChartOption](functions/getBoxPlotChartOption.md)
 - [getHistogramChartOption](functions/getHistogramChartOption.md)
+- [handleBrushSelection](functions/handleBrushSelection.md)
 - [histogramCallbackFunction](functions/histogramCallbackFunction.md)
 - [HistogramCallbackMessage](functions/HistogramCallbackMessage.md)
 - [HistogramComponent](functions/HistogramComponent.md)
 - [histogramFunctionDefinition](functions/histogramFunctionDefinition.md)
 - [linearRegression](functions/linearRegression.md)
+- [onBrushSelected](functions/onBrushSelected.md)
 - [parallelCoordinateCallbackFunction](functions/parallelCoordinateCallbackFunction.md)
 - [ParallelCoordinateCallbackMessage](functions/ParallelCoordinateCallbackMessage.md)
 - [ParallelCoordinateComponent](functions/ParallelCoordinateComponent.md)
@@ -66,5 +73,6 @@
 - [ScatterplotComponent](functions/ScatterplotComponent.md)
 - [scatterplotFunctionDefinition](functions/scatterplotFunctionDefinition.md)
 - [ScatterRegressionPlot](functions/ScatterRegressionPlot.md)
+- [simpleLinearRegression](functions/simpleLinearRegression.md)
 - [SimpleScatterPlot](functions/SimpleScatterPlot.md)
 - [standardize](functions/standardize.md)

@@ -59,9 +59,11 @@ export function createBubbleChartOption(props: BubbleChartOutputData) {
   const option: EChartsOption = {
     xAxis: {
       type: 'value',
+      splitLine: { show: false },
     },
     yAxis: {
       type: 'value',
+      splitLine: { show: false },
     },
     series: [
       {

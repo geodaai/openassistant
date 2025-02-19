@@ -2,7 +2,7 @@
 
 > **RegressionResults**: `object`
 
-Defined in: [math/linear-regression.ts:29](https://github.com/GeoDaCenter/openassistant/blob/2c73424721a2d454352fbebfbd647d2c7c73df8b/packages/echarts/src/math/linear-regression.ts#L29)
+Defined in: [math/linear-regression.ts:57](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/echarts/src/math/linear-regression.ts#L57)
 
 The results of the linear regression.
 

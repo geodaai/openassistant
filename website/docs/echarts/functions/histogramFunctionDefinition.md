@@ -2,7 +2,7 @@
 
 > **histogramFunctionDefinition**(`context`): `RegisterFunctionCallingProps`
 
-Defined in: [histogram/definition.ts:61](https://github.com/GeoDaCenter/openassistant/blob/2c73424721a2d454352fbebfbd647d2c7c73df8b/packages/echarts/src/histogram/definition.ts#L61)
+Defined in: [histogram/definition.ts:61](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/echarts/src/histogram/definition.ts#L61)
 
 Define the histogram function for tool calling. This function can assist user to create a histogram plot using the values of a variable in the dataset.
 The values should be retrieved using the getValues() callback function.

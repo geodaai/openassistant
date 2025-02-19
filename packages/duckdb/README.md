@@ -153,10 +153,6 @@ With the above code, users can prompt the AI assistant to query your datasets. F
 Query and sort the value (revenue / population) from the dataset "myVenues".
 ```
 
-Here is a screenshot of the query result:
-
-![query result](./docs/query-result.png)
-
 ## With TailwindCSS
 
 If you are using tailwindcss, you can  add the following to your tailwind.config.js file:

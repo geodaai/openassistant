@@ -9,7 +9,7 @@ import {
 import { Message } from '@ai-sdk/ui-utils';
 import { convertOpenAIToolsToVercelTools } from './tool-utils';
 import { proceedToolCall } from '../utils/toolcall';
-import { CustomFunctions } from '../types';
+import { CustomFunctionOutputProps, CustomFunctions } from '../types';
 import { tiktokenCounterPerMessage } from '../utils/token-counter';
 import { trimMessages } from '../utils/trim-messages';
 
@@ -98,8 +98,21 @@ export class ChatHandler {
         // handle server side tool calls
         const responseMsg = response.messages[response.messages.length - 1];
         const toolInvocations: ToolInvocation[] = [];
+
+        // handle tool calls
+        const previousOutput: CustomFunctionOutputProps<unknown, unknown>[] =
+          [];
+
         for (const toolCall of toolCalls) {
-          const toolInvocation = await this.handleToolCall({ toolCall });
+          const toolInvocation = await this.handleToolCall({
+            toolCall,
+            previousOutput,
+          });
+
+          if (toolInvocation && 'result' in toolInvocation) {
+            previousOutput.push(toolInvocation.result);
+          }
+
           if (toolInvocation) {
             toolInvocations.push(toolInvocation);
           }
@@ -127,22 +140,25 @@ export class ChatHandler {
 
   async handleToolCall({
     toolCall,
+    previousOutput,
   }: {
     toolCall: ToolCall<string, unknown>;
+    previousOutput?: CustomFunctionOutputProps<unknown, unknown>[];
   }): Promise<ToolInvocation | null> {
     // handle server side tool call
     // check if tool call is registered at server side
     const functionName = toolCall.toolName;
 
     if (this.tools?.[functionName]) {
-      const result = await proceedToolCall({
+      const output = await proceedToolCall({
         toolCall,
         customFunctions: this.toolFunctions,
+        previousOutput,
       });
 
       return {
         toolCallId: toolCall.toolCallId,
-        result: result.toolResult,
+        result: output.result,
         state: 'result',
         toolName: toolCall.toolName,
         args: toolCall.args,

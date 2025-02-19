@@ -1,7 +1,4 @@
 {
-  "sidebar": {
-    "autoConfiguration": true,
-    "pretty": false,
-    "deprecatedItemClassName": "typedoc-sidebar-item-deprecated"
-  }
+  "hidePageHeader": false,
+  "hideBreadcrumbs": false,
 }

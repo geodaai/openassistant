@@ -24,6 +24,7 @@ export function getSimpleScatterChartOption(
     },
     xAxis: {
       type: 'value',
+      splitLine: { show: false },
       axisLabel: {
         formatter: numericFormatter,
       },

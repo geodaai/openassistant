@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import clsx from 'clsx';
 // import Link from '@docusaurus/Link';
 // import Heading from '@theme/Heading';
@@ -14,7 +14,7 @@ function HomepageHeader() {
   return (
     <header
       className={clsx(
-        'hero hero--primary bg-white dark:bg-black mb-0 p-0 w-full items-center flex justify-center',
+        'mb-0 p-0 w-full items-center flex justify-center',
         styles.heroBanner
       )}
     >

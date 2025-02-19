@@ -197,6 +197,7 @@ export function getScatterplotChartOption({
       axisLabel: {
         formatter: numericFormatter,
       },
+      splitLine: { show: false },
     },
     yAxis: {
       type: 'value',

@@ -275,12 +275,18 @@ export class VercelAi extends AbstractAssistant {
       }: {
         toolCall: ToolCall<string, unknown>;
       }) => {
-        const result = await proceedToolCall({
+        const output = await proceedToolCall({
           toolCall,
           customFunctions: VercelAi.customFunctions,
         });
-        customMessage = result.customMessage;
-        return JSON.stringify(result.toolResult);
+        if ('customMessageCallback' in output && output.customMessageCallback) {
+          customMessage = output.customMessageCallback({
+            functionName: output.name,
+            functionArgs: output.args,
+            output: output,
+          });
+        }
+        return JSON.stringify(output.result);
       },
       onUpdate: ({ message }) => {
         if (message.role === 'assistant') {

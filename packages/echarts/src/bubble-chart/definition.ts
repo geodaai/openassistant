@@ -1,6 +1,7 @@
-import { RegisterFunctionCallingProps } from '@openassistant/core';
-
-import { CustomFunctionContext } from '@openassistant/core';
+import {
+  RegisterFunctionCallingProps,
+  CustomFunctionContext,
+} from '@openassistant/core';
 import { GetValues } from '../histogram/definition';
 import { BubbleChartCallbackFunction } from './callback-function';
 import { BubbleChartCallbackMessage } from './callback-component';
@@ -61,7 +62,7 @@ export type BubbleChartFunctionContextValues =
  * :::
  *
  * @param context - The context object used by the bubble chart function. See [BubbleChartFunctionContext](../type-aliases/BubbleChartFunctionContext) for more details.
- * 
+ *
  * :::note
  * You are responsible to provide the context object, which are `getValues` and `config` as shown in the example above, to the bubble chart function.
  * :::

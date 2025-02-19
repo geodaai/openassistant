@@ -2,7 +2,7 @@
 
 > **HistogramFunctionContext**: `object`
 
-Defined in: [histogram/definition.ts:40](https://github.com/GeoDaCenter/openassistant/blob/2c73424721a2d454352fbebfbd647d2c7c73df8b/packages/echarts/src/histogram/definition.ts#L40)
+Defined in: [histogram/definition.ts:40](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/echarts/src/histogram/definition.ts#L40)
 
 The context of the histogram function.
 

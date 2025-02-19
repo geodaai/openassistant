@@ -8,12 +8,14 @@ export type MoranScatterChartOptionProps = {
   yVariableName: string;
   yData: number[];
   regression: SimpleLinearRegressionResult;
+  theme?: string;
 };
 
 export function getMoranScatterChartOption(
   props: MoranScatterChartOptionProps
 ): EChartsOption {
-  const { xVariableName, xData, yVariableName, yData, regression } = props;
+  const { xVariableName, xData, yVariableName, yData, regression, theme } =
+    props;
   const slope = regression.slope;
   const intercept = regression.intercept;
   const seriesData = xData.map((x, i) => [x, yData[i]]);
@@ -33,10 +35,12 @@ export function getMoranScatterChartOption(
       top: 10,
       textStyle: {
         fontSize: 10,
+        color: theme === 'dark' ? '#fff' : '#555',
       },
     },
     xAxis: {
       type: 'value' as const,
+      splitLine: { show: false },
       axisLabel: {
         formatter: numericFormatter,
       },

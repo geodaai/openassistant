@@ -90,7 +90,7 @@ export function getBoxPlotChartOption({
     boundaryGap: true,
     splitArea: { show: false },
     splitLine: {
-      show: isExpanded,
+      show: false,
       interval: 'auto',
       lineStyle: { color: theme === 'dark' ? '#333' : '#f3f3f3' },
     },
@@ -124,7 +124,7 @@ export function getBoxPlotChartOption({
           formatter: numericFormatter,
         },
     splitLine: {
-      show: !isExpanded,
+      show: false,
       interval: 'auto',
       lineStyle: { color: theme === 'dark' ? '#333' : '#f3f3f3' },
     },

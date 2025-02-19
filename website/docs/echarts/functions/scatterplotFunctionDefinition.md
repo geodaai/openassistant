@@ -2,7 +2,7 @@
 
 > **scatterplotFunctionDefinition**(`context`): `RegisterFunctionCallingProps`
 
-Defined in: [scatterplot/definition.ts:69](https://github.com/GeoDaCenter/openassistant/blob/2c73424721a2d454352fbebfbd647d2c7c73df8b/packages/echarts/src/scatterplot/definition.ts#L69)
+Defined in: [scatterplot/definition.ts:71](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/echarts/src/scatterplot/definition.ts#L71)
 
 Define the scatterplot function for tool calling. This function can assist user to create a scatterplot using the values of two variables in the dataset.
 The values of x and y should be retrieved using the getValues() callback function.

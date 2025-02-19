@@ -47,13 +47,13 @@ export type DataClassifyFunctionContextValues =
  * 2. The result will be an array of break points, which can be used to classify the data into k bins or classes.
  * 3. The LLM will respond with the break points to the user.
  *
- * @example
+ * ### For example
  * ```
  * User: can you classify the data of population into 5 classes?
  * LLM:  Yes, I've used the quantile method to classify the data of population into 5 classes. The break points are [10000, 20000, 30000, 40000, 50000].
  * ```
  *
- * @usage
+ * ### Code example
  * ```typescript
  * import { AiAssistant, dataClassifyFunctionDefinition } from "ai-assistant";
  *

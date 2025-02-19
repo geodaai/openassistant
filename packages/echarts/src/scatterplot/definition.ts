@@ -1,5 +1,7 @@
-import { RegisterFunctionCallingProps } from '@openassistant/core';
-import { CustomFunctionContext } from '@openassistant/core';
+import {
+  RegisterFunctionCallingProps,
+  CustomFunctionContext,
+} from '@openassistant/core';
 import { ScatterplotCallbackFunction } from './callback-function';
 import { ScatterplotCallbackComponent } from './callback-component';
 

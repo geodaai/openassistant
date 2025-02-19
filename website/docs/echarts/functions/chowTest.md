@@ -2,7 +2,7 @@
 
 > **chowTest**(`x1`, `y1`, `x2`, `y2`): [`ChowTestResult`](../type-aliases/ChowTestResult.md)
 
-Defined in: [math/linear-regression.ts:312](https://github.com/GeoDaCenter/openassistant/blob/2c73424721a2d454352fbebfbd647d2c7c73df8b/packages/echarts/src/math/linear-regression.ts#L312)
+Defined in: [math/linear-regression.ts:340](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/echarts/src/math/linear-regression.ts#L340)
 
 Perform the Chow test to check if the regression is different between the first and second subset.
 

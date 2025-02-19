@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Add AI Assistant UI to your Application
+# Add AI Assistant to your Application
 
 import assistantLight from '../../static/img/getstart-light.png';
 import configUi from '../../static/img/getstart-model.png';

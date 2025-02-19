@@ -1,5 +1,7 @@
-import { RegisterFunctionCallingProps } from '@openassistant/core';
-import { CustomFunctionContext } from '@openassistant/core';
+import {
+  RegisterFunctionCallingProps,
+  CustomFunctionContext,
+} from '@openassistant/core';
 import { moranScatterCallbackFunction } from './callback-function';
 import { MoranScatterCallbackComponent } from './callback-component';
 import { WeightsMeta } from 'geoda-wasm';
@@ -12,7 +14,9 @@ export type GetWeights = (weightsId: string) => {
 /**
  * Function signature for retrieving variable values from a dataset.
  *
- * @note Users should implement this function to retrieve the values of a variable from their own dataset e.g. database.
+ * :::note
+ * Users should implement this function to retrieve the values of a variable from their own dataset e.g. database.
+ * :::
  *
  * @param datasetName - Name of the target dataset
  * @param variableName - Name of the variable to retrieve

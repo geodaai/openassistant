@@ -1,0 +1,4 @@
+// @ts-check
+/** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
+const typedocSidebar = { items: [{"type":"category","label":"Type Aliases","items":[{"type":"doc","id":"duckdb/type-aliases/QueryDuckDBOutputData","label":"QueryDuckDBOutputData"}]},{"type":"category","label":"Variables","items":[{"type":"doc","id":"duckdb/variables/db","label":"db"}]},{"type":"category","label":"Functions","items":[{"type":"doc","id":"duckdb/functions/initDuckDB","label":"initDuckDB"},{"type":"doc","id":"duckdb/functions/queryDuckDBCallbackFunction","label":"queryDuckDBCallbackFunction"},{"type":"doc","id":"duckdb/functions/queryDuckDBCallbackMessage","label":"queryDuckDBCallbackMessage"},{"type":"doc","id":"duckdb/functions/QueryDuckDBComponent","label":"QueryDuckDBComponent"},{"type":"doc","id":"duckdb/functions/queryDuckDBFunctionDefinition","label":"queryDuckDBFunctionDefinition"}]}]};
+module.exports = typedocSidebar.items;

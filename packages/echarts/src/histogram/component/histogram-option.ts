@@ -124,7 +124,7 @@ export function getHistogramChartOption(
         axisLine: { show: false },
         position: 'bottom',
         splitLine: {
-          show: true,
+          show: false,
         },
       },
       {

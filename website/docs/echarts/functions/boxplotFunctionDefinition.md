@@ -2,7 +2,7 @@
 
 > **boxplotFunctionDefinition**(`context`): `RegisterFunctionCallingProps`
 
-Defined in: [boxplot/definition.ts:58](https://github.com/GeoDaCenter/openassistant/blob/2c73424721a2d454352fbebfbd647d2c7c73df8b/packages/echarts/src/boxplot/definition.ts#L58)
+Defined in: [boxplot/definition.ts:58](https://github.com/GeoDaCenter/openassistant/blob/1a6f158a9bc0914d446c35a467a546a572748a5e/packages/echarts/src/boxplot/definition.ts#L58)
 
 Define the boxplot function for tool calling. This function can assist user to create a boxplot using the values of a variable in the dataset.
 The values should be retrieved using the getValues() callback function.

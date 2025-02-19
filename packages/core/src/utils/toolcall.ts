@@ -8,7 +8,7 @@ export async function proceedToolCall({
 }: {
   toolCall: ToolCall<string, unknown>;
   customFunctions: CustomFunctions;
-  previousOutput: CustomFunctionOutputProps<unknown, unknown>[];
+  previousOutput?: CustomFunctionOutputProps<unknown, unknown>[];
 }) {
   const functionName = toolCall.toolName;
   const functionArgs = toolCall.args as Record<string, unknown>;

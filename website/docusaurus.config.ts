@@ -71,6 +71,36 @@ const config: Config = {
         watch: true,
       },
     ],
+    [
+      'docusaurus-plugin-typedoc',
+      {
+        id: 'geoda',
+        entryPoints: ['../packages/geoda/src/index.ts'],
+        tsconfig: '../packages/geoda/tsconfig.json',
+        out: 'docs/geoda',
+        watch: true,
+      },
+    ],
+    [
+      'docusaurus-plugin-typedoc',
+      {
+        id: 'ui',
+        entryPoints: ['../packages/ui/src/index.ts'],
+        tsconfig: '../packages/ui/tsconfig.json',
+        out: 'docs/ui',
+        watch: true,
+      },
+    ],
+    [
+      'docusaurus-plugin-typedoc',
+      {
+        id: 'duckdb',
+        entryPoints: ['../packages/duckdb/src/index.ts'],
+        tsconfig: '../packages/duckdb/tsconfig.json',
+        out: 'docs/duckdb',
+        watch: true,
+      },
+    ],
   ],
 
   presets: [
@@ -121,6 +151,18 @@ const config: Config = {
           sidebarId: 'tutorialSidebar',
           position: 'left',
           label: 'Tutorial',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'pluginSidebar',
+          position: 'left',
+          label: 'Plugins',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'apiSidebar',
+          position: 'left',
+          label: 'API',
         },
         { to: '/blog', label: 'Blog', position: 'left' },
         {
