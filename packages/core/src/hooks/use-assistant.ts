@@ -2,14 +2,14 @@
 
 import { useState } from 'react';
 import {
-  CallbackFunction,
-  CustomFunctionContext,
-  CustomMessageCallback,
+  OpenAIFunctionTool,
   StreamMessageCallback,
+  VercelToolSet,
 } from '../types';
 import { VercelAi } from '../llm/vercelai';
-import { GetAssistantModelByProvider } from '../lib/model-utils';
-
+import { createAssistant } from '../utils/create-assistant';
+import { ToolChoice } from 'ai';
+import { ToolSet } from 'ai';
 /**
  * Props for the Assistant UI and useAssistant hook.
  *
@@ -45,20 +45,11 @@ export type UseAssistantProps = {
   temperature?: number;
   topP?: number;
   instructions: string;
-  functions: {
-    name: string;
-    description: string;
-    properties: {
-      [key: string]: {
-        type: string; // 'string' | 'number' | 'boolean' | 'array';
-        description: string;
-      };
-    };
-    required: string[];
-    callbackFunction: CallbackFunction;
-    callbackFunctionContext?: CustomFunctionContext<unknown>;
-    callbackMessage?: CustomMessageCallback;
-  }[];
+  functions?: Array<OpenAIFunctionTool> | VercelToolSet;
+  vercelFunctions?: VercelToolSet;
+  toolChoice?: ToolChoice<ToolSet>;
+  maxSteps?: number;
+  abortController?: AbortController;
 };
 
 /**
@@ -114,40 +105,8 @@ export function useAssistant(props: UseAssistantProps) {
         );
       }
 
-      const AssistantModel = GetAssistantModelByProvider({
-        provider: props.modelProvider,
-        chatEndpoint: props.chatEndpoint,
-      });
-
-      // configure the assistant model
-      AssistantModel.configure({
-        chatEndpoint: props.chatEndpoint,
-        voiceEndpoint: props.voiceEndpoint,
-        model: props.model,
-        apiKey: props.apiKey,
-        instructions: props.instructions,
-        temperature: props.temperature,
-        topP: props.topP,
-        description: props.description,
-        version: props.version,
-        ...(props.baseUrl ? { baseURL: props.baseUrl } : {}),
-      });
-
-      // register custom functions
-      props.functions.forEach((func) => {
-        AssistantModel.registerFunctionCalling({
-          name: func.name,
-          description: func.description,
-          properties: func.properties,
-          required: func.required,
-          callbackFunction: func.callbackFunction,
-          callbackFunctionContext: func.callbackFunctionContext,
-          callbackMessage: func.callbackMessage,
-        });
-      });
-
       // initialize the assistant model
-      assistant = await AssistantModel.getInstance();
+      assistant = await createAssistant(props);
 
       setApiKeyStatus('success');
     } catch (error) {

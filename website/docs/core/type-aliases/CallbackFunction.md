@@ -2,7 +2,7 @@
 
 > **CallbackFunction**: (`props`) => [`CustomFunctionOutputProps`](CustomFunctionOutputProps.md)\<`unknown`, `unknown`\> \| `Promise`\<[`CustomFunctionOutputProps`](CustomFunctionOutputProps.md)\<`unknown`, `unknown`\>\>
 
-Defined in: [types.ts:142](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/types.ts#L142)
+Defined in: [types.ts:143](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/types.ts#L143)
 
 Callback function for custom functions. You can define your own callback function to execute custom functions.
 

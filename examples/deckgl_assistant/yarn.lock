@@ -2333,9 +2333,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openassistant/core@npm:0.1.5":
-  version: 0.1.5
-  resolution: "@openassistant/core@npm:0.1.5"
+"@openassistant/core@npm:0.1.9":
+  version: 0.1.9
+  resolution: "@openassistant/core@npm:0.1.9"
   dependencies:
     "@ai-sdk/deepseek": "npm:^0.1.8"
     "@ai-sdk/google": "npm:^1.1.8"
@@ -2347,10 +2347,12 @@ __metadata:
     ai: "npm:^4.1.12"
     ollama-ai-provider: "npm:^1.2.0"
     openai: "npm:^4.82.0"
+    openai-zod-functions: "npm:^0.1.2"
     zod: "npm:^3.24.1"
+    zod-to-json-schema: "npm:^3.24.1"
   peerDependencies:
     react: ">=18.2"
-  checksum: 14e0c6033bf1c50864d97d890b80e8ba4aaab0cc83916309c8b8bef799f5ba1e0ce2c855e25db33103e557ffa13efb3cca4fa84cf0ad7dee00e3a274eb2c8135
+  checksum: 6671c5d945cb8b05e16509f5a006282ec18dd25033aa6dda6888559aedfcdecc36a42a94d21ad8268baefdeaddeff6a90ac563ffbb4bd4ce7b704c94125eede0
   languageName: node
   linkType: hard
 
@@ -5567,7 +5569,7 @@ __metadata:
     "@deck.gl/react": "npm:^9.1.1"
     "@deck.gl/widgets": "npm:^9.1.1"
     "@nextui-org/react": "npm:^2.6.10"
-    "@openassistant/core": "npm:0.1.5"
+    "@openassistant/core": "npm:0.1.9"
     "@openassistant/duckdb": "npm:0.1.5"
     "@openassistant/echarts": "npm:0.1.5"
     "@openassistant/ui": "npm:0.1.5"
@@ -7958,6 +7960,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"openai-zod-functions@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "openai-zod-functions@npm:0.1.2"
+  dependencies:
+    zod: "npm:^3.22.4"
+    zod-to-json-schema: "npm:^3.22.3"
+    zod-validation-error: "npm:^2.1.0"
+  peerDependencies:
+    openai: ">= 4.20.0"
+  checksum: fa4aed75cead6dba326b5566c209b738feb370a95ab157396137ef6b1b53d4ec65872582985d070a08a889a95401a13553b9ee57357a9b45e85d6888ed61ab66
+  languageName: node
+  linkType: hard
+
 "openai@npm:^4.82.0":
   version: 4.83.0
   resolution: "openai@npm:4.83.0"
@@ -9986,6 +10001,15 @@ __metadata:
   peerDependencies:
     zod: ^3.24.1
   checksum: d31fd05b67b428d8e0d5ecad2c3e80a1c2fc370e4c22f9111ffd11cbe05cfcab00f3228f84295830952649d15ea4494ef42c2ee1cbe723c865b13f4cf2b80c09
+  languageName: node
+  linkType: hard
+
+"zod-validation-error@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "zod-validation-error@npm:2.1.0"
+  peerDependencies:
+    zod: ^3.18.0
+  checksum: fdd3a9fdf176571404abf22af3af330e89227c3cb2e7092d61d0c6dfc8dd688648025346303585a03db51aa466efef5ebb8bdf14dbe630ccdedd5d0aa00741ab
   languageName: node
   linkType: hard
 

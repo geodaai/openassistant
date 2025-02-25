@@ -19,7 +19,9 @@ export type GetDatasetForCreateMapFunctionArgs = {
  * @param config.theme - The theme of the map.
  */
 export type MapLayerFunctionContext = {
-  getDataset: ({ datasetName }: GetDatasetForCreateMapFunctionArgs) => unknown;
+  getDataset: ({
+    datasetName,
+  }: GetDatasetForCreateMapFunctionArgs) => Promise<unknown>;
   config?: { isDraggable?: boolean; theme?: string };
 };
 

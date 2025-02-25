@@ -2,7 +2,7 @@
 
 > **VercelAiClientConfigureProps**: `object`
 
-Defined in: [llm/vercelai-client.ts:20](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai-client.ts#L20)
+Defined in: [llm/vercelai-client.ts:28](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai-client.ts#L28)
 
 ## Type declaration
 
@@ -33,6 +33,10 @@ Defined in: [llm/vercelai-client.ts:20](https://github.com/GeoDaCenter/openassis
 ### temperature?
 
 > `optional` **temperature**: `number`
+
+### toolChoice?
+
+> `optional` **toolChoice**: `ToolChoice`\<`ToolSet`\>
 
 ### topP?
 

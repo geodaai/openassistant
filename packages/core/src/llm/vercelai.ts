@@ -1,14 +1,16 @@
 import { AbstractAssistant } from './assistant';
 import {
   AudioToTextProps,
+  CustomFunctionOutputProps,
   CustomFunctions,
   ProcessImageMessageProps,
   ProcessMessageProps,
   RegisterFunctionCallingProps,
   StreamMessageCallback,
+  ToolCallMessage,
 } from '../types';
 import { ReactNode } from 'react';
-import { Tool, ToolCall, ToolSet } from 'ai';
+import { LanguageModelUsage, StepResult, Tool, ToolCall, ToolChoice, ToolSet } from 'ai';
 import {
   Message,
   UIMessage,
@@ -33,6 +35,13 @@ export function isAssistantMessageWithCompletedToolCalls(message: Message) {
     )
   );
 }
+
+export type TriggerRequestOutput = {
+  customMessage: ReactNode | null;
+  outputToolResults?: StepResult<ToolSet>['toolResults'][];
+  outputToolCalls?: ToolCall<string, unknown>[];
+  tokensUsed?: LanguageModelUsage;
+};
 
 /**
  * Checks if another request should be triggered based on the current message state
@@ -79,6 +88,7 @@ type VercelAiConfigureProps = {
   maxTokens?: number;
   chatEndpoint?: string;
   voiceEndpoint?: string;
+  toolChoice?: ToolChoice<ToolSet>;
 };
 
 /**
@@ -88,12 +98,16 @@ export class VercelAi extends AbstractAssistant {
   protected static chatEndpoint = '';
   protected static voiceEndpoint = '';
   protected static instructions = '';
+  protected static toolChoice: ToolChoice<ToolSet> = 'auto';
+  protected static maxSteps = 4;
   protected static additionalContext = '';
-  protected static temperature = 1.0;
-  protected static topP = 0.8;
+  protected static temperature = 0.0;
+  protected static topP: number | undefined = undefined;
   protected static description = '';
   protected static maxTokens = 128000; // 128k tokens
   protected static hasInitializedServer = false;
+
+  protected toolSteps = 0;
 
   protected messages: Message[] = [];
   protected static customFunctions: CustomFunctions = {};
@@ -123,8 +137,9 @@ export class VercelAi extends AbstractAssistant {
     VercelAi.chatEndpoint = config.chatEndpoint;
     if (config.voiceEndpoint) VercelAi.voiceEndpoint = config.voiceEndpoint;
     if (config.instructions) VercelAi.instructions = config.instructions;
-    if (config.temperature) VercelAi.temperature = config.temperature;
-    if (config.topP) VercelAi.topP = config.topP;
+    if (config.temperature !== undefined)
+      VercelAi.temperature = config.temperature;
+    if (config.topP !== undefined) VercelAi.topP = config.topP;
     if (config.description) VercelAi.description = config.description;
     if (config.maxTokens) VercelAi.maxTokens = config.maxTokens;
   }
@@ -163,6 +178,10 @@ export class VercelAi extends AbstractAssistant {
     VercelAi.additionalContext += context;
   }
 
+  public setAbortController(abortController: AbortController) {
+    this.abortController = abortController;
+  }
+
   public override stop() {
     if (this.abortController) {
       this.abortController.abort();
@@ -176,7 +195,9 @@ export class VercelAi extends AbstractAssistant {
   }
 
   public static getBaseURL() {
-    throw new Error('No base URL for VercelAi. It is a server-side only class.');
+    throw new Error(
+      'No base URL for VercelAi. It is a server-side only class.'
+    );
   }
 
   public override async processImageMessage({
@@ -195,6 +216,7 @@ export class VercelAi extends AbstractAssistant {
     textMessage,
     streamMessageCallback,
     imageMessage,
+    onStepFinish,
   }: ProcessMessageProps) {
     if (!this.abortController) {
       this.abortController = new AbortController();
@@ -209,10 +231,15 @@ export class VercelAi extends AbstractAssistant {
       });
     }
 
-    const { customMessage } = await this.triggerRequest({
-      streamMessageCallback,
-      imageMessage,
-    });
+    // reset tool steps
+    this.toolSteps = 0;
+
+    const { customMessage, outputToolResults, outputToolCalls } =
+      await this.triggerRequest({
+        streamMessageCallback,
+        imageMessage,
+        onStepFinish,
+      });
 
     const lastMessage = this.messages[this.messages.length - 1];
     streamMessageCallback({
@@ -220,6 +247,8 @@ export class VercelAi extends AbstractAssistant {
       customMessage,
       isCompleted: true,
     });
+
+    return { messages: [lastMessage], outputToolResults, outputToolCalls };
   }
 
   protected async triggerRequest({
@@ -228,13 +257,17 @@ export class VercelAi extends AbstractAssistant {
   }: {
     streamMessageCallback: StreamMessageCallback;
     imageMessage?: string;
-  }) {
+    onStepFinish?: (
+      event: StepResult<ToolSet>,
+      toolCallMessages: ToolCallMessage[]
+    ) => Promise<void> | void;
+  }): Promise<TriggerRequestOutput> {
     /**
      * Maximum number of sequential LLM calls (steps), e.g. when you use tool calls. Must be at least 1.
      * A maximum number is required to prevent infinite loops in the case of misconfigured tools.
      * By default, it's set to 1, which means that only a single LLM call is made.
      */
-    const maxSteps = 4;
+    const maxSteps = VercelAi.maxSteps;
     const messageCount = this.messages.length;
     const maxStep = extractMaxToolInvocationStep(
       this.messages[this.messages.length - 1]?.toolInvocations
@@ -275,16 +308,22 @@ export class VercelAi extends AbstractAssistant {
       }: {
         toolCall: ToolCall<string, unknown>;
       }) => {
-        const output = await proceedToolCall({
+        const output: CustomFunctionOutputProps<unknown, unknown> = await proceedToolCall({
           toolCall,
           customFunctions: VercelAi.customFunctions,
         });
-        if ('customMessageCallback' in output && output.customMessageCallback) {
-          customMessage = output.customMessageCallback({
-            functionName: output.name,
-            functionArgs: output.args,
-            output: output,
-          });
+        if (output.customMessageCallback) {
+          try {
+            customMessage = output.customMessageCallback({
+              functionName: output.name,
+              functionArgs: output.args || {},
+              output: output,
+            });
+          } catch (error) {
+            console.error(
+              `Error creating custom message for tool call ${toolCall.toolCallId}: ${error}`
+            );
+          }
         }
         return JSON.stringify(output.result);
       },

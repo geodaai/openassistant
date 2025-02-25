@@ -2,7 +2,7 @@
 
 > **CustomFunctionCall**: `object`
 
-Defined in: [types.ts:167](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/types.ts#L167)
+Defined in: [types.ts:168](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/types.ts#L168)
 
 Type of CustomFunctionCall
 

@@ -2,7 +2,7 @@
 
 > **SendTextMessageProps**: `object`
 
-Defined in: [hooks/use-assistant.ts:70](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/hooks/use-assistant.ts#L70)
+Defined in: [hooks/use-assistant.ts:58](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/hooks/use-assistant.ts#L58)
 
 Type of SendTextMessageProps
 

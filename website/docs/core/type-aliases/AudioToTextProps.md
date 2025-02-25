@@ -2,7 +2,7 @@
 
 > **AudioToTextProps**: `object`
 
-Defined in: [types.ts:248](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/types.ts#L248)
+Defined in: [types.ts:249](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/types.ts#L249)
 
 Type of AudioToTextProps
 

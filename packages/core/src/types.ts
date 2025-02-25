@@ -1,4 +1,7 @@
+import { ToolSet } from 'ai';
+import { StepResult } from 'ai';
 import { ReactNode } from 'react';
+import { z } from 'zod';
 
 /**
  * Type of image message content
@@ -91,10 +94,10 @@ export type CustomFunctionContextCallback<C> = () => CustomFunctionContext<C>;
  * ```
  */
 export type CustomFunctionOutputProps<R, D> = {
-  /** Type of the function, used for type guarding (e.g. 'custom') */
-  type: string;
   /** Name of the function (e.g. createMap, createPlot) */
   name: string;
+  /** Type of the function, used for type guarding (e.g. 'custom') */
+  type?: string;
   /** Arguments passed to the function (e.g. `{datasetId: '123', variable: 'income'}`) */
   args?: Record<string, unknown>;
   /** Indicates if this is an intermediate step in a multi-step function execution */
@@ -221,6 +224,10 @@ export type ProcessMessageProps = {
   imageMessage?: string;
   userActions?: UserActionProps[];
   streamMessageCallback: StreamMessageCallback;
+  onStepFinish?: (
+    event: StepResult<ToolSet>,
+    toolCallMessages: ToolCallMessage[]
+  ) => Promise<void> | void;
   useTool?: boolean;
   message?: string;
 };
@@ -302,4 +309,34 @@ export type OpenAIConfigProps = {
   description?: string;
   instructions?: string;
   version?: string;
+};
+
+export type OpenAIFunctionTool = {
+  name: string;
+  description: string;
+  properties: {
+    [key: string]: {
+      type: string; // 'string' | 'number' | 'boolean' | 'array';
+      description: string;
+    };
+  };
+  required: string[];
+  callbackFunction: CallbackFunction;
+  callbackFunctionContext?: CustomFunctionContext<unknown>;
+  callbackMessage?: CustomMessageCallback;
+};
+
+export type VercelFunctionTool = {
+  description: string;
+  parameters: z.ZodType<unknown>;
+  executeWithContext: CallbackFunction;
+  context?: CustomFunctionContext<unknown>;
+  message?: CustomMessageCallback;
+};
+
+export type VercelToolSet = Record<string, VercelFunctionTool>;
+
+export type ToolCallMessage = {
+  toolCallId: string;
+  element: ReactNode;
 };

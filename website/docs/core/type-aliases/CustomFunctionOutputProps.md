@@ -2,7 +2,7 @@
 
 > **CustomFunctionOutputProps**\<`R`, `D`\>: `object`
 
-Defined in: [types.ts:93](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/types.ts#L93)
+Defined in: [types.ts:94](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/types.ts#L94)
 
 Properties for custom function output
 

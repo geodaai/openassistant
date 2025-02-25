@@ -234,6 +234,7 @@ export class AiAssistantWidget implements Widget<AiAssistantWidgetProps> {
                             this.temperature = config.temperature;
                             this.topP = config.topP;
                             this.baseUrl = config.baseUrl || '';
+                            this.update();
                           }}
                         />
                       </div>

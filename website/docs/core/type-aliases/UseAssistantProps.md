@@ -26,7 +26,7 @@ Props for the Assistant UI and useAssistant hook.
 
 ### functions
 
-> **functions**: `object`[]
+> **functions**: [`OpenAIFunctionTool`](OpenAIFunctionTool.md)[] \| [`VercelToolSet`](VercelToolSet.md)
 
 ### instructions
 
@@ -47,6 +47,10 @@ Props for the Assistant UI and useAssistant hook.
 ### temperature?
 
 > `optional` **temperature**: `number`
+
+### toolChoice?
+
+> `optional` **toolChoice**: `ToolChoice`\<`ToolSet`\>
 
 ### topP?
 

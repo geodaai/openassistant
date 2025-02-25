@@ -2,6 +2,8 @@ import { createBaseConfig, buildFormat } from '../../esbuild.config.mjs';
 import { dtsPlugin } from 'esbuild-plugin-d.ts';
 
 const baseConfig = createBaseConfig({
+  minify: false,
+  sourcemap: true,
   entryPoints: ['src/index.ts'],
   external: [
     'react',
@@ -15,6 +17,7 @@ const baseConfig = createBaseConfig({
     'openai',
     'p-retry',
     'p-queue',
+    'openai-zod-functions',
   ],
   plugins: [dtsPlugin()],
 });

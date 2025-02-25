@@ -2,6 +2,7 @@ import {
   AudioToTextProps,
   CustomFunctionOutputProps,
   StreamMessageCallback,
+  ToolCallMessage,
 } from '../types';
 import { ReactNode } from 'react';
 import {
@@ -10,80 +11,135 @@ import {
   LanguageModelUsage,
   streamText,
   Tool,
+  ToolChoice,
+  ToolSet,
+  StepResult,
 } from 'ai';
 import { Message, extractMaxToolInvocationStep } from '@ai-sdk/ui-utils';
-import { shouldTriggerNextRequest, VercelAi } from './vercelai';
+import {
+  shouldTriggerNextRequest,
+  TriggerRequestOutput,
+  VercelAi,
+} from './vercelai';
 import { convertOpenAIToolsToVercelTools } from '../lib/tool-utils';
 import { tiktokenCounter } from '../utils/token-counter';
-import { proceedToolCall } from '../utils/toolcall';
+import {
+  createToolCallCustomMessage,
+  proceedToolCall,
+} from '../utils/toolcall';
 
+/**
+ * Configuration properties for VercelAiClient
+ * @interface
+ */
 export type VercelAiClientConfigureProps = {
+  /** API key for authentication */
   apiKey?: string;
+  /** Model name to use */
   model?: string;
+  /** System instructions for the model */
   instructions?: string;
+  /** Temperature for controlling randomness (0-1) */
   temperature?: number;
+  /** Top P sampling parameter (0-1) */
   topP?: number;
+  /** Description of the assistant */
   description?: string;
+  /** Version of the model */
   version?: string;
+  /** Maximum tokens to generate */
   maxTokens?: number;
+  /** Base URL for API requests */
   baseURL?: string;
+  /** Tool choice configuration */
+  toolChoice?: ToolChoice<ToolSet>;
+  /** Maximum number of tool call steps */
+  maxSteps?: number;
 };
 
 /**
- * Abstract Vercel AI Client for Client only. This class is extended from VercelAi class.
- * However, it overrides the triggerRequest method to call LLM using Vercel AI SDK
- * directly from local e.g. browser instead of POST request to API endpoint.
- *
- * It has a protected property llm: LanguageModel | null = null, which is initialized in the constructor.
- * It also has a protected static properties which are for client-side support:
- * - apiKey: string = '';
- * - model: string = '';
- * - baseURL: string = '';
- *
- * These properties are initialized in the configure method.
- *
- * The constructor is protected, so it cannot be instantiated directly.
- *
+ * Abstract Vercel AI Client for client-side usage. Extends the VercelAi class to handle
+ * LLM interactions directly from the browser using Vercel AI SDK instead of API endpoints.
+ * 
+ * @abstract
+ * @extends {VercelAi}
  */
 export abstract class VercelAiClient extends VercelAi {
+  /** API key for authentication */
   protected static apiKey = '';
+  
+  /** Model name to use */
   protected static model = '';
+  
+  /** Base URL for API requests */
   protected static baseURL = '';
 
+  /** Language model instance */
   public llm: LanguageModel | null = null;
 
+  /** Singleton instance */
   protected static instance: VercelAiClient | null = null;
 
+  /**
+   * Gets the base URL for API requests
+   * @abstract
+   * @throws {Error} Always throws as this is an abstract class
+   */
   public static getBaseURL() {
     throw new Error('No base URL for VercelAiClient. It is an abstract class.');
   }
 
+  /**
+   * Validates that a model has been configured
+   * @protected
+   * @throws {Error} If model is not configured
+   */
   protected static checkModel() {
     if (!VercelAiClient.model || VercelAiClient.model.trim() === '') {
       throw new Error('LLM is not configured. Please call configure() first.');
     }
   }
 
+  /**
+   * Validates that an API key has been configured
+   * @protected
+   * @throws {Error} If API key is not configured
+   */
   protected static checkApiKey() {
     if (!VercelAiClient.apiKey || VercelAiClient.apiKey.trim() === '') {
       throw new Error('LLM is not configured. Please call configure() first.');
     }
   }
 
+  /**
+   * Protected constructor to prevent direct instantiation
+   * @protected
+   */
   protected constructor() {
     super();
   }
 
+  /**
+   * Configures the client with the provided settings
+   * @param {VercelAiClientConfigureProps} config - Configuration options
+   */
   public static override configure(config: VercelAiClientConfigureProps) {
     if (config.apiKey) VercelAiClient.apiKey = config.apiKey;
     if (config.model) VercelAiClient.model = config.model;
     if (config.instructions) VercelAiClient.instructions = config.instructions;
-    if (config.temperature) VercelAiClient.temperature = config.temperature;
-    if (config.topP) VercelAiClient.topP = config.topP;
+    if (config.temperature !== undefined)
+      VercelAiClient.temperature = config.temperature;
+    if (config.topP !== undefined) VercelAiClient.topP = config.topP;
     if (config.description) VercelAiClient.description = config.description;
     if (config.baseURL) VercelAiClient.baseURL = config.baseURL;
+    if (config.toolChoice) VercelAiClient.toolChoice = config.toolChoice;
+    if (config.maxSteps !== undefined)
+      VercelAiClient.maxSteps = config.maxSteps;
   }
 
+  /**
+   * Restarts the chat by clearing messages and resetting the LLM instance
+   */
   public override restart() {
     this.stop();
     this.messages = [];
@@ -91,6 +147,11 @@ export abstract class VercelAiClient extends VercelAi {
     this.llm = null;
   }
 
+  /**
+   * Trims messages to stay within token limits
+   * @protected
+   * @returns {Promise<Message[]>} Trimmed messages array
+   */
   protected async trimMessages() {
     let totalTokens = await tiktokenCounter(this.messages);
 
@@ -133,16 +194,132 @@ export abstract class VercelAiClient extends VercelAi {
   }
 
   /**
-   * Trigger the request to the Vercel AI API
-   * Override the triggerRequest method to call LLM with Vercel AI SDK from local e.g. browser
-   * @param streamMessageCallback - The callback function to stream the message
-   * @returns The custom message and the tokens used
+   * Checks if a tool invocation is a duplicate of the last one
+   * @protected
+   * @param {Message} message - Message to check
+   * @returns {boolean} True if duplicate
+   */
+  protected isDuplicateToolInvocation(message: Message): boolean {
+    if (!message.toolInvocations?.length) return false;
+
+    const lastMessage = this.messages[this.messages.length - 1];
+    if (!lastMessage?.toolInvocations?.length) return false;
+
+    return (
+      message.toolInvocations[0].toolName ===
+        lastMessage.toolInvocations[0].toolName &&
+      JSON.stringify(message.toolInvocations[0].args) ===
+        JSON.stringify(lastMessage.toolInvocations[0].args)
+    );
+  }
+
+  /**
+   * Handles completion of a step in the LLM interaction
+   * @protected
+   * @param {StepResult<ToolSet>} event - Step result
+   * @param {string} messageContent - Current message content
+   * @param {LanguageModelUsage} tokensUsed - Token usage stats
+   * @param {Function} [onStepFinish] - Optional callback for step completion
+   * @returns {Promise<ReactNode | null>} Custom message element if any
+   */
+  protected async handleStepFinish(
+    event: StepResult<ToolSet>,
+    messageContent: string,
+    tokensUsed: LanguageModelUsage,
+    onStepFinish?: (
+      event: StepResult<ToolSet>,
+      toolCallMessages: ToolCallMessage[]
+    ) => Promise<void> | void
+  ) {
+    const { toolCalls, response, usage } = event;
+    const responseMsg = response.messages[response.messages.length - 1];
+    let customMessage: ReactNode | null = null;
+    const toolCallMessages: ToolCallMessage[] = [];
+
+    // add final message to the messages array
+    const message: Message = {
+      id: responseMsg.id,
+      role: responseMsg.role as 'assistant',
+      content: messageContent,
+      toolInvocations: [],
+    };
+
+    // handle tool calls
+    const functionOutput: CustomFunctionOutputProps<unknown, unknown>[] = [];
+
+    // since we are handling the function calls, we need to save the tool results for onStepFinish callback
+    const toolResults: StepResult<ToolSet>['toolResults'] = [];
+
+    for (const toolCall of toolCalls) {
+      const output: CustomFunctionOutputProps<unknown, unknown> =
+        await proceedToolCall({
+          toolCall,
+          customFunctions: VercelAi.customFunctions,
+          previousOutput: functionOutput,
+        });
+
+      functionOutput.push(output);
+      this.toolSteps++;
+
+      const toolResult = {
+        toolCallId: toolCall.toolCallId,
+        result: output.result,
+        state: 'result' as const,
+        toolName: toolCall.toolName,
+        args: toolCall.args,
+        step: this.toolSteps,
+      };
+
+      message.toolInvocations?.push(toolResult);
+      // @ts-expect-error fix type
+      toolResults.push(toolResult);
+
+      const toolCallMessage = createToolCallCustomMessage(
+        toolCall.toolCallId,
+        output
+      );
+      if (toolCallMessage) {
+        toolCallMessages.push(toolCallMessage);
+      }
+    }
+
+    if (toolCallMessages.length > 0) {
+      customMessage = toolCallMessages[toolCallMessages.length - 1].element;
+    }
+
+    tokensUsed.promptTokens = usage?.promptTokens || 0;
+    tokensUsed.completionTokens = usage?.completionTokens || 0;
+    tokensUsed.totalTokens = usage?.totalTokens || 0;
+
+    if (!this.isDuplicateToolInvocation(message)) {
+      this.messages?.push(message);
+      if (onStepFinish) {
+        await onStepFinish({ ...event, toolResults }, toolCallMessages);
+      }
+    }
+
+    return customMessage;
+  }
+
+  /**
+   * Triggers a request to the Vercel AI API using the local LLM instance
+   * @protected
+   * @param {Object} params - Request parameters
+   * @param {StreamMessageCallback} params.streamMessageCallback - Callback for streaming messages
+   * @param {Function} [params.onStepFinish] - Optional callback for step completion
+   * @returns {Promise<TriggerRequestOutput>} Request output
+   * @throws {Error} If LLM is not initialized
    */
   protected async triggerRequest({
     streamMessageCallback,
+    onStepFinish,
   }: {
     streamMessageCallback: StreamMessageCallback;
-  }) {
+    onStepFinish?: (
+      event: StepResult<ToolSet>,
+      toolCallMessages: ToolCallMessage[]
+    ) => Promise<void> | void;
+  }): Promise<TriggerRequestOutput> {
     if (!this.llm) {
       throw new Error(
         'LLM instance is not initialized. Please call configure() first if you want to create a client LLM instance.'
@@ -157,7 +334,7 @@ export abstract class VercelAiClient extends VercelAi {
       totalTokens: 0,
     };
 
-    const maxSteps = 4;
+    const maxSteps = VercelAiClient.maxSteps || 4;
     const messageCount = this.messages.length;
     const maxStep = extractMaxToolInvocationStep(
       this.messages[this.messages.length - 1]?.toolInvocations
@@ -171,66 +348,19 @@ export abstract class VercelAiClient extends VercelAi {
       model: this.llm,
       messages: this.messages,
       tools,
+      toolChoice: VercelAiClient.toolChoice,
       system: VercelAiClient.instructions,
       temperature: VercelAiClient.temperature,
-      topP: VercelAiClient.topP,
+      ...(VercelAiClient.topP !== undefined && { topP: VercelAiClient.topP }),
       maxSteps,
       abortSignal: this.abortController?.signal,
-      onFinish: async ({ toolCalls, response, usage }) => {
-        // response messages could be CoreAssistantMessage | CoreToolMessage
-        const responseMsg = response.messages[response.messages.length - 1];
-
-        // add final message to the messages array
-        const message: Message = {
-          id: responseMsg.id,
-          role: responseMsg.role as 'assistant',
-          content: messageContent,
-          toolInvocations: [],
-        };
-
-        // handle tool calls
-        const functionOutput: CustomFunctionOutputProps<unknown, unknown>[] =
-          [];
-
-        for (const toolCall of toolCalls) {
-          const output = await proceedToolCall({
-            toolCall,
-            customFunctions: VercelAi.customFunctions,
-            previousOutput: functionOutput,
-          });
-
-          // append output to functionOutput so it can be used by next function
-          functionOutput.push(output);
-
-          message.toolInvocations = [
-            {
-              toolCallId: toolCall.toolCallId,
-              result: output.result,
-              state: 'result',
-              toolName: toolCall.toolName,
-              args: toolCall.args,
-            },
-          ];
-        }
-
-        // add custom reponse message from last functionOutput
-        const lastOutput = functionOutput[functionOutput.length - 1];
-        if (lastOutput.customMessageCallback) {
-          customMessage = lastOutput.customMessageCallback({
-            functionName: lastOutput.name,
-            functionArgs: lastOutput.args || {},
-            output: lastOutput,
-          });
-        }
-
-        // add the response message to the messages array
-        this.messages?.push(message);
-
-        // NOTE: some providers will not return usage values, we still need to count the token usage
-        // safely handle potentially undefined usage values
-        tokensUsed.promptTokens = usage?.promptTokens || 0;
-        tokensUsed.completionTokens = usage?.completionTokens || 0;
-        tokensUsed.totalTokens = usage?.totalTokens || 0;
+      onStepFinish: async (event: StepResult<ToolSet>) => {
+        customMessage = await this.handleStepFinish(
+          event,
+          messageContent,
+          tokensUsed,
+          onStepFinish
+        );
       },
     });
 
@@ -257,12 +387,21 @@ export abstract class VercelAiClient extends VercelAi {
     if (
       shouldTriggerNextRequest(this.messages, messageCount, maxSteps, maxStep)
     ) {
-      await this.triggerRequest({ streamMessageCallback });
+      await this.triggerRequest({
+        streamMessageCallback,
+        onStepFinish,
+      });
     }
 
     return { customMessage, tokensUsed };
   }
 
+  /**
+   * Converts audio to text using the configured LLM
+   * @param {AudioToTextProps} params - Audio conversion parameters
+   * @returns {Promise<string>} Transcribed text
+   * @throws {Error} If LLM is not configured or audio blob is missing
+   */
   public override async audioToText({
     audioBlob,
   }: AudioToTextProps): Promise<string> {

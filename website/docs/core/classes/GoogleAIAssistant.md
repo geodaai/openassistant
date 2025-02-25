@@ -14,7 +14,7 @@ Google Gemini Assistant LLM for Client only
 
 > **llm**: `null` \| `LanguageModelV1` = `null`
 
-Defined in: [llm/vercelai-client.ts:53](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai-client.ts#L53)
+Defined in: [llm/vercelai-client.ts:62](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai-client.ts#L62)
 
 #### Inherited from
 
@@ -26,7 +26,7 @@ Defined in: [llm/vercelai-client.ts:53](https://github.com/GeoDaCenter/openassis
 
 > **addAdditionalContext**(`__namedParameters`): `Promise`\<`void`\>
 
-Defined in: [llm/vercelai.ts:162](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai.ts#L162)
+Defined in: [llm/vercelai.ts:174](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai.ts#L174)
 
 Add additional context to the conversation, so LLM can understand the context better
 
@@ -52,7 +52,7 @@ Add additional context to the conversation, so LLM can understand the context be
 
 > **audioToText**(`audioBlob`): `Promise`\<`string`\>
 
-Defined in: [llm/vercelai-client.ts:266](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai-client.ts#L266)
+Defined in: [llm/vercelai-client.ts:324](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai-client.ts#L324)
 
 audioToText method to use API endpoint for audio transcription
 
@@ -98,7 +98,7 @@ Close the LLM instance
 
 > **processImageMessage**(`__namedParameters`): `Promise`\<`void`\>
 
-Defined in: [llm/vercelai.ts:182](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai.ts#L182)
+Defined in: [llm/vercelai.ts:196](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai.ts#L196)
 
 Process image message
 
@@ -120,9 +120,9 @@ Process image message
 
 ### processTextMessage()
 
-> **processTextMessage**(`__namedParameters`): `Promise`\<`void`\>
+> **processTextMessage**(`__namedParameters`): `Promise`\<\{ `messages`: `Message`[]; `outputToolCalls`: `undefined` \| `ToolCall`\<`string`, `unknown`\>[]; `outputToolResults`: `undefined` \| `ToolResult`\<`string`, `unknown`, `unknown`\>[]; \}\>
 
-Defined in: [llm/vercelai.ts:194](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai.ts#L194)
+Defined in: [llm/vercelai.ts:208](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai.ts#L208)
 
 Process text message
 
@@ -134,7 +134,7 @@ Process text message
 
 #### Returns
 
-`Promise`\<`void`\>
+`Promise`\<\{ `messages`: `Message`[]; `outputToolCalls`: `undefined` \| `ToolCall`\<`string`, `unknown`\>[]; `outputToolResults`: `undefined` \| `ToolResult`\<`string`, `unknown`, `unknown`\>[]; \}\>
 
 #### Inherited from
 
@@ -164,7 +164,7 @@ Restart the chat
 
 > **stop**(): `void`
 
-Defined in: [llm/vercelai.ts:166](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai.ts#L166)
+Defined in: [llm/vercelai.ts:178](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai.ts#L178)
 
 Stop processing
 
@@ -264,7 +264,7 @@ Get instance using singleton pattern
 
 > `static` **registerFunctionCalling**(`__namedParameters`): `void`
 
-Defined in: [llm/vercelai.ts:132](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai.ts#L132)
+Defined in: [llm/vercelai.ts:144](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai.ts#L144)
 
 Register custom function for function calling
 

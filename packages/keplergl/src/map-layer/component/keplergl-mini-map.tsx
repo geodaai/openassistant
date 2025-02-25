@@ -29,7 +29,7 @@ const initialMapUiState = {
   // disable side panel
   activeSidePanel: null,
   // disable toggle button
-  readonly: true,
+  readOnly: true,
 };
 
 /**

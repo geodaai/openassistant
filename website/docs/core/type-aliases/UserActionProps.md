@@ -2,7 +2,7 @@
 
 > **UserActionProps**: `object`
 
-Defined in: [types.ts:204](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/types.ts#L204)
+Defined in: [types.ts:205](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/types.ts#L205)
 
 Type of UserActionProps
 

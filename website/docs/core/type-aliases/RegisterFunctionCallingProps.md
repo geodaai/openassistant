@@ -2,7 +2,7 @@
 
 > **RegisterFunctionCallingProps**: `object`
 
-Defined in: [types.ts:265](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/types.ts#L265)
+Defined in: [types.ts:266](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/types.ts#L266)
 
 Type of RegisterFunctionCallingProps
 

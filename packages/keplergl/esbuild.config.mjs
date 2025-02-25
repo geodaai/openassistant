@@ -3,6 +3,8 @@ import { dtsPlugin } from 'esbuild-plugin-d.ts';
 import { polyfillNode } from 'esbuild-plugin-polyfill-node';
 
 const baseConfig = createBaseConfig({
+  minify: false,
+  sourcemap: true,
   entryPoints: ['src/index.ts'],
   loader: {
     '.js': 'jsx',
@@ -16,6 +18,7 @@ const baseConfig = createBaseConfig({
   minify: false,
   plugins: [dtsPlugin(), polyfillNode()],
   external: [
+    'apache-arrow',
     'react',
     'react-dom',
     'react-palm',

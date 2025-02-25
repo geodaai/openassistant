@@ -2,7 +2,7 @@
 
 > **shouldTriggerNextRequest**(`messages`, `messageCount`, `maxSteps`, `maxStep`): `boolean`
 
-Defined in: [llm/vercelai.ts:45](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai.ts#L45)
+Defined in: [llm/vercelai.ts:52](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai.ts#L52)
 
 Checks if another request should be triggered based on the current message state
 

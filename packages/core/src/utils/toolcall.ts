@@ -9,7 +9,7 @@ export async function proceedToolCall({
   toolCall: ToolCall<string, unknown>;
   customFunctions: CustomFunctions;
   previousOutput?: CustomFunctionOutputProps<unknown, unknown>[];
-}) {
+}): Promise<CustomFunctionOutputProps<unknown, unknown>> {
   const functionName = toolCall.toolName;
   const functionArgs = toolCall.args as Record<string, unknown>;
 
@@ -43,4 +43,34 @@ export async function proceedToolCall({
       },
     };
   }
+}
+
+export function createToolCallCustomMessage(
+  toolCallId: string,
+  output: CustomFunctionOutputProps<unknown, unknown>
+) {
+  if (
+    output &&
+    output.customMessageCallback &&
+    output.result &&
+    typeof output.result === 'object' &&
+    'success' in output.result &&
+    output.result.success === true
+  ) {
+    try {
+      return {
+        toolCallId: toolCallId,
+        element: output.customMessageCallback({
+          functionName: output.name,
+          functionArgs: output.args || {},
+          output: output,
+        }),
+      };
+    } catch (error) {
+      console.error(
+        `Error creating custom message for tool call ${toolCallId}: ${error}`
+      );
+    }
+  }
+  return null;
 }

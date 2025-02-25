@@ -24,3 +24,4 @@ export * from './types';
 
 export * from './hooks/use-assistant';
 
+export * from './utils/create-assistant';

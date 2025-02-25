@@ -14,7 +14,7 @@
     "@deck.gl/react": "^9.1.1",
     "@deck.gl/widgets": "^9.1.1",
     "@nextui-org/react": "^2.6.10",
-    "@openassistant/core": "0.1.5",
+    "@openassistant/core": "0.1.9",
     "@openassistant/duckdb": "0.1.5",
     "@openassistant/echarts": "0.1.5",
     "@openassistant/ui": "0.1.5",

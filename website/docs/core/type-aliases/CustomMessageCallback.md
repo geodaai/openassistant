@@ -2,7 +2,7 @@
 
 > **CustomMessageCallback**: (`customFunctionCall`) => `ReactNode` \| `null`
 
-Defined in: [types.ts:181](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/types.ts#L181)
+Defined in: [types.ts:182](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/types.ts#L182)
 
 Type of CustomMessageCallback
 

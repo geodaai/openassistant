@@ -2,7 +2,7 @@
 
 > **ProcessMessageProps**: `object`
 
-Defined in: [types.ts:219](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/types.ts#L219)
+Defined in: [types.ts:220](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/types.ts#L220)
 
 Type of ProcessMessageProps
 
