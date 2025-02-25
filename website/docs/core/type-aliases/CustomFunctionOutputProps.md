@@ -2,7 +2,7 @@
 
 > **CustomFunctionOutputProps**\<`R`, `D`\>: `object`
 
-Defined in: [types.ts:94](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/types.ts#L94)
+Defined in: [types.ts:96](https://github.com/GeoDaCenter/openassistant/blob/a1f850931f3d8289e0a4c297ef4b317a2f84235b/packages/core/src/types.ts#L96)
 
 Properties for custom function output
 
@@ -63,8 +63,8 @@ Name of the function (e.g. createMap, createPlot)
 
 Result of the function execution, sent back to LLM as response
 
-### type
+### type?
 
-> **type**: `string`
+> `optional` **type**: `string`
 
 Type of the function, used for type guarding (e.g. 'custom')

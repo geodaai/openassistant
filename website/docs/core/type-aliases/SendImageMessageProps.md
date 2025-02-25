@@ -2,7 +2,7 @@
 
 > **SendImageMessageProps**: `object`
 
-Defined in: [hooks/use-assistant.ts:70](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/hooks/use-assistant.ts#L70)
+Defined in: [hooks/use-assistant.ts:73](https://github.com/GeoDaCenter/openassistant/blob/a1f850931f3d8289e0a4c297ef4b317a2f84235b/packages/core/src/hooks/use-assistant.ts#L73)
 
 Type of SendImageMessageProps
 

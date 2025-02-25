@@ -2,7 +2,7 @@
 
 > **ScatterplotFunctionContext**: `object`
 
-Defined in: [scatterplot/definition.ts:43](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/echarts/src/scatterplot/definition.ts#L43)
+Defined in: [scatterplot/definition.ts:43](https://github.com/GeoDaCenter/openassistant/blob/a1f850931f3d8289e0a4c297ef4b317a2f84235b/packages/echarts/src/scatterplot/definition.ts#L43)
 
 The context of the scatterplot function. The context will be used by the function calling to create the scatterplot.
 

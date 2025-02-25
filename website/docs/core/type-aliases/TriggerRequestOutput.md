@@ -2,7 +2,7 @@
 
 > **TriggerRequestOutput**: `object`
 
-Defined in: [llm/vercelai.ts:37](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/llm/vercelai.ts#L37)
+Defined in: [llm/vercelai.ts:39](https://github.com/GeoDaCenter/openassistant/blob/a1f850931f3d8289e0a4c297ef4b317a2f84235b/packages/core/src/llm/vercelai.ts#L39)
 
 ## Type declaration
 
@@ -16,7 +16,7 @@ Defined in: [llm/vercelai.ts:37](https://github.com/GeoDaCenter/openassistant/bl
 
 ### outputToolResults?
 
-> `optional` **outputToolResults**: `ToolResult`\<`string`, `unknown`, `unknown`\>[]
+> `optional` **outputToolResults**: `StepResult`\<`ToolSet`\>\[`"toolResults"`\][]
 
 ### tokensUsed?
 

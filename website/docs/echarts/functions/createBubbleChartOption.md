@@ -2,7 +2,7 @@
 
 > **createBubbleChartOption**(`props`): `EChartsOption`
 
-Defined in: [bubble-chart/component/bubble-chart-option.ts:35](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/echarts/src/bubble-chart/component/bubble-chart-option.ts#L35)
+Defined in: [bubble-chart/component/bubble-chart-option.ts:35](https://github.com/GeoDaCenter/openassistant/blob/a1f850931f3d8289e0a4c297ef4b317a2f84235b/packages/echarts/src/bubble-chart/component/bubble-chart-option.ts#L35)
 
 Creates an ECharts option configuration for rendering a bubble chart.
 

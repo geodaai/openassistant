@@ -2,13 +2,13 @@
 
 > **VercelFunctionTool**: `object`
 
-Defined in: [types.ts:323](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/types.ts#L323)
+Defined in: [types.ts:329](https://github.com/GeoDaCenter/openassistant/blob/a1f850931f3d8289e0a4c297ef4b317a2f84235b/packages/core/src/types.ts#L329)
 
 ## Type declaration
 
-### context
+### context?
 
-> **context**: [`CustomFunctionContext`](CustomFunctionContext.md)\<`unknown`\>
+> `optional` **context**: [`CustomFunctionContext`](CustomFunctionContext.md)\<`unknown`\>
 
 ### description
 
@@ -18,9 +18,9 @@ Defined in: [types.ts:323](https://github.com/GeoDaCenter/openassistant/blob/fd2
 
 > **executeWithContext**: [`CallbackFunction`](CallbackFunction.md)
 
-### message
+### message?
 
-> **message**: [`CustomMessageCallback`](CustomMessageCallback.md)
+> `optional` **message**: [`CustomMessageCallback`](CustomMessageCallback.md)
 
 ### parameters
 

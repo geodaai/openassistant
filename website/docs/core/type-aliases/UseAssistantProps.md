@@ -2,11 +2,15 @@
 
 > **UseAssistantProps**: `object`
 
-Defined in: [hooks/use-assistant.ts:35](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/core/src/hooks/use-assistant.ts#L35)
+Defined in: [hooks/use-assistant.ts:35](https://github.com/GeoDaCenter/openassistant/blob/a1f850931f3d8289e0a4c297ef4b317a2f84235b/packages/core/src/hooks/use-assistant.ts#L35)
 
 Props for the Assistant UI and useAssistant hook.
 
 ## Type declaration
+
+### abortController?
+
+> `optional` **abortController**: `AbortController`
 
 ### apiKey
 
@@ -24,13 +28,17 @@ Props for the Assistant UI and useAssistant hook.
 
 > `optional` **description**: `string`
 
-### functions
+### functions?
 
-> **functions**: [`OpenAIFunctionTool`](OpenAIFunctionTool.md)[] \| [`VercelToolSet`](VercelToolSet.md)
+> `optional` **functions**: [`OpenAIFunctionTool`](OpenAIFunctionTool.md)[] \| [`VercelToolSet`](VercelToolSet.md)
 
 ### instructions
 
 > **instructions**: `string`
+
+### maxSteps?
+
+> `optional` **maxSteps**: `number`
 
 ### model
 
@@ -55,6 +63,10 @@ Props for the Assistant UI and useAssistant hook.
 ### topP?
 
 > `optional` **topP**: `number`
+
+### vercelFunctions?
+
+> `optional` **vercelFunctions**: [`VercelToolSet`](VercelToolSet.md)
 
 ### version
 

@@ -2,7 +2,7 @@
 
 > **parallelCoordinateFunctionDefinition**(`context`): `RegisterFunctionCallingProps`
 
-Defined in: [pcp/definition.ts:73](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/echarts/src/pcp/definition.ts#L73)
+Defined in: [pcp/definition.ts:73](https://github.com/GeoDaCenter/openassistant/blob/a1f850931f3d8289e0a4c297ef4b317a2f84235b/packages/echarts/src/pcp/definition.ts#L73)
 
 ## Summary
 

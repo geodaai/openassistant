@@ -45,8 +45,11 @@ export type UseAssistantProps = {
   temperature?: number;
   topP?: number;
   instructions: string;
-  functions: Array<OpenAIFunctionTool> | VercelToolSet;
+  functions?: Array<OpenAIFunctionTool> | VercelToolSet;
+  vercelFunctions?: VercelToolSet;
   toolChoice?: ToolChoice<ToolSet>;
+  maxSteps?: number;
+  abortController?: AbortController;
 };
 
 /**

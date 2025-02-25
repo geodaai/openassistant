@@ -17,6 +17,7 @@
 
 - [MessageImageContentProps](interfaces/MessageImageContentProps.md)
 - [MessageModel](interfaces/MessageModel.md)
+- [VercelAiClientConfigureProps](interfaces/VercelAiClientConfigureProps.md)
 
 ## Type Aliases
 
@@ -41,10 +42,10 @@
 - [SendImageMessageProps](type-aliases/SendImageMessageProps.md)
 - [SendTextMessageProps](type-aliases/SendTextMessageProps.md)
 - [StreamMessageCallback](type-aliases/StreamMessageCallback.md)
+- [ToolCallMessage](type-aliases/ToolCallMessage.md)
 - [TriggerRequestOutput](type-aliases/TriggerRequestOutput.md)
 - [UseAssistantProps](type-aliases/UseAssistantProps.md)
 - [UserActionProps](type-aliases/UserActionProps.md)
-- [VercelAiClientConfigureProps](type-aliases/VercelAiClientConfigureProps.md)
 - [VercelFunctionTool](type-aliases/VercelFunctionTool.md)
 - [VercelToolSet](type-aliases/VercelToolSet.md)
 

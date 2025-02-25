@@ -2,7 +2,7 @@
 
 > **useBrushLink**(`__namedParameters`): `object`
 
-Defined in: [hooks/use-brush-link.tsx:62](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/common/src/hooks/use-brush-link.tsx#L62)
+Defined in: [hooks/use-brush-link.tsx:62](https://github.com/GeoDaCenter/openassistant/blob/a1f850931f3d8289e0a4c297ef4b317a2f84235b/packages/common/src/hooks/use-brush-link.tsx#L62)
 
 This hook is used to link the brush data between different components.
 

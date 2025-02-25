@@ -2,7 +2,7 @@
 
 > **spatialCountFunctionDefinition**(`context`): `RegisterFunctionCallingProps`
 
-Defined in: [packages/geoda/src/spatial-count/definition.ts:29](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/geoda/src/spatial-count/definition.ts#L29)
+Defined in: [packages/geoda/src/spatial-count/definition.ts:29](https://github.com/GeoDaCenter/openassistant/blob/a1f850931f3d8289e0a4c297ef4b317a2f84235b/packages/geoda/src/spatial-count/definition.ts#L29)
 
 The definition of the spatial count function
 

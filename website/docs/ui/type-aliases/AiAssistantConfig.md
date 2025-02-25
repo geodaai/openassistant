@@ -2,7 +2,7 @@
 
 > **AiAssistantConfig**: `object`
 
-Defined in: [config-panel.tsx:22](https://github.com/GeoDaCenter/openassistant/blob/fd29806c870b11792765637bc0dc6fbb46bd3016/packages/ui/src/components/config-panel.tsx#L22)
+Defined in: [config-panel.tsx:22](https://github.com/GeoDaCenter/openassistant/blob/a1f850931f3d8289e0a4c297ef4b317a2f84235b/packages/ui/src/components/config-panel.tsx#L22)
 
 The configuration for the AI Assistant.
 
