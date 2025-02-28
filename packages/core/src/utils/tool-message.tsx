@@ -21,8 +21,6 @@ export function isOutputData(outputData: unknown): outputData is {
 }
 
 export function getCustomMessage({
-  functionName,
-  functionArgs,
   output,
   CustomMessage,
 }: {

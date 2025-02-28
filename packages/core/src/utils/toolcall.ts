@@ -1,5 +1,6 @@
 import { ToolCall } from 'ai';
 import { CustomFunctionOutputProps, CustomFunctions } from '../types';
+import { getCustomMessage } from './tool-message';
 
 export async function proceedToolCall({
   toolCall,

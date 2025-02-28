@@ -3,7 +3,6 @@ import { Resizable } from 're-resizable';
 export function ResizablePlotContainer({
   children,
   defaultWidth,
-  defaultHeight = 380,
   handlePosition = 'bottomRight',
 }: {
   children: JSX.Element;

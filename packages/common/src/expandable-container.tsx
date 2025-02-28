@@ -47,17 +47,19 @@ export function ExpandableContainer({
           <EChartsSkeleton />
         )}
         <div className="group absolute top-0 right-0 mt-2 mr-2 cursor-pointer flex flex-row">
-          <Button
-            isIconOnly
-            size="sm"
-            variant="light"
-            onClick={onExpandComponent}
-            draggable={draggable}
-            onDragStart={onDragStart}
-            className="opacity-0 hover:opacity-100 group-hover:opacity-100 transition-opacity cursor-move"
-          >
-            <Icon icon="basil:move-outline" width="12" height="12" />
-          </Button>
+          {draggable && (
+            <Button
+              isIconOnly
+              size="sm"
+              variant="light"
+              onClick={onExpandComponent}
+              draggable={draggable}
+              onDragStart={onDragStart}
+              className="opacity-0 hover:opacity-100 group-hover:opacity-100 transition-opacity cursor-move"
+            >
+              <Icon icon="basil:move-outline" width="12" height="12" />
+            </Button>
+          )}
           <Popover
             isOpen={isExpanded}
             placement="left"

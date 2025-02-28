@@ -54,6 +54,7 @@ export type AiAssistantProps = UseAssistantProps & {
   botMessageClassName?: string;
   userMessageClassName?: string;
   githubIssueLink?: string;
+  useMarkdown?: boolean;
 };
 
 /**
@@ -252,6 +253,7 @@ export function AiAssistant(props: AiAssistantProps) {
                   isMessageDraggable={props.isMessageDraggable || false}
                   unselectable="on"
                   githubIssueLink={props.githubIssueLink}
+                  useMarkdown={props.useMarkdown}
                 />
               );
             })}

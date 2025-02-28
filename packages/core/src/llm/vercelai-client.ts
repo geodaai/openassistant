@@ -383,7 +383,6 @@ export abstract class VercelAiClient extends VercelAi {
           message: this.streamMessage,
         });
       } else if (chunk.type === 'tool-call-streaming-start') {
-        console.log('tool-call-streaming-start', chunk);
         const toolCallId = chunk.toolCallId;
         const toolCallMessage = this.streamMessage.toolCallMessages?.find(
           (message) => message.toolCallId === toolCallId
