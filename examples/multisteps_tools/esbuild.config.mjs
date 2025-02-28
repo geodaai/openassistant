@@ -13,7 +13,7 @@ const config = {
   minify: !isStart,
   sourcemap: isStart,
   metafile: true,
-  platform: 'browser',
+  target: ['chrome58', 'firefox57', 'safari11'],
   loader: {
     '.js': 'jsx',
     '.ts': 'tsx',
@@ -29,15 +29,18 @@ const config = {
     ),
   },
   jsx: 'automatic',
-  alias: {
-    // make sure the same version of apache-arrow is used
-    'apache-arrow': './node_modules/apache-arrow',
-  },
   plugins: [
     tailwindPlugin({
       config: './tailwind.config.js',
     }),
   ],
+  alias: {
+    '@openassistant/core': '../../packages/core/src',
+    '@openassistant/common': '../../packages/common/src',
+    '@openassistant/ui': '../../packages/ui/src',
+    react: '../../node_modules/react',
+    'react-dom': '../../node_modules/react-dom',
+  },
 };
 
 const openURL = (url) => {

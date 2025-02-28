@@ -29,7 +29,8 @@ function isBoxplotFunctionArgs(data: unknown): data is BoxplotFunctionArgs {
   return (
     typeof data === 'object' &&
     data !== null &&
-    'variableName' in data &&
+    'datasetName' in data &&
+    'variableNames' in data &&
     'boundIQR' in data
   );
 }
@@ -71,10 +72,12 @@ export async function boxplotCallbackFunction({
 
   try {
     const data = {};
-    variableNames.forEach(async (variable) => {
-      const values = await getValues(datasetName, variable);
-      data[variable] = values;
-    });
+    await Promise.all(
+      variableNames.map(async (variable) => {
+        const values = await getValues(datasetName, variable);
+        data[variable] = values;
+      })
+    );
 
     // create boxplot data
     const boxplotData: BoxplotDataProps = createBoxplot({

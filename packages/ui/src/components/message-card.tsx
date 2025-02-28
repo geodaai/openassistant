@@ -3,7 +3,6 @@
 import React, {
   forwardRef,
   HTMLAttributes,
-  isValidElement,
   ReactNode,
   useCallback,
   useRef,
@@ -16,16 +15,19 @@ import {
   Link,
   Tooltip,
   Spinner,
+  cn,
 } from '@nextui-org/react';
 import { useClipboard } from '@nextui-org/use-clipboard';
 import { Icon } from '@iconify/react';
-import { MessagePayload } from '@openassistant/core';
+import { MessagePayload, StreamMessage } from '@openassistant/core';
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export type MessageCardProps = HTMLAttributes<HTMLDivElement> & {
   index: number;
   avatar?: ReactNode | string;
   showFeedback?: boolean;
-  message?: ReactNode | string;
+  message?: StreamMessage;
   customMessage?: MessagePayload;
   currentAttempt?: number;
   status?: 'success' | 'failed' | 'pending';
@@ -38,6 +40,76 @@ export type MessageCardProps = HTMLAttributes<HTMLDivElement> & {
   onAttemptFeedback?: (feedback: 'like' | 'dislike' | 'same') => void;
   githubIssueLink?: string;
   isMessageDraggable?: boolean;
+};
+
+const AvatarBadge = ({
+  avatar,
+  hasFailed,
+}: {
+  avatar: ReactNode | string;
+  hasFailed: boolean;
+}) => (
+  <Badge
+    isOneChar
+    color="danger"
+    content={
+      <Icon
+        className="text-background"
+        icon="gravity-ui:circle-exclamation-fill"
+      />
+    }
+    isInvisible={!hasFailed}
+    placement="bottom-right"
+    shape="circle"
+  >
+    {typeof avatar === 'string' ? (
+      <Avatar showFallback src={avatar} />
+    ) : (
+      <Avatar showFallback icon={avatar} />
+    )}
+  </Badge>
+);
+
+const FailedMessage = ({ githubIssueLink }: { githubIssueLink?: string }) => (
+  <p className="mb-2" data-testid="failed-message">
+    Sorry, something went wrong. If the issue persists please contact us through
+    &nbsp;
+    <Link target="_blank" href={githubIssueLink} size="sm">
+      Github
+    </Link>
+  </p>
+);
+
+const ScreenshotImage = ({ customMessage }: { customMessage: string }) => (
+  <img
+    className="h-14 w-14 rounded-small border-small border-default-200/50 object-cover"
+    src={customMessage}
+    alt="screenshot"
+  />
+);
+
+const MarkdownContent = ({ text, showMarkdown = true }: { text?: string; showMarkdown?: boolean }) => {
+  if (!showMarkdown) {
+    return <div className="max-w-full overflow-hidden whitespace-pre-wrap break-words">{text}</div>;
+  }
+
+  return (
+    <div className="max-w-full overflow-hidden whitespace-pre-wrap break-words">
+      <Markdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          pre: ({ children }) => (
+            <pre className="max-w-full overflow-x-auto">{children}</pre>
+          ),
+          code: ({ children }) => (
+            <code className="max-w-full overflow-x-auto">{children}</code>
+          ),
+        }}
+      >
+        {text}
+      </Markdown>
+    </div>
+  );
 };
 
 const MessageCard = forwardRef<HTMLDivElement, MessageCardProps>(
@@ -75,15 +147,6 @@ const MessageCard = forwardRef<HTMLDivElement, MessageCardProps>(
       status === 'failed'
         ? 'bg-danger-100/50 border border-danger-100 text-foreground'
         : '';
-    const failedMessage = (
-      <p className="mb-2" data-testid="failed-message">
-        Sorry, something went wrong. If the issue persists please contact us
-        through &nbsp;
-        <Link target="_blank" href={githubIssueLink} size="sm">
-          Github
-        </Link>
-      </p>
-    );
 
     const hasFailed = status === 'failed';
 
@@ -134,7 +197,7 @@ const MessageCard = forwardRef<HTMLDivElement, MessageCardProps>(
     const onMessageDragStart = (
       e: React.DragEvent<HTMLButtonElement>,
       index: number,
-      message: string | ReactNode
+      message?: StreamMessage
     ) => {
       // when message is string
       if (typeof message === 'string') {
@@ -152,33 +215,15 @@ const MessageCard = forwardRef<HTMLDivElement, MessageCardProps>(
     return (
       <div {...props} ref={ref} className="flex gap-3">
         <div className="relative flex-none">
-          <Badge
-            isOneChar
-            color="danger"
-            content={
-              <Icon
-                className="text-background"
-                icon="gravity-ui:circle-exclamation-fill"
-              />
-            }
-            isInvisible={!hasFailed}
-            placement="bottom-right"
-            shape="circle"
-          >
-            {typeof avatar === 'string' ? (
-              <Avatar showFallback src={avatar} />
-            ) : (
-              <Avatar showFallback icon={avatar} />
-            )}
-          </Badge>
+          <AvatarBadge avatar={avatar} hasFailed={hasFailed} />
         </div>
         <div className="flex w-full flex-col gap-4 overflow-x-auto">
           <div
-            className={`
-              group relative w-full rounded-medium px-4 py-3 
-              ${failedMessageClassName}
-              ${messageClassName}
-            `.trim()}
+            className={cn(
+              'group relative w-full rounded-medium px-4 py-3',
+              failedMessageClassName,
+              messageClassName
+            )}
           >
             <div
               ref={messageRef}
@@ -188,36 +233,28 @@ const MessageCard = forwardRef<HTMLDivElement, MessageCardProps>(
               {customMessage &&
                 typeof customMessage === 'string' &&
                 customMessage.startsWith('data:image') && (
-                  <img
-                    className="h-14 w-14 rounded-small border-small border-default-200/50 object-cover"
-                    src={customMessage}
-                    alt="screenshot"
-                  />
+                  <ScreenshotImage customMessage={customMessage} />
                 )}
               {/* show error message if any */}
-              {hasFailed && failedMessage}
-              {/* show message */}
-              {message}
-              {/* <Markdown
-                remarkPlugins={[remarkGfm]}
-                className="max-w-full overflow-hidden break-words"
-                components={{
-                  pre: ({ children }) => (
-                    <pre className="max-w-full overflow-x-auto">{children}</pre>
-                  ),
-                  code: ({ children }) => (
-                    <code className="max-w-full overflow-x-auto">
-                      {children}
-                    </code>
-                  ),
-                }}
-              >
-                {message as string}
-              </Markdown> */}
+              {hasFailed && <FailedMessage githubIssueLink={githubIssueLink} />}
+              {/* show tool call messages */}
+              {message?.toolCallMessages?.map((toolCallMessage, i) => (
+                <div
+                  className="flex flex-col gap-2"
+                  key={`${toolCallMessage.toolCallId}-${i}`}
+                >
+                  <div className="text-sm text-gray-500">
+                    {toolCallMessage.text}
+                    {toolCallMessage.reason}
+                  </div>
+                  <div>{toolCallMessage.element}</div>
+                </div>
+              ))}
+              <MarkdownContent text={message?.text} />
               {/* show custom message */}
-              {customMessage && isValidElement(customMessage) && (
+              {/* {customMessage && isValidElement(customMessage) && (
                 <>{customMessage}</>
-              )}
+              )} */}
               {/* show loading spinner */}
               {status === 'pending' && (
                 <Spinner

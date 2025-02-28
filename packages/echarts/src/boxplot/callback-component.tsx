@@ -29,8 +29,6 @@ export function BoxplotCallbackMessage(
 
   return (
     <ExpandableContainer
-      defaultWidth={600}
-      defaultHeight={800}
       draggable={outputData.isDraggable || false}
       onDragStart={onDragStart}
     >

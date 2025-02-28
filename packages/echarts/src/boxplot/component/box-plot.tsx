@@ -34,8 +34,23 @@ echarts.use([
 ]);
 echarts.registerTheme('dark', ECHARTS_DARK_THEME);
 
+/**
+ * The data for the box plot
+ *
+ * @property id - The id of the box plot
+ * @property datasetName - The name of the dataset
+ * @property variables - The variables of the box plot
+ * @property boxplotData - The data for the box plot
+ * @property data - The raw data for rendering points in box plot, and used in brushing and linking. See {@link CreateBoxplotProps} for more details.
+ * @property boundIQR - The multiplier for the IQR to determine the whisker lengths. See {@link CreateBoxplotProps} for more details.
+ * @property theme (optional) - The theme of the box plot
+ * @property isExpanded (optional) - Whether the box plot is expanded
+ * @property isDraggable (optional) - Whether the box plot is draggable
+ * @property setIsExpanded (optional) - The callback to toggle expanded state
+ */
 export type BoxplotOutputData = {
   id: string;
+  datasetId?: string;
   datasetName: string;
   variables: string[];
   boxplotData: BoxplotDataProps;
@@ -51,6 +66,7 @@ export type BoxplotOutputData = {
 export const Boxplot = (props: BoxplotOutputData) => {
   const {
     id,
+    datasetId,
     datasetName,
     variables,
     data: rawData,
@@ -76,7 +92,7 @@ export const Boxplot = (props: BoxplotOutputData) => {
   const [rendered, setRendered] = useState(false);
 
   const { brush, componentId } = useBrushLink({
-    defaultDataId: datasetName,
+    defaultDataId: datasetId || datasetName,
     componentId: id,
     onLink: (highlightedRows, sourceDataId) => {
       console.log(
@@ -109,7 +125,7 @@ export const Boxplot = (props: BoxplotOutputData) => {
         onBrushSelected(
           params,
           id,
-          datasetName,
+          datasetId || datasetName,
           eChartsRef.current?.getEchartsInstance(),
           brush
         );
@@ -118,7 +134,7 @@ export const Boxplot = (props: BoxplotOutputData) => {
         setRendered(true);
       },
     }),
-    [id, datasetName, brush]
+    [id, datasetId, datasetName, brush]
   );
 
   return useMemo(
@@ -128,7 +144,7 @@ export const Boxplot = (props: BoxplotOutputData) => {
           <div style={{ height, width }}>
             <div
               style={{ height: '100%' }}
-              className="h-full w-full flex flex-col rounded-lg bg-default-100 p-6 text-gray-900 shadow-secondary-1 dark:bg-gray-950 dark:text-gray-100"
+              className="h-full w-full flex flex-col rounded-lg p-6 text-gray-900 dark:text-gray-100"
             >
               <div className="flex-col items-start p-2">
                 <p className="text-tiny font-bold uppercase">

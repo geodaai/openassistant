@@ -67,6 +67,11 @@ const createWelcomeMessage = (welcomeMessage: string): MessageModel => ({
   sender: 'assistant',
   direction: 'incoming',
   position: 'first',
+  messageContent: {
+    reasoning: '',
+    toolCallMessages: [],
+    text: welcomeMessage,
+  },
 });
 
 /**
@@ -219,7 +224,7 @@ export function AiAssistant(props: AiAssistantProps) {
         >
           <div className="overscroll-behavior-y-auto overflow-anchor-auto touch-action-none absolute bottom-0 left-0 right-0 top-0 flex h-full flex-col gap-4 px-1">
             {messages.map((message, i) => {
-              const messageElement = message.message as string;
+              const messageElement = message.messageContent;
               return (
                 <MessageCard
                   key={i}

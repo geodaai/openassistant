@@ -44,10 +44,8 @@ export function handleBrushSelection(
     }
   }, 100);
 
-  if (brushed.length > 0) {
-    // Debounce the onSelected callback
-    debouncedOnSelected({ datasetName, filteredIndex: brushed }, onSelected);
-  }
+  // Debounce the onSelected callback
+  debouncedOnSelected({ datasetName, filteredIndex: brushed }, onSelected);
 }
 
 /**

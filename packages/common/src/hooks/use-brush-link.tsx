@@ -11,53 +11,78 @@ export type OnBrushedCallback = (
   dataId: string
 ) => void;
 
+// Add this static registry at the top level, outside the hook
+const brushLinkRegistry = new Map<
+  string,
+  {
+    onLink?: (highlightedRows: number[], sourceDataId: string) => void;
+    defaultDataId?: string;
+  }
+>();
+
 /**
- * This hook is used to link the brush data between different components.
- * 
- * It will save the brush data to the localStorage and listen for the storage changes.
- * When the storage changes, it will call the onLink callback with the highlighted rows and the dataId.
+ * A hook that enables brush data synchronization between different components using localStorage.
+ * This allows multiple charts or components to share selection/highlighting states.
+ *
+ * @remarks
+ * The hook manages brush data in localStorage, enabling cross-component and cross-tab communication.
+ * Each component can either monitor a specific dataset (using defaultDataId) or all datasets.
  *
  * @example
  * ```tsx
- * // Component A
- * const ChartOne = () => {
- *   const { brush, clearBrush, componentId } = useBrushLink({
- *     defaultDataId: 'chart1',
- *     componentId: 'chart-one', // Optional: provide your own ID
+ * // --- Basic Usage ---
+ * const MyChart = () => {
+ *   const { brush, clearBrush } = useBrushLink({
+ *     defaultDataId: 'myChart',
  *     onLink: (highlightedRows, sourceDataId) => {
- *       console.log(`Chart One (${componentId}) received update for ${sourceDataId}:`, highlightedRows);
- *     },
+ *       // Update your chart's highlighting here
+ *       setHighlightedData(highlightedRows);
+ *     }
  *   });
  *
- *   return (
- *     <div>
- *       <button onClick={() => brush([1, 2, 3], 'chart1')}>Select in Chart 1</button>
- *       <button onClick={() => clearBrush('chart1')}>Clear Chart 1</button>
- *     </div>
- *   );
+ *   // Trigger brush events
+ *   const onBrushSelection = (selectedIndices) => {
+ *     brush(selectedIndices, 'myChart');
+ *   };
  * };
  *
- * // Component B
- * const ChartTwo = () => {
- *   const { brush, clearBrush, componentId } = useBrushLink({
- *     defaultDataId: 'chart2',
+ * // --- Multiple Linked Charts ---
+ * const ChartA = () => {
+ *   const { brush, clearBrush } = useBrushLink({
+ *     defaultDataId: 'chartA',
  *     onLink: (highlightedRows, sourceDataId) => {
- *       console.log(`Chart Two (${componentId}) received update for ${sourceDataId}:`, highlightedRows);
- *     },
+ *       // React to brush events from any chart
+ *       updateChartAHighlights(highlightedRows);
+ *     }
  *   });
+ * };
  *
- *   return (
- *     <div>
- *       <button onClick={() => brush([4, 5, 6], 'chart2')}>Select in Chart 2</button>
- *       <button onClick={() => clearBrush('chart2')}>Clear Chart 2</button>
- *     </div>
- *   );
+ * const ChartB = () => {
+ *   const { brush, clearBrush } = useBrushLink({
+ *     defaultDataId: 'chartB',
+ *     onLink: (highlightedRows, sourceDataId) => {
+ *       // sourceDataId tells you which chart triggered the update
+ *       if (sourceDataId === 'chartA') {
+ *         // Handle updates from Chart A
+ *       }
+ *       updateChartBHighlights(highlightedRows);
+ *     }
+ *   });
  * };
  * ```
- * @param defaultDataId - The dataId of the default dataset to monitor.
- * @param onLink - The callback function to be called when the brush data changes.
- * @param componentId - The id of the component.
- * @returns
+ *
+ * @param options - Configuration options for the brush link
+ * @param options.defaultDataId - The ID of the dataset this component will monitor. If not provided, 
+ *                               the component will receive updates for all datasets.
+ * @param options.onLink - Callback function triggered when brush data changes. Receives the highlighted 
+ *                        row indices and the source dataset ID.
+ * @param options.componentId - Optional unique identifier for this component instance. Auto-generated if not provided.
+ *
+ * @returns An object containing:
+ * - brush: Function to update brush selection (params: highlightRowIndices: number[], dataId: string)
+ * - clearBrush: Function to clear brush selection for a specific dataId
+ * - getBrushData: Function to get current brush data for all datasets
+ * - componentId: The unique identifier for this component instance
  */
 export const useBrushLink = ({
   defaultDataId,
@@ -77,6 +102,58 @@ export const useBrushLink = ({
     return storedData ? JSON.parse(storedData) : { data: {}, sourceId: null };
   }, []);
 
+  // Register the component when the hook is initialized
+  useEffect(() => {
+    const currentId = uniqueComponentId.current;
+    brushLinkRegistry.set(currentId, { onLink, defaultDataId });
+    
+    return () => {
+      // Cleanup: remove from registry when component unmounts
+      brushLinkRegistry.delete(currentId);
+    };
+  }, [onLink, defaultDataId]);
+
+  // Update the handleStorageChange to notify all registered components
+  const handleStorageChange = useCallback(
+    (event: StorageEvent) => {
+      if (event.key === STORAGE_KEY) {
+        const newValue = event.newValue
+          ? JSON.parse(event.newValue)
+          : { data: {}, sourceId: null };
+        const oldValue = event.oldValue
+          ? JSON.parse(event.oldValue)
+          : { data: {}, sourceId: null };
+
+        // Notify all registered components except the source
+        brushLinkRegistry.forEach((config, registeredId) => {
+          if (registeredId !== newValue.sourceId && config.onLink) {
+            if (config.defaultDataId) {
+              // Component is monitoring specific dataset
+              const highlightedRows = newValue.data[config.defaultDataId] || [];
+              if (
+                JSON.stringify(highlightedRows) !==
+                JSON.stringify(oldValue.data[config.defaultDataId])
+              ) {
+                config.onLink?.(highlightedRows, config.defaultDataId);
+              }
+            } else {
+              // Component is monitoring all datasets
+              Object.keys(newValue.data).forEach((dataId) => {
+                if (
+                  JSON.stringify(newValue.data[dataId]) !==
+                  JSON.stringify(oldValue.data[dataId])
+                ) {
+                  config.onLink?.(newValue.data[dataId] || [], dataId);
+                }
+              });
+            }
+          }
+        });
+      }
+    },
+    [STORAGE_KEY]
+  );
+
   // Brush function to save highlighted rows with specific dataId
   const brush = useCallback(
     (highlightRowIndices: number[], dataId: string) => {
@@ -85,14 +162,23 @@ export const useBrushLink = ({
           ...getBrushData().data,
           [dataId]: highlightRowIndices,
         },
-        sourceId: uniqueComponentId.current, // Store the source component ID
+        sourceId: uniqueComponentId.current,
       };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
+      const newValueString = JSON.stringify(newData);
+      const oldValueString = localStorage.getItem(STORAGE_KEY);
+      localStorage.setItem(STORAGE_KEY, newValueString);
+
+      // Manually trigger handler for same-tab updates
+      handleStorageChange({
+        key: STORAGE_KEY,
+        newValue: newValueString,
+        oldValue: oldValueString,
+      } as StorageEvent);
     },
-    [getBrushData]
+    [getBrushData, handleStorageChange]
   );
 
-  // Clear brush data for a specific dataId
+  // Clear brush function with same manual trigger
   const clearBrush = useCallback(
     (dataId: string = defaultDataId || '') => {
       if (!dataId) return;
@@ -102,53 +188,24 @@ export const useBrushLink = ({
         data: currentData.data,
         sourceId: uniqueComponentId.current,
       };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
+      const newValueString = JSON.stringify(newData);
+      const oldValueString = localStorage.getItem(STORAGE_KEY);
+      localStorage.setItem(STORAGE_KEY, newValueString);
+
+      // Manually trigger handler for same-tab updates
+      handleStorageChange({
+        key: STORAGE_KEY,
+        newValue: newValueString,
+        oldValue: oldValueString,
+      } as StorageEvent);
     },
-    [defaultDataId, getBrushData]
+    [defaultDataId, getBrushData, handleStorageChange]
   );
 
-  // Listen for storage changes
   useEffect(() => {
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === STORAGE_KEY && onLink) {
-        const newValue = event.newValue
-          ? JSON.parse(event.newValue)
-          : { data: {}, sourceId: null };
-        const oldValue = event.oldValue
-          ? JSON.parse(event.oldValue)
-          : { data: {}, sourceId: null };
-
-        // Skip if this component triggered the change
-        if (newValue.sourceId === uniqueComponentId.current) {
-          return;
-        }
-
-        // Handle specific dataset monitoring
-        if (defaultDataId) {
-          const highlightedRows = newValue.data[defaultDataId] || [];
-          if (
-            JSON.stringify(highlightedRows) !==
-            JSON.stringify(oldValue.data[defaultDataId])
-          ) {
-            onLink(highlightedRows, defaultDataId);
-          }
-        } else {
-          // Handle all-dataset monitoring
-          Object.keys(newValue.data).forEach((dataId) => {
-            if (
-              JSON.stringify(newValue.data[dataId]) !==
-              JSON.stringify(oldValue.data[dataId])
-            ) {
-              onLink(newValue.data[dataId] || [], dataId);
-            }
-          });
-        }
-      }
-    };
-
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
-  }, [defaultDataId, onLink]);
+  }, [handleStorageChange]);
 
   return {
     brush,

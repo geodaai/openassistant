@@ -6,11 +6,19 @@ import {
   ProcessImageMessageProps,
   ProcessMessageProps,
   RegisterFunctionCallingProps,
+  StreamMessage,
   StreamMessageCallback,
   ToolCallMessage,
 } from '../types';
 import { ReactNode } from 'react';
-import { LanguageModelUsage, StepResult, Tool, ToolCall, ToolChoice, ToolSet } from 'ai';
+import {
+  LanguageModelUsage,
+  StepResult,
+  Tool,
+  ToolCall,
+  ToolChoice,
+  ToolSet,
+} from 'ai';
 import {
   Message,
   UIMessage,
@@ -116,6 +124,11 @@ export class VercelAi extends AbstractAssistant {
 
   protected static instance: VercelAi | null = null;
 
+  protected streamMessage: StreamMessage = {
+    toolCallMessages: [],
+    text: '',
+  };
+
   protected constructor() {
     super();
   }
@@ -155,7 +168,7 @@ export class VercelAi extends AbstractAssistant {
   }: RegisterFunctionCallingProps) {
     // register custom function, if already registed then rewrite it
     VercelAi.customFunctions[name] = {
-      func: callbackFunction,
+      func: callbackFunction || (() => Promise.resolve({ name, result: {} })),
       context: callbackFunctionContext,
       callbackMessage,
     };
@@ -234,6 +247,13 @@ export class VercelAi extends AbstractAssistant {
     // reset tool steps
     this.toolSteps = 0;
 
+    // reset stream message
+    this.streamMessage = {
+      reasoning: '',
+      toolCallMessages: [],
+      text: '',
+    };
+
     const { customMessage, outputToolResults, outputToolCalls } =
       await this.triggerRequest({
         streamMessageCallback,
@@ -246,6 +266,7 @@ export class VercelAi extends AbstractAssistant {
       deltaMessage: lastMessage.content,
       customMessage,
       isCompleted: true,
+      message: this.streamMessage,
     });
 
     return { messages: [lastMessage], outputToolResults, outputToolCalls };
@@ -308,10 +329,11 @@ export class VercelAi extends AbstractAssistant {
       }: {
         toolCall: ToolCall<string, unknown>;
       }) => {
-        const output: CustomFunctionOutputProps<unknown, unknown> = await proceedToolCall({
-          toolCall,
-          customFunctions: VercelAi.customFunctions,
-        });
+        const output: CustomFunctionOutputProps<unknown, unknown> =
+          await proceedToolCall({
+            toolCall,
+            customFunctions: VercelAi.customFunctions,
+          });
         if (output.customMessageCallback) {
           try {
             customMessage = output.customMessageCallback({

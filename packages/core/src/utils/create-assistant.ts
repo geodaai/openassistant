@@ -1,12 +1,142 @@
 import { toJsonSchema } from 'openai-zod-functions';
+import { Schema } from '@ai-sdk/ui-utils';
+import { z } from 'zod';
 
 import { GetAssistantModelByProvider } from '../lib/model-utils';
 import { UseAssistantProps } from '../hooks/use-assistant';
 import {
-  VercelFunctionTool,
+  CallbackFunctionProps,
+  CustomFunctionCall,
+  CustomFunctionContext,
+  CustomFunctionContextCallback,
   OpenAIFunctionTool,
-  RegisterFunctionCallingProps,
 } from '../types';
+import { Tool, ToolExecutionOptions } from 'ai';
+import { getCustomMessage } from './tool-message';
+
+type Parameters = z.ZodTypeAny | Schema<unknown>;
+
+export type inferParameters<PARAMETERS extends Parameters> =
+  PARAMETERS extends Schema<unknown>
+    ? PARAMETERS['_type']
+    : PARAMETERS extends z.ZodTypeAny
+      ? z.infer<PARAMETERS>
+      : never;
+
+/**
+ * Represents the result of executing a custom function
+ */
+type ExecuteFunctionResult = {
+  /**
+   * The formatted result string that will be sent back to the LLM
+   * @type {string}
+   */
+  llmResult: string;
+  /**
+   * Additional data returned by the function that can be used by the UI
+   * @type {unknown}
+   */
+  output: unknown;
+};
+
+/**
+ * Represents the function that will be called when the tool is executed
+ * @param PARAMETERS - The parameters of the tool
+ * @returns The function that will be called when the tool is executed
+ */
+type ExecuteFunction<PARAMETERS extends Parameters> = (
+  /**
+   * The arguments of the tool
+   */
+  args: inferParameters<PARAMETERS>,
+  /**
+   * The options of the tool. It can be a custom function context or a tool execution options
+   * @type {ToolExecutionOptions}
+   */
+  options:
+    | {
+        /**
+         * The context of the tool
+         * @type {CustomFunctionContext<unknown> | CustomFunctionContextCallback<unknown>}
+         */
+        context?:
+          | CustomFunctionContext<unknown>
+          | CustomFunctionContextCallback<unknown>;
+      }
+    | ToolExecutionOptions
+) => PromiseLike<ExecuteFunctionResult>;
+
+/**
+A tool contains the description and the schema of the input that the tool expects.
+This enables the language model to generate the input.
+ExtendedTool extends the Tool type from Vercel AI SDK: https://sdk.vercel.ai/docs/reference/ai-sdk-core/tool#tool.tool
+
+The tool can also contain:
+- an optional execute function for the actual execution function of the tool.
+- an optional context for providing additional data for the tool execution.
+- an optional component for rendering additional information (e.g. chart or map) of LLM response.
+ */
+export type ExtendedTool<PARAMETERS extends Parameters = never> =
+  Tool<PARAMETERS> & {
+    /** test */
+    execute: ExecuteFunction<PARAMETERS>;
+    /**
+     * The context that will be passed to the function
+     */
+    context?:
+      | CustomFunctionContext<unknown>
+      | CustomFunctionContextCallback<unknown>;
+    /**
+     * The component that will be rendered when the tool is executed
+     * @type {React.ReactNode}
+     */
+    component?: React.ElementType;
+  };
+
+/**
+ * Extends the vercel AI tool (see https://sdk.vercel.ai/docs/reference/ai-sdk-core/tool) with additional properties:
+ * 
+ * - **execute**: updated execute function that returns `{llmResult, output}`, where `llmResult` will be sent back to the LLM and `output` (optional) will be used for next tool call or tool component rendering
+ * - **context**: get additional context for the tool execution, e.g. data that needs to be fetched from the server 
+ * - **component**: tool component (e.g. chart or map) can be rendered as additional information of LLM response
+ * 
+ * ### Example: 
+ * 
+ * ```ts
+ * {
+    weather: tool({
+      description: 'Get the weather in a location',
+      parameters: z.object({
+        location: z.string().describe('The location to get the weather for'),
+      }),
+      execute: async ({ location }) => {
+        // get the weather from the weather API
+        // the result should contains llmResult and output
+        // `llmResult` will be sent back to the LLM
+        // `output` (optional) will be used for next tool call or tool component rendering
+        return {
+          llmResult: 'Weather in ' + location,
+          output: {
+            temperature: 72 + Math.floor(Math.random() * 21) - 10,
+          },
+        };
+      },
+    }),
+  },
+ * ```
+ * 
+ * @param tool - The vercel AI tool to extend
+ * @returns The extended tool
+ */
+export function tool<PARAMETERS extends Parameters = never>(
+  /**
+   * The vercel AI tool to extend
+   * @type {ExtendedTool<PARAMETERS>}
+   */
+  tool: ExtendedTool<PARAMETERS>
+): ExtendedTool<PARAMETERS> {
+  return tool;
+}
 
 /**
  * Type guard to check if a tool is an OpenAI function tool
@@ -14,7 +144,7 @@ import {
  * @returns True if the tool is an OpenAI function tool
  */
 export function isOpenAIFunctionTool(
-  tool: OpenAIFunctionTool | VercelFunctionTool
+  tool: OpenAIFunctionTool | Tool
 ): tool is OpenAIFunctionTool {
   return 'name' in tool && 'properties' in tool;
 }
@@ -25,17 +155,17 @@ export function isOpenAIFunctionTool(
  * @returns True if the tool is a Vercel function tool
  */
 export function isVercelFunctionTool(
-  tool: OpenAIFunctionTool | VercelFunctionTool
-): tool is VercelFunctionTool {
-  return 'parameters' in tool;
+  tool: OpenAIFunctionTool | ExtendedTool
+): tool is ExtendedTool {
+  return 'parameters' in tool && 'execute' in tool && 'description' in tool;
 }
 
 /**
  * Creates an AI assistant instance with the specified configuration
- * 
+ *
  * @param props - Configuration properties for the assistant
  * @returns Promise that resolves to the configured assistant instance
- * 
+ *
  * @example
  * ```ts
  * const assistant = await createAssistant({
@@ -85,25 +215,36 @@ export async function createAssistant(props: UseAssistantProps) {
     });
   }
 
-  // register custom functions using Vercel Function format
-  if (props.vercelFunctions) {
-    Object.keys(props.vercelFunctions).forEach((functionName) => {
-      if (isVercelFunctionTool(props.vercelFunctions![functionName])) {
-        const func = props.vercelFunctions![functionName];
+  // register custom functions using Vercel Tool format
+  if (props.functions) {
+    Object.keys(props.functions).forEach((functionName) => {
+      if (isVercelFunctionTool(props.functions![functionName])) {
+        const func = props.functions![functionName];
+        // get the description from the tool
+        let description = '';
+        if (func.type === 'function' || func.type === undefined) {
+          description = func.description || '';
+        }
+        // convert the zod schema to a json schema
         const jsonSchemaFunctionDef = toJsonSchema({
           name: functionName,
-          description: func.description,
+          description,
           schema: func.parameters,
         });
+
         AssistantModel.registerFunctionCalling({
           name: jsonSchemaFunctionDef.name,
           description: jsonSchemaFunctionDef.description || '',
           properties: jsonSchemaFunctionDef.parameters.properties || {},
           required: jsonSchemaFunctionDef.parameters.required || [],
-          callbackFunction: func.executeWithContext,
-          callbackFunctionContext: func.context,
-          callbackMessage: func.message,
-        } as RegisterFunctionCallingProps);
+          ...(func.execute
+            ? { callbackFunction: createCallbackFunction(func.execute) }
+            : {}),
+          ...(func.context ? { callbackFunctionContext: func.context } : {}),
+          ...(func.component
+            ? { callbackMessage: createCallbackMessage(func.component) }
+            : {}),
+        });
       }
     });
   }
@@ -116,4 +257,78 @@ export async function createAssistant(props: UseAssistantProps) {
   }
 
   return assistant;
+}
+
+function createCallbackMessage(component: React.ElementType) {
+  const callbackMessage = (customFunctionCall: CustomFunctionCall) => {
+    const { functionName, functionArgs, output } = customFunctionCall;
+    if (functionArgs) {
+      const message = getCustomMessage({
+        functionName,
+        functionArgs,
+        output,
+        CustomMessage: component,
+      });
+      return message;
+    }
+    return null;
+  };
+  return callbackMessage;
+}
+
+function isExecuteFunctionResult(
+  result: unknown
+): result is ExecuteFunctionResult {
+  return (
+    typeof result === 'object' &&
+    result !== null &&
+    'llmResult' in result &&
+    'output' in result
+  );
+}
+
+function createCallbackFunction<PARAMETERS extends Parameters>(
+  execute: ExecuteFunction<PARAMETERS>
+) {
+  const callbackFunction = async (props: CallbackFunctionProps) => {
+    const { functionArgs, functionContext, functionName } = props;
+    const args = functionArgs as inferParameters<PARAMETERS>;
+    const context = functionContext;
+
+    try {
+      const result = await execute?.(args, { context });
+
+      // check result type: {llmResult, outputData}
+      if (!isExecuteFunctionResult(result)) {
+        return {
+          name: functionName,
+          result: {
+            success: false,
+            details:
+              'Failed to execute function. Executaion results are not valid.',
+          },
+        };
+      }
+
+      return {
+        name: functionName,
+        result: {
+          success: true,
+          llmResult: result.llmResult,
+        },
+        data: result.output,
+      };
+    } catch (error) {
+      return {
+        type: 'error',
+        name: functionName,
+        result: {
+          success: false,
+          details: `Failed to execute function. ${error}`,
+        },
+      };
+    }
+  };
+
+  return callbackFunction;
 }

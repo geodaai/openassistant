@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, DragEvent } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import {
   Button,
@@ -12,15 +12,67 @@ import {
 import { Icon } from '@iconify/react';
 import { Boxplot, BoxplotOutputData } from './box-plot';
 import { BoxplotDataProps } from './utils';
+import { ExpandableContainer } from '@openassistant/common';
 
+/**
+ * BoxplotComponentContainer for rendering box plot visualizations with expandable container.
+ * With expandable container, the box plot can be:
+ * - expanded to a modal dialog with box plots rendered in vertical direction and with detailed statistics table.
+ * - dragged and dropped to other places.
+ * - resized.
+ * - have a tooltip with detailed statistics.
+ *
+ * @param props {@link BoxplotOutputData} Configuration and data for the box plot
+ * @returns Box plot visualization with optional detailed statistics table
+ */
+export function BoxplotComponentContainer(
+  props: BoxplotOutputData
+): JSX.Element | null {
+  const onDragStart = (e: DragEvent<HTMLButtonElement>) => {
+    e.dataTransfer.setData(
+      'text/plain',
+      JSON.stringify({
+        id: props.id,
+        type: 'boxplot',
+        data: props,
+      })
+    );
+
+    // prevent the event from propagating
+    e.stopPropagation();
+  };
+
+  return (
+    <ExpandableContainer
+      defaultWidth={600}
+      defaultHeight={800}
+      draggable={props.isDraggable || false}
+      onDragStart={onDragStart}
+    >
+      <BoxplotComponent {...props} />
+    </ExpandableContainer>
+  );
+}
+
+/**
+ * Component that renders a box plot visualization with optional expanded statistics table.
+ * See {@link BoxplotComponentContainer} for detailed usage and features.
+ *
+ * @param props {@link BoxplotOutputData} Configuration and data for the box plot
+ * @returns Box plot visualization with optional detailed statistics table
+ */
 export function BoxplotComponent(props: BoxplotOutputData): JSX.Element | null {
-  const [showMore, setShowMore] = useState(props.isExpanded);
-
   const handleMorePress = useCallback(() => {
-    setShowMore(!showMore);
-    props.setIsExpanded?.(!props.isExpanded);
-  }, [showMore, props]);
+    props.setIsExpanded?.(true);
+  }, [props]);
 
+  /**
+   * Creates table cells for a given metric and boxplot data
+   *
+   * @param metric - Statistical metric to display (e.g. 'low', 'q1', 'mean')
+   * @param boxplotData - Data containing boxplot statistics
+   * @returns Array of table cells with formatted metric values
+   */
   const createTableCells = (metric: string, boxplotData: BoxplotDataProps) => {
     const tableCells: JSX.Element[] = [];
     tableCells.push(<TableCell key="metric-label">{metric}</TableCell>);
@@ -32,6 +84,12 @@ export function BoxplotComponent(props: BoxplotOutputData): JSX.Element | null {
     return tableCells;
   };
 
+  /**
+   * Generates table rows for all boxplot statistics
+   *
+   * @param boxplotData - Data containing boxplot statistics
+   * @returns Array of table rows with statistical metrics
+   */
   const generateStatsRows = (boxplotData: BoxplotDataProps) => {
     const metrics = ['low', 'q1', 'q2', 'q3', 'high', 'mean', 'std', 'iqr'];
 
@@ -45,9 +103,12 @@ export function BoxplotComponent(props: BoxplotOutputData): JSX.Element | null {
   return (
     <AutoSizer>
       {({ height, width }) => (
-        <div style={{ height, width }} className="relative">
-          <div className="h-full w-full flex flex-col rounded-lg gap-2 p-6 text-gray-900 shadow-secondary-1 dark:bg-gray-950 dark:text-gray-100">
-            <div className="relative h-full py-2 flex-grow dark:bg-black">
+        <div
+          style={{ height: Math.max(height, 200), width }}
+          className="relative"
+        >
+          <div className="h-full w-full flex flex-col rounded-lg gap-2 shadow-secondary-1 dark:text-gray-100">
+            <div className="relative h-full py-2 flex-grow">
               <div className="absolute left-0 top-0 h-full w-full">
                 <Boxplot {...props} />
               </div>
@@ -66,7 +127,7 @@ export function BoxplotComponent(props: BoxplotOutputData): JSX.Element | null {
                       />
                     }
                     endContent={
-                      showMore && (
+                      props.isExpanded && (
                         <Icon
                           icon="solar:alt-arrow-up-line-duotone"
                           width="18"
@@ -80,7 +141,7 @@ export function BoxplotComponent(props: BoxplotOutputData): JSX.Element | null {
                   </Button>
                 </div>
               )}
-              {showMore && (
+              {props.isExpanded && (
                 <div className="w-full text-tiny">
                   <Table
                     aria-label="Box Plot Statistics"

@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
+    "sourceMap": true,
+    "strict": true,
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "esModuleInterop": true,
+    "allowJs": false,
+    "checkJs": false,
+    "skipLibCheck": true,
+    "noImplicitAny": false,
+    "baseUrl": ".",
+    "paths": {
+      "@openassistant/core": ["../../packages/core/src"],
+      "@openassistant/common": ["../../packages/common/src"],
+      "@openassistant/ui": ["../../packages/ui/src"]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "../../node_modules",
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/*.d.ts",
+    "**/coverage/**",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.stories.tsx"
+  ]
+}

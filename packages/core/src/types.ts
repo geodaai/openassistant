@@ -2,6 +2,7 @@ import { ToolSet } from 'ai';
 import { StepResult } from 'ai';
 import { ReactNode } from 'react';
 import { z } from 'zod';
+import { JsonSchema7Type } from 'zod-to-json-schema';
 
 /**
  * Type of image message content
@@ -44,6 +45,10 @@ export type MessagePayload =
  * @param payload The payload of the message, can be string, object, image or custom
  */
 export interface MessageModel {
+  /**
+   * The message to be sent and received from the assistant.
+   * @deprecated Use messageContent.text instead
+   */
   message?: string;
   sentTime?: string;
   sender?: string;
@@ -51,6 +56,8 @@ export interface MessageModel {
   position: 'single' | 'first' | 'normal' | 'last' | 0 | 1 | 2 | 3;
   type?: MessageType;
   payload?: MessagePayload;
+  toolCallMessages?: ToolCallMessage[];
+  messageContent?: StreamMessage;
 }
 
 /**
@@ -171,7 +178,7 @@ export type CustomFunctionCall = {
   /** the name of the function */
   functionName: string;
   /** the arguments of the function */
-  functionArgs: Record<string, unknown>;
+  functionArgs?: Record<string, unknown>;
   /** the output of function execution */
   output: CustomFunctionOutputProps<unknown, unknown>
 };
@@ -185,6 +192,13 @@ export type CustomMessageCallback = (
   customFunctionCall: CustomFunctionCall
 ) => ReactNode | null;
 
+
+export type StreamMessage = {
+  reasoning?: string;
+  toolCallMessages?: ToolCallMessage[];
+  text?: string;
+}
+
 /**
  * Type of StreamMessageCallback
  *
@@ -196,6 +210,7 @@ export type StreamMessageCallback = (props: {
   deltaMessage: string;
   customMessage?: MessagePayload;
   isCompleted?: boolean;
+  message?: StreamMessage;
 }) => void;
 
 /**
@@ -273,16 +288,18 @@ export type RegisterFunctionCallingProps = {
   name: string;
   description: string;
   properties: {
-    [key: string]: {
-      type: string; // 'string' | 'number' | 'boolean' | 'array';
-      description: string;
-      items?: {
-        type: string;
-      };
-    };
+    [key: string]:
+      | {
+          type: string; // 'string' | 'number' | 'boolean' | 'array';
+          description: string;
+          items?: {
+            type: string;
+          };
+        }
+      | JsonSchema7Type;
   };
   required: string[];
-  callbackFunction: CallbackFunction;
+  callbackFunction?: CallbackFunction;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   callbackFunctionContext?: CustomFunctionContext<any>;
   callbackMessage?: CustomMessageCallback;
@@ -338,5 +355,7 @@ export type VercelToolSet = Record<string, VercelFunctionTool>;
 
 export type ToolCallMessage = {
   toolCallId: string;
-  element: ReactNode;
+  element?: ReactNode;
+  text?: string;
+  reason?: string;
 };

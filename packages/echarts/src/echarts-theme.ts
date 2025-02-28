@@ -12,7 +12,7 @@ export const ECHARTS_DARK_THEME = {
     '#91ca8c',
     '#f49f42',
   ],
-  backgroundColor: 'rgba(14,14,14,1)',
+  backgroundColor: 'rgba(14,14,14,0)',
   textStyle: {},
   title: {
     textStyle: {

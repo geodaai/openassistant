@@ -35,7 +35,7 @@ export function getBoxPlotChartOption({
     pointsData?.map((data) => ({
       type: 'scatter' as const,
       data,
-      symbolSize: 6,
+      symbolSize: data.length > 1000 ? 4 : 6,
       symbol: data.length > 1000 ? 'rect' : 'circle',
       itemStyle: {
         color: 'lightblue',

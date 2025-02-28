@@ -1,6 +1,7 @@
 import {
   AudioToTextProps,
   CustomFunctionOutputProps,
+  StreamMessage,
   StreamMessageCallback,
   ToolCallMessage,
 } from '../types';
@@ -60,17 +61,17 @@ export type VercelAiClientConfigureProps = {
 /**
  * Abstract Vercel AI Client for client-side usage. Extends the VercelAi class to handle
  * LLM interactions directly from the browser using Vercel AI SDK instead of API endpoints.
- * 
+ *
  * @abstract
  * @extends {VercelAi}
  */
 export abstract class VercelAiClient extends VercelAi {
   /** API key for authentication */
   protected static apiKey = '';
-  
+
   /** Model name to use */
   protected static model = '';
-  
+
   /** Base URL for API requests */
   protected static baseURL = '';
 
@@ -280,6 +281,13 @@ export abstract class VercelAiClient extends VercelAi {
       );
       if (toolCallMessage) {
         toolCallMessages.push(toolCallMessage);
+        // find toolCallMessage in the streamMessage.toolCallMessages array
+        const existingToolCallMessage = this.streamMessage.toolCallMessages?.find(
+          (message) => message.toolCallId === toolCall.toolCallId
+        );
+        if (existingToolCallMessage) {
+          existingToolCallMessage.element = toolCallMessage.element;
+        }
       }
     }
 
@@ -348,6 +356,7 @@ export abstract class VercelAiClient extends VercelAi {
       model: this.llm,
       messages: this.messages,
       tools,
+      toolCallStreaming: true,
       toolChoice: VercelAiClient.toolChoice,
       system: VercelAiClient.instructions,
       temperature: VercelAiClient.temperature,
@@ -367,15 +376,67 @@ export abstract class VercelAiClient extends VercelAi {
     for await (const chunk of fullStream) {
       if (chunk.type === 'text-delta') {
         messageContent += chunk.textDelta;
+        this.streamMessage.text += chunk.textDelta;
         streamMessageCallback({
           deltaMessage: messageContent,
           customMessage,
+          message: this.streamMessage,
         });
+      } else if (chunk.type === 'tool-call-streaming-start') {
+        console.log('tool-call-streaming-start', chunk);
+        const toolCallId = chunk.toolCallId;
+        const toolCallMessage = this.streamMessage.toolCallMessages?.find(
+          (message) => message.toolCallId === toolCallId
+        );
+        if (!toolCallMessage) {
+          this.streamMessage.toolCallMessages?.push({
+            toolCallId,
+            text: '',
+            reason: '',
+          });
+        }
+      } else if (chunk.type === 'tool-call-delta') {
+        const toolCallId = chunk.toolCallId;
+        // find the toolCallMessage using the toolCallId
+        const toolCallMessage = this.streamMessage.toolCallMessages?.find(
+          (message) => message.toolCallId === toolCallId
+        );
+        if (toolCallMessage) {
+          toolCallMessage.text += chunk.argsTextDelta;
+          streamMessageCallback({
+            deltaMessage: '',
+            customMessage,
+            message: this.streamMessage,
+          });
+        }
+      } else if (chunk.type === 'tool-call') {
+        const toolCallId = chunk.toolCallId;
+        // find the toolCallMessage using the toolCallId
+        const toolCallMessage = this.streamMessage.toolCallMessages?.find(
+          (message) => message.toolCallId === toolCallId
+        );
+        if (toolCallMessage) {
+          // check if 'reason' is present in the chunk.argsTextDelta and
+          if (toolCallMessage.text?.includes('reason')) {
+            // parse json object from the chunk.argsTextDelta
+            const args = JSON.parse(toolCallMessage.text);
+            if (args.reason) {
+              toolCallMessage.reason = args.reason;
+              toolCallMessage.text = '';
+            }
+            streamMessageCallback({
+              deltaMessage: '',
+              customMessage,
+              message: this.streamMessage,
+            });
+          }
+        }
       } else if (chunk.type === 'reasoning') {
-        messageContent += chunk.textDelta;
+        this.streamMessage.reasoning += chunk.textDelta;
         streamMessageCallback({
           deltaMessage: messageContent,
           customMessage,
+          message: this.streamMessage,
         });
       } else if (chunk.type === 'error') {
         throw new Error(`Error from Vercel AI API: ${chunk.error}`);

@@ -1,0 +1,30 @@
+{
+  "name": "multistep-tools-example",
+  "version": "1.0.0",
+  "description": "React app using OpenAssistant with multistep tools",
+  "scripts": {
+    "start": "node esbuild.config.mjs --start",
+    "build": "node esbuild.config.mjs"
+  },
+  "author": "Xun Li <lixun910@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@openassistant/core": "latest",
+    "@openassistant/ui": "latest",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@nextui-org/react": "^2.6.10",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "autoprefixer": "^10.4.20",
+    "esbuild": "^0.24.2",
+    "esbuild-plugin-tailwindcss": "^1.2.1",
+    "esbuild-style-plugin": "^1.6.3",
+    "framer-motion": "^11.15.0",
+    "open": "^10.1.0",
+    "postcss": "^8.4.49",
+    "tailwind": "^4.0.0"
+  }
+}

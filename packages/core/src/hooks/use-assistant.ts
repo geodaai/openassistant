@@ -1,14 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  OpenAIFunctionTool,
-  StreamMessageCallback,
-  VercelToolSet,
-} from '../types';
+import { OpenAIFunctionTool, StreamMessageCallback, ToolCallMessage } from '../types';
 import { VercelAi } from '../llm/vercelai';
-import { createAssistant } from '../utils/create-assistant';
-import { ToolChoice } from 'ai';
+import { createAssistant, ExtendedTool } from '../utils/create-assistant';
+import { StepResult, ToolChoice } from 'ai';
 import { ToolSet } from 'ai';
 /**
  * Props for the Assistant UI and useAssistant hook.
@@ -45,8 +41,10 @@ export type UseAssistantProps = {
   temperature?: number;
   topP?: number;
   instructions: string;
-  functions?: Array<OpenAIFunctionTool> | VercelToolSet;
-  vercelFunctions?: VercelToolSet;
+  functions?:
+    | Array<OpenAIFunctionTool>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    | Record<string, ExtendedTool<any>>;
   toolChoice?: ToolChoice<ToolSet>;
   maxSteps?: number;
   abortController?: AbortController;
@@ -61,6 +59,10 @@ export type UseAssistantProps = {
 export type SendTextMessageProps = {
   message: string;
   streamMessageCallback: StreamMessageCallback;
+  onStepFinish?: (
+    event: StepResult<ToolSet>,
+    toolCallMessages: ToolCallMessage[]
+  ) => Promise<void> | void;
 };
 
 /**
@@ -154,11 +156,13 @@ export function useAssistant(props: UseAssistantProps) {
   const sendTextMessage = async ({
     message,
     streamMessageCallback,
+    onStepFinish,
   }: SendTextMessageProps) => {
     await checkLLMInstance();
     await assistant?.processTextMessage({
       textMessage: message,
       streamMessageCallback,
+      onStepFinish
     });
   };
 
