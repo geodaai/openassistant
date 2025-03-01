@@ -8,40 +8,39 @@ on:
       - 'v*'
   pull_request:
     branches:
-      - 'main'  # Run on PRs targeting main branch
+      - 'main' # Run on PRs targeting main branch
 
 jobs:
-  build:  # Renamed from 'publish' to 'build' since it's not always publishing
+  build: # Renamed from 'publish' to 'build' since it's not always publishing
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Required for Lerna to access tags
-      
+          fetch-depth: 0 # Required for Lerna to access tags
+
       - uses: actions/setup-node@v4
         with:
-          node-version: '20.18.1'
-          registry-url: 'https://registry.npmjs.org'
-    
+          node-version: 22
+
       - name: Install Yarn
         run: |
           corepack enable
           corepack prepare yarn@4.6.0 --activate
-      
+
       - name: Install dependencies
         run: |
           yarn --version
           yarn install --immutable
-      
+
       - name: Lint
         run: yarn lint
-      
+
       - name: Build packages
         run: yarn build
 
       # - name: Test
       #   run: yarn test
-      
+
       - name: Check version match
         if: github.ref_type == 'tag'
         run: |
@@ -54,7 +53,7 @@ jobs:
           DUCKDB_PKG_VERSION=$(node -p "require('./packages/duckdb/package.json').version")
           ECHARTS_PKG_VERSION=$(node -p "require('./packages/echarts/package.json').version")
           GEODA_PKG_VERSION=$(node -p "require('./packages/geoda/package.json').version")
-          
+
           # Compare versions
           if [ "$TAG_VERSION" != "$PKG_VERSION" ] || [ "$TAG_VERSION" != "$UI_PKG_VERSION" ] || [ "$TAG_VERSION" != "$CORE_PKG_VERSION" ] || [ "$TAG_VERSION" != "$DUCKDB_PKG_VERSION" ] || [ "$TAG_VERSION" != "$ECHARTS_PKG_VERSION" ] || [ "$TAG_VERSION" != "$GEODA_PKG_VERSION" ]; then
             echo "Version mismatch!"
@@ -68,11 +67,11 @@ jobs:
             exit 1
           fi
           echo "Versions match: $TAG_VERSION"
-      
+
       - name: Publish packages
         if: github.ref_type == 'tag'
         run: |
           npm config set "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}"
           npm publish --workspaces --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} 
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

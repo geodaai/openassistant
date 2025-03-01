@@ -36,8 +36,5 @@
   },
   "resolutions": {
     "styled-components": "6.1.8"
-  },
-  "volta": {
-    "node": "20.18.1"
   }
 }
