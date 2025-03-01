@@ -1,6 +1,6 @@
 {
   "name": "@openassistant/geoda",
-  "version": "0.1.6-alpha.0",
+  "version": "0.2.0",
   "author": "Xun Li<lixun910@gmail.com>",
   "description": "The GeoDa spatial analysis addon for OpenAssistant",
   "main": "dist/index.esm.js",
@@ -23,6 +23,7 @@
     "@nextui-org/react": "^2.6.8",
     "@openassistant/common": "workspace:*",
     "@openassistant/core": "workspace:*",
+    "@openassistant/echarts": "workspace:*",
     "framer-motion": "^11.15.0",
     "geoda-wasm": "^0.0.5",
     "tailwindcss": "^3.4.17"

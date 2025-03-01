@@ -1,5 +1,6 @@
 {
   "name": "react-tailwind-example",
+  "private": true,
   "version": "1.0.0",
   "description": "React app using OpenAssistant with Tailwind",
   "scripts": {
@@ -11,13 +12,13 @@
   "dependencies": {
     "@openassistant/core": "latest",
     "@openassistant/ui": "latest",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
     "@nextui-org/react": "^2.6.10",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.20",
     "esbuild": "^0.24.2",
     "esbuild-plugin-tailwindcss": "^1.2.1",

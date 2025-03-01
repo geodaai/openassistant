@@ -12,8 +12,8 @@ import { EChartsSkeleton } from './echarts-skeleton';
 
 export function ExpandableContainer({
   children,
-  defaultWidth = 600,
-  defaultHeight = 800,
+  defaultWidth,
+  defaultHeight,
   draggable = false,
   onDragStart,
 }: {
@@ -32,7 +32,10 @@ export function ExpandableContainer({
   };
 
   return (
-    <ResizablePlotContainer>
+    <ResizablePlotContainer
+      {...(defaultWidth ? { defaultWidth } : {})}
+      {...(defaultHeight ? { defaultHeight } : {})}
+    >
       <div
         className={`h-full w-full relative rounded-md${
           isExpanded ? ' border border-default-200 p-1' : ''

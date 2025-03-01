@@ -46,6 +46,15 @@ const SAMPLE_DATA = {
   ],
 };
 
+const INSTRUCTIONS = `
+You are a data and map analyst. You can help users to create a map from a dataset.
+If a function calling can be used to answer the user's question, please always confirm the function calling and its arguments with the user.
+
+Here is the dataset are available for function calling:
+DatasetName: myVenues
+Fields: name, longitude, latitude, revenue, population
+`;
+
 export function App() {
   const functions = [
     createMapFunctionDefinition({
@@ -67,9 +76,9 @@ export function App() {
     model: 'gpt-4o',
     apiKey: process.env.OPENAI_TOKEN || '',
     welcomeMessage: 'Hi, I am your AI assistant',
-    instructions:
-      "You are a data and map analyst. You can help users to create a map from a dataset. If a function calling can be used to answer the user's question, please always confirm the function calling and its arguments with the user.",
+    instructions: INSTRUCTIONS,
     functions,
+    useMarkdown: true,
   };
 
   const dataContext = useMemo(() => {

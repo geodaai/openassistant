@@ -50,8 +50,8 @@ export function CreateMapCallbackComponent(props: CustomFunctionCall) {
 
   return (
     <ExpandableContainer
-      defaultWidth={600}
-      defaultHeight={800}
+      defaultWidth={300}
+      defaultHeight={350}
       draggable={data.isDraggable || false}
       onDragStart={onDragStart}
     >

@@ -1,5 +1,6 @@
 {
   "name": "simple-react-app",
+  "private": true,
   "version": "1.0.0",
   "description": "Simple react app using OpenAssistant",
   "main": "src/index.js",
@@ -12,12 +13,12 @@
   "dependencies": {
     "@openassistant/core": "latest",
     "@openassistant/ui": "latest",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
     "react-scripts": "^5.0.1"
   },
   "browserslist": {

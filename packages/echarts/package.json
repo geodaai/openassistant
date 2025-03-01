@@ -1,6 +1,6 @@
 {
   "name": "@openassistant/echarts",
-  "version": "0.1.6-alpha.0",
+  "version": "0.2.0",
   "author": "Xun Li<lixun910@gmail.com>",
   "description": "The echarts addon for OpenAssistant",
   "main": "./dist/index.esm.js",

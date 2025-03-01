@@ -1,6 +1,7 @@
 {
   "name": "deckgl-assistant-example",
   "version": "1.0.0",
+  "private": true,
   "description": "React app using OpenAssistant with Deck.gl",
   "scripts": {
     "start": "node esbuild.config.mjs --start",
@@ -14,10 +15,10 @@
     "@deck.gl/react": "^9.1.1",
     "@deck.gl/widgets": "^9.1.1",
     "@nextui-org/react": "^2.6.10",
-    "@openassistant/core": "0.1.9",
-    "@openassistant/duckdb": "0.1.5",
-    "@openassistant/echarts": "0.1.5",
-    "@openassistant/ui": "0.1.5",
+    "@openassistant/core": "latest",
+    "@openassistant/duckdb": "latest",
+    "@openassistant/echarts": "latest",
+    "@openassistant/ui": "latest",
     "ollama-ai-provider": "^1.2.0",
     "preact": "^10.25.4",
     "react": "^18.3.1",
@@ -29,8 +30,8 @@
     "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.20",
     "esbuild": "^0.24.2",
     "esbuild-plugin-tailwindcss": "^1.2.1",

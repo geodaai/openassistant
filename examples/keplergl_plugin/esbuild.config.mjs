@@ -6,12 +6,11 @@ import process from 'node:process';
 import dotenv from 'dotenv';
 import { polyfillNode } from 'esbuild-plugin-polyfill-node';
 
-
 dotenv.config();
 
 const isStart = process.argv.includes('--start');
 const port = 3003;
-
+console.log('isStart', isStart);
 const config = {
   entryPoints: ['src/main.tsx'],
   bundle: true,

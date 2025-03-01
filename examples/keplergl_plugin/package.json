@@ -1,7 +1,8 @@
 {
-  "name": "plugin-simple-map",
+  "name": "keplergl-plugin",
+  "private": true,
   "version": "1.0.0",
-  "description": "React plugin map using OpenAssistant with Tailwind",
+  "description": "OpenAssistant using Kepler.gl plugin for map visualization",
   "scripts": {
     "start": "node esbuild.config.mjs --start",
     "build": "node esbuild.config.mjs"
@@ -9,6 +10,8 @@
   "author": "Xun Li <lixun910@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "@deck.gl/extensions": "^9.1.4",
+    "@deck.gl/mesh-layers": "^9.1.4",
     "@kepler.gl/actions": "3.0.0",
     "@kepler.gl/components": "3.0.0",
     "@kepler.gl/constants": "3.0.0",
@@ -16,9 +19,10 @@
     "@kepler.gl/reducers": "3.0.0",
     "@kepler.gl/styles": "3.0.0",
     "@kepler.gl/utils": "3.0.0",
-    "@openassistant/core": "0.0.5",
-    "@openassistant/keplergl": "0.0.5",
-    "@openassistant/ui": "0.0.5",
+    "@openassistant/common": "latest",
+    "@openassistant/core": "latest",
+    "@openassistant/keplergl": "latest",
+    "@openassistant/ui": "latest",
     "assert": "^2.1.0",
     "d3-request": "^1.0.6",
     "fs": "^0.0.1-security",
@@ -37,8 +41,8 @@
   },
   "devDependencies": {
     "@nextui-org/react": "^2.6.10",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.20",
     "child_process": "^1.0.2",
     "esbuild": "^0.23.1",

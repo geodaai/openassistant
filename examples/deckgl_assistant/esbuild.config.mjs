@@ -31,7 +31,8 @@ const config = {
   jsx: 'automatic',
   alias: {
     // make sure the same version of apache-arrow is used
-    'apache-arrow': './node_modules/apache-arrow',
+    'apache-arrow': '../../node_modules/apache-arrow',
+    // '@luma.gl': '../../node_modules/@luma.gl',
   },
   plugins: [
     tailwindPlugin({

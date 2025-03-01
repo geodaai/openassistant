@@ -52,8 +52,10 @@ export function getCustomMessage({
 
   return (
     <ExpandableContainer
-      defaultWidth={600}
-      defaultHeight={800}
+      // @ts-expect-error - width and height are not required
+      defaultWidth={'auto'}
+      // @ts-expect-error - width and height are not required
+      defaultHeight={'auto'}
       draggable={isDraggable}
       onDragStart={onDragStart}
     >
