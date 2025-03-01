@@ -69,7 +69,11 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "esbuild": "0.24.2",
-    "styled-components": "6.1.8"
+    "styled-components": "6.1.8",
+    "@deck.gl/core": "8.9.36",
+    "@deck.gl/layers": "8.9.36",
+    "@deck.gl/react": "8.9.36",
+    "@deck.gl/mesh-layers": "8.9.36"
   },
   "packageManager": "yarn@4.6.0"
 }

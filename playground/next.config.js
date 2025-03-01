@@ -49,29 +49,29 @@ module.exports = {
     };
 
     // Only add @openassistant/common alias when running with --local flag
-    if (process.env.LOCAL === 'true') {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        '@openassistant/common': path.resolve(
-          __dirname,
-          '../packages/common/src'
-        ),
-        '@openassistant/ui': path.resolve(__dirname, '../packages/ui/src'),
-        '@openassistant/core': path.resolve(__dirname, '../packages/core/src'),
-        '@openassistant/echarts': path.resolve(
-          __dirname,
-          '../packages/echarts/src'
-        ),
-        '@openassistant/duckdb': path.resolve(
-          __dirname,
-          '../packages/duckdb/src'
-        ),
-        '@openassistant/geoda': path.resolve(
-          __dirname,
-          '../packages/geoda/src'
-        ),
-      };
-    }
+    // if (process.env.LOCAL === 'true') {
+    //   config.resolve.alias = {
+    //     ...config.resolve.alias,
+    //     '@openassistant/common': path.resolve(
+    //       __dirname,
+    //       '../packages/common/src'
+    //     ),
+    //     '@openassistant/ui': path.resolve(__dirname, '../packages/ui/src'),
+    //     '@openassistant/core': path.resolve(__dirname, '../packages/core/src'),
+    //     '@openassistant/echarts': path.resolve(
+    //       __dirname,
+    //       '../packages/echarts/src'
+    //     ),
+    //     '@openassistant/duckdb': path.resolve(
+    //       __dirname,
+    //       '../packages/duckdb/src'
+    //     ),
+    //     '@openassistant/geoda': path.resolve(
+    //       __dirname,
+    //       '../packages/geoda/src'
+    //     ),
+    //   };
+    // }
 
     // Fix Critical dependency: the request of a dependency is an expression
     config.module = {
