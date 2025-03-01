@@ -1,23 +1,29 @@
 # Function: useBrushLink()
 
-> **useBrushLink**(`__namedParameters`): `object`
+> **useBrushLink**(`options`): `object`
 
-Defined in: [hooks/use-brush-link.tsx:62](https://github.com/GeoDaCenter/openassistant/blob/a1f850931f3d8289e0a4c297ef4b317a2f84235b/packages/common/src/hooks/use-brush-link.tsx#L62)
+Defined in: [hooks/use-brush-link.tsx:87](https://github.com/GeoDaCenter/openassistant/blob/1b6e044b8153114911daa09cb063c51a2d620732/packages/common/src/hooks/use-brush-link.tsx#L87)
 
-This hook is used to link the brush data between different components.
-
-It will save the brush data to the localStorage and listen for the storage changes.
-When the storage changes, it will call the onLink callback with the highlighted rows and the dataId.
+A hook that enables brush data synchronization between different components using localStorage.
+This allows multiple charts or components to share selection/highlighting states.
 
 ## Parameters
 
-### \_\_namedParameters
+### options
 
 `BrushLinkOptions` = `{}`
+
+Configuration options for the brush link
 
 ## Returns
 
 `object`
+
+An object containing:
+- brush: Function to update brush selection (params: highlightRowIndices: number[], dataId: string)
+- clearBrush: Function to clear brush selection for a specific dataId
+- getBrushData: Function to get current brush data for all datasets
+- componentId: The unique identifier for this component instance
 
 ### brush()
 
@@ -63,41 +69,51 @@ When the storage changes, it will call the onLink callback with the highlighted 
 
 `any`
 
+## Remarks
+
+The hook manages brush data in localStorage, enabling cross-component and cross-tab communication.
+Each component can either monitor a specific dataset (using defaultDataId) or all datasets.
+
 ## Example
 
 ```tsx
-// Component A
-const ChartOne = () => {
-  const { brush, clearBrush, componentId } = useBrushLink({
-    defaultDataId: 'chart1',
-    componentId: 'chart-one', // Optional: provide your own ID
+// --- Basic Usage ---
+const MyChart = () => {
+  const { brush, clearBrush } = useBrushLink({
+    defaultDataId: 'myChart',
     onLink: (highlightedRows, sourceDataId) => {
-      console.log(`Chart One (${componentId}) received update for ${sourceDataId}:`, highlightedRows);
-    },
+      // Update your chart's highlighting here
+      setHighlightedData(highlightedRows);
+    }
   });
 
-  return (
-    <div>
-      <button onClick={() => brush([1, 2, 3], 'chart1')}>Select in Chart 1</button>
-      <button onClick={() => clearBrush('chart1')}>Clear Chart 1</button>
-    </div>
-  );
+  // Trigger brush events
+  const onBrushSelection = (selectedIndices) => {
+    brush(selectedIndices, 'myChart');
+  };
 };
 
-// Component B
-const ChartTwo = () => {
-  const { brush, clearBrush, componentId } = useBrushLink({
-    defaultDataId: 'chart2',
+// --- Multiple Linked Charts ---
+const ChartA = () => {
+  const { brush, clearBrush } = useBrushLink({
+    defaultDataId: 'chartA',
     onLink: (highlightedRows, sourceDataId) => {
-      console.log(`Chart Two (${componentId}) received update for ${sourceDataId}:`, highlightedRows);
-    },
+      // React to brush events from any chart
+      updateChartAHighlights(highlightedRows);
+    }
   });
+};
 
-  return (
-    <div>
-      <button onClick={() => brush([4, 5, 6], 'chart2')}>Select in Chart 2</button>
-      <button onClick={() => clearBrush('chart2')}>Clear Chart 2</button>
-    </div>
-  );
+const ChartB = () => {
+  const { brush, clearBrush } = useBrushLink({
+    defaultDataId: 'chartB',
+    onLink: (highlightedRows, sourceDataId) => {
+      // sourceDataId tells you which chart triggered the update
+      if (sourceDataId === 'chartA') {
+        // Handle updates from Chart A
+      }
+      updateChartBHighlights(highlightedRows);
+    }
+  });
 };
 ```

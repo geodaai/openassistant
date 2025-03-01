@@ -2,7 +2,9 @@
 
 > **BoxplotProps**: `object`
 
-Defined in: [boxplot/component/utils.ts:14](https://github.com/GeoDaCenter/openassistant/blob/a1f850931f3d8289e0a4c297ef4b317a2f84235b/packages/echarts/src/boxplot/component/utils.ts#L14)
+Defined in: [boxplot/component/utils.ts:31](https://github.com/GeoDaCenter/openassistant/blob/1b6e044b8153114911daa09cb063c51a2d620732/packages/echarts/src/boxplot/component/utils.ts#L31)
+
+Statistical properties calculated for each boxplot
 
 ## Type declaration
 
@@ -10,34 +12,52 @@ Defined in: [boxplot/component/utils.ts:14](https://github.com/GeoDaCenter/opena
 
 > **high**: `number`
 
+Upper whisker value (Q3 + boundIQR * IQR)
+
 ### iqr
 
 > **iqr**: `number`
+
+Interquartile range (Q3 - Q1)
 
 ### low
 
 > **low**: `number`
 
+Lower whisker value (Q1 - boundIQR * IQR)
+
 ### mean
 
 > **mean**: `number`
+
+Arithmetic mean of the data
 
 ### name
 
 > **name**: `string`
 
+Name/identifier of the data group
+
 ### q1
 
 > **q1**: `number`
+
+First quartile (25th percentile)
 
 ### q2
 
 > **q2**: `number`
 
+Median (50th percentile)
+
 ### q3
 
 > **q3**: `number`
 
+Third quartile (75th percentile)
+
 ### std
 
 > **std**: `number`
+
+Standard deviation of the data

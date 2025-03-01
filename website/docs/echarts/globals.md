@@ -7,6 +7,7 @@
 - [BoxplotFunctionContext](type-aliases/BoxplotFunctionContext.md)
 - [BoxplotOutputData](type-aliases/BoxplotOutputData.md)
 - [BoxplotProps](type-aliases/BoxplotProps.md)
+- [BoxplotToolProps](type-aliases/BoxplotToolProps.md)
 - [BubbleChartFunctionArgs](type-aliases/BubbleChartFunctionArgs.md)
 - [BubbleChartFunctionContext](type-aliases/BubbleChartFunctionContext.md)
 - [BubbleChartFunctionContextValues](type-aliases/BubbleChartFunctionContextValues.md)
@@ -33,6 +34,7 @@
 
 ## Variables
 
+- [BoxplotFunction](variables/BoxplotFunction.md)
 - [ECHARTS\_DARK\_THEME](variables/ECHARTS_DARK_THEME.md)
 
 ## Functions
@@ -41,7 +43,9 @@
 - [boxplotCallbackFunction](functions/boxplotCallbackFunction.md)
 - [BoxplotCallbackMessage](functions/BoxplotCallbackMessage.md)
 - [BoxplotComponent](functions/BoxplotComponent.md)
+- [BoxplotComponentContainer](functions/BoxplotComponentContainer.md)
 - [boxplotFunctionDefinition](functions/boxplotFunctionDefinition.md)
+- [boxplotTool](functions/boxplotTool.md)
 - [BubbleChart](functions/BubbleChart.md)
 - [BubbleChartCallbackFunction](functions/BubbleChartCallbackFunction.md)
 - [BubbleChartCallbackMessage](functions/BubbleChartCallbackMessage.md)

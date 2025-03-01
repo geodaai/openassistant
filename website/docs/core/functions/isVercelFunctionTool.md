@@ -1,8 +1,8 @@
 # Function: isVercelFunctionTool()
 
-> **isVercelFunctionTool**(`tool`): `tool is VercelFunctionTool`
+> **isVercelFunctionTool**(`tool`): `tool is ExtendedTool<never>`
 
-Defined in: [utils/create-assistant.ts:27](https://github.com/GeoDaCenter/openassistant/blob/a1f850931f3d8289e0a4c297ef4b317a2f84235b/packages/core/src/utils/create-assistant.ts#L27)
+Defined in: [utils/create-assistant.ts:157](https://github.com/GeoDaCenter/openassistant/blob/1b6e044b8153114911daa09cb063c51a2d620732/packages/core/src/utils/create-assistant.ts#L157)
 
 Type guard to check if a tool is a Vercel function tool
 
@@ -12,10 +12,10 @@ Type guard to check if a tool is a Vercel function tool
 
 The tool to check
 
-[`OpenAIFunctionTool`](../type-aliases/OpenAIFunctionTool.md) | [`VercelFunctionTool`](../type-aliases/VercelFunctionTool.md)
+[`OpenAIFunctionTool`](../type-aliases/OpenAIFunctionTool.md) | [`ExtendedTool`](../type-aliases/ExtendedTool.md)\<`never`\>
 
 ## Returns
 
-`tool is VercelFunctionTool`
+`tool is ExtendedTool<never>`
 
 True if the tool is a Vercel function tool

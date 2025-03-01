@@ -2,7 +2,7 @@
 
 > **CustomFunctionContext**\<`C`\>: `object`
 
-Defined in: [types.ts:69](https://github.com/GeoDaCenter/openassistant/blob/a1f850931f3d8289e0a4c297ef4b317a2f84235b/packages/core/src/types.ts#L69)
+Defined in: [types.ts:76](https://github.com/GeoDaCenter/openassistant/blob/1b6e044b8153114911daa09cb063c51a2d620732/packages/core/src/types.ts#L76)
 
 Context object for custom functions. The context object can be used to pass data from your react app to custom functions.
 The context object (*) will be used in the following work flow: 

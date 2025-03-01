@@ -2,7 +2,7 @@
 
 > **UseAssistantProps**: `object`
 
-Defined in: [hooks/use-assistant.ts:35](https://github.com/GeoDaCenter/openassistant/blob/a1f850931f3d8289e0a4c297ef4b317a2f84235b/packages/core/src/hooks/use-assistant.ts#L35)
+Defined in: [hooks/use-assistant.ts:31](https://github.com/GeoDaCenter/openassistant/blob/1b6e044b8153114911daa09cb063c51a2d620732/packages/core/src/hooks/use-assistant.ts#L31)
 
 Props for the Assistant UI and useAssistant hook.
 
@@ -30,7 +30,7 @@ Props for the Assistant UI and useAssistant hook.
 
 ### functions?
 
-> `optional` **functions**: [`OpenAIFunctionTool`](OpenAIFunctionTool.md)[] \| [`VercelToolSet`](VercelToolSet.md)
+> `optional` **functions**: [`OpenAIFunctionTool`](OpenAIFunctionTool.md)[] \| `Record`\<`string`, [`ExtendedTool`](ExtendedTool.md)\<`any`\>\>
 
 ### instructions
 
@@ -63,10 +63,6 @@ Props for the Assistant UI and useAssistant hook.
 ### topP?
 
 > `optional` **topP**: `number`
-
-### vercelFunctions?
-
-> `optional` **vercelFunctions**: [`VercelToolSet`](VercelToolSet.md)
 
 ### version
 

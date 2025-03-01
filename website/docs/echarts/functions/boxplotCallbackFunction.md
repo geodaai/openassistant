@@ -2,7 +2,7 @@
 
 > **boxplotCallbackFunction**(`__namedParameters`): `Promise`\<`CustomFunctionOutputProps`\<`BoxplotOutputResult`, [`BoxplotOutputData`](../type-aliases/BoxplotOutputData.md)\>\>
 
-Defined in: [boxplot/callback-function.ts:37](https://github.com/GeoDaCenter/openassistant/blob/a1f850931f3d8289e0a4c297ef4b317a2f84235b/packages/echarts/src/boxplot/callback-function.ts#L37)
+Defined in: [boxplot/callback-function.ts:38](https://github.com/GeoDaCenter/openassistant/blob/1b6e044b8153114911daa09cb063c51a2d620732/packages/echarts/src/boxplot/callback-function.ts#L38)
 
 ## Parameters
 

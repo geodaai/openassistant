@@ -2,9 +2,9 @@
 
 > **BoxplotFunctionContext**: `object`
 
-Defined in: [boxplot/definition.ts:37](https://github.com/GeoDaCenter/openassistant/blob/a1f850931f3d8289e0a4c297ef4b317a2f84235b/packages/echarts/src/boxplot/definition.ts#L37)
+Defined in: [boxplot/definition.ts:37](https://github.com/GeoDaCenter/openassistant/blob/1b6e044b8153114911daa09cb063c51a2d620732/packages/echarts/src/boxplot/definition.ts#L37)
 
-The context of the boxplot function.
+Configuration and callback context for the boxplot function.
 
 ## Type declaration
 
@@ -30,20 +30,20 @@ The context of the boxplot function.
 
 ## Param
 
-Get the values of a variable from the dataset. See [GetValues](GetValues.md) for more details.
+Function to retrieve values from a dataset. See [GetValues](GetValues.md).
 
 ## Param
 
-The callback function can be used to sync the selections of the boxplot with the original dataset. See [OnSelectedCallback](OnSelectedCallback.md) for more details.
+Optional callback to handle selection events. See [OnSelectedCallback](OnSelectedCallback.md).
 
 ## Param
 
-The configuration of the boxplot.
+Optional configuration object for the boxplot.
 
 ## Param
 
-The theme of the boxplot. The possible values are 'light' and 'dark'.
+Visual theme for the boxplot ('light' or 'dark').
 
 ## Param
 
-Whether the boxplot is draggable e.g. to a dashboard.
+Whether the boxplot can be dragged to other containers.

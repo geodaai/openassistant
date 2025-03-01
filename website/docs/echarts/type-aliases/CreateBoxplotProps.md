@@ -2,7 +2,9 @@
 
 > **CreateBoxplotProps**: `object`
 
-Defined in: [boxplot/component/utils.ts:9](https://github.com/GeoDaCenter/openassistant/blob/a1f850931f3d8289e0a4c297ef4b317a2f84235b/packages/echarts/src/boxplot/component/utils.ts#L9)
+Defined in: [boxplot/component/utils.ts:14](https://github.com/GeoDaCenter/openassistant/blob/1b6e044b8153114911daa09cb063c51a2d620732/packages/echarts/src/boxplot/component/utils.ts#L14)
+
+Properties required to create a boxplot visualization
 
 ## Type declaration
 
@@ -10,9 +12,14 @@ Defined in: [boxplot/component/utils.ts:9](https://github.com/GeoDaCenter/openas
 
 > **boundIQR**: `number`
 
+Multiplier for the IQR to determine the whisker lengths
+Common values are 1.5 (default) or 3.0
+
 ### data
 
 > **data**: `object`
+
+Input data object where each key represents a group/category and the value is an array of numbers
 
 #### Index Signature
 
