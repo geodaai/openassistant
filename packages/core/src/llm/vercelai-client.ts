@@ -1,7 +1,6 @@
 import {
   AudioToTextProps,
   CustomFunctionOutputProps,
-  StreamMessage,
   StreamMessageCallback,
   ToolCallMessage,
 } from '../types';

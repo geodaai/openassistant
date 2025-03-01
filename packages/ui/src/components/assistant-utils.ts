@@ -2,7 +2,6 @@ import {
   MessageModel,
   SendImageMessageProps,
   SendTextMessageProps,
-  ToolCallMessage,
 } from '@openassistant/core';
 import React from 'react';
 
