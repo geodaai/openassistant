@@ -1,6 +1,6 @@
 {
   "name": "@openassistant/echarts",
-  "version": "0.1.5",
+  "version": "0.1.6-alpha.0",
   "author": "Xun Li<lixun910@gmail.com>",
   "description": "The echarts addon for OpenAssistant",
   "main": "./dist/index.esm.js",
@@ -30,6 +30,7 @@
     "@iconify/react": "^5.1.0",
     "@nextui-org/react": "^2.6.10",
     "@nextui-org/theme": "^2.4.4",
+    "@openassistant/core": "workspace:*",
     "echarts": "^5.5.1",
     "echarts-for-react": "^3.0.2",
     "framer-motion": "^11.15.0",
@@ -41,7 +42,6 @@
     "tailwindcss": "^3.4.17"
   },
   "peerDependencies": {
-    "@openassistant/core": "*",
     "react": ">=18.2",
     "react-dom": ">=18.2"
   },

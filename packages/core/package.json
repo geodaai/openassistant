@@ -1,6 +1,6 @@
 {
   "name": "@openassistant/core",
-  "version": "0.1.9",
+  "version": "0.1.10-alpha.0",
   "author": "Xun Li<lixun910@gmail.com>",
   "description": "Core library using Vercel AI SDK for OpenAssistant",
   "main": "src/index.ts",
