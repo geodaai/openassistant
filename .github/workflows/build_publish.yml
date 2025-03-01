@@ -24,9 +24,10 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
     
       - name: Install Yarn
-        run:
-          npm install -g yarn
-              
+        run: |
+          corepack enable
+          corepack prepare yarn@4.6.0 --activate
+      
       - name: Install dependencies
         run: |
           yarn --version
