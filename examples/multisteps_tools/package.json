@@ -27,6 +27,5 @@
     "open": "^10.1.0",
     "postcss": "^8.4.49",
     "tailwind": "^4.0.0"
-  },
-  "packageManager": "yarn@4.6.0"
+  }
 }

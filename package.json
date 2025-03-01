@@ -62,8 +62,7 @@
     "typescript": "^5.0.4"
   },
   "volta": {
-    "node": "20.18.1",
-    "yarn": "4.6.0"
+    "node": "20.18.1"
   },
   "resolutions": {
     "react": "18.3.1",
@@ -74,6 +73,5 @@
     "@deck.gl/layers": "8.9.36",
     "@deck.gl/react": "8.9.36",
     "@deck.gl/mesh-layers": "8.9.36"
-  },
-  "packageManager": "yarn@4.6.0"
+  }
 }
