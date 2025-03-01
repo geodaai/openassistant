@@ -1,7 +1,9 @@
 {
   "version": "independent",
-  "npmClient": "npm",
   "command": {
+    "run": {
+      "npmClient": "yarn"
+    },
     "publish": {
       "conventionalCommits": true,
       "yes": true,
