@@ -9,11 +9,11 @@ import {
  * Creates an ECharts option configuration for rendering a bubble chart.
  * 
  * @param props - The input data for the bubble chart
- * @param props.data - The data object containing variables for the chart
- * @param props.data.variableX - The X-axis variable containing name and values
- * @param props.data.variableY - The Y-axis variable containing name and values
- * @param props.data.variableSize - The variable controlling bubble sizes, containing name and values
- * @param props.data.variableColor - Optional variable controlling bubble colors, containing name and values
+ * @param props.data - The data object containing the following variables:
+ *   - variableX: The X-axis variable containing name and values
+ *   - variableY: The Y-axis variable containing name and values
+ *   - variableSize: The variable controlling bubble sizes, containing name and values
+ *   - variableColor: Optional variable controlling bubble colors, containing name and values
  * 
  * @returns An ECharts option configuration object that defines:
  * - Scatter plot with variable-sized bubbles

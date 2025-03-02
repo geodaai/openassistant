@@ -2,7 +2,7 @@
 
 > **parallelCoordinateCallbackFunction**(`__namedParameters`): `Promise`\<`CustomFunctionOutputProps`\<`ParallelCoordinateOutputResult`, `ParallelCoordinateOutputData`\>\>
 
-Defined in: [pcp/callback-function.ts:33](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/echarts/src/pcp/callback-function.ts#L33)
+Defined in: [pcp/callback-function.ts:33](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/echarts/src/pcp/callback-function.ts#L33)
 
 ## Parameters
 

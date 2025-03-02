@@ -2,7 +2,7 @@
 
 > **onBrushSelected**(`params`, `id`, `datasetName`, `eChart`?, `onSelected`?): `void`
 
-Defined in: [echarts-updater.tsx:63](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/echarts/src/echarts-updater.tsx#L63)
+Defined in: [echarts-updater.tsx:61](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/echarts/src/echarts-updater.tsx#L61)
 
 Handles the brush selection event from ECharts and processes the selected data indices.
 
@@ -16,7 +16,7 @@ The brush selection event parameters from ECharts
 
 `object`[]
 
-Array of batch selection data
+Array of batch selection data containing selected data indices
 
 ### id
 

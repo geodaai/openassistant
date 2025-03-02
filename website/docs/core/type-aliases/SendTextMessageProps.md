@@ -2,9 +2,9 @@
 
 > **SendTextMessageProps**: `object`
 
-Defined in: [hooks/use-assistant.ts:59](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/core/src/hooks/use-assistant.ts#L59)
+Defined in: [hooks/use-assistant.ts:60](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/core/src/hooks/use-assistant.ts#L60)
 
-Type of SendTextMessageProps
+Parameters for sending a text message to the assistant.
 
 ## Type declaration
 
@@ -36,8 +36,12 @@ Type of SendTextMessageProps
 
 ## Param
 
-The message to be sent.
+The text message to send to the assistant.
 
 ## Param
 
-The stream message callback to stream the message back to the UI. See [StreamMessageCallback](StreamMessageCallback.md) for more details.
+Callback function to handle streaming response chunks.
+
+## Param
+
+Optional callback triggered when a conversation step completes.

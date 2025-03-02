@@ -205,10 +205,12 @@ export type StreamMessage = {
 
 /**
  * Type of StreamMessageCallback
- *
- * @param deltaMessage The delta message from the assistant
- * @param customMessage The custom message from the custom function
- * @param isCompleted The flag to indicate if the message is completed
+ * 
+ * @param props The callback properties
+ * @param props.deltaMessage The incremental message update from the assistant
+ * @param props.customMessage Optional custom message payload
+ * @param props.isCompleted Optional flag indicating if the message stream is complete
+ * @param props.message Optional full stream message object
  */
 export type StreamMessageCallback = (props: {
   deltaMessage: string;

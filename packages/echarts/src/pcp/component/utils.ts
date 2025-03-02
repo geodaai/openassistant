@@ -37,10 +37,8 @@ function calculateVariableStats(values: number[], variableName: string) {
 
 /**
  * Processes multiple variables to generate PCP data and raw data
- * @param getValues Function to retrieve values for a variable
- * @param datasetName Name of the dataset
- * @param variableNames Array of variable names to process
- * @returns Promise containing processed PCP data and raw data
+ * @param rawData Object containing variable names as keys and their corresponding numeric values as arrays
+ * @returns Processed PCP data with statistical measures for each variable
  */
 export function processParallelCoordinateData(
   rawData: RawDataType

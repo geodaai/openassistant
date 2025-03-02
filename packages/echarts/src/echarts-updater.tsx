@@ -52,9 +52,7 @@ export function handleBrushSelection(
  * Handles the brush selection event from ECharts and processes the selected data indices.
  * 
  * @param params - The brush selection event parameters from ECharts
- * @param params.batch - Array of batch selection data
- * @param params.batch[].selected - Array of selected data information
- * @param params.batch[].selected[].dataIndex - Array of selected data indices
+ * @param params.batch - Array of batch selection data containing selected data indices
  * @param id - The identifier for the chart instance
  * @param datasetName - Name of the dataset being visualized
  * @param eChart - Optional ECharts instance reference

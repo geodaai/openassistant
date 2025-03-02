@@ -2,9 +2,9 @@
 
 > **SendImageMessageProps**: `object`
 
-Defined in: [hooks/use-assistant.ts:75](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/core/src/hooks/use-assistant.ts#L75)
+Defined in: [hooks/use-assistant.ts:76](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/core/src/hooks/use-assistant.ts#L76)
 
-Type of SendImageMessageProps
+Parameters for sending an image with optional text to the assistant.
 
 ## Type declaration
 
@@ -22,12 +22,12 @@ Type of SendImageMessageProps
 
 ## Param
 
-The image base64 string to be sent.
+Base64-encoded image data.
 
 ## Param
 
-The message to be sent.
+Optional text message to accompany the image.
 
 ## Param
 
-The stream message callback to stream the message back to the UI. See [StreamMessageCallback](StreamMessageCallback.md) for more details.
+Callback function to handle streaming response chunks.

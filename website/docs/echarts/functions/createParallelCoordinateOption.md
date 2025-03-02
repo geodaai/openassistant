@@ -2,7 +2,7 @@
 
 > **createParallelCoordinateOption**(`props`): `EChartsOption`
 
-Defined in: [pcp/component/pcp-option.ts:61](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/echarts/src/pcp/component/pcp-option.ts#L61)
+Defined in: [pcp/component/pcp-option.ts:61](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/echarts/src/pcp/component/pcp-option.ts#L61)
 
 Creates a parallel coordinate option configuration for the PCP (Parallel Coordinates Plot) chart.
 

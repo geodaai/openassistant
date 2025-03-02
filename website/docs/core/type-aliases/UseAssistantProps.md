@@ -2,9 +2,9 @@
 
 > **UseAssistantProps**: `object`
 
-Defined in: [hooks/use-assistant.ts:31](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/core/src/hooks/use-assistant.ts#L31)
+Defined in: [hooks/use-assistant.ts:30](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/core/src/hooks/use-assistant.ts#L30)
 
-Props for the Assistant UI and useAssistant hook.
+Props for configuring the AI Assistant and useAssistant hook.
 
 ## Type declaration
 
@@ -31,6 +31,10 @@ Props for the Assistant UI and useAssistant hook.
 ### functions?
 
 > `optional` **functions**: [`OpenAIFunctionTool`](OpenAIFunctionTool.md)[] \| `Record`\<`string`, [`ExtendedTool`](ExtendedTool.md)\<`any`\>\>
+
+### historyMessages?
+
+> `optional` **historyMessages**: `Message`[]
 
 ### instructions
 
@@ -74,72 +78,68 @@ Props for the Assistant UI and useAssistant hook.
 
 ## Param
 
-The name of the assistant.
+The server endpoint for handling chat requests (e.g. '/api/chat'). Required for server-side support.
 
 ## Param
 
-The chat endpoint that handles the chat requests, e.g. '/api/chat'. This is required for server-side support. If not provided, the chat will be handled by the client.
+The server endpoint for handling voice/audio requests.
 
 ## Param
 
-The model provider.
+The display name of the assistant.
 
 ## Param
 
-The model.
+The AI model provider service (e.g. 'openai', 'anthropic').
 
 ## Param
 
-The API key.
+The specific model identifier to use.
 
 ## Param
 
-The version.
+Authentication key for the model provider's API.
 
 ## Param
 
-The description.
+API version to use.
 
 ## Param
 
-The temperature.
+Optional base URL for API requests.
 
 ## Param
 
-The topP.
+Optional description of the assistant's purpose.
 
 ## Param
 
-The instructions.
+Controls randomness in responses (0-1).
 
 ## Param
 
-The functions.
+Controls diversity of responses via nucleus sampling (0-1).
 
 ## Param
 
-The name of the function.
+System instructions/prompt for the assistant.
 
 ## Param
 
-The description of the function.
+Custom functions/tools the assistant can use, either as an array or record object.
 
 ## Param
 
-The properties of the function.
+Controls how the assistant selects tools to use.
 
 ## Param
 
-The required properties of the function.
+Maximum number of steps/iterations in a conversation.
 
 ## Param
 
-The callback function of the function. See [CallbackFunction](CallbackFunction.md) for more details.
+Optional AbortController to cancel requests.
 
 ## Param
 
-The context of the callback function. See [CustomFunctionContext](CustomFunctionContext.md) for more details.
-
-## Param
-
-The message of the callback function. See [CustomMessageCallback](CustomMessageCallback.md) for more details.
+Optional array of previous messages to provide conversation context.

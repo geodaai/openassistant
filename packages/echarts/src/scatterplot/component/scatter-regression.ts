@@ -37,9 +37,10 @@ export type ComputeRegressionResult = {
  * Compute the regression for the scatterplot. If filteredIndex is provided, compute the regression for the selected points and the unselected points.
  * Otherwise, only the regression for all points is computed.
  *
- * @param xData - The x data.
- * @param yData - The y data.
- * @param filteredIndex - The indices of the selected points.
+ * @param props - The properties for computing regression
+ * @param props.xData - The x data
+ * @param props.yData - The y data
+ * @param props.filteredIndex - The indices of the selected points
  * @returns The results of the regression. See {@link ComputeRegressionResult} for more details.
  */
 export function computeRegression({

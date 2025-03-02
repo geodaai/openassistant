@@ -105,9 +105,10 @@ function isScatterplotFunctionContext(
  * The callback function for the scatterplot. When LLM calls the scatterplot function, it will be executed.
  * The result will be returned as a reponse of the function call to the LLM.
  *
- * @param functionName - The name of the function.
- * @param functionArgs - The arguments of the function.
- * @param functionContext - The context of the function.
+ * @param props - The callback function properties
+ * @param props.functionName - The name of the function.
+ * @param props.functionArgs - The arguments of the function.
+ * @param props.functionContext - The context of the function.
  * @returns The result of the function.
  */
 export async function ScatterplotCallbackFunction({

@@ -191,6 +191,10 @@ export class VercelAi extends AbstractAssistant {
     return this.messages;
   }
 
+  public setMessages(messages: Message[]) {
+    this.messages = messages;
+  }
+
   public override async addAdditionalContext({ context }: { context: string }) {
     VercelAi.additionalContext += context;
   }

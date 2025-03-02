@@ -1,6 +1,6 @@
 # Interface: MessageModel
 
-Defined in: [types.ts:46](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/core/src/types.ts#L46)
+Defined in: [types.ts:46](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/core/src/types.ts#L46)
 
 Type of Message model
 
@@ -38,7 +38,7 @@ The payload of the message, can be string, object, image or custom
 
 > **direction**: [`MessageDirection`](../type-aliases/MessageDirection.md)
 
-Defined in: [types.ts:54](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/core/src/types.ts#L54)
+Defined in: [types.ts:54](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/core/src/types.ts#L54)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [types.ts:54](https://github.com/GeoDaCenter/openassistant/blob/a5ee
 
 > `optional` **message**: `string`
 
-Defined in: [types.ts:51](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/core/src/types.ts#L51)
+Defined in: [types.ts:51](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/core/src/types.ts#L51)
 
 The message to be sent and received from the assistant.
 
@@ -60,7 +60,7 @@ Use messageContent.text instead
 
 > `optional` **messageContent**: [`StreamMessage`](../type-aliases/StreamMessage.md)
 
-Defined in: [types.ts:59](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/core/src/types.ts#L59)
+Defined in: [types.ts:59](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/core/src/types.ts#L59)
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: [types.ts:59](https://github.com/GeoDaCenter/openassistant/blob/a5ee
 
 > `optional` **payload**: [`MessagePayload`](../type-aliases/MessagePayload.md)
 
-Defined in: [types.ts:57](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/core/src/types.ts#L57)
+Defined in: [types.ts:57](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/core/src/types.ts#L57)
 
 ***
 
@@ -76,7 +76,7 @@ Defined in: [types.ts:57](https://github.com/GeoDaCenter/openassistant/blob/a5ee
 
 > **position**: `0` \| `1` \| `"single"` \| `"first"` \| `"normal"` \| `"last"` \| `2` \| `3`
 
-Defined in: [types.ts:55](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/core/src/types.ts#L55)
+Defined in: [types.ts:55](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/core/src/types.ts#L55)
 
 ***
 
@@ -84,7 +84,7 @@ Defined in: [types.ts:55](https://github.com/GeoDaCenter/openassistant/blob/a5ee
 
 > `optional` **sender**: `string`
 
-Defined in: [types.ts:53](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/core/src/types.ts#L53)
+Defined in: [types.ts:53](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/core/src/types.ts#L53)
 
 ***
 
@@ -92,7 +92,7 @@ Defined in: [types.ts:53](https://github.com/GeoDaCenter/openassistant/blob/a5ee
 
 > `optional` **sentTime**: `string`
 
-Defined in: [types.ts:52](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/core/src/types.ts#L52)
+Defined in: [types.ts:52](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/core/src/types.ts#L52)
 
 ***
 
@@ -100,7 +100,7 @@ Defined in: [types.ts:52](https://github.com/GeoDaCenter/openassistant/blob/a5ee
 
 > `optional` **toolCallMessages**: [`ToolCallMessage`](../type-aliases/ToolCallMessage.md)[]
 
-Defined in: [types.ts:58](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/core/src/types.ts#L58)
+Defined in: [types.ts:58](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/core/src/types.ts#L58)
 
 ***
 
@@ -108,4 +108,4 @@ Defined in: [types.ts:58](https://github.com/GeoDaCenter/openassistant/blob/a5ee
 
 > `optional` **type**: [`MessageType`](../type-aliases/MessageType.md)
 
-Defined in: [types.ts:56](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/core/src/types.ts#L56)
+Defined in: [types.ts:56](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/core/src/types.ts#L56)

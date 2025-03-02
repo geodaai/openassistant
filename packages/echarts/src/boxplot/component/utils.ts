@@ -61,12 +61,13 @@ export type BoxplotDataProps = {
 
 /**
  * Create a boxplot from a list of numbers and option boundIQR (1.5 or 3.0)
- * @param data - The data to create the boxplot from
- * @param boundIQR - The boundIQR to use for the boxplot
- * @returns The boxplot data
- *
+ * @param {CreateBoxplotProps} props - The properties object containing:
+ * @param {Object.<string, number[]>} props.data - Input data object where each key represents a group/category and the value is an array of numbers
+ * @param {number} props.boundIQR - Multiplier for the IQR to determine the whisker lengths (commonly 1.5 or 3.0)
+ * @returns {BoxplotDataProps} The boxplot data containing statistical properties and mean points
+ * 
  * ### Example: single boxplot
- *
+ * 
  * ```ts
  * const data = {
  *   'samples': [1, 2, 3, 4, 5],
@@ -74,9 +75,9 @@ export type BoxplotDataProps = {
  * const boundIQR = 1.5;
  * const boxplotData = createBoxplot({data, boundIQR});
  * ```
- *
+ * 
  * ### Example: multiple boxplots
- *
+ * 
  * ```ts
  * const data = {
  *   'samples': [1, 2, 3, 4, 5],
