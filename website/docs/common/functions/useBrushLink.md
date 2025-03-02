@@ -2,7 +2,7 @@
 
 > **useBrushLink**(`options`): `object`
 
-Defined in: [hooks/use-brush-link.tsx:87](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/common/src/hooks/use-brush-link.tsx#L87)
+Defined in: [hooks/use-brush-link.tsx:87](https://github.com/GeoDaCenter/openassistant/blob/aa41155e698e0b65b1716140c0c14440cdd9d76a/packages/common/src/hooks/use-brush-link.tsx#L87)
 
 A hook that enables brush data synchronization between different components using localStorage.
 This allows multiple charts or components to share selection/highlighting states.

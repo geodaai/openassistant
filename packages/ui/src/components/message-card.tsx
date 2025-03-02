@@ -315,13 +315,13 @@ const MessageActions = ({
     message?: StreamMessage
   ) => {
     // when message is string
-    if (typeof message === 'string') {
+    if (message?.text) {
       e.dataTransfer.setData(
         'text/plain',
         JSON.stringify({
           id: `message-${index}`,
           type: 'text',
-          data: message,
+          data: message.text,
         })
       );
     }
@@ -449,11 +449,8 @@ const MessageCard = forwardRef<HTMLDivElement, MessageCardProps>(
           }
         });
       }
-
       const valueToCopy = stringValue || messageRef.current?.textContent || '';
-
       copy(valueToCopy);
-
       onMessageCopy?.(valueToCopy);
     }, [copy, message, onMessageCopy]);
 

@@ -37,3 +37,54 @@ mapping:
   label: Mapping
   permalink: /mapping
   description: Geographic mapping and visualization content
+
+genai:
+  label: GenAI
+  permalink: /genai
+  description: GenAI-related content and guides
+
+LLM:
+  label: LLM
+  permalink: /llm
+  description: LLM-related content and guides
+
+server:
+  label: Server
+  permalink: /server
+  description: Server-related content and guides
+
+support:
+  label: Support
+  permalink: /support
+  description: Support-related content and guides
+
+beginner-friendly:
+  label: Beginner Friendly
+  permalink: /beginner-friendly
+  description: Beginner-friendly content and guides
+
+duckdb:
+  label: DuckDB
+  permalink: /duckdb
+  description: DuckDB-related content and guides
+
+
+database:
+  label: Database
+  permalink: /database
+  description: Database-related content and guides
+
+sql:
+  label: SQL
+  permalink: /sql
+  description: SQL-related content and guides
+
+deckgl:
+  label: Deck.gl
+  permalink: /deckgl
+  description: Deck.gl-related content and guides
+
+assistant:
+  label: Assistant
+  permalink: /assistant
+  description: Assistant-related content and guides

@@ -13,8 +13,10 @@
     "emitDeclarationOnly": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
+    "paths": {
+      "@openassistant/core": ["../../core"]
+    }
   },
-  "references": [{ "path": "../core" }],
   "include": ["src/**/*"],
   "exclude": [
     "node_modules",

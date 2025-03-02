@@ -2,7 +2,7 @@
 
 > **bubbleChartFunctionDefinition**(`context`): `RegisterFunctionCallingProps`
 
-Defined in: [bubble-chart/definition.ts:72](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/echarts/src/bubble-chart/definition.ts#L72)
+Defined in: [bubble-chart/definition.ts:72](https://github.com/GeoDaCenter/openassistant/blob/aa41155e698e0b65b1716140c0c14440cdd9d76a/packages/echarts/src/bubble-chart/definition.ts#L72)
 
 ## Summary
 

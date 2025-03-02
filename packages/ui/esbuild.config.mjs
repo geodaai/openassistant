@@ -18,9 +18,6 @@ const baseConfig = createBaseConfig({
     '@openassistant/core',
     '@nextui-org',
   ],
-  // alias: {
-  //   '@openassistant/core': '../core/src/index.ts',
-  // },
 });
 
 const fullBundleConfig = {

@@ -2,7 +2,7 @@
 
 > **BoxplotDataProps**: `object`
 
-Defined in: [boxplot/component/utils.ts:55](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/echarts/src/boxplot/component/utils.ts#L55)
+Defined in: [boxplot/component/utils.ts:55](https://github.com/GeoDaCenter/openassistant/blob/aa41155e698e0b65b1716140c0c14440cdd9d76a/packages/echarts/src/boxplot/component/utils.ts#L55)
 
 Output data structure compatible with eCharts boxplot series
 

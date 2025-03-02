@@ -2,7 +2,7 @@
 
 > **UseAssistantProps**: `object`
 
-Defined in: [hooks/use-assistant.ts:30](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/core/src/hooks/use-assistant.ts#L30)
+Defined in: [hooks/use-assistant.ts:30](https://github.com/GeoDaCenter/openassistant/blob/aa41155e698e0b65b1716140c0c14440cdd9d76a/packages/core/src/hooks/use-assistant.ts#L30)
 
 Props for configuring the AI Assistant and useAssistant hook.
 
@@ -31,10 +31,6 @@ Props for configuring the AI Assistant and useAssistant hook.
 ### functions?
 
 > `optional` **functions**: [`OpenAIFunctionTool`](OpenAIFunctionTool.md)[] \| `Record`\<`string`, [`ExtendedTool`](ExtendedTool.md)\<`any`\>\>
-
-### historyMessages?
-
-> `optional` **historyMessages**: `Message`[]
 
 ### instructions
 

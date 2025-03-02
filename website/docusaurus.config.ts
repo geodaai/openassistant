@@ -31,16 +31,15 @@ const config: Config = {
     locales: ['en'],
   },
 
-  scripts: [
-    {
-      src: 'https://cdnjs.cloudflare.com/ajax/libs/process/0.11.10/process.min.js',
-    },
-  ],
+  // scripts: [
+  //   {
+  //     src: 'https://cdnjs.cloudflare.com/ajax/libs/process/0.11.10/process.min.js',
+  //   },
+  // ],
 
   // Correct webpack configuration syntax for Docusaurus
   // clientModules: [require.resolve('./src/client-modules/webpack-fallback.ts')],
   plugins: [
-    'docusaurus-node-polyfills',
     [
       'docusaurus-plugin-typedoc',
       {

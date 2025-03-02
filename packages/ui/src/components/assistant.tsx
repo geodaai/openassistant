@@ -77,7 +77,7 @@ const createWelcomeMessage = (welcomeMessage: string): MessageModel => ({
 
 /**
  * Main AI Assistant component for React applications
- * @component
+ * 
  * @param {AiAssistantProps} props - The props of the Assistant component. See {@link AiAssistantProps} for more details.
  * @returns {JSX.Element} The rendered AI Assistant component
  * @example

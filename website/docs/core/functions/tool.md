@@ -2,7 +2,7 @@
 
 > **tool**\<`PARAMETERS`\>(`tool`): [`ExtendedTool`](../type-aliases/ExtendedTool.md)\<`PARAMETERS`\>
 
-Defined in: [utils/create-assistant.ts:131](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/core/src/utils/create-assistant.ts#L131)
+Defined in: [utils/create-assistant.ts:131](https://github.com/GeoDaCenter/openassistant/blob/aa41155e698e0b65b1716140c0c14440cdd9d76a/packages/core/src/utils/create-assistant.ts#L131)
 
 Extends the vercel AI tool (see https://sdk.vercel.ai/docs/reference/ai-sdk-core/tool) with additional properties:
 

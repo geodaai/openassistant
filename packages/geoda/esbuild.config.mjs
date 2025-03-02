@@ -24,6 +24,7 @@ const baseConfig = createBaseConfig({
     'react-dom',
     '@openassistant/core',
     '@openassistant/common',
+    '@openassistant/echarts',
     '@nextui-org/react',
     'framer-motion',
     'tailwindcss',

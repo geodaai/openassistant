@@ -81,6 +81,7 @@ export function App() {
         welcomeMessage="Hello, how can I help you today?"
         instructions="You are a helpful assistant. Explain the steps you are taking to solve the user's problem."
         functions={functions}
+        useMarkdown={true}
       />
     </div>
   );

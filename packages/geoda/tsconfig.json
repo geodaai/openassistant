@@ -11,9 +11,13 @@
     "declarationMap": false,
     "declarationDir": "./dist",
     "emitDeclarationOnly": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "@openassistant/core": ["../../core"],
+      "@openassistant/common": ["../../common"],
+      "@openassistant/echarts": ["../../echarts"]
+    }
   },
-  "references": [{ "path": "../core" }, { "path": "../common" }],
   "include": ["src/**/*"],
   "exclude": [
     "node_modules",

@@ -47,7 +47,6 @@ export type UseAssistantProps = {
   toolChoice?: ToolChoice<ToolSet>;
   maxSteps?: number;
   abortController?: AbortController;
-  historyMessages?: Message[];
 };
 
 /**

@@ -1,6 +1,6 @@
 # Class: WhisperVoiceHandler
 
-Defined in: [lib/voice-handler.ts:9](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/core/src/lib/voice-handler.ts#L9)
+Defined in: [lib/voice-handler.ts:9](https://github.com/GeoDaCenter/openassistant/blob/aa41155e698e0b65b1716140c0c14440cdd9d76a/packages/core/src/lib/voice-handler.ts#L9)
 
 Handles voice transcription requests using OpenAI Whisper
 
@@ -10,7 +10,7 @@ Handles voice transcription requests using OpenAI Whisper
 
 > **new WhisperVoiceHandler**(`config`): [`WhisperVoiceHandler`](WhisperVoiceHandler.md)
 
-Defined in: [lib/voice-handler.ts:16](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/core/src/lib/voice-handler.ts#L16)
+Defined in: [lib/voice-handler.ts:16](https://github.com/GeoDaCenter/openassistant/blob/aa41155e698e0b65b1716140c0c14440cdd9d76a/packages/core/src/lib/voice-handler.ts#L16)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ OpenAI API key
 
 > **processRequest**(`req`): `Promise`\<`Response`\>
 
-Defined in: [lib/voice-handler.ts:25](https://github.com/GeoDaCenter/openassistant/blob/2a93b5036fdb3a9355cf5403bdecfb2525f1d8b3/packages/core/src/lib/voice-handler.ts#L25)
+Defined in: [lib/voice-handler.ts:25](https://github.com/GeoDaCenter/openassistant/blob/aa41155e698e0b65b1716140c0c14440cdd9d76a/packages/core/src/lib/voice-handler.ts#L25)
 
 Processes voice transcription requests
 
