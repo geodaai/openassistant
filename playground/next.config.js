@@ -39,13 +39,13 @@ module.exports = {
     // Resolve aliases for different versions of dependencies
     config.resolve.alias = {
       ...config.resolve.alias,
-      // react: path.resolve(__dirname, 'node_modules/react'),
-      // 'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
+      // react: path.resolve(__dirname, '../node_modules/react'),
+      // 'react-dom': path.resolve(__dirname, '../node_modules/react-dom'),
       'styled-components': path.resolve(
         __dirname,
-        'node_modules/styled-components'
+        './node_modules/styled-components'
       ),
-      'apache-arrow': path.resolve(__dirname, 'node_modules/apache-arrow'),
+      'apache-arrow': path.resolve(__dirname, './node_modules/apache-arrow'),
     };
 
     // Only add @openassistant/common alias when running with --local flag

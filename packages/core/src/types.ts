@@ -14,6 +14,19 @@ export type VercelFunctionTool = {
 export type VercelToolSet = Record<string, VercelFunctionTool>;
 
 /**
+ * Type of ToolCallElement. A ToolCallElement is a ReactNode element
+ * that can be reconstructed by using the `type` and `config`.
+ * 
+ *
+ * @param type - The type of the tool call element, which is the name of the functional component
+ * @param config - The config of the tool call element, which is the props of the functional component
+ */
+type ToolCallElement = {
+  type: string;
+  config: Record<string, unknown>;
+};
+
+/**
  * Type of ToolCallMessage
  * 
  * The tool call message is used to store the tool call information for UI display, see {@link StreamMessage}.
