@@ -117,6 +117,11 @@ export class VercelAi extends AbstractAssistant {
 
   protected toolSteps = 0;
 
+  /**
+   * The messages array, which is used to send to the LLM.
+   *
+   * To persist the messages, you can call the {@link setMessages} method, and  the {@link getMessages} method.
+   */
   protected messages: Message[] = [];
   protected static customFunctions: CustomFunctions = {};
   protected static tools: ToolSet = {};
@@ -233,6 +238,16 @@ export class VercelAi extends AbstractAssistant {
     });
   }
 
+  /**
+   * Process the text message by sending it to the LLM.
+   * 
+   * @param params - The parameters object containing:
+   * @param params.textMessage - The text message to send to the LLM
+   * @param params.streamMessageCallback - The callback function to handle the stream message
+   * @param params.imageMessage - Optional image message to process
+   * @param params.onStepFinish - Optional callback function to handle step completion
+   * @returns Promise containing the last message
+   */
   public override async processTextMessage({
     textMessage,
     streamMessageCallback,
@@ -262,12 +277,11 @@ export class VercelAi extends AbstractAssistant {
       text: '',
     };
 
-    const { customMessage, outputToolResults, outputToolCalls } =
-      await this.triggerRequest({
-        streamMessageCallback,
-        imageMessage,
-        onStepFinish,
-      });
+    const { customMessage } = await this.triggerRequest({
+      streamMessageCallback,
+      imageMessage,
+      onStepFinish,
+    });
 
     const lastMessage = this.messages[this.messages.length - 1];
     streamMessageCallback({
@@ -277,7 +291,7 @@ export class VercelAi extends AbstractAssistant {
       message: this.streamMessage,
     });
 
-    return { messages: [lastMessage], outputToolResults, outputToolCalls };
+    return { messages: [lastMessage] };
   }
 
   protected async triggerRequest({

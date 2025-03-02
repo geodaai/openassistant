@@ -2,7 +2,7 @@
 
 > **GetValues**: (`datasetName`, `variableName`) => `Promise`\<`number`[]\>
 
-Defined in: [histogram/definition.ts:19](https://github.com/GeoDaCenter/openassistant/blob/aa41155e698e0b65b1716140c0c14440cdd9d76a/packages/echarts/src/histogram/definition.ts#L19)
+Defined in: [histogram/definition.ts:19](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/echarts/src/histogram/definition.ts#L19)
 
 Function signature for retrieving variable values from a dataset.
 

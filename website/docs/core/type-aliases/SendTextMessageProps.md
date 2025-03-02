@@ -2,7 +2,7 @@
 
 > **SendTextMessageProps**: `object`
 
-Defined in: [hooks/use-assistant.ts:59](https://github.com/GeoDaCenter/openassistant/blob/aa41155e698e0b65b1716140c0c14440cdd9d76a/packages/core/src/hooks/use-assistant.ts#L59)
+Defined in: [hooks/use-assistant.ts:59](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/core/src/hooks/use-assistant.ts#L59)
 
 Parameters for sending a text message to the assistant.
 

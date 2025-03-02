@@ -3,6 +3,34 @@ import { StepResult } from 'ai';
 import { ReactNode } from 'react';
 import { z } from 'zod';
 
+export type VercelFunctionTool = {
+  description: string;
+  parameters: z.ZodType<unknown>;
+  executeWithContext: CallbackFunction;
+  context?: CustomFunctionContext<unknown>;
+  message?: CustomMessageCallback;
+};
+
+export type VercelToolSet = Record<string, VercelFunctionTool>;
+
+/**
+ * Type of ToolCallMessage
+ * 
+ * The tool call message is used to store the tool call information for UI display, see {@link StreamMessage}.
+ * Note: the ToolCallMessage is not used in the tool call execution.
+ * 
+ * @param toolCallId - The id of the tool call
+ * @param element - The element of the tool call
+ * @param text - The text of the tool call
+ * @param reason - The reason of the tool call
+ */
+export type ToolCallMessage = {
+  toolCallId: string;
+  element?: ReactNode;
+  text?: string;
+  reason?: string;
+};
+
 /**
  * Type of image message content
  */
@@ -55,7 +83,6 @@ export interface MessageModel {
   position: 'single' | 'first' | 'normal' | 'last' | 0 | 1 | 2 | 3;
   type?: MessageType;
   payload?: MessagePayload;
-  toolCallMessages?: ToolCallMessage[];
   messageContent?: StreamMessage;
 }
 
@@ -197,6 +224,25 @@ export type CustomMessageCallback = (
   customFunctionCall: CustomFunctionCall
 ) => ReactNode | null;
 
+/**
+ * Type of StreamMessage. The structure of the stream message is:
+ *
+ * ```
+ * ------------------
+ * | reasoning      |
+ * ------------------
+ * | toolCallMessage |
+ * | toolCallMessage |
+ * | toolCallMessage |
+ * ------------------
+ * | text           |
+ * ------------------
+ * ```
+ *
+ * @param reasoning The reasoning of the assistant
+ * @param toolCallMessages The tool call messages
+ * @param text The text of the message
+ */
 export type StreamMessage = {
   reasoning?: string;
   toolCallMessages?: ToolCallMessage[];
@@ -237,6 +283,7 @@ export type UserActionProps = {
  * @param imageMessage - The image message to be processed.
  * @param userActions - The user actions to be processed.
  * @param streamMessageCallback - The stream message callback to stream the message back to the UI.
+ * @param onStepFinish - The callback function to handle the step finish.
  * @param useTool - The flag to indicate if the tool is used.
  * @param message - The message to be processed.
  */
@@ -245,6 +292,12 @@ export type ProcessMessageProps = {
   imageMessage?: string;
   userActions?: UserActionProps[];
   streamMessageCallback: StreamMessageCallback;
+  /**
+   * The callback function to handle the step finish.
+   *
+   * @param event The step result returned from Vercel AI SDK
+   * @param toolCallMessages The tool call messages, that can be used to update the UI, see {@link ToolCallMessage}
+   */
   onStepFinish?: (
     event: StepResult<ToolSet>,
     toolCallMessages: ToolCallMessage[]
@@ -345,21 +398,4 @@ export type OpenAIFunctionTool = {
   callbackFunction: CallbackFunction;
   callbackFunctionContext?: CustomFunctionContext<unknown>;
   callbackMessage?: CustomMessageCallback;
-};
-
-export type VercelFunctionTool = {
-  description: string;
-  parameters: z.ZodType<unknown>;
-  executeWithContext: CallbackFunction;
-  context?: CustomFunctionContext<unknown>;
-  message?: CustomMessageCallback;
-};
-
-export type VercelToolSet = Record<string, VercelFunctionTool>;
-
-export type ToolCallMessage = {
-  toolCallId: string;
-  element?: ReactNode;
-  text?: string;
-  reason?: string;
 };

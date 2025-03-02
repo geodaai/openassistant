@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { OpenAIFunctionTool, StreamMessageCallback, ToolCallMessage } from '../types';
 import { VercelAi } from '../llm/vercelai';
 import { createAssistant, ExtendedTool } from '../utils/create-assistant';
-import { Message, StepResult, ToolChoice } from 'ai';
+import { StepResult, ToolChoice } from 'ai';
 import { ToolSet } from 'ai';
 /**
  * Props for configuring the AI Assistant and useAssistant hook.

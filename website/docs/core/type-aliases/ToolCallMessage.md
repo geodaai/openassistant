@@ -2,7 +2,12 @@
 
 > **ToolCallMessage**: `object`
 
-Defined in: [types.ts:360](https://github.com/GeoDaCenter/openassistant/blob/aa41155e698e0b65b1716140c0c14440cdd9d76a/packages/core/src/types.ts#L360)
+Defined in: [types.ts:27](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/core/src/types.ts#L27)
+
+Type of ToolCallMessage
+
+The tool call message is used to store the tool call information for UI display, see [StreamMessage](StreamMessage.md).
+Note: the ToolCallMessage is not used in the tool call execution.
 
 ## Type declaration
 
@@ -21,3 +26,19 @@ Defined in: [types.ts:360](https://github.com/GeoDaCenter/openassistant/blob/aa4
 ### toolCallId
 
 > **toolCallId**: `string`
+
+## Param
+
+The id of the tool call
+
+## Param
+
+The element of the tool call
+
+## Param
+
+The text of the tool call
+
+## Param
+
+The reason of the tool call

@@ -2,7 +2,7 @@
 
 > **ParallelCoordinateFunctionContext**: `object`
 
-Defined in: [pcp/definition.ts:17](https://github.com/GeoDaCenter/openassistant/blob/aa41155e698e0b65b1716140c0c14440cdd9d76a/packages/echarts/src/pcp/definition.ts#L17)
+Defined in: [pcp/definition.ts:17](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/echarts/src/pcp/definition.ts#L17)
 
 Configuration context for the parallel coordinate visualization
 

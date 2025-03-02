@@ -2,7 +2,7 @@
 
 > **ExtendedTool**\<`PARAMETERS`\>: `Tool`\<`PARAMETERS`\> & `object`
 
-Defined in: [utils/create-assistant.ts:79](https://github.com/GeoDaCenter/openassistant/blob/aa41155e698e0b65b1716140c0c14440cdd9d76a/packages/core/src/utils/create-assistant.ts#L79)
+Defined in: [utils/create-assistant.ts:79](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/core/src/utils/create-assistant.ts#L79)
 
 A tool contains the description and the schema of the input that the tool expects.
 This enables the language model to generate the input.

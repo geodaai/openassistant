@@ -1,6 +1,6 @@
 # Interface: MessageImageContentProps
 
-Defined in: [types.ts:9](https://github.com/GeoDaCenter/openassistant/blob/aa41155e698e0b65b1716140c0c14440cdd9d76a/packages/core/src/types.ts#L9)
+Defined in: [types.ts:37](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/core/src/types.ts#L37)
 
 Type of image message content
 
@@ -10,7 +10,7 @@ Type of image message content
 
 > `optional` **alt**: `string`
 
-Defined in: [types.ts:13](https://github.com/GeoDaCenter/openassistant/blob/aa41155e698e0b65b1716140c0c14440cdd9d76a/packages/core/src/types.ts#L13)
+Defined in: [types.ts:41](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/core/src/types.ts#L41)
 
 ***
 
@@ -18,7 +18,7 @@ Defined in: [types.ts:13](https://github.com/GeoDaCenter/openassistant/blob/aa41
 
 > `optional` **height**: `string` \| `number`
 
-Defined in: [types.ts:12](https://github.com/GeoDaCenter/openassistant/blob/aa41155e698e0b65b1716140c0c14440cdd9d76a/packages/core/src/types.ts#L12)
+Defined in: [types.ts:40](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/core/src/types.ts#L40)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [types.ts:12](https://github.com/GeoDaCenter/openassistant/blob/aa41
 
 > `optional` **src**: `string`
 
-Defined in: [types.ts:10](https://github.com/GeoDaCenter/openassistant/blob/aa41155e698e0b65b1716140c0c14440cdd9d76a/packages/core/src/types.ts#L10)
+Defined in: [types.ts:38](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/core/src/types.ts#L38)
 
 ***
 
@@ -34,4 +34,4 @@ Defined in: [types.ts:10](https://github.com/GeoDaCenter/openassistant/blob/aa41
 
 > `optional` **width**: `string` \| `number`
 
-Defined in: [types.ts:11](https://github.com/GeoDaCenter/openassistant/blob/aa41155e698e0b65b1716140c0c14440cdd9d76a/packages/core/src/types.ts#L11)
+Defined in: [types.ts:39](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/core/src/types.ts#L39)

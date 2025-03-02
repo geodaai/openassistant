@@ -47,7 +47,7 @@ const config: Config = {
         entryPoints: ['../packages/common/src/index.ts'],
         tsconfig: '../packages/common/tsconfig.json',
         out: 'docs/common',
-        watch: true,
+        watch: false,
       },
     ],
     [
@@ -57,7 +57,7 @@ const config: Config = {
         entryPoints: ['../packages/core/src/index.ts'],
         tsconfig: '../packages/core/tsconfig.json',
         out: 'docs/core',
-        watch: true,
+        watch: false,
       },
     ],
     [
@@ -67,7 +67,7 @@ const config: Config = {
         entryPoints: ['../packages/echarts/src/index.ts'],
         tsconfig: '../packages/echarts/tsconfig.json',
         out: 'docs/echarts',
-        watch: true,
+        watch: false,
       },
     ],
     [
@@ -77,7 +77,7 @@ const config: Config = {
         entryPoints: ['../packages/geoda/src/index.ts'],
         tsconfig: '../packages/geoda/tsconfig.json',
         out: 'docs/geoda',
-        watch: true,
+        watch: false,
       },
     ],
     [
@@ -87,7 +87,7 @@ const config: Config = {
         entryPoints: ['../packages/ui/src/index.ts'],
         tsconfig: '../packages/ui/tsconfig.json',
         out: 'docs/ui',
-        watch: true,
+        watch: false,
       },
     ],
     [
@@ -97,7 +97,7 @@ const config: Config = {
         entryPoints: ['../packages/duckdb/src/index.ts'],
         tsconfig: '../packages/duckdb/tsconfig.json',
         out: 'docs/duckdb',
-        watch: true,
+        watch: false,
       },
     ],
   ],
