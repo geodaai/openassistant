@@ -2,7 +2,7 @@
 
 > **CustomFunctions**: `object`
 
-Defined in: [types.ts:162](https://github.com/GeoDaCenter/openassistant/blob/1b6e044b8153114911daa09cb063c51a2d620732/packages/core/src/types.ts#L162)
+Defined in: [types.ts:165](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/core/src/types.ts#L165)
 
 Type of Custom functions, a dictionary of functions e.g. createMap, createPlot etc.
 key is the name of the function, value is the function itself.

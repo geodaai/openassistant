@@ -108,6 +108,8 @@ export class VoiceHandler {
       });
     }
 
+    const arrayBuffer = await audioFile.arrayBuffer();
+
     try {
       const response = await generateText({
         model: this.model.llm,
@@ -121,7 +123,7 @@ export class VoiceHandler {
               },
               {
                 type: 'file',
-                data: audioFile,
+                data: arrayBuffer,
                 mimeType: 'audio/webm',
               },
             ],

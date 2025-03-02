@@ -475,6 +475,7 @@ export abstract class VercelAiClient extends VercelAi {
     }
 
     const file = new File([audioBlob], 'audio.webm');
+    const arrayBuffer = await file.arrayBuffer();
 
     const response = await generateText({
       model: this.llm,
@@ -488,7 +489,7 @@ export abstract class VercelAiClient extends VercelAi {
             },
             {
               type: 'file',
-              data: file,
+              data: arrayBuffer,
               mimeType: 'audio/webm',
             },
           ],

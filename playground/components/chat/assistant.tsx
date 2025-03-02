@@ -5,7 +5,7 @@ import {
   GetDatasetForCreateMapFunctionArgs,
 } from '@openassistant/keplergl';
 import { useMemo, useState, useEffect } from 'react';
-import { MessageModel, useAssistant } from '@openassistant/core';
+import { MessageModel, OpenAIFunctionTool, useAssistant } from '@openassistant/core';
 import { AiAssistant, AiAssistantConfig, ConfigPanel } from '@openassistant/ui';
 import { queryDuckDBFunctionDefinition } from '@openassistant/duckdb';
 import {
@@ -79,7 +79,7 @@ export default function Assistant({
 
   const componentConfig = { isDraggable: true, theme: 'light' };
 
-  const myFunctions = useMemo(
+  const myFunctions: OpenAIFunctionTool[] = useMemo(
     () => [
       createMapFunctionDefinition({
         getDataset: ({ datasetName }: GetDatasetForCreateMapFunctionArgs) => {
@@ -178,12 +178,25 @@ ${JSON.stringify(dataContext)}`,
 
   const historyMessages: MessageModel[] = [
     {
-      message: 'Hello, how can I help you today?',
       direction: 'incoming',
       position: 'single',
+      messageContent: {
+        text: 'Hello, how can I help you today?',
+      },
     },
     {
-      message: `Here is the data you can use in the chat:
+      direction: 'incoming',
+      position: 'single',
+      payload: (
+        <div className="mt-4">
+          <ConfigPanel
+            initialConfig={aiConfig}
+            onConfigChange={onAiConfigChange}
+          />
+        </div>
+      ),
+      messageContent: {
+        text: `Here is the data you can use in the chat:
 
 dataset: myVenues
 column names:
@@ -195,23 +208,13 @@ column names:
 
 Please select your prefered LLM model and use your API key to start the chat.
       `,
-      direction: 'incoming',
-      position: 'single',
-      payload: (
-        <div className="mt-4">
-          <ConfigPanel
-            initialConfig={aiConfig}
-            onConfigChange={onAiConfigChange}
-          />
-        </div>
-      ),
+      },
     },
   ];
 
   return (
     <AiAssistant
       {...assistantProps}
-      chatEndpoint='/api/chat'
       historyMessages={historyMessages}
       isMessageDraggable={true}
       enableVoice={true}
@@ -219,6 +222,7 @@ Please select your prefered LLM model and use your API key to start the chat.
       screenCapturedBase64={screenCaptured}
       onScreenshotClick={() => setStartScreenCapture(true)}
       onRemoveScreenshot={() => setScreenCaptured('')}
+      useMarkdown={true}
     />
   );
 }

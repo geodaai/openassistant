@@ -235,6 +235,7 @@ export async function createAssistant(props: UseAssistantProps) {
         AssistantModel.registerFunctionCalling({
           name: jsonSchemaFunctionDef.name,
           description: jsonSchemaFunctionDef.description || '',
+          // @ts-expect-error - TODO: fix this
           properties: jsonSchemaFunctionDef.parameters.properties || {},
           required: jsonSchemaFunctionDef.parameters.required || [],
           ...(func.execute

@@ -2,7 +2,7 @@
 
 > **BoxplotComponent**(`props`): `null` \| `Element`
 
-Defined in: [boxplot/component/box-plot-component.tsx:64](https://github.com/GeoDaCenter/openassistant/blob/1b6e044b8153114911daa09cb063c51a2d620732/packages/echarts/src/boxplot/component/box-plot-component.tsx#L64)
+Defined in: [boxplot/component/box-plot-component.tsx:64](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/echarts/src/boxplot/component/box-plot-component.tsx#L64)
 
 Component that renders a box plot visualization with optional expanded statistics table.
 See [BoxplotComponentContainer](BoxplotComponentContainer.md) for detailed usage and features.

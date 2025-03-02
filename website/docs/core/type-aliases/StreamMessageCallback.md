@@ -2,7 +2,7 @@
 
 > **StreamMessageCallback**: (`props`) => `void`
 
-Defined in: [types.ts:209](https://github.com/GeoDaCenter/openassistant/blob/1b6e044b8153114911daa09cb063c51a2d620732/packages/core/src/types.ts#L209)
+Defined in: [types.ts:213](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/core/src/types.ts#L213)
 
 Type of StreamMessageCallback
 

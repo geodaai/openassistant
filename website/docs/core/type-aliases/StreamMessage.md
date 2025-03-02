@@ -2,7 +2,7 @@
 
 > **StreamMessage**: `object`
 
-Defined in: [types.ts:196](https://github.com/GeoDaCenter/openassistant/blob/1b6e044b8153114911daa09cb063c51a2d620732/packages/core/src/types.ts#L196)
+Defined in: [types.ts:200](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/core/src/types.ts#L200)
 
 ## Type declaration
 

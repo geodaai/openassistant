@@ -2,7 +2,7 @@
 
 > **createHistogramBins**(`values`, `numberOfBins`): `object`
 
-Defined in: [histogram/component/utils.ts:10](https://github.com/GeoDaCenter/openassistant/blob/1b6e044b8153114911daa09cb063c51a2d620732/packages/echarts/src/histogram/component/utils.ts#L10)
+Defined in: [histogram/component/utils.ts:10](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/echarts/src/histogram/component/utils.ts#L10)
 
 Create histogram bins.
 

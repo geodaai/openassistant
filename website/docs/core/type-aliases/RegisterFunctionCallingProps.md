@@ -2,15 +2,15 @@
 
 > **RegisterFunctionCallingProps**: `object`
 
-Defined in: [types.ts:287](https://github.com/GeoDaCenter/openassistant/blob/1b6e044b8153114911daa09cb063c51a2d620732/packages/core/src/types.ts#L287)
+Defined in: [types.ts:291](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/core/src/types.ts#L291)
 
 Type of RegisterFunctionCallingProps
 
 ## Type declaration
 
-### callbackFunction?
+### callbackFunction
 
-> `optional` **callbackFunction**: [`CallbackFunction`](CallbackFunction.md)
+> **callbackFunction**: [`CallbackFunction`](CallbackFunction.md)
 
 ### callbackFunctionContext?
 
@@ -34,7 +34,7 @@ Type of RegisterFunctionCallingProps
 
 #### Index Signature
 
-\[`key`: `string`\]: \{ `description`: `string`; `items`: \{ `type`: `string`; \}; `type`: `string`; \} \| `JsonSchema7Type`
+\[`key`: `string`\]: `object`
 
 ### required
 

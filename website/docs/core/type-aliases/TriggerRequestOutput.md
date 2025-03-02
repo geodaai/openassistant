@@ -2,7 +2,7 @@
 
 > **TriggerRequestOutput**: `object`
 
-Defined in: [llm/vercelai.ts:47](https://github.com/GeoDaCenter/openassistant/blob/1b6e044b8153114911daa09cb063c51a2d620732/packages/core/src/llm/vercelai.ts#L47)
+Defined in: [llm/vercelai.ts:47](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/core/src/llm/vercelai.ts#L47)
 
 ## Type declaration
 

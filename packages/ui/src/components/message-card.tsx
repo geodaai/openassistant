@@ -3,6 +3,7 @@
 import React, {
   forwardRef,
   HTMLAttributes,
+  isValidElement,
   ReactNode,
   useCallback,
   useRef,
@@ -23,6 +24,7 @@ import { Icon } from '@iconify/react';
 import { MessagePayload, StreamMessage } from '@openassistant/core';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import './assistant.css';
 
 export type MessageCardProps = HTMLAttributes<HTMLDivElement> & {
   index: number;
@@ -106,7 +108,7 @@ const MarkdownContent = ({
   }
 
   return (
-    <div className="max-w-full overflow-hidden whitespace-pre-wrap break-words">
+    <div className="markdown-body max-w-full overflow-hidden whitespace-pre-wrap break-words">
       <Markdown
         remarkPlugins={[remarkGfm]}
         components={{
@@ -172,6 +174,7 @@ const MessageContent = ({
         data-testid="spinner-icon"
       />
     )}
+    {customMessage && isValidElement(customMessage) && customMessage}
   </>
 );
 

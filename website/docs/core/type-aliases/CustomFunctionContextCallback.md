@@ -2,7 +2,7 @@
 
 > **CustomFunctionContextCallback**\<`C`\>: () => [`CustomFunctionContext`](CustomFunctionContext.md)\<`C`\>
 
-Defined in: [types.ts:86](https://github.com/GeoDaCenter/openassistant/blob/1b6e044b8153114911daa09cb063c51a2d620732/packages/core/src/types.ts#L86)
+Defined in: [types.ts:85](https://github.com/GeoDaCenter/openassistant/blob/a5eebdb32e6bf1b6b4eedf634485568edcefaa57/packages/core/src/types.ts#L85)
 
 Custom function to get the context object.
 

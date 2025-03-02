@@ -28,6 +28,7 @@
     "@openassistant/keplergl": "latest",
     "@openassistant/ui": "latest",
     "apache-arrow": "13.0.0",
+    "github-markdown-css": "^5.8.1",
     "next": "^14.2.21",
     "next-themes": "^0.4.4",
     "react": "^18.3.1",
@@ -37,6 +38,7 @@
     "react-redux": "^9.2.0",
     "react-virtualized-auto-sizer": "^1.0.24",
     "redux": "^4.2.1",
+    "remark-gfm": "^4.0.1",
     "retry": "^0.13.1",
     "styled-components": "6.1.8",
     "zod": "^3.24.1"

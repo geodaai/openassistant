@@ -21,7 +21,15 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {
+      "@openassistant/core": ["../packages/core/src"],
+      "@openassistant/common": ["../packages/common/src"],
+      "@openassistant/ui": ["../packages/ui/src"],
+      "@openassistant/echarts": ["../packages/echarts/src"],
+      "@openassistant/duckdb": ["../packages/duckdb/src"],
+      "@openassistant/keplergl": ["../packages/keplergl/src"]
+    }
   },
   "include": [
     "next-env.d.ts",
