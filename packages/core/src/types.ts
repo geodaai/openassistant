@@ -21,7 +21,7 @@ export type VercelToolSet = Record<string, VercelFunctionTool>;
  * @param type - The type of the tool call element, which is the name of the functional component
  * @param config - The config of the tool call element, which is the props of the functional component
  */
-type ToolCallElement = {
+export type ToolCallElement = {
   type: string;
   config: Record<string, unknown>;
 };
@@ -84,7 +84,7 @@ export type MessagePayload =
  * @param type The type of the message
  * @param payload The payload of the message, can be string, object, image or custom
  */
-export interface MessageModel {
+export type MessageModel = {
   /**
    * The message to be sent and received from the assistant.
    * @deprecated Use messageContent.text instead
@@ -97,7 +97,7 @@ export interface MessageModel {
   type?: MessageType;
   payload?: MessagePayload;
   messageContent?: StreamMessage;
-}
+};
 
 /**
  * Context object for custom functions. The context object can be used to pass data from your react app to custom functions.

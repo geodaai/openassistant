@@ -4,6 +4,7 @@ import {
   useAssistant,
   UseAssistantProps,
 } from '@openassistant/core';
+import { Message } from '@ai-sdk/ui-utils';
 import MessageCard from './message-card';
 import PromptInputWithBottomActions from './prompt-input-with-bottom-actions';
 import { ChatContainer } from './chat-container';
@@ -32,11 +33,14 @@ import {
  * @param onMessagesUpdated - The callback function to handle the messages updated.
  * @param onRestartChat - The callback function to handle the restart chat.
  * @param fontSize - The font size of the assistant.
+ * @param botMessageClassName - The class name of the bot message.
+ * @param userMessageClassName - The class name of the user message.
+ * @param githubIssueLink - The link to the github issue.
+ * @param useMarkdown - The flag to indicate if the markdown is enabled.
  */
 export type AiAssistantProps = UseAssistantProps & {
   theme?: 'dark' | 'light';
   welcomeMessage: string;
-  historyMessages?: MessageModel[];
   ideas?: { title: string; description: string }[];
   userAvatar?: ReactNode | string;
   assistantAvatar?: ReactNode | string;
@@ -75,9 +79,27 @@ const createWelcomeMessage = (welcomeMessage: string): MessageModel => ({
   },
 });
 
+function rebuildHistoryMessages(historyMessages: Message[]): MessageModel[] {
+  return historyMessages.map((message) => ({
+    sender: message.role,
+    direction: message.role === 'user' ? 'outgoing' : 'incoming',
+    position: 'normal',
+    messageContent: {
+      reasoning: message.reasoning,
+      toolCallMessages: message.toolInvocations?.map((toolCall) => ({
+        toolCallId: toolCall.toolCallId,
+        element: null,
+        text: '',
+        reason: toolCall.args.reason || '',
+      })),
+      text: message.content,
+    },
+  }));
+}
+
 /**
  * Main AI Assistant component for React applications
- * 
+ *
  * @param {AiAssistantProps} props - The props of the Assistant component. See {@link AiAssistantProps} for more details.
  * @returns {JSX.Element} The rendered AI Assistant component
  * @example
@@ -91,8 +113,8 @@ const createWelcomeMessage = (welcomeMessage: string): MessageModel => ({
  */
 export function AiAssistant(props: AiAssistantProps) {
   const [messages, setMessages] = useState<MessageModel[]>(
-    props.historyMessages && props.historyMessages.length > 0
-      ? props.historyMessages
+    props.historyMessages
+      ? rebuildHistoryMessages(props.historyMessages)
       : [createWelcomeMessage(props.welcomeMessage)]
   );
   const [isPrompting, setIsPrompting] = useState(false);

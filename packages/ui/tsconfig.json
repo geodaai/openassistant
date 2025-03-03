@@ -14,7 +14,7 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "paths": {
-      "@openassistant/core": ["../../core"]
+      "@openassistant/core": ["../../core/src"]
     }
   },
   "include": ["src/**/*"],

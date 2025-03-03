@@ -254,9 +254,9 @@ export async function createAssistant(props: UseAssistantProps) {
   const assistant = await AssistantModel.getInstance();
 
   // restore the history messages
-  // if (props.hist&& assistant.getMessages().length === 0) {
-  //   assistant.setMessages(props.historyMessages);
-  // }
+  if (props.historyMessages && assistant.getMessages().length === 0) {
+    assistant.setMessages(props.historyMessages);
+  }
 
   // set the abort controller
   if (props.abortController) {
