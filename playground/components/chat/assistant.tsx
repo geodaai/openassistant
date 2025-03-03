@@ -176,14 +176,7 @@ ${JSON.stringify(dataContext)}`,
     setAiConfig(config);
   };
 
-  const historyMessages: MessageModel[] = [
-    {
-      direction: 'incoming',
-      position: 'single',
-      messageContent: {
-        text: 'Hello, how can I help you today?',
-      },
-    },
+  const initialMessages: MessageModel[] = [
     {
       direction: 'incoming',
       position: 'single',
@@ -215,7 +208,7 @@ Please select your prefered LLM model and use your API key to start the chat.
   return (
     <AiAssistant
       {...assistantProps}
-      historyMessages={historyMessages}
+      initialMessages={initialMessages}
       isMessageDraggable={true}
       enableVoice={true}
       enableScreenCapture={true}

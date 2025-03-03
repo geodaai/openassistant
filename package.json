@@ -4,8 +4,7 @@
   "private": true,
   "workspaces": [
     "packages/*",
-    "examples/*",
-    "playground"
+    "examples/*"
   ],
   "scripts": {
     "clean": "rm -rf packages/*/dist",

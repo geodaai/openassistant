@@ -59,6 +59,7 @@ export type AiAssistantProps = UseAssistantProps & {
   userMessageClassName?: string;
   githubIssueLink?: string;
   useMarkdown?: boolean;
+  initialMessages?: MessageModel[];
 };
 
 /**
@@ -114,8 +115,14 @@ function rebuildHistoryMessages(historyMessages: Message[]): MessageModel[] {
 export function AiAssistant(props: AiAssistantProps) {
   const [messages, setMessages] = useState<MessageModel[]>(
     props.historyMessages
-      ? rebuildHistoryMessages(props.historyMessages)
-      : [createWelcomeMessage(props.welcomeMessage)]
+      ? [
+          ...rebuildHistoryMessages(props.historyMessages),
+          ...(props.initialMessages || []),
+        ]
+      : [
+          createWelcomeMessage(props.welcomeMessage),
+          ...(props.initialMessages || []),
+        ]
   );
   const [isPrompting, setIsPrompting] = useState(false);
 

@@ -7258,7 +7258,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openassistant/common@workspace:*, @openassistant/common@workspace:packages/common":
+"@openassistant/common@workspace:*, @openassistant/common@workspace:^, @openassistant/common@workspace:packages/common":
   version: 0.0.0-use.local
   resolution: "@openassistant/common@workspace:packages/common"
   dependencies:
@@ -7295,7 +7295,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openassistant/core@workspace:*, @openassistant/core@workspace:packages/core":
+"@openassistant/core@workspace:*, @openassistant/core@workspace:^, @openassistant/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@openassistant/core@workspace:packages/core"
   dependencies:
@@ -7334,7 +7334,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openassistant/duckdb@workspace:packages/duckdb":
+"@openassistant/duckdb@workspace:^, @openassistant/duckdb@workspace:packages/duckdb":
   version: 0.0.0-use.local
   resolution: "@openassistant/duckdb@workspace:packages/duckdb"
   dependencies:
@@ -7374,7 +7374,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openassistant/echarts@workspace:*, @openassistant/echarts@workspace:packages/echarts":
+"@openassistant/echarts@workspace:*, @openassistant/echarts@workspace:^, @openassistant/echarts@workspace:packages/echarts":
   version: 0.0.0-use.local
   resolution: "@openassistant/echarts@workspace:packages/echarts"
   dependencies:
@@ -7444,7 +7444,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openassistant/keplergl@workspace:packages/keplergl":
+"@openassistant/keplergl@workspace:^, @openassistant/keplergl@workspace:packages/keplergl":
   version: 0.0.0-use.local
   resolution: "@openassistant/keplergl@workspace:packages/keplergl"
   dependencies:
@@ -7494,7 +7494,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openassistant/ui@workspace:packages/ui":
+"@openassistant/ui@workspace:^, @openassistant/ui@workspace:packages/ui":
   version: 0.0.0-use.local
   resolution: "@openassistant/ui@workspace:packages/ui"
   dependencies:
@@ -25145,12 +25145,12 @@ __metadata:
     "@lexical/react": "npm:^0.23.1"
     "@next/eslint-plugin-next": "npm:^15.1.5"
     "@nextui-org/theme": "npm:^2.4.4"
-    "@openassistant/common": "npm:latest"
-    "@openassistant/core": "npm:latest"
-    "@openassistant/duckdb": "npm:latest"
-    "@openassistant/echarts": "npm:latest"
-    "@openassistant/keplergl": "npm:latest"
-    "@openassistant/ui": "npm:latest"
+    "@openassistant/common": "workspace:^"
+    "@openassistant/core": "workspace:^"
+    "@openassistant/duckdb": "workspace:^"
+    "@openassistant/echarts": "workspace:^"
+    "@openassistant/keplergl": "workspace:^"
+    "@openassistant/ui": "workspace:^"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
     "@types/react-grid-layout": "npm:^1"
