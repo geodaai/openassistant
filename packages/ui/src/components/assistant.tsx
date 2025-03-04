@@ -59,7 +59,6 @@ export type AiAssistantProps = UseAssistantProps & {
   userMessageClassName?: string;
   githubIssueLink?: string;
   useMarkdown?: boolean;
-  initialMessages?: MessageModel[];
 };
 
 /**
@@ -80,22 +79,40 @@ const createWelcomeMessage = (welcomeMessage: string): MessageModel => ({
   },
 });
 
-function rebuildHistoryMessages(historyMessages: Message[]): MessageModel[] {
-  return historyMessages.map((message) => ({
-    sender: message.role,
-    direction: message.role === 'user' ? 'outgoing' : 'incoming',
-    position: 'normal',
-    messageContent: {
-      reasoning: message.reasoning,
-      toolCallMessages: message.toolInvocations?.map((toolCall) => ({
-        toolCallId: toolCall.toolCallId,
-        element: null,
-        text: '',
-        reason: toolCall.args.reason || '',
-      })),
-      text: message.content,
-    },
-  }));
+function rebuildMessages(historyMessages: MessageModel[]): Message[] {
+  // historyMessages: between user and next user message, there can be multiple tool calls
+  // we need to group the tool calls by tool call id, for example:
+  // messages: [
+  //   {role: 'system', content: 'You are a helpful assistant.'},
+  //   {role: 'user', content: 'Hello, how are you?'},
+  //   {role: 'assistant', content: 'I am a helpful assistant.'},
+  //   {role: 'user', content: 'What is the weather in Tokyo?'},
+  //   {role: 'assistant', content: '', },
+  //   {role: 'tool', tool_call_id: '1', args: {city: 'Tokyo'}, toolName: 'getWeather', toolResult: 'sunny.'},
+  //   {role: 'assistant', content: 'The weather in Tokyo is sunny.'},
+  // ]
+  const messages: Message[] = [];
+
+  historyMessages.forEach((uiMessage, index) => {
+    if (uiMessage.sender === 'user') {
+      messages.push({
+        id: index.toString(),
+        role: 'user',
+        content: uiMessage.messageContent?.text || '',
+      });
+    } else {
+      const streamMessage = uiMessage.messageContent;
+      // add role: 'assistant'
+      messages.push({
+        id: index.toString(),
+        role: 'assistant',
+        content: streamMessage?.text || '',
+      });
+      // add role: 'tool' if needed
+    }
+  });
+
+  return messages;
 }
 
 /**
@@ -114,15 +131,7 @@ function rebuildHistoryMessages(historyMessages: Message[]): MessageModel[] {
  */
 export function AiAssistant(props: AiAssistantProps) {
   const [messages, setMessages] = useState<MessageModel[]>(
-    props.historyMessages
-      ? [
-          ...rebuildHistoryMessages(props.historyMessages),
-          ...(props.initialMessages || []),
-        ]
-      : [
-          createWelcomeMessage(props.welcomeMessage),
-          ...(props.initialMessages || []),
-        ]
+    props.historyMessages || [createWelcomeMessage(props.welcomeMessage)]
   );
   const [isPrompting, setIsPrompting] = useState(false);
 
@@ -132,6 +141,7 @@ export function AiAssistant(props: AiAssistantProps) {
     sendTextMessage,
     sendImageMessage,
     audioToText,
+    getComponents,
   } = useAssistant({
     chatEndpoint: props.chatEndpoint,
     voiceEndpoint: props.voiceEndpoint,
@@ -263,6 +273,7 @@ export function AiAssistant(props: AiAssistantProps) {
                   avatar={getAvatar(message.direction)}
                   currentAttempt={i === 1 ? 2 : 1}
                   message={messageElement}
+                  components={getComponents()}
                   customMessage={message.payload}
                   messageClassName={
                     message.direction === 'outgoing'

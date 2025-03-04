@@ -12,10 +12,7 @@
     "declarationDir": "./dist",
     "emitDeclarationOnly": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true,
-    "paths": {
-      "@openassistant/core": ["../../core/src"]
-    }
+    "resolveJsonModule": true
   },
   "include": ["src/**/*"],
   "exclude": [

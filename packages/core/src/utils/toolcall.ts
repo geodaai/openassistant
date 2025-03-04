@@ -1,5 +1,9 @@
 import { ToolCall } from 'ai';
-import { CustomFunctionOutputProps, CustomFunctions } from '../types';
+import {
+  CustomFunctionOutputProps,
+  CustomFunctions,
+  ToolCallMessage,
+} from '../types';
 
 export async function proceedToolCall({
   toolCall,
@@ -15,7 +19,8 @@ export async function proceedToolCall({
 
   try {
     // get the registered function, context and callback message
-    const { func, context, callbackMessage } = customFunctions[functionName];
+    const { func, context, callbackMessage, component } =
+      customFunctions[functionName];
 
     // execute the function
     const output = await func({
@@ -30,6 +35,9 @@ export async function proceedToolCall({
       name: functionName,
       args: functionArgs,
       customMessageCallback: callbackMessage,
+      ...(component
+        ? { component: { toolName: functionName, component } }
+        : {}),
     };
   } catch (err) {
     // make sure to return something back to openai when the function execution fails
@@ -46,12 +54,12 @@ export async function proceedToolCall({
 }
 
 export function createToolCallCustomMessage(
-  toolCallId: string,
+  toolCall: ToolCall<string, unknown>,
   output: CustomFunctionOutputProps<unknown, unknown>
-) {
+): ToolCallMessage | null {
   if (
     output &&
-    output.customMessageCallback &&
+    output.component &&
     output.result &&
     typeof output.result === 'object' &&
     'success' in output.result &&
@@ -59,16 +67,21 @@ export function createToolCallCustomMessage(
   ) {
     try {
       return {
-        toolCallId: toolCallId,
-        element: output.customMessageCallback({
-          functionName: output.name,
-          functionArgs: output.args || {},
-          output: output,
-        }),
+        toolCallId: toolCall.toolCallId,
+        toolName: toolCall.toolName,
+        args: toolCall.args as Record<string, unknown>,
+        additionalData: output.data,
+        llmResult: output.result,
+        // componentName: output.component?.component.displayName,
+        // element: output.customMessageCallback({
+        //   functionName: output.name,
+        //   functionArgs: output.args || {},
+        //   output: output,
+        // }),
       };
     } catch (error) {
       console.error(
-        `Error creating custom message for tool call ${toolCallId}: ${error}`
+        `Error creating custom message for tool call ${toolCall.toolCallId}: ${error}`
       );
     }
   }

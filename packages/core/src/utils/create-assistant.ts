@@ -9,7 +9,7 @@ import {
   CustomFunctionCall,
   CustomFunctionContext,
   CustomFunctionContextCallback,
-  OpenAIFunctionTool,
+  RegisterFunctionCallingProps,
 } from '../types';
 import { Tool, ToolExecutionOptions } from 'ai';
 import { getCustomMessage } from './tool-message';
@@ -36,7 +36,7 @@ type ExecuteFunctionResult = {
    * Additional data returned by the function that can be used by the UI
    * @type {unknown}
    */
-  output: unknown;
+  output?: unknown;
 };
 
 /**
@@ -144,8 +144,8 @@ export function tool<PARAMETERS extends Parameters = never>(
  * @returns True if the tool is an OpenAI function tool
  */
 export function isOpenAIFunctionTool(
-  tool: OpenAIFunctionTool | Tool
-): tool is OpenAIFunctionTool {
+  tool: RegisterFunctionCallingProps | Tool
+): tool is RegisterFunctionCallingProps {
   return 'name' in tool && 'properties' in tool;
 }
 
@@ -155,7 +155,7 @@ export function isOpenAIFunctionTool(
  * @returns True if the tool is a Vercel function tool
  */
 export function isVercelFunctionTool(
-  tool: OpenAIFunctionTool | ExtendedTool
+  tool: RegisterFunctionCallingProps | ExtendedTool
 ): tool is ExtendedTool {
   return 'parameters' in tool && 'execute' in tool && 'description' in tool;
 }
@@ -242,9 +242,7 @@ export async function createAssistant(props: UseAssistantProps) {
             ? { callbackFunction: createCallbackFunction(func.execute) }
             : {}),
           ...(func.context ? { callbackFunctionContext: func.context } : {}),
-          ...(func.component
-            ? { callbackMessage: createCallbackMessage(func.component) }
-            : {}),
+          ...(func.component ? { component: func.component } : {}),
         });
       }
     });
@@ -254,9 +252,9 @@ export async function createAssistant(props: UseAssistantProps) {
   const assistant = await AssistantModel.getInstance();
 
   // restore the history messages
-  if (props.historyMessages && assistant.getMessages().length === 0) {
-    assistant.setMessages(props.historyMessages);
-  }
+  // if (props.historyMessages && assistant.getMessages().length === 0) {
+  //   assistant.setMessages(props.historyMessages);
+  // }
 
   // set the abort controller
   if (props.abortController) {
@@ -286,12 +284,7 @@ function createCallbackMessage(component: React.ElementType) {
 function isExecuteFunctionResult(
   result: unknown
 ): result is ExecuteFunctionResult {
-  return (
-    typeof result === 'object' &&
-    result !== null &&
-    'llmResult' in result &&
-    'output' in result
-  );
+  return typeof result === 'object' && result !== null && 'llmResult' in result;
 }
 
 function createCallbackFunction<PARAMETERS extends Parameters>(

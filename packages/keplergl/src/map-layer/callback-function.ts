@@ -116,9 +116,7 @@ export async function CreateMapCallbackFunction({
   functionName,
   functionArgs,
   functionContext,
-}: CallbackFunctionProps): Promise<
-  CustomFunctionOutputProps<CreateMapOutputResult, CreateMapOutputData>
-> {
+}: CallbackFunctionProps): Promise<CustomFunctionOutputProps<CreateMapOutputResult, CreateMapOutputData>> {
   // check if the function arguments are valid
   if (!isMapLayerFunctionArgs(functionArgs)) {
     return {

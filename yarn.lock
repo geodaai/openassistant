@@ -7272,9 +7272,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openassistant/core@npm:0.2.0, @openassistant/core@workspace:*, @openassistant/core@workspace:packages/core":
-  version: 0.0.0-use.local
-  resolution: "@openassistant/core@workspace:packages/core"
+"@openassistant/core@npm:0.2.0":
+  version: 0.2.0
+  resolution: "@openassistant/core@npm:0.2.0"
   dependencies:
     "@ai-sdk/deepseek": "npm:^0.1.8"
     "@ai-sdk/google": "npm:^1.1.8"
@@ -7291,8 +7291,9 @@ __metadata:
     zod-to-json-schema: "npm:^3.24.1"
   peerDependencies:
     react: ">=18.2"
-  languageName: unknown
-  linkType: soft
+  checksum: 2f0eec4ba1a86143dfdfcf936fda3cae99326e779b6e7dd3d1753244fa5272a2eb54b23aff1b59193a36ae97d271daa7678f6d1c32e1313d84d9acd1aea3fd05
+  languageName: node
+  linkType: hard
 
 "@openassistant/core@npm:latest":
   version: 0.1.9
@@ -7316,6 +7317,28 @@ __metadata:
   checksum: 6671c5d945cb8b05e16509f5a006282ec18dd25033aa6dda6888559aedfcdecc36a42a94d21ad8268baefdeaddeff6a90ac563ffbb4bd4ce7b704c94125eede0
   languageName: node
   linkType: hard
+
+"@openassistant/core@workspace:*, @openassistant/core@workspace:packages/core":
+  version: 0.0.0-use.local
+  resolution: "@openassistant/core@workspace:packages/core"
+  dependencies:
+    "@ai-sdk/deepseek": "npm:^0.1.8"
+    "@ai-sdk/google": "npm:^1.1.8"
+    "@ai-sdk/openai": "npm:^1.1.5"
+    "@ai-sdk/react": "npm:^1.1.7"
+    "@ai-sdk/ui-utils": "npm:^1.1.8"
+    "@ai-sdk/xai": "npm:^1.1.8"
+    "@langchain/core": "npm:^0.3.38"
+    ai: "npm:^4.1.12"
+    ollama-ai-provider: "npm:^1.2.0"
+    openai: "npm:^4.82.0"
+    openai-zod-functions: "npm:^0.1.2"
+    zod: "npm:^3.24.1"
+    zod-to-json-schema: "npm:^3.24.1"
+  peerDependencies:
+    react: ">=18.2"
+  languageName: unknown
+  linkType: soft
 
 "@openassistant/duckdb@npm:0.2.0, @openassistant/duckdb@workspace:packages/duckdb":
   version: 0.0.0-use.local
@@ -30917,23 +30940,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:>=5.0.2, typescript@npm:^5.0.4, typescript@npm:^5.7.3":
-  version: 5.8.2
-  resolution: "typescript@npm:5.8.2"
+"typescript@npm:5.0.4":
+  version: 5.0.4
+  resolution: "typescript@npm:5.0.4"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: dbc2168a55d56771f4d581997be52bab5cbc09734fec976cfbaabd787e61fb4c6cf9125fd48c6f98054ce549c77ecedefc7f64252a830dd8e9c3381f61fbeb78
+  checksum: e5c3adff09a138c0e27d13b5bb2b106ca17a162ffa945d66161669c265c65436309c5817358a2af1abb69d07440d358f8c1ed7cbb63a2c8680e19b9c268fe4ef
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A>=5.0.2#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.0.4#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.7.3#optional!builtin<compat/typescript>":
-  version: 5.8.2
-  resolution: "typescript@patch:typescript@npm%3A5.8.2#optional!builtin<compat/typescript>::version=5.8.2&hash=29ae49"
+"typescript@patch:typescript@npm%3A5.0.4#optional!builtin<compat/typescript>":
+  version: 5.0.4
+  resolution: "typescript@patch:typescript@npm%3A5.0.4#optional!builtin<compat/typescript>::version=5.0.4&hash=b5f058"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 6ae9b2c4d3254ec2eaee6f26ed997e19c02177a212422993209f81e87092b2bb0a4738085549c5b0164982a5609364c047c72aeb281f6c8d802cd0d1c6f0d353
+  checksum: b1b62606c7ec75efe9edc61e195d9e69f0440cac1bcd111dfa864f839255f0d9a7b79869f2823559c608826fc0c9894d2917ae4063e0aa06f5d0784a35170497
   languageName: node
   linkType: hard
 

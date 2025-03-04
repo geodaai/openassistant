@@ -1,7 +1,24 @@
-import { ToolSet } from 'ai';
+import { Message, ToolSet } from 'ai';
 import { StepResult } from 'ai';
 import { ReactNode } from 'react';
 import { z } from 'zod';
+
+export type ToolCallComponent = {
+  toolName: string;
+  component: React.ElementType;
+};
+
+/**
+ * Type of ToolCallComponents
+ *
+ * A dictionary of components, key is the class name of the component, value is the React component itself.
+ * The component will be used to create the tool call message.
+ */
+export type ToolCallComponents = ToolCallComponent[];
+
+export type AIMessage = Message & {
+  id: string;
+};
 
 export type VercelFunctionTool = {
   description: string;
@@ -16,7 +33,7 @@ export type VercelToolSet = Record<string, VercelFunctionTool>;
 /**
  * Type of ToolCallElement. A ToolCallElement is a ReactNode element
  * that can be reconstructed by using the `type` and `config`.
- * 
+ *
  *
  * @param type - The type of the tool call element, which is the name of the functional component
  * @param config - The config of the tool call element, which is the props of the functional component
@@ -28,20 +45,22 @@ export type ToolCallElement = {
 
 /**
  * Type of ToolCallMessage
- * 
+ *
  * The tool call message is used to store the tool call information for UI display, see {@link StreamMessage}.
  * Note: the ToolCallMessage is not used in the tool call execution.
- * 
+ *
  * @param toolCallId - The id of the tool call
  * @param element - The element of the tool call
  * @param text - The text of the tool call
  * @param reason - The reason of the tool call
  */
 export type ToolCallMessage = {
+  toolName: string;
   toolCallId: string;
-  element?: ReactNode;
+  args: Record<string, unknown>;
+  llmResult?: unknown;
+  additionalData?: unknown;
   text?: string;
-  reason?: string;
 };
 
 /**
@@ -152,8 +171,10 @@ export type CustomFunctionOutputProps<R, D> = {
   result: R;
   /** Additional data used by customMessageCallback to create UI elements (e.g. plot, map) */
   data?: D;
-  /** Callback function to create custom UI elements like plots or maps */
+  /** @deprecated Callback function to create custom UI elements like plots or maps */
   customMessageCallback?: CustomMessageCallback;
+  /** Component for the tool call */
+  component?: ToolCallComponent;
 };
 
 /**
@@ -208,6 +229,8 @@ export type CustomFunctions = {
     context?:
       | CustomFunctionContext<unknown>
       | CustomFunctionContextCallback<unknown>;
+    component?: React.ComponentType;
+    /** @deprecated Callback function to create custom UI elements like plots or maps */
     callbackMessage?: CustomMessageCallback;
   };
 };
@@ -264,7 +287,7 @@ export type StreamMessage = {
 
 /**
  * Type of StreamMessageCallback
- * 
+ *
  * @param props The callback properties
  * @param props.deltaMessage The incremental message update from the assistant
  * @param props.customMessage Optional custom message payload
@@ -372,7 +395,10 @@ export type RegisterFunctionCallingProps = {
   callbackFunction: CallbackFunction;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   callbackFunctionContext?: CustomFunctionContext<any>;
+  /** @deprecated Callback function to create custom UI elements like plots or maps */
   callbackMessage?: CustomMessageCallback;
+  /** Component for the tool call */
+  component?: React.ComponentType;
 };
 
 /**
@@ -396,19 +422,4 @@ export type OpenAIConfigProps = {
   description?: string;
   instructions?: string;
   version?: string;
-};
-
-export type OpenAIFunctionTool = {
-  name: string;
-  description: string;
-  properties: {
-    [key: string]: {
-      type: string; // 'string' | 'number' | 'boolean' | 'array';
-      description: string;
-    };
-  };
-  required: string[];
-  callbackFunction: CallbackFunction;
-  callbackFunctionContext?: CustomFunctionContext<unknown>;
-  callbackMessage?: CustomMessageCallback;
 };

@@ -233,7 +233,6 @@ export abstract class VercelAiClient extends VercelAi {
   ) {
     const { toolCalls, response, usage } = event;
     const responseMsg = response.messages[response.messages.length - 1];
-    let customMessage: ReactNode | null = null;
     const toolCallMessages: ToolCallMessage[] = [];
 
     // add final message to the messages array
@@ -274,24 +273,21 @@ export abstract class VercelAiClient extends VercelAi {
       // @ts-expect-error fix type
       toolResults.push(toolResult);
 
-      const toolCallMessage = createToolCallCustomMessage(
-        toolCall.toolCallId,
-        output
-      );
+      const toolCallMessage = createToolCallCustomMessage(toolCall, output);
       if (toolCallMessage) {
         toolCallMessages.push(toolCallMessage);
         // find toolCallMessage in the streamMessage.toolCallMessages array
-        const existingToolCallMessage = this.streamMessage.toolCallMessages?.find(
-          (message) => message.toolCallId === toolCall.toolCallId
-        );
+        const existingToolCallMessage =
+          this.streamMessage.toolCallMessages?.find(
+            (message) => message.toolCallId === toolCall.toolCallId
+          );
         if (existingToolCallMessage) {
-          existingToolCallMessage.element = toolCallMessage.element;
+          existingToolCallMessage.args = toolCallMessage.args;
+          existingToolCallMessage.llmResult = toolCallMessage.llmResult;
+          existingToolCallMessage.additionalData =
+            toolCallMessage.additionalData;
         }
       }
-    }
-
-    if (toolCallMessages.length > 0) {
-      customMessage = toolCallMessages[toolCallMessages.length - 1].element;
     }
 
     tokensUsed.promptTokens = usage?.promptTokens || 0;
@@ -305,7 +301,8 @@ export abstract class VercelAiClient extends VercelAi {
       }
     }
 
-    return customMessage;
+    // return customMessage;
+    return null;
   }
 
   /**
@@ -389,8 +386,9 @@ export abstract class VercelAiClient extends VercelAi {
         if (!toolCallMessage) {
           this.streamMessage.toolCallMessages?.push({
             toolCallId,
+            toolName: chunk.toolName,
+            args: {},
             text: '',
-            reason: '',
           });
         }
       } else if (chunk.type === 'tool-call-delta') {
@@ -415,19 +413,14 @@ export abstract class VercelAiClient extends VercelAi {
         );
         if (toolCallMessage) {
           // check if 'reason' is present in the chunk.argsTextDelta and
-          if (toolCallMessage.text?.includes('reason')) {
-            // parse json object from the chunk.argsTextDelta
-            const args = JSON.parse(toolCallMessage.text);
-            if (args.reason) {
-              toolCallMessage.reason = args.reason;
-              toolCallMessage.text = '';
-            }
-            streamMessageCallback({
-              deltaMessage: '',
-              customMessage,
-              message: this.streamMessage,
-            });
-          }
+          toolCallMessage.args = chunk.args;
+          // clear the text
+          toolCallMessage.text = '';
+          streamMessageCallback({
+            deltaMessage: '',
+            customMessage,
+            message: this.streamMessage,
+          });
         }
       } else if (chunk.type === 'reasoning') {
         this.streamMessage.reasoning += chunk.textDelta;

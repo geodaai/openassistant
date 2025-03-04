@@ -5,7 +5,11 @@ import {
   GetDatasetForCreateMapFunctionArgs,
 } from '@openassistant/keplergl';
 import { useMemo, useState, useEffect } from 'react';
-import { MessageModel, OpenAIFunctionTool, useAssistant } from '@openassistant/core';
+import {
+  MessageModel,
+  RegisterFunctionCallingProps,
+  useAssistant,
+} from '@openassistant/core';
 import { AiAssistant, AiAssistantConfig, ConfigPanel } from '@openassistant/ui';
 import { queryDuckDBFunctionDefinition } from '@openassistant/duckdb';
 import {
@@ -79,7 +83,7 @@ export default function Assistant({
 
   const componentConfig = { isDraggable: true, theme: 'light' };
 
-  const myFunctions: OpenAIFunctionTool[] = useMemo(
+  const myFunctions: RegisterFunctionCallingProps[] = useMemo(
     () => [
       createMapFunctionDefinition({
         getDataset: ({ datasetName }: GetDatasetForCreateMapFunctionArgs) => {
@@ -208,7 +212,7 @@ Please select your prefered LLM model and use your API key to start the chat.
   return (
     <AiAssistant
       {...assistantProps}
-      initialMessages={initialMessages}
+      historyMessages={initialMessages}
       isMessageDraggable={true}
       enableVoice={true}
       enableScreenCapture={true}

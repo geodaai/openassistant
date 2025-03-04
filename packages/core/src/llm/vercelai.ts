@@ -1,5 +1,6 @@
 import { AbstractAssistant } from './assistant';
 import {
+  AIMessage,
   AudioToTextProps,
   CustomFunctionOutputProps,
   CustomFunctions,
@@ -8,6 +9,7 @@ import {
   RegisterFunctionCallingProps,
   StreamMessage,
   StreamMessageCallback,
+  ToolCallComponents,
   ToolCallMessage,
 } from '../types';
 import { ReactNode } from 'react';
@@ -122,7 +124,23 @@ export class VercelAi extends AbstractAssistant {
    *
    * To persist the messages, you can call the {@link setMessages} method, and  the {@link getMessages} method.
    */
-  protected messages: Message[] = [];
+  protected messages: AIMessage[] = [];
+
+  /**
+   * The message components array, which is used to store the components for the messages.
+   * The key is the name of the component, the value is the functional component.
+   *
+   * For example:
+   *
+   * const Component = this.messageComponents['WeatherStation'];
+   *
+   * if (Component) {
+   *   return <Component {...message.toolCall.args} />;
+   * }
+   */
+  protected messageComponents: Record<string, React.ComponentType<unknown>> =
+    {};
+
   protected static customFunctions: CustomFunctions = {};
   protected static tools: ToolSet = {};
   protected abortController: AbortController | null = null;
@@ -170,12 +188,14 @@ export class VercelAi extends AbstractAssistant {
     callbackFunction,
     callbackFunctionContext,
     callbackMessage,
+    component,
   }: RegisterFunctionCallingProps) {
     // register custom function, if already registed then rewrite it
     VercelAi.customFunctions[name] = {
       func: callbackFunction || (() => Promise.resolve({ name, result: {} })),
       context: callbackFunctionContext,
       callbackMessage,
+      component,
     };
 
     // add function calling to tools
@@ -198,6 +218,22 @@ export class VercelAi extends AbstractAssistant {
 
   public setMessages(messages: Message[]) {
     this.messages = messages;
+  }
+
+  public getComponents(): ToolCallComponents {
+    const components: ToolCallComponents = [];
+
+    Object.keys(VercelAi.customFunctions).forEach((key) => {
+      const func = VercelAi.customFunctions[key];
+      if (func.component) {
+        components.push({
+          toolName: key,
+          component: func.component,
+        });
+      }
+    });
+
+    return components;
   }
 
   public override async addAdditionalContext({ context }: { context: string }) {
@@ -240,7 +276,7 @@ export class VercelAi extends AbstractAssistant {
 
   /**
    * Process the text message by sending it to the LLM.
-   * 
+   *
    * @param params - The parameters object containing:
    * @param params.textMessage - The text message to send to the LLM
    * @param params.streamMessageCallback - The callback function to handle the stream message
@@ -257,6 +293,9 @@ export class VercelAi extends AbstractAssistant {
     if (!this.abortController) {
       this.abortController = new AbortController();
     }
+
+    // record the length of the messages array
+    const messagesLength = this.messages.length;
 
     if (textMessage) {
       this.messages.push({
@@ -291,7 +330,9 @@ export class VercelAi extends AbstractAssistant {
       message: this.streamMessage,
     });
 
-    return { messages: [lastMessage] };
+    // return the newly added message
+    const newMessages = this.messages.slice(messagesLength);
+    return { messages: newMessages };
   }
 
   protected async triggerRequest({

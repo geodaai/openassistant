@@ -1,7 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { OpenAIFunctionTool, StreamMessageCallback, ToolCallMessage } from '../types';
+import {
+  RegisterFunctionCallingProps,
+  StreamMessageCallback,
+  ToolCallMessage,
+} from '../types';
 import { VercelAi } from '../llm/vercelai';
 import { createAssistant, ExtendedTool } from '../utils/create-assistant';
 import { StepResult, ToolChoice } from 'ai';
@@ -41,7 +45,7 @@ export type UseAssistantProps = {
   topP?: number;
   instructions: string;
   functions?:
-    | Array<OpenAIFunctionTool>
+    | Array<RegisterFunctionCallingProps>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     | Record<string, ExtendedTool<any>>;
   toolChoice?: ToolChoice<ToolSet>;
