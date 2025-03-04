@@ -1,14 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   RegisterFunctionCallingProps,
   StreamMessageCallback,
   ToolCallMessage,
+  MessageModel,
 } from '../types';
 import { VercelAi } from '../llm/vercelai';
 import { createAssistant, ExtendedTool } from '../utils/create-assistant';
-import { StepResult, ToolChoice } from 'ai';
+import { Message, StepResult, ToolChoice } from 'ai';
 import { ToolSet } from 'ai';
 /**
  * Props for configuring the AI Assistant and useAssistant hook.
@@ -43,6 +44,7 @@ export type UseAssistantProps = {
   temperature?: number;
   topP?: number;
   instructions: string;
+  historyMessages?: Message[];
   functions?:
     | Array<RegisterFunctionCallingProps>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -99,6 +101,12 @@ export function useAssistant(props: UseAssistantProps) {
    */
   const [apiKeyStatus, setApiKeyStatus] = useState<string>('failed');
 
+  // Add useEffect to initialize the assistant when the hook is first called
+  useEffect(() => {
+    initializeAssistant();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); 
+
   /**
    * Initializes the AI assistant with the provided configuration.
    */
@@ -112,6 +120,11 @@ export function useAssistant(props: UseAssistantProps) {
 
       // initialize the assistant model
       assistant = await createAssistant(props);
+
+      // restore the history messages
+      if (props.historyMessages) {
+        assistant.setMessages(props.historyMessages);
+      }
 
       setApiKeyStatus('success');
     } catch (error) {

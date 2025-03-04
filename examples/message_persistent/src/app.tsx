@@ -1,6 +1,7 @@
-import { tool } from '@openassistant/core';
+import { MessageModel, tool } from '@openassistant/core';
 import { AiAssistant } from '@openassistant/ui';
 import { z } from 'zod';
+import { SAVED_MESSAGES } from './messages';
 
 function WeatherStation({
   temperature,
@@ -70,6 +71,10 @@ export function App() {
     }),
   };
 
+  const onMessagesUpdated = (messages: MessageModel[]) => {
+    console.log(messages);
+  };
+
   return (
     <div className="w-[400px] h-[800px] m-4">
       <AiAssistant
@@ -82,6 +87,8 @@ export function App() {
         instructions="You are a helpful assistant."
         functions={functions}
         useMarkdown={true}
+        onMessagesUpdated={onMessagesUpdated}
+        initialMessages={SAVED_MESSAGES}
       />
     </div>
   );

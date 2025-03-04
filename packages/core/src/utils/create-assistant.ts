@@ -6,13 +6,11 @@ import { GetAssistantModelByProvider } from '../lib/model-utils';
 import { UseAssistantProps } from '../hooks/use-assistant';
 import {
   CallbackFunctionProps,
-  CustomFunctionCall,
   CustomFunctionContext,
   CustomFunctionContextCallback,
   RegisterFunctionCallingProps,
 } from '../types';
 import { Tool, ToolExecutionOptions } from 'ai';
-import { getCustomMessage } from './tool-message';
 
 type Parameters = z.ZodTypeAny | Schema<unknown>;
 
@@ -252,9 +250,9 @@ export async function createAssistant(props: UseAssistantProps) {
   const assistant = await AssistantModel.getInstance();
 
   // restore the history messages
-  // if (props.historyMessages && assistant.getMessages().length === 0) {
-  //   assistant.setMessages(props.historyMessages);
-  // }
+  if (props.historyMessages && assistant.getMessages().length === 0) {
+    assistant.setMessages(props.historyMessages);
+  }
 
   // set the abort controller
   if (props.abortController) {
@@ -262,23 +260,6 @@ export async function createAssistant(props: UseAssistantProps) {
   }
 
   return assistant;
-}
-
-function createCallbackMessage(component: React.ElementType) {
-  const callbackMessage = (customFunctionCall: CustomFunctionCall) => {
-    const { functionName, functionArgs, output } = customFunctionCall;
-    if (functionArgs) {
-      const message = getCustomMessage({
-        functionName,
-        functionArgs,
-        output,
-        CustomMessage: component,
-      });
-      return message;
-    }
-    return null;
-  };
-  return callbackMessage;
 }
 
 function isExecuteFunctionResult(
