@@ -262,31 +262,38 @@ export abstract class VercelAiClient extends VercelAi {
 
       const toolResult = {
         toolCallId: toolCall.toolCallId,
-        result: output.result,
-        state: 'result' as const,
         toolName: toolCall.toolName,
         args: toolCall.args,
-        step: this.toolSteps,
       };
 
-      message.toolInvocations?.push(toolResult);
+      const toolInvocation = {
+        ...toolResult,
+        result: output.result,
+        state: 'result' as const,
+        step: this.toolSteps,
+      };
+      message.toolInvocations?.push(toolInvocation);
       // @ts-expect-error fix type
-      toolResults.push(toolResult);
+      toolResults.push(toolInvocation);
 
-      const toolCallMessage = createToolCallCustomMessage(toolCall, output);
-      if (toolCallMessage) {
-        toolCallMessages.push(toolCallMessage);
-        // find toolCallMessage in the streamMessage.toolCallMessages array
-        const existingToolCallMessage =
-          this.streamMessage.toolCallMessages?.find(
-            (message) => message.toolCallId === toolCall.toolCallId
-          );
-        if (existingToolCallMessage) {
-          existingToolCallMessage.args = toolCallMessage.args;
-          existingToolCallMessage.llmResult = toolCallMessage.llmResult;
-          existingToolCallMessage.additionalData =
-            toolCallMessage.additionalData;
-        }
+      const toolCallMessage = {
+        toolCallId: toolCall.toolCallId,
+        toolName: toolCall.toolName,
+        args: toolCall.args,
+        llmResult: output.result,
+        additionalData: output.data,
+        component: output.component,
+      };
+
+      toolCallMessages.push(toolCallMessage);
+      // find toolCallMessage in the streamMessage.toolCallMessages array
+      const existingToolCallMessage = this.streamMessage.toolCallMessages?.find(
+        (message) => message.toolCallId === toolCall.toolCallId
+      );
+      if (existingToolCallMessage) {
+        existingToolCallMessage.args = toolCallMessage.args;
+        existingToolCallMessage.llmResult = toolCallMessage.llmResult;
+        existingToolCallMessage.additionalData = toolCallMessage.additionalData;
       }
     }
 

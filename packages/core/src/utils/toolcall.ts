@@ -30,14 +30,22 @@ export async function proceedToolCall({
       previousOutput,
     });
 
+    const customComponent = {
+      toolName: functionName,
+      component: callbackMessage
+        ? callbackMessage({
+            functionName,
+            functionArgs,
+            output,
+          })
+        : component,
+    };
+
     return {
       ...output,
       name: functionName,
       args: functionArgs,
-      customMessageCallback: callbackMessage,
-      ...(component
-        ? { component: { toolName: functionName, component } }
-        : {}),
+      ...(customComponent ? { component: customComponent } : {}),
     };
   } catch (err) {
     // make sure to return something back to openai when the function execution fails

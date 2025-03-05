@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 export type ToolCallComponent = {
   toolName: string;
-  component: React.ElementType;
+  component?: React.ElementType | ReactNode;
 };
 
 /**
@@ -62,6 +62,15 @@ export type ToolCallMessage = {
   additionalData?: unknown;
   text?: string;
 };
+
+export const ToolCallMessageSchema = z.object({
+  toolName: z.string(),
+  toolCallId: z.string(),
+  args: z.record(z.unknown()),
+  llmResult: z.unknown().optional(),
+  additionalData: z.unknown().optional(),
+  text: z.string().optional(),
+});
 
 /**
  * Type of image message content
@@ -284,6 +293,12 @@ export type StreamMessage = {
   toolCallMessages?: ToolCallMessage[];
   text?: string;
 };
+
+export const StreamMessageSchema = z.object({
+  reasoning: z.string().optional(),
+  toolCallMessages: z.array(ToolCallMessageSchema).optional(),
+  text: z.string().optional(),
+});
 
 /**
  * Type of StreamMessageCallback

@@ -57,7 +57,11 @@ export function ToolCallComponent({
       </div>
       {Component && (
         <ToolCallErrorBoundary>
-          <Component {...(additionalData as Record<string, unknown>)} />
+          {typeof Component === 'function' ? (
+            <Component {...(additionalData as Record<string, unknown>)} />
+          ) : (
+            Component
+          )}
         </ToolCallErrorBoundary>
       )}
     </div>
