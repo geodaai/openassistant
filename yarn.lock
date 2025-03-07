@@ -22,6 +22,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ai-sdk/anthropic@npm:^1.1.14":
+  version: 1.1.14
+  resolution: "@ai-sdk/anthropic@npm:1.1.14"
+  dependencies:
+    "@ai-sdk/provider": "npm:1.0.9"
+    "@ai-sdk/provider-utils": "npm:2.1.10"
+  peerDependencies:
+    zod: ^3.0.0
+  checksum: 43dee55be38737f328790c8042353a50c348ef0e97169de3c7e91293adaa05cd8d308dd4ac722bd7dd79c1e9f6b90733bda56fe6bf111713a9c97b441a175cd9
+  languageName: node
+  linkType: hard
+
 "@ai-sdk/deepseek@npm:^0.1.8":
   version: 0.1.12
   resolution: "@ai-sdk/deepseek@npm:0.1.12"
@@ -7322,6 +7334,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@openassistant/core@workspace:packages/core"
   dependencies:
+    "@ai-sdk/anthropic": "npm:^1.1.14"
     "@ai-sdk/deepseek": "npm:^0.1.8"
     "@ai-sdk/google": "npm:^1.1.8"
     "@ai-sdk/openai": "npm:^1.1.5"
@@ -23382,6 +23395,28 @@ __metadata:
   checksum: 7268db63ed5169466540b6fb947aec313200bcf6d40c5ab722c22e242f651994619bcd85601602972d3c85bd2cc45a358a4c61937e9f11a061919a1da569b0c2
   languageName: node
   linkType: hard
+
+"message-persistent-example@workspace:examples/message_persistent":
+  version: 0.0.0-use.local
+  resolution: "message-persistent-example@workspace:examples/message_persistent"
+  dependencies:
+    "@nextui-org/react": "npm:^2.6.10"
+    "@openassistant/core": "npm:latest"
+    "@openassistant/ui": "npm:latest"
+    "@types/react": "npm:^18.3.1"
+    "@types/react-dom": "npm:^18.3.1"
+    autoprefixer: "npm:^10.4.20"
+    esbuild: "npm:^0.24.2"
+    esbuild-plugin-tailwindcss: "npm:^1.2.1"
+    esbuild-style-plugin: "npm:^1.6.3"
+    framer-motion: "npm:^11.15.0"
+    open: "npm:^10.1.0"
+    postcss: "npm:^8.4.49"
+    react: "npm:^18.3.1"
+    react-dom: "npm:^18.3.1"
+    tailwind: "npm:^4.0.0"
+  languageName: unknown
+  linkType: soft
 
 "methods@npm:~1.1.2":
   version: 1.1.2

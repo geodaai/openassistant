@@ -1,9 +1,5 @@
 import { ToolCall } from 'ai';
-import {
-  CustomFunctionOutputProps,
-  CustomFunctions,
-  ToolCallMessage,
-} from '../types';
+import { CustomFunctionOutputProps, CustomFunctions } from '../types';
 
 export async function proceedToolCall({
   toolCall,
@@ -59,39 +55,4 @@ export async function proceedToolCall({
       },
     };
   }
-}
-
-export function createToolCallCustomMessage(
-  toolCall: ToolCall<string, unknown>,
-  output: CustomFunctionOutputProps<unknown, unknown>
-): ToolCallMessage | null {
-  if (
-    output &&
-    output.component &&
-    output.result &&
-    typeof output.result === 'object' &&
-    'success' in output.result &&
-    output.result.success === true
-  ) {
-    try {
-      return {
-        toolCallId: toolCall.toolCallId,
-        toolName: toolCall.toolName,
-        args: toolCall.args as Record<string, unknown>,
-        additionalData: output.data,
-        llmResult: output.result,
-        // componentName: output.component?.component.displayName,
-        // element: output.customMessageCallback({
-        //   functionName: output.name,
-        //   functionArgs: output.args || {},
-        //   output: output,
-        // }),
-      };
-    } catch (error) {
-      console.error(
-        `Error creating custom message for tool call ${toolCall.toolCallId}: ${error}`
-      );
-    }
-  }
-  return null;
 }

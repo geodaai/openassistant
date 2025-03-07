@@ -54,6 +54,11 @@ export class XaiAssistant extends VercelAiClient {
     if (XaiAssistant.instance === null) {
       XaiAssistant.instance = new XaiAssistant();
     }
+    if (XaiAssistant.instance.llm === null) {
+      // reset the instance so getInstance doesn't return the same instance
+      XaiAssistant.instance.restart();
+      throw new Error('XaiAssistant is not initialized');
+    }
     return XaiAssistant.instance;
   }
 

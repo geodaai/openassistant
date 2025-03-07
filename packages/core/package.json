@@ -1,6 +1,6 @@
 {
   "name": "@openassistant/core",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "author": "Xun Li<lixun910@gmail.com>",
   "description": "Core library using Vercel AI SDK for OpenAssistant",
   "main": "src/index.ts",
@@ -27,6 +27,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@ai-sdk/anthropic": "^1.1.14",
     "@ai-sdk/deepseek": "^0.1.8",
     "@ai-sdk/google": "^1.1.8",
     "@ai-sdk/openai": "^1.1.5",

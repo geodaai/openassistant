@@ -79,6 +79,11 @@ export class OpenAIAssistant extends VercelAiClient {
     if (OpenAIAssistant.instance === null) {
       OpenAIAssistant.instance = new OpenAIAssistant();
     }
+    if (OpenAIAssistant.instance.llm === null) {
+      // reset the instance so getInstance doesn't return the same instance
+      OpenAIAssistant.instance.restart();
+      throw new Error('OpenAIAssistant is not initialized');
+    }
     return OpenAIAssistant.instance;
   }
 

@@ -5,7 +5,6 @@ import {
   RegisterFunctionCallingProps,
   StreamMessageCallback,
   ToolCallMessage,
-  MessageModel,
 } from '../types';
 import { VercelAi } from '../llm/vercelai';
 import { createAssistant, ExtendedTool } from '../utils/create-assistant';
@@ -51,6 +50,7 @@ export type UseAssistantProps = {
     | Record<string, ExtendedTool<any>>;
   toolChoice?: ToolChoice<ToolSet>;
   maxSteps?: number;
+  toolCallStreaming?: boolean;
   abortController?: AbortController;
 };
 
@@ -105,7 +105,7 @@ export function useAssistant(props: UseAssistantProps) {
   useEffect(() => {
     initializeAssistant();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); 
+  }, []);
 
   /**
    * Initializes the AI assistant with the provided configuration.

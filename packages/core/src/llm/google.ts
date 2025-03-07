@@ -59,6 +59,11 @@ export class GoogleAIAssistant extends VercelAiClient {
     if (GoogleAIAssistant.instance === null) {
       GoogleAIAssistant.instance = new GoogleAIAssistant();
     }
+    if (GoogleAIAssistant.instance.llm === null) {
+      // reset the instance so getInstance doesn't return the same instance
+      GoogleAIAssistant.instance.restart();
+      throw new Error('GoogleAIAssistant is not initialized');
+    }
     return GoogleAIAssistant.instance;
   }
 

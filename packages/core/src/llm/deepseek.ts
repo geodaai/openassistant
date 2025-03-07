@@ -58,6 +58,11 @@ export class DeepSeekAssistant extends VercelAiClient {
     if (DeepSeekAssistant.instance === null) {
       DeepSeekAssistant.instance = new DeepSeekAssistant();
     }
+    if (DeepSeekAssistant.instance.llm === null) {
+      // reset the instance so getInstance doesn't return the same instance
+      DeepSeekAssistant.instance.restart();
+      throw new Error('DeepSeekAssistant is not initialized');
+    }
     return DeepSeekAssistant.instance;
   }
 

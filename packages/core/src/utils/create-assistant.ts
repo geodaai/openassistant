@@ -27,14 +27,14 @@ export type inferParameters<PARAMETERS extends Parameters> =
 type ExecuteFunctionResult = {
   /**
    * The formatted result string that will be sent back to the LLM
-   * @type {string}
+   * @type {object}
    */
-  llmResult: string;
+  llmResult: object;
   /**
    * Additional data returned by the function that can be used by the UI
-   * @type {unknown}
+   * @type {object}
    */
-  output?: unknown;
+  additionalData?: object;
 };
 
 /**
@@ -161,7 +161,7 @@ export function isVercelFunctionTool(
 /**
  * Creates an AI assistant instance with the specified configuration
  *
- * @param props - Configuration properties for the assistant
+ * @param props - Configuration properties for the assistant. See {@link UseAssistantProps} for more details.
  * @returns Promise that resolves to the configured assistant instance
  *
  * @example
@@ -170,9 +170,25 @@ export function isVercelFunctionTool(
  *   modelProvider: 'openai',
  *   model: 'gpt-4',
  *   apiKey: 'your-api-key',
- *   instructions: 'You are a helpful assistant'
+ *   instructions: 'You are a helpful assistant',
+ *   functions: [
+ *     tool({
+ *       description: 'Get the weather in a location',
+ *       parameters: z.object({ location: z.string() }),
+ *       execute: async ({ location }, option) => {
+ *         const getStation = options.context?.getStation;
+ *         const station = getStation ? await getStation(location) : null;
+ *         return { llmResult: `Weather in ${location} from station ${station}.` };
+ *       },
+ *       context: {
+ *         getStation: async (location) => {
+ *           return { station: '123' };
+ *         },
+ *       },
+ *       component: WeatherComponent,
+ *     })
+ *   ]
  * });
- * ```
  */
 export async function createAssistant(props: UseAssistantProps) {
   const AssistantModel = GetAssistantModelByProvider({
@@ -193,6 +209,7 @@ export async function createAssistant(props: UseAssistantProps) {
     version: props.version,
     toolChoice: props.toolChoice,
     maxSteps: props.maxSteps,
+    toolCallStreaming: props.toolCallStreaming,
     ...(props.baseUrl ? { baseURL: props.baseUrl } : {}),
   });
 
@@ -293,11 +310,8 @@ function createCallbackFunction<PARAMETERS extends Parameters>(
 
       return {
         name: functionName,
-        result: {
-          success: true,
-          llmResult: result.llmResult,
-        },
-        data: result.output,
+        result: result.llmResult,
+        data: result.additionalData,
       };
     } catch (error) {
       return {

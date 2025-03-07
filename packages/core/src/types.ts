@@ -46,18 +46,24 @@ export type ToolCallElement = {
 /**
  * Type of ToolCallMessage
  *
- * The tool call message is used to store the tool call information for UI display, see {@link StreamMessage}.
- * Note: the ToolCallMessage is not used in the tool call execution.
+ * The tool call message is used to store the tool call information.
  *
  * @param toolCallId - The id of the tool call
- * @param element - The element of the tool call
- * @param text - The text of the tool call
- * @param reason - The reason of the tool call
+ * @param toolName - The name of the tool
+ * @param args - The arguments of the tool
+ * @param llmResult - The result from the execution of the tool, which will be sent back to the LLM as response.
+ * @param additionalData - The additional data of the tool, which can be used to pass the output of the tool to next tool call or the component for rendering.
+ * @param text - The streaming text of the tool
+ * @param isCompleted - The flag indicating if the tool call is completed. Note: there are three stages of the tool call:
+ * 1. The tool call is requested by the LLM with the tool name and arguments.
+ * 2. The tool call is executing and {llmResult, additionalData} will be updated.
+ * 3. The tool call is completed and {llmResult} will be sent back to the LLM as response.
  */
 export type ToolCallMessage = {
   toolName: string;
   toolCallId: string;
   args: Record<string, unknown>;
+  isCompleted: boolean;
   llmResult?: unknown;
   additionalData?: unknown;
   text?: string;
@@ -67,6 +73,7 @@ export const ToolCallMessageSchema = z.object({
   toolName: z.string(),
   toolCallId: z.string(),
   args: z.record(z.unknown()),
+  isCompleted: z.boolean(),
   llmResult: z.unknown().optional(),
   additionalData: z.unknown().optional(),
   text: z.string().optional(),
@@ -285,7 +292,7 @@ export type CustomMessageCallback = (
  * ```
  *
  * @param reasoning The reasoning of the assistant
- * @param toolCallMessages The tool call messages
+ * @param toolCallMessages The array of tool call messages. See {@link ToolCallMessage} for more details.
  * @param text The text of the message
  */
 export type StreamMessage = {
@@ -303,11 +310,10 @@ export const StreamMessageSchema = z.object({
 /**
  * Type of StreamMessageCallback
  *
- * @param props The callback properties
- * @param props.deltaMessage The incremental message update from the assistant
- * @param props.customMessage Optional custom message payload
- * @param props.isCompleted Optional flag indicating if the message stream is complete
- * @param props.message Optional full stream message object
+ * @param message - Optional full stream message object. See {@link StreamMessage} for more details.
+ * @param isCompleted - Optional flag indicating if the message stream is complete
+ * @param customMessage - Optional custom message payload (e.g. screenshot base64 string)
+ * @param deltaMessage - The incremental message update from the assistant
  */
 export type StreamMessageCallback = (props: {
   deltaMessage: string;

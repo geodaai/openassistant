@@ -68,6 +68,11 @@ export class OllamaAssistant extends VercelAiClient {
     if (OllamaAssistant.instance === null) {
       OllamaAssistant.instance = new OllamaAssistant();
     }
+    if (OllamaAssistant.instance.llm === null) {
+      // reset the instance so getInstance doesn't return the same instance
+      OllamaAssistant.instance.restart();
+      throw new Error('OllamaAssistant is not initialized');
+    }
     return OllamaAssistant.instance;
   }
 

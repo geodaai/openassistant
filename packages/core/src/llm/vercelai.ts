@@ -99,6 +99,7 @@ type VercelAiConfigureProps = {
   chatEndpoint?: string;
   voiceEndpoint?: string;
   toolChoice?: ToolChoice<ToolSet>;
+  toolCallStreaming?: boolean;
 };
 
 /**
@@ -109,6 +110,7 @@ export class VercelAi extends AbstractAssistant {
   protected static voiceEndpoint = '';
   protected static instructions = '';
   protected static toolChoice: ToolChoice<ToolSet> = 'auto';
+  protected static toolCallStreaming = false;
   protected static maxSteps = 4;
   protected static additionalContext = '';
   protected static temperature = 0.0;
@@ -178,6 +180,8 @@ export class VercelAi extends AbstractAssistant {
     if (config.topP !== undefined) VercelAi.topP = config.topP;
     if (config.description) VercelAi.description = config.description;
     if (config.maxTokens) VercelAi.maxTokens = config.maxTokens;
+    if (config.toolCallStreaming !== undefined)
+      VercelAi.toolCallStreaming = config.toolCallStreaming;
   }
 
   public static override registerFunctionCalling({
@@ -277,12 +281,12 @@ export class VercelAi extends AbstractAssistant {
   /**
    * Process the text message by sending it to the LLM.
    *
-   * @param params - The parameters object containing:
-   * @param params.textMessage - The text message to send to the LLM
-   * @param params.streamMessageCallback - The callback function to handle the stream message
-   * @param params.imageMessage - Optional image message to process
-   * @param params.onStepFinish - Optional callback function to handle step completion
-   * @returns Promise containing the last message
+   * @param textMessage - The text message to send to the LLM
+   * @param streamMessageCallback - The callback function to handle the stream message. See {@link StreamMessage} for more details.
+   * @param imageMessage - Optional image message to process
+   * @param onStepFinish - Optional callback function to handle step completion
+   *
+   * @returns Promise containing the newly added message
    */
   public override async processTextMessage({
     textMessage,
