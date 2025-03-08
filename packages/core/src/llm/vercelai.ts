@@ -70,7 +70,7 @@ export function shouldTriggerNextRequest(
   const lastMessage = messages[messages.length - 1];
   return Boolean(
     // ensure there is a last message:
-    lastMessage &&
+    Boolean(lastMessage) &&
       // ensure we actually have new messages (to prevent infinite loops in case of errors):
       (messages.length > messageCount ||
         extractMaxToolInvocationStep(lastMessage.toolInvocations) !==
@@ -80,7 +80,8 @@ export function shouldTriggerNextRequest(
       // check that next step is possible:
       isAssistantMessageWithCompletedToolCalls(lastMessage) &&
       // check that assistant has not answered yet:
-      !lastMessage.content && // empty string or undefined
+      // note: analysis text + tool calls + answer text
+      // Boolean(lastMessage.content) && // empty string or undefined
       // limit the number of automatic steps:
       (extractMaxToolInvocationStep(lastMessage.toolInvocations) ?? 0) <
         maxSteps
@@ -151,6 +152,8 @@ export class VercelAi extends AbstractAssistant {
 
   protected streamMessage: StreamMessage = {
     toolCallMessages: [],
+    parts: [],
+    analysis: '',
     text: '',
   };
 
@@ -318,6 +321,8 @@ export class VercelAi extends AbstractAssistant {
       reasoning: '',
       toolCallMessages: [],
       text: '',
+      analysis: '',
+      parts: [],
     };
 
     const { customMessage } = await this.triggerRequest({

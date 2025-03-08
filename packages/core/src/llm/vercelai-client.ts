@@ -3,6 +3,7 @@ import {
   CustomFunctionOutputProps,
   StreamMessageCallback,
   ToolCallMessage,
+  TextPart,
 } from '../types';
 import { ReactNode } from 'react';
 import {
@@ -290,26 +291,24 @@ export abstract class VercelAiClient extends VercelAi {
 
       toolCallMessages.push(toolCallMessage);
 
-      // find toolCallMessage in the streamMessage.toolCallMessages array
-      const existingToolCallMessage = this.streamMessage.toolCallMessages?.find(
-        (message) => message.toolCallId === toolCall.toolCallId
-      );
-      if (existingToolCallMessage) {
-        existingToolCallMessage.args = toolCallMessage.args;
-        existingToolCallMessage.llmResult = toolCallMessage.llmResult;
-        existingToolCallMessage.additionalData = toolCallMessage.additionalData;
-        existingToolCallMessage.text = toolCallMessage.text;
-        existingToolCallMessage.isCompleted = true;
-      } else {
-        this.streamMessage.toolCallMessages?.push(toolCallMessage);
-      }
-      if (streamMessageCallback) {
-        streamMessageCallback({
-          deltaMessage: '',
-          customMessage: null,
-          message: this.streamMessage,
-        });
-      }
+      // suppose no tool call streaming
+      this.streamMessage.toolCallMessages?.push(toolCallMessage);
+    }
+
+    // add part
+    if (toolCallMessages.length > 0) {
+      this.streamMessage.parts?.push({
+        type: 'tool',
+        toolCallMessages,
+      });
+    }
+
+    if (streamMessageCallback) {
+      streamMessageCallback({
+        deltaMessage: '',
+        customMessage: null,
+        message: this.streamMessage,
+      });
     }
 
     tokensUsed.promptTokens = usage?.promptTokens || 0;
@@ -374,7 +373,7 @@ export abstract class VercelAiClient extends VercelAi {
       model: this.llm,
       messages: this.messages,
       tools,
-      toolCallStreaming: VercelAiClient.toolCallStreaming,
+      toolCallStreaming: false, // TODO: disable tool call streaming for now
       toolChoice: VercelAiClient.toolChoice,
       system: VercelAiClient.instructions,
       temperature: VercelAiClient.temperature,
@@ -394,63 +393,83 @@ export abstract class VercelAiClient extends VercelAi {
 
     for await (const chunk of fullStream) {
       if (chunk.type === 'text-delta') {
+        if (messageContent.length === 0) {
+          // add text part at the beginning of text streaming
+          this.streamMessage.parts?.push({
+            type: 'text',
+            text: '',
+          });
+        }
+        // deprecated: use parts instead
         messageContent += chunk.textDelta;
+        // deprecated: use parts instead
         this.streamMessage.text += chunk.textDelta;
+        // find last text part
+        const lastTextPart = this.streamMessage.parts?.findLast(
+          (part) => part.type === 'text'
+        );
+        if (lastTextPart) {
+          (lastTextPart as TextPart).text += chunk.textDelta;
+        }
         streamMessageCallback({
+          // deprecated: use parts instead
           deltaMessage: messageContent,
           customMessage,
           message: this.streamMessage,
         });
-      } else if (chunk.type === 'tool-call-streaming-start') {
-        const toolCallId = chunk.toolCallId;
-        const toolCallMessage = this.streamMessage.toolCallMessages?.find(
-          (message) => message.toolCallId === toolCallId
-        );
-        if (!toolCallMessage) {
-          this.streamMessage.toolCallMessages?.push({
-            toolCallId,
-            toolName: chunk.toolName,
-            args: {},
-            text: '',
-            isCompleted: false,
-          });
-        }
-      } else if (chunk.type === 'tool-call-delta') {
-        const toolCallId = chunk.toolCallId;
-        // find the toolCallMessage using the toolCallId
-        const toolCallMessage = this.streamMessage.toolCallMessages?.find(
-          (message) => message.toolCallId === toolCallId
-        );
-        if (toolCallMessage) {
-          toolCallMessage.text += chunk.argsTextDelta;
-          streamMessageCallback({
-            deltaMessage: '',
-            customMessage,
-            message: this.streamMessage,
-          });
-        }
-      } else if (chunk.type === 'tool-call') {
-        const toolCallId = chunk.toolCallId;
-        // find the toolCallMessage using the toolCallId
-        let toolCallMessage = this.streamMessage.toolCallMessages?.find(
-          (message) => message.toolCallId === toolCallId
-        );
-        if (!toolCallMessage) {
-          // create a new toolCallMessage
-          toolCallMessage = {
-            toolCallId,
-            toolName: chunk.toolName,
-            args: chunk.args,
-            isCompleted: false,
-          };
-          this.streamMessage.toolCallMessages?.push(toolCallMessage);
-        }
-        toolCallMessage.args = chunk.args;
-        streamMessageCallback({
-          deltaMessage: '',
-          customMessage,
-          message: this.streamMessage,
-        });
+        // CHANGE: disable tool call streaming for now
+        // } else if (chunk.type === 'tool-call-streaming-start') {
+        //   const toolCallId = chunk.toolCallId;
+        //   const newToolCallMessage: ToolCallMessage = {
+        //     toolCallId,
+        //     toolName: chunk.toolName,
+        //     args: { },
+        //     text: '',
+        //     isCompleted: false,
+        //   };
+        //   // deprecated: use parts instead
+        //   this.streamMessage.toolCallMessages?.push(newToolCallMessage);
+        //   // create a part
+        //   this.streamMessage.parts?.push({
+        //     type: 'tool',
+        //     toolCallMessage: newToolCallMessage,
+        //   });
+        // } else if (chunk.type === 'tool-call-delta') {
+        //   const toolCallId = chunk.toolCallId;
+        //   // find the toolCallMessage using the toolCallId
+        //   const toolCallMessage = this.streamMessage.toolCallMessages?.find(
+        //     (message) => message.toolCallId === toolCallId
+        //   );
+        //   if (toolCallMessage) {
+        //     toolCallMessage.text += chunk.argsTextDelta;
+        //     streamMessageCallback({
+        //       deltaMessage: '',
+        //       customMessage,
+        //       message: this.streamMessage,
+        //     });
+        //   }
+        // } else if (chunk.type === 'tool-call') {
+        //   const toolCallId = chunk.toolCallId;
+        //   // deprecated: find the toolCallMessage using the toolCallId
+        //   let toolCallMessage = this.streamMessage.toolCallMessages?.find(
+        //     (message) => message.toolCallId === toolCallId
+        //   );
+        //   if (!toolCallMessage) {
+        //     // create a new toolCallMessage
+        //     toolCallMessage = {
+        //       toolCallId,
+        //       toolName: chunk.toolName,
+        //       args: chunk.args,
+        //       isCompleted: false,
+        //     };
+        //     this.streamMessage.toolCallMessages?.push(toolCallMessage);
+        //   }
+        //   toolCallMessage.args = chunk.args;
+        //   streamMessageCallback({
+        //     deltaMessage: '',
+        //     customMessage,
+        //     message: this.streamMessage,
+        //   });
       } else if (chunk.type === 'reasoning') {
         this.streamMessage.reasoning += chunk.textDelta;
         streamMessageCallback({

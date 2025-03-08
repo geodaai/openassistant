@@ -276,6 +276,18 @@ export type CustomMessageCallback = (
   customFunctionCall: CustomFunctionCall
 ) => ReactNode | null;
 
+export type TextPart = {
+  type: 'text';
+  text: string;
+};
+
+export type ToolPart = {
+  type: 'tool';
+  toolCallMessages: ToolCallMessage[];
+};
+
+export type StreamMessagePart = TextPart | ToolPart;
+
 /**
  * Type of StreamMessage. The structure of the stream message is:
  *
@@ -293,18 +305,33 @@ export type CustomMessageCallback = (
  *
  * @param reasoning The reasoning of the assistant
  * @param toolCallMessages The array of tool call messages. See {@link ToolCallMessage} for more details.
- * @param text The text of the message
+ * @param analysis The analysis of the message. This is the text that happens before the tool calls.
+ * @param text The text of the message. This is the text that happens after the tool calls.
  */
 export type StreamMessage = {
   reasoning?: string;
   toolCallMessages?: ToolCallMessage[];
+  analysis?: string;
   text?: string;
+  parts?: StreamMessagePart[];
 };
+
+export const TextPartSchema = z.object({
+  type: z.literal('text'),
+  text: z.string(),
+});
+
+export const ToolPartSchema = z.object({
+  type: z.literal('tool'),
+  toolCallMessages: z.array(ToolCallMessageSchema),
+});
 
 export const StreamMessageSchema = z.object({
   reasoning: z.string().optional(),
   toolCallMessages: z.array(ToolCallMessageSchema).optional(),
+  analysis: z.string().optional(),
   text: z.string().optional(),
+  parts: z.array(z.union([TextPartSchema, ToolPartSchema])).optional(),
 });
 
 /**
