@@ -1,14 +1,11 @@
 import {
-  GoogleGenerativeAIProvider,
-  GoogleGenerativeAIProviderSettings,
-  createGoogleGenerativeAI,
-} from '@ai-sdk/google';
-
-import {
   VercelAiClient,
   VercelAiClientConfigureProps,
 } from './vercelai-client';
 import { testConnection } from '../utils/connection-test';
+import { LanguageModelV1 } from 'ai';
+
+type GoogleGenerativeAIProvider = (model: string) => LanguageModelV1;
 
 /**
  * Google Gemini Assistant LLM for Client only
@@ -33,25 +30,40 @@ export class GoogleAIAssistant extends VercelAiClient {
     apiKey: string,
     model: string
   ): Promise<boolean> {
-    const llm = createGoogleGenerativeAI({ apiKey });
-    return await testConnection(llm(model));
+    try {
+      const { createGoogleGenerativeAI } = await import('@ai-sdk/google');
+      const llm = createGoogleGenerativeAI({ apiKey });
+      return await testConnection(llm(model));
+    } catch (error) {
+      console.error('Failed to load @ai-sdk/google:', error);
+      return false;
+    }
   }
 
   private constructor() {
     super();
 
     if (GoogleAIAssistant.apiKey) {
-      // only apiKey is provided, so we can create the openai LLM instance in the client
-      const options: GoogleGenerativeAIProviderSettings = {
+      this.initializeGoogle();
+    }
+  }
+
+  private async initializeGoogle() {
+    try {
+      const { createGoogleGenerativeAI } = await import('@ai-sdk/google');
+      // only apiKey is provided, so we can create the LLM instance in the client
+      const options = {
         apiKey: GoogleAIAssistant.apiKey,
         baseURL: GoogleAIAssistant.baseURL,
       };
 
-      // Initialize openai instance
+      // Initialize provider instance
       this.providerInstance = createGoogleGenerativeAI(options);
 
       // create a language model from the provider instance
       this.llm = this.providerInstance(GoogleAIAssistant.model);
+    } catch (error) {
+      throw new Error(`Failed to initialize Google. ${error}`);
     }
   }
 

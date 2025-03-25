@@ -30,8 +30,7 @@ export function App() {
   const functions = {
     weather: tool({
       description: 'Get the weather in a city from a weather station',
-      parameters: z
-        .object({ cityName: z.string(), reason: z.string() }),
+      parameters: z.object({ cityName: z.string(), reason: z.string() }),
       execute: async ({ cityName, reason }, options) => {
         const getStation = options.context?.getStation;
         const station = getStation ? await getStation(cityName) : null;
@@ -40,7 +39,10 @@ export function App() {
           ? await getTemperature(cityName)
           : null;
         return {
-          llmResult: `The temperature in ${cityName} is ${temperature} degrees from weather station ${station}.`,
+          llmResult: {
+            success: true,
+            message: `The temperature in ${cityName} is ${temperature} degrees from weather station ${station}.`,
+          },
           output: {
             cityName,
             temperature,

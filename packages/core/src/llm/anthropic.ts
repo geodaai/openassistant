@@ -1,13 +1,11 @@
 import {
-  createAnthropic,
-  AnthropicProvider,
-  AnthropicProviderSettings,
-} from '@ai-sdk/anthropic';
-import {
   VercelAiClient,
   VercelAiClientConfigureProps,
 } from './vercelai-client';
 import { testConnection } from '../utils/connection-test';
+import { LanguageModelV1 } from 'ai';
+
+type AnthropicProvider = (model: string) => LanguageModelV1;
 
 /**
  * Anthropic Assistant LLM for Client only
@@ -29,7 +27,6 @@ export class AnthropicAssistant extends VercelAiClient {
   }
 
   public static override configure(config: VercelAiClientConfigureProps) {
-    // call parent configure
     super.configure(config);
   }
 
@@ -37,29 +34,45 @@ export class AnthropicAssistant extends VercelAiClient {
     apiKey: string,
     model: string
   ): Promise<boolean> {
-    const anthropic = createAnthropic({
-      apiKey,
-      headers: AnthropicAssistant.headers,
-    });
-    return await testConnection(anthropic(model));
+    try {
+      // @ts-expect-error - @ai-sdk/anthropic will be installed by the user
+      const { createAnthropic } = await import('@ai-sdk/anthropic');
+      const anthropic = createAnthropic({
+        apiKey,
+        headers: AnthropicAssistant.headers,
+      });
+      return await testConnection(anthropic(model));
+    } catch (error) {
+      console.error('Failed to load @ai-sdk/anthropic:', error);
+      return false;
+    }
   }
 
   private constructor() {
     super();
 
     if (AnthropicAssistant.apiKey) {
-      // only apiKey is provided, so we can create the Anthropic LLM instance in the client
-      const options: AnthropicProviderSettings = {
+      this.initializeAnthropic();
+    }
+  }
+
+  private async initializeAnthropic() {
+    try {
+      // @ts-expect-error - @ai-sdk/anthropic will be installed by the user
+      const { createAnthropic } = await import('@ai-sdk/anthropic');
+      const options = {
         apiKey: AnthropicAssistant.apiKey,
         baseURL: AnthropicAssistant.baseURL,
         headers: { 'anthropic-dangerous-direct-browser-access': 'true' },
       };
 
-      // Initialize Anthropic instance
       this.providerInstance = createAnthropic(options);
-
-      // create a language model from the provider instance
+      if (!this.providerInstance) {
+        throw new Error('Failed to create Anthropic provider');
+      }
       this.llm = this.providerInstance(AnthropicAssistant.model);
+    } catch (error) {
+      throw new Error(`Failed to initialize Anthropic. ${error}`);
     }
   }
 

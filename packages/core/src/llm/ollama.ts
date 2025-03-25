@@ -1,13 +1,16 @@
-import { createOllama, OllamaProvider } from 'ollama-ai-provider';
 import {
   VercelAiClient,
   VercelAiClientConfigureProps,
 } from './vercelai-client';
 import { testConnection } from '../utils/connection-test';
+import { LanguageModelV1 } from 'ai';
+
+type OllamaProvider = (model: string) => LanguageModelV1;
 
 type ConfigureProps = {
   baseURL?: string;
 } & VercelAiClientConfigureProps;
+
 /**
  * Ollama Assistant LLM for Client only
  */
@@ -32,10 +35,16 @@ export class OllamaAssistant extends VercelAiClient {
     apiKey: string,
     model: string
   ): Promise<boolean> {
-    const llm = createOllama({
-      baseURL: OllamaAssistant.baseURL,
-    });
-    return await testConnection(llm(model));
+    try {
+      const { createOllama } = await import('ollama-ai-provider');
+      const llm = createOllama({
+        baseURL: OllamaAssistant.baseURL,
+      });
+      return await testConnection(llm(model));
+    } catch (error) {
+      console.error('Failed to load ollama-ai-provider:', error);
+      return false;
+    }
   }
 
   public static override configure(config: ConfigureProps) {
@@ -51,7 +60,14 @@ export class OllamaAssistant extends VercelAiClient {
     super();
 
     if (OllamaAssistant.model) {
-      // only apiKey is provided, so we can create the openai LLM instance in the client
+      this.initializeOllama();
+    }
+  }
+
+  private async initializeOllama() {
+    try {
+      const { createOllama } = await import('ollama-ai-provider');
+      // only apiKey is provided, so we can create the LLM instance in the client
       const options = {
         baseURL: OllamaAssistant.baseURL,
       };
@@ -61,6 +77,8 @@ export class OllamaAssistant extends VercelAiClient {
 
       // create a language model from the provider instance, e.g. phi3
       this.llm = this.providerInstance(OllamaAssistant.model);
+    } catch (error) {
+      throw new Error(`Failed to initialize Ollama. ${error}`);
     }
   }
 

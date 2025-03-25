@@ -1,16 +1,18 @@
-import { XaiProvider, XaiProviderSettings, createXai } from '@ai-sdk/xai';
-
 import {
   VercelAiClient,
   VercelAiClientConfigureProps,
 } from './vercelai-client';
 import { testConnection } from '../utils/connection-test';
+import { LanguageModelV1 } from 'ai';
+
+type XaiProvider = (model: string) => LanguageModelV1;
 
 /**
  * XAi Grok Assistant LLM for Client only
  */
 export class XaiAssistant extends VercelAiClient {
   protected static baseURL = 'https://api.grok.com/v1';
+
   protected providerInstance: XaiProvider | null = null;
 
   protected static instance: XaiAssistant | null = null;
@@ -28,16 +30,29 @@ export class XaiAssistant extends VercelAiClient {
     apiKey: string,
     model: string
   ): Promise<boolean> {
-    const llm = createXai({ apiKey });
-    return await testConnection(llm(model));
+    try {
+      const { createXai } = await import('@ai-sdk/xai');
+      const llm = createXai({ apiKey });
+      return await testConnection(llm(model));
+    } catch (error) {
+      console.error('Failed to load @ai-sdk/xai:', error);
+      return false;
+    }
   }
 
   private constructor() {
     super();
 
     if (XaiAssistant.apiKey) {
+      this.initializeXai();
+    }
+  }
+
+  private async initializeXai() {
+    try {
+      const { createXai } = await import('@ai-sdk/xai');
       // only apiKey is provided, so we can create the openai LLM instance in the client
-      const options: XaiProviderSettings = {
+      const options = {
         apiKey: XaiAssistant.apiKey,
         baseURL: XaiAssistant.baseURL,
       };
@@ -47,6 +62,8 @@ export class XaiAssistant extends VercelAiClient {
 
       // create a language model from the provider instance
       this.llm = this.providerInstance(XaiAssistant.model);
+    } catch (error) {
+      throw new Error(`Failed to initialize Xai. ${error}`);
     }
   }
 

@@ -1,13 +1,11 @@
 import {
-  createDeepSeek,
-  DeepSeekProviderSettings,
-  DeepSeekProvider,
-} from '@ai-sdk/deepseek';
-import {
   VercelAiClient,
   VercelAiClientConfigureProps,
 } from './vercelai-client';
 import { testConnection } from '../utils/connection-test';
+import { LanguageModelV1 } from 'ai';
+
+type DeepSeekProvider = (model: string) => LanguageModelV1;
 
 /**
  * DeepSeek Assistant LLM for Client only
@@ -32,25 +30,37 @@ export class DeepSeekAssistant extends VercelAiClient {
     apiKey: string,
     model: string
   ): Promise<boolean> {
-    const ds = createDeepSeek({ apiKey });
-    return await testConnection(ds(model));
+    try {
+      const { createDeepSeek } = await import('@ai-sdk/deepseek');
+      const ds = createDeepSeek({ apiKey });
+      return await testConnection(ds(model));
+    } catch (error) {
+      console.error('Failed to load @ai-sdk/deepseek:', error);
+      return false;
+    }
   }
 
   private constructor() {
     super();
 
     if (DeepSeekAssistant.apiKey) {
-      // only apiKey is provided, so we can create the openai LLM instance in the client
-      const options: DeepSeekProviderSettings = {
+      this.initializeDeepSeek();
+    }
+  }
+
+  private async initializeDeepSeek() {
+    try {
+      const { createDeepSeek } = await import('@ai-sdk/deepseek');
+      const options = {
         apiKey: DeepSeekAssistant.apiKey,
         baseURL: DeepSeekAssistant.baseURL,
       };
 
-      // Initialize openai instance
       this.providerInstance = createDeepSeek(options);
 
-      // create a language model from the provider instance
       this.llm = this.providerInstance(DeepSeekAssistant.model);
+    } catch (error) {
+      throw new Error(`Failed to initialize DeepSeek. ${error}`);
     }
   }
 
