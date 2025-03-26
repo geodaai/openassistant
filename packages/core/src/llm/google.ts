@@ -1,14 +1,17 @@
 import {
-  GoogleGenerativeAIProvider,
-  GoogleGenerativeAIProviderSettings,
-  createGoogleGenerativeAI,
-} from '@ai-sdk/google';
-
-import {
   VercelAiClient,
   VercelAiClientConfigureProps,
 } from './vercelai-client';
 import { testConnection } from '../utils/connection-test';
+import { LanguageModelV1 } from 'ai';
+
+type GoogleGenerativeAIProvider = (model: string) => LanguageModelV1;
+interface Module {
+  createGoogleGenerativeAI: (options: {
+    apiKey: string;
+    baseURL: string;
+  }) => GoogleGenerativeAIProvider;
+}
 
 /**
  * Google Gemini Assistant LLM for Client only
@@ -29,41 +32,61 @@ export class GoogleAIAssistant extends VercelAiClient {
     super.configure(config);
   }
 
+  private static async loadModule(): Promise<Module> {
+    try {
+      return await import('@ai-sdk/google');
+    } catch (error) {
+      throw new Error(`Failed to load @ai-sdk/google: ${error}`);
+    }
+  }
+
   public static async testConnection(
     apiKey: string,
     model: string
   ): Promise<boolean> {
-    const llm = createGoogleGenerativeAI({ apiKey });
+    const module = await this.loadModule();
+    const llm = module.createGoogleGenerativeAI({
+      apiKey,
+      baseURL: GoogleAIAssistant.baseURL,
+    });
     return await testConnection(llm(model));
   }
 
-  private constructor() {
+  private constructor(module: Module) {
     super();
+    this.initializeProvider(module);
+  }
 
-    if (GoogleAIAssistant.apiKey) {
-      // only apiKey is provided, so we can create the openai LLM instance in the client
-      const options: GoogleGenerativeAIProviderSettings = {
-        apiKey: GoogleAIAssistant.apiKey,
-        baseURL: GoogleAIAssistant.baseURL,
-      };
-
-      // Initialize openai instance
-      this.providerInstance = createGoogleGenerativeAI(options);
-
-      // create a language model from the provider instance
-      this.llm = this.providerInstance(GoogleAIAssistant.model);
+  private initializeProvider(module: Module): void {
+    if (!GoogleAIAssistant.apiKey) {
+      return;
     }
+
+    const options = {
+      apiKey: GoogleAIAssistant.apiKey,
+      baseURL: GoogleAIAssistant.baseURL,
+    };
+
+    this.providerInstance = module.createGoogleGenerativeAI(options);
+
+    if (!this.providerInstance) {
+      throw new Error('Failed to initialize Google');
+    }
+
+    this.llm = this.providerInstance(GoogleAIAssistant.model);
   }
 
   public static async getInstance(): Promise<GoogleAIAssistant> {
-    if (GoogleAIAssistant.instance === null) {
-      GoogleAIAssistant.instance = new GoogleAIAssistant();
+    if (!GoogleAIAssistant.instance) {
+      const module = await this.loadModule();
+      GoogleAIAssistant.instance = new GoogleAIAssistant(module);
     }
-    if (GoogleAIAssistant.instance.llm === null) {
-      // reset the instance so getInstance doesn't return the same instance
+
+    if (!GoogleAIAssistant.instance.llm) {
       GoogleAIAssistant.instance.restart();
       throw new Error('GoogleAIAssistant is not initialized');
     }
+
     return GoogleAIAssistant.instance;
   }
 

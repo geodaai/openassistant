@@ -3,3 +3,4 @@ tests/
 *.test.*
 .eslintrc
 tsconfig.json 
+*.meta.json

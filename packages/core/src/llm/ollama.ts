@@ -1,13 +1,18 @@
-import { createOllama, OllamaProvider } from 'ollama-ai-provider';
 import {
   VercelAiClient,
   VercelAiClientConfigureProps,
 } from './vercelai-client';
 import { testConnection } from '../utils/connection-test';
+import { LanguageModelV1 } from 'ai';
 
 type ConfigureProps = {
   baseURL?: string;
 } & VercelAiClientConfigureProps;
+
+type OllamaProvider = (model: string) => LanguageModelV1;
+interface Module {
+  createOllama: (options: { baseURL: string }) => OllamaProvider;
+}
 /**
  * Ollama Assistant LLM for Client only
  */
@@ -28,11 +33,20 @@ export class OllamaAssistant extends VercelAiClient {
     return OllamaAssistant.baseURL;
   }
 
+  private static async loadModule(): Promise<Module> {
+    try {
+      return await import('ollama-ai-provider');
+    } catch (error) {
+      throw new Error(`Failed to load ollama-ai-provider: ${error}`);
+    }
+  }
+
   public static async testConnection(
     apiKey: string,
     model: string
   ): Promise<boolean> {
-    const llm = createOllama({
+    const module = await this.loadModule();
+    const llm = module.createOllama({
       baseURL: OllamaAssistant.baseURL,
     });
     return await testConnection(llm(model));
@@ -47,17 +61,18 @@ export class OllamaAssistant extends VercelAiClient {
     super.configure(rest);
   }
 
-  private constructor() {
+  private constructor(module: Module) {
     super();
+    this.initializeProvider(module);
+  }
 
-    if (OllamaAssistant.model) {
-      // only apiKey is provided, so we can create the openai LLM instance in the client
+  private initializeProvider(module: Module) {
+    if (!OllamaAssistant.model) {
       const options = {
         baseURL: OllamaAssistant.baseURL,
       };
 
-      // Initialize openai instance
-      this.providerInstance = createOllama(options);
+      this.providerInstance = module.createOllama(options);
 
       // create a language model from the provider instance, e.g. phi3
       this.llm = this.providerInstance(OllamaAssistant.model);
@@ -65,11 +80,12 @@ export class OllamaAssistant extends VercelAiClient {
   }
 
   public static async getInstance(): Promise<OllamaAssistant> {
-    if (OllamaAssistant.instance === null) {
-      OllamaAssistant.instance = new OllamaAssistant();
+    if (!OllamaAssistant.instance) {
+      const module = await this.loadModule();
+      OllamaAssistant.instance = new OllamaAssistant(module);
     }
-    if (OllamaAssistant.instance.llm === null) {
-      // reset the instance so getInstance doesn't return the same instance
+
+    if (!OllamaAssistant.instance.llm) {
       OllamaAssistant.instance.restart();
       throw new Error('OllamaAssistant is not initialized');
     }

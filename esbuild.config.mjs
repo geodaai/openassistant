@@ -18,10 +18,10 @@ export const createBaseConfig = (options = {}) => {
     minify: !isStart,
     sourcemap: isStart,
     metafile: true,
-    target: ['chrome58', 'firefox57', 'safari11'],
+    target: ['esnext'],
     format: 'esm',
-    platform: 'browser',
-    mainFields: ['module', 'main'], // Prioritize ESM modules
+    platform: 'neutral',
+    mainFields: ['module', 'import', 'main'], // Prioritize ESM modules
     conditions: ['import', 'module'], // Ensure ESM resolution
     define: {
       'process.env.NODE_ENV': isStart ? '"development"' : '"production"',
@@ -70,6 +70,7 @@ export const buildFormat = async (config, format, outfile) => {
   const result = await esbuild.build({
     ...config,
     format,
+    ...(format === 'cjs' ? { platform: 'node', target: ['es2017'] } : {}),
     define: {
       ...config.define,
       // Ensure consistent module loading behavior

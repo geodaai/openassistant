@@ -1,10 +1,14 @@
-import { XaiProvider, XaiProviderSettings, createXai } from '@ai-sdk/xai';
-
 import {
   VercelAiClient,
   VercelAiClientConfigureProps,
 } from './vercelai-client';
 import { testConnection } from '../utils/connection-test';
+import { LanguageModelV1 } from 'ai';
+
+type XaiProvider = (model: string) => LanguageModelV1;
+interface Module {
+  createXai: (options: { apiKey: string; baseURL: string }) => XaiProvider;
+}
 
 /**
  * XAi Grok Assistant LLM for Client only
@@ -24,38 +28,54 @@ export class XaiAssistant extends VercelAiClient {
     super.configure(config);
   }
 
+  private static async loadModule(): Promise<Module> {
+    try {
+      return await import('@ai-sdk/xai');
+    } catch (error) {
+      throw new Error(`Failed to load @ai-sdk/xai: ${error}`);
+    }
+  }
+
   public static async testConnection(
     apiKey: string,
     model: string
   ): Promise<boolean> {
-    const llm = createXai({ apiKey });
+    const module = await this.loadModule();
+    const llm = module.createXai({ apiKey, baseURL: XaiAssistant.baseURL });
     return await testConnection(llm(model));
   }
 
-  private constructor() {
+  private constructor(module: Module) {
     super();
+    this.initializeProvider(module);
+  }
 
-    if (XaiAssistant.apiKey) {
-      // only apiKey is provided, so we can create the openai LLM instance in the client
-      const options: XaiProviderSettings = {
+  private initializeProvider(module: Module) {
+    if (!XaiAssistant.apiKey) {
+      return;
+    }
+
+    const options = {
         apiKey: XaiAssistant.apiKey,
         baseURL: XaiAssistant.baseURL,
       };
 
-      // Initialize openai instance
-      this.providerInstance = createXai(options);
+    this.providerInstance = module.createXai(options);
 
-      // create a language model from the provider instance
-      this.llm = this.providerInstance(XaiAssistant.model);
+    if (!this.providerInstance) {
+      throw new Error('Failed to initialize Xai');
     }
+
+    this.llm = this.providerInstance(XaiAssistant.model);
   }
 
   public static async getInstance(): Promise<XaiAssistant> {
-    if (XaiAssistant.instance === null) {
-      XaiAssistant.instance = new XaiAssistant();
+    if (!XaiAssistant.instance) {
+      const module = await this.loadModule();
+      XaiAssistant.instance = new XaiAssistant(module);
     }
-    if (XaiAssistant.instance.llm === null) {
-      // reset the instance so getInstance doesn't return the same instance
+
+    if (!XaiAssistant.instance.llm) {
       XaiAssistant.instance.restart();
       throw new Error('XaiAssistant is not initialized');
     }
@@ -64,7 +84,6 @@ export class XaiAssistant extends VercelAiClient {
 
   public override restart() {
     super.restart();
-    // need to reset the instance so getInstance doesn't return the same instance
     this.providerInstance = null;
     XaiAssistant.instance = null;
   }

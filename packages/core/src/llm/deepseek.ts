@@ -1,13 +1,17 @@
 import {
-  createDeepSeek,
-  DeepSeekProviderSettings,
-  DeepSeekProvider,
-} from '@ai-sdk/deepseek';
-import {
   VercelAiClient,
   VercelAiClientConfigureProps,
 } from './vercelai-client';
 import { testConnection } from '../utils/connection-test';
+import { LanguageModelV1 } from 'ai';
+
+type DeepSeekProvider = (model: string) => LanguageModelV1;
+interface Module {
+  createDeepSeek: (options: {
+    apiKey: string;
+    baseURL: string;
+  }) => DeepSeekProvider;
+}
 
 /**
  * DeepSeek Assistant LLM for Client only
@@ -28,38 +32,57 @@ export class DeepSeekAssistant extends VercelAiClient {
     super.configure(config);
   }
 
+  private static async loadModule(): Promise<Module> {
+    try {
+      return await import('@ai-sdk/deepseek');
+    } catch (error) {
+      throw new Error(`Failed to load @ai-sdk/deepseek: ${error}`);
+    }
+  }
+
   public static async testConnection(
     apiKey: string,
     model: string
   ): Promise<boolean> {
-    const ds = createDeepSeek({ apiKey });
+    const module = await this.loadModule();
+    const ds = module.createDeepSeek({
+      apiKey,
+      baseURL: DeepSeekAssistant.baseURL,
+    });
     return await testConnection(ds(model));
   }
 
-  private constructor() {
+  private constructor(module: Module) {
     super();
+    this.initializeProvider(module);
+  }
 
-    if (DeepSeekAssistant.apiKey) {
-      // only apiKey is provided, so we can create the openai LLM instance in the client
-      const options: DeepSeekProviderSettings = {
-        apiKey: DeepSeekAssistant.apiKey,
-        baseURL: DeepSeekAssistant.baseURL,
-      };
-
-      // Initialize openai instance
-      this.providerInstance = createDeepSeek(options);
-
-      // create a language model from the provider instance
-      this.llm = this.providerInstance(DeepSeekAssistant.model);
+  private initializeProvider(module: Module) {
+    if (!DeepSeekAssistant.apiKey) {
+      return;
     }
+
+    const options = {
+      apiKey: DeepSeekAssistant.apiKey,
+      baseURL: DeepSeekAssistant.baseURL,
+    };
+
+    this.providerInstance = module.createDeepSeek(options);
+
+    if (!this.providerInstance) {
+      throw new Error('Failed to initialize DeepSeek');
+    }
+
+    this.llm = this.providerInstance(DeepSeekAssistant.model);
   }
 
   public static async getInstance(): Promise<DeepSeekAssistant> {
-    if (DeepSeekAssistant.instance === null) {
-      DeepSeekAssistant.instance = new DeepSeekAssistant();
+    if (!DeepSeekAssistant.instance) {
+      const module = await this.loadModule();
+      DeepSeekAssistant.instance = new DeepSeekAssistant(module);
     }
-    if (DeepSeekAssistant.instance.llm === null) {
-      // reset the instance so getInstance doesn't return the same instance
+
+    if (!DeepSeekAssistant.instance.llm) {
       DeepSeekAssistant.instance.restart();
       throw new Error('DeepSeekAssistant is not initialized');
     }
