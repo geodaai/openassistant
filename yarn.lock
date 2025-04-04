@@ -7351,14 +7351,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@openassistant/duckdb@npm:0.2.0, @openassistant/duckdb@workspace:packages/duckdb":
+"@openassistant/duckdb@npm:0.2.0, @openassistant/duckdb@workspace:*, @openassistant/duckdb@workspace:packages/duckdb":
   version: 0.0.0-use.local
   resolution: "@openassistant/duckdb@workspace:packages/duckdb"
   dependencies:
     "@duckdb/duckdb-wasm": "npm:^1.29.0"
     "@nextui-org/react": "npm:^2.6.8"
     "@openassistant/core": "workspace:*"
-    apache-arrow: "npm:^13.0.0"
+    apache-arrow: "npm:^17.0.0"
     framer-motion: "npm:^11.15.0"
     tailwindcss: "npm:^3.4.17"
   peerDependencies:
@@ -7509,7 +7509,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openassistant/ui@npm:0.2.0, @openassistant/ui@workspace:packages/ui":
+"@openassistant/ui@npm:0.2.0, @openassistant/ui@workspace:*, @openassistant/ui@workspace:packages/ui":
   version: 0.0.0-use.local
   resolution: "@openassistant/ui@workspace:packages/ui"
   dependencies:
@@ -16499,6 +16499,21 @@ __metadata:
   checksum: 8abddebcaab0d542afcb62971526beb5ea09f977b92cb06723e6046bde7d2bc9513c8508b937f62d7a46b28827b26fda4c31ed85fe2902e01685741f823a50eb
   languageName: node
   linkType: hard
+
+"duckdb-esbuild-example@workspace:examples/duckdb_esbuild":
+  version: 0.0.0-use.local
+  resolution: "duckdb-esbuild-example@workspace:examples/duckdb_esbuild"
+  dependencies:
+    "@openassistant/core": "workspace:*"
+    "@openassistant/duckdb": "workspace:*"
+    "@openassistant/ui": "workspace:*"
+    esbuild: "npm:^0.20.0"
+    open: "npm:^10.1.0"
+    react: "npm:^18.2.0"
+    react-dom: "npm:^18.2.0"
+    typescript: "npm:^5.0.0"
+  languageName: unknown
+  linkType: soft
 
 "dunder-proto@npm:^1.0.0, dunder-proto@npm:^1.0.1":
   version: 1.0.1

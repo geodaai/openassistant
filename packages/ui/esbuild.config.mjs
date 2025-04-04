@@ -17,6 +17,8 @@ const baseConfig = createBaseConfig({
     'html2canvas',
     '@openassistant/core',
     '@nextui-org',
+    'react-markdown',
+    'remark-gfm',
   ],
 });
 

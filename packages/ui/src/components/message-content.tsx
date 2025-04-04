@@ -1,12 +1,10 @@
 import { Spinner, Link } from '@nextui-org/react';
-import remarkGfm from 'remark-gfm';
-import Markdown from 'react-markdown';
 import {
   MessagePayload,
   StreamMessage,
   ToolCallComponents,
 } from '@openassistant/core';
-import { ToolCallComponent } from './message-toolcall';
+import { PartComponent } from './message-toolcall';
 
 const FailedMessage = ({ githubIssueLink }: { githubIssueLink?: string }) => (
   <p className="mb-2" data-testid="failed-message">
@@ -25,40 +23,6 @@ const ScreenshotImage = ({ customMessage }: { customMessage: string }) => (
     alt="screenshot"
   />
 );
-
-const MarkdownContent = ({
-  text,
-  showMarkdown = true,
-}: {
-  text?: string;
-  showMarkdown?: boolean;
-}) => {
-  if (!showMarkdown) {
-    return (
-      <div className="max-w-full overflow-hidden whitespace-pre-wrap break-words">
-        {text}
-      </div>
-    );
-  }
-
-  return (
-    <div className="markdown-body max-w-full overflow-hidden whitespace-pre-wrap break-words">
-      <Markdown
-        remarkPlugins={[remarkGfm]}
-        components={{
-          pre: ({ children }) => (
-            <pre className="max-w-full overflow-x-auto">{children}</pre>
-          ),
-          code: ({ children }) => (
-            <code className="max-w-full overflow-x-auto">{children}</code>
-          ),
-        }}
-      >
-        {text}
-      </Markdown>
-    </div>
-  );
-};
 
 type MessageContentProps = {
   customMessage?: MessagePayload;
@@ -93,16 +57,17 @@ export function MessageContent({
         {hasFailed && <FailedMessage githubIssueLink={githubIssueLink} />}
 
         {/* show tool call messages */}
-        {message?.toolCallMessages?.map((toolCallMessage, i) => (
-          <ToolCallComponent
-            key={`${toolCallMessage.toolCallId}-${i}`}
-            toolCallMessage={toolCallMessage}
+        {message?.parts?.map((part, i) => (
+          <PartComponent
+            key={`${part.type}-${i}`}
+            part={part}
             components={components}
+            useMarkdown={useMarkdown}
           />
         ))}
 
         {/* show markdown message */}
-        {useMarkdown ? <MarkdownContent text={message?.text} /> : message?.text}
+        {useMarkdown && !message?.parts && message?.text}
       </div>
 
       {/* show loading spinner */}

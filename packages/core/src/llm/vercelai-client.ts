@@ -251,7 +251,37 @@ export abstract class VercelAiClient extends VercelAi {
     // since we are handling the function calls, we need to save the tool results for onStepFinish callback
     const toolResults: StepResult<ToolSet>['toolResults'] = [];
 
+    // before handling tool calls, create tool call messages
     for (const toolCall of toolCalls) {
+      const toolCallMessage = {
+        toolCallId: toolCall.toolCallId,
+        toolName: toolCall.toolName,
+        args: toolCall.args,
+        text: '',
+        isCompleted: false,
+      };
+      toolCallMessages.push(toolCallMessage);
+    }
+
+    // add part
+    if (toolCallMessages.length > 0) {
+      this.streamMessage.parts?.push({
+        type: 'tool',
+        toolCallMessages,
+      });
+    }
+
+    if (streamMessageCallback) {
+      streamMessageCallback({
+        deltaMessage: '',
+        customMessage: null,
+        message: this.streamMessage,
+      });
+    }
+
+    // handle tool calls
+    for (let i = 0; i < toolCalls.length; i++) {
+      const toolCall = toolCalls[i];
       const output: CustomFunctionOutputProps<unknown, unknown> =
         await proceedToolCall({
           toolCall,
@@ -289,18 +319,19 @@ export abstract class VercelAiClient extends VercelAi {
         isCompleted: true,
       };
 
-      toolCallMessages.push(toolCallMessage);
+      // update tool call message
+      toolCallMessages[i] = toolCallMessage;
 
       // suppose no tool call streaming
       this.streamMessage.toolCallMessages?.push(toolCallMessage);
     }
 
-    // add part
-    if (toolCallMessages.length > 0) {
-      this.streamMessage.parts?.push({
+    // update last part
+    if (toolCallMessages.length > 0 && this.streamMessage.parts) {
+      this.streamMessage.parts[this.streamMessage.parts.length - 1] = {
         type: 'tool',
         toolCallMessages,
-      });
+      };
     }
 
     if (streamMessageCallback) {

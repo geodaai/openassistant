@@ -1,0 +1,23 @@
+{
+  "name": "duckdb-esbuild-example",
+  "version": "1.0.0",
+  "description": "Example project using @openassistant/duckdb with esbuild",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "node esbuild.config.mjs",
+    "dev": "node esbuild.config.mjs --start"
+  },
+  "dependencies": {
+    "@openassistant/core": "workspace:*",
+    "@openassistant/duckdb": "workspace:*",
+    "@openassistant/ui": "workspace:*",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.20.0",
+    "open": "^10.1.0",
+    "typescript": "^5.0.0"
+  }
+}

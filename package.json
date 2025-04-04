@@ -1,6 +1,6 @@
 {
   "name": "openassistant-monorepo",
-  "version": "0.1.5",
+  "version": "0.0.0",
   "private": true,
   "workspaces": [
     "packages/*",
@@ -15,12 +15,11 @@
     "test": "node --experimental-vm-modules node_modules/.bin/jest --coverage",
     "lint": "eslint packages/*/src --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint packages/*/src --ext .js,.jsx,.ts,.tsx --fix",
-    "update-version": "lerna version --force-publish",
     "website:start": "cd website && yarn start",
-    "version-prerelease": "lerna version prerelease --sync-workspace-lock --force-publish",
-    "version-patch": "lerna version patch --no-push --sync-workspace-lock --force-publish",
-    "version-minor": "lerna version minor --no-push --sync-workspace-lock --force-publish",
-    "version-major": "lerna version major --no-push --sync-workspace-lock --force-publish",
+    "version-prerelease": "lerna version prerelease --no-push --sync-workspace-lock --no-git-tag-version --force-publish && ts-node scripts/update-version.mjs && yarn install",
+    "version-patch": "lerna version patch --no-push --sync-workspace-lock --no-git-tag-version --force-publish && ts-node scripts/update-version.mjs && yarn install",
+    "version-minor": "lerna version minor --no-push --sync-workspace-lock --no-git-tag-version --force-publish && ts-node scripts/update-version.mjs && yarn install",
+    "version-major": "lerna version major --no-push --sync-workspace-lock --no-git-tag-version --force-publish && ts-node scripts/update-version.mjs && yarn install",
     "publish-dry-run": "turbo run publish && lerna publish from-package --yes --dry-run",
     "publish-preview": "turbo run publish && lerna publish from-package --yes --dist-tag preview",
     "publish-release": "turbo run publish && lerna publish from-package --yes"

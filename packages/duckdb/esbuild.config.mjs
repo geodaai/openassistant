@@ -2,12 +2,14 @@
 import {
   createBaseConfig,
   createDevServer,
+  createWatchMode,
   buildFormat,
 } from '../../esbuild.config.mjs';
 import tailwindPlugin from 'esbuild-plugin-tailwindcss';
 import { dtsPlugin } from 'esbuild-plugin-d.ts';
 
 const baseConfig = createBaseConfig({
+  minify: false,
   entryPoints: ['src/index.ts'],
   loader: {
     '.js': 'jsx',
@@ -35,6 +37,13 @@ const baseConfig = createBaseConfig({
     'tailwindcss',
   ],
 });
+
+if (process.argv.includes('--watch')) {
+  createWatchMode(baseConfig).catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+}
 
 const isStart = process.argv.includes('--start');
 

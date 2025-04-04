@@ -303,10 +303,11 @@ export type StreamMessagePart = TextPart | ToolPart;
  * ------------------
  * ```
  *
- * @param reasoning The reasoning of the assistant
- * @param toolCallMessages The array of tool call messages. See {@link ToolCallMessage} for more details.
- * @param analysis The analysis of the message. This is the text that happens before the tool calls.
- * @param text The text of the message. This is the text that happens after the tool calls.
+ * @param reasoning (deprecated. use parts instead) The reasoning of the assistant
+ * @param toolCallMessages (deprecated. use parts instead) The array of tool call messages. See {@link ToolCallMessage} for more details.
+ * @param analysis (deprecated. use parts instead) The analysis of the message. This is the text that happens before the tool calls.
+ * @param text (deprecated. use parts instead) The text of the message. This is the text that happens after the tool calls.
+ * @param parts The parts of the message. This is the text that happens after the tool calls.
  */
 export type StreamMessage = {
   reasoning?: string;
@@ -326,6 +327,15 @@ export const ToolPartSchema = z.object({
   toolCallMessages: z.array(ToolCallMessageSchema),
 });
 
+/**
+ * Type of StreamMessageSchema
+ *
+ * @param reasoning (deprecated. use parts instead) The reasoning of the assistant
+ * @param toolCallMessages (deprecated. use parts instead) The array of tool call messages. See {@link ToolCallMessage} for more details.
+ * @param analysis (deprecated. use parts instead) The analysis of the message. This is the text that happens before the tool calls.
+ * @param text (deprecated. use parts instead) The text of the message. This is the text that happens after the tool calls.
+ * @param parts The parts of the message. This is the text that happens after the tool calls.
+ */
 export const StreamMessageSchema = z.object({
   reasoning: z.string().optional(),
   toolCallMessages: z.array(ToolCallMessageSchema).optional(),

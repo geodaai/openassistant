@@ -19,6 +19,15 @@ const JSDELIVR_BUNDLES = duckdb.getJsDelivrBundles();
 export let db: duckdb.AsyncDuckDB | null = null;
 let initializationPromise: Promise<void> | null = null;
 
+export async function getDuckDB(externalDB?: duckdb.AsyncDuckDB) {
+  if (externalDB) {
+    db = externalDB;
+    return db;
+  }
+  await initDuckDB(externalDB);
+  return db;
+}
+
 export async function initDuckDB(externalDB?: duckdb.AsyncDuckDB) {
   // If already initializing, wait for that to complete
   if (initializationPromise) {
@@ -275,7 +284,7 @@ export async function queryDuckDBCallbackFunction({
         details: `Show the sql that will be executed: ${sql}, and tell the user the result will be displayed in a table.`,
       },
       data: {
-        db,
+        ...(db ? { db } : {}),
         columnData,
         variableNames,
         datasetName,

@@ -16,7 +16,7 @@ export const createBaseConfig = (options = {}) => {
   return {
     bundle: true,
     minify: !isStart,
-    sourcemap: isStart,
+    sourcemap: true,
     metafile: true,
     target: ['esnext'],
     format: 'esm',
@@ -29,6 +29,14 @@ export const createBaseConfig = (options = {}) => {
     },
     ...options,
   };
+};
+
+// Watch mode configuration factory
+export const createWatchMode = async (config) => {
+  const ctx = await esbuild.context(config);
+  await ctx.watch();
+  console.log('Watching for changes...');
+  return ctx;
 };
 
 // Development server configuration factory

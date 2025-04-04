@@ -41,37 +41,10 @@ jobs:
       # - name: Test
       #   run: yarn test
 
-      - name: Check version match
-        if: github.ref_type == 'tag'
-        run: |
-          # Extract version from git tag (remove 'v' prefix)
-          TAG_VERSION=$(echo ${{ github.ref_name }} | sed 's/^v//')
-          # Read version from package.json
-          PKG_VERSION=$(node -p "require('./package.json').version")
-          UI_PKG_VERSION=$(node -p "require('./packages/ui/package.json').version")
-          CORE_PKG_VERSION=$(node -p "require('./packages/core/package.json').version")
-          DUCKDB_PKG_VERSION=$(node -p "require('./packages/duckdb/package.json').version")
-          ECHARTS_PKG_VERSION=$(node -p "require('./packages/echarts/package.json').version")
-          GEODA_PKG_VERSION=$(node -p "require('./packages/geoda/package.json').version")
-
-          # Compare versions
-          if [ "$TAG_VERSION" != "$PKG_VERSION" ] || [ "$TAG_VERSION" != "$UI_PKG_VERSION" ] || [ "$TAG_VERSION" != "$CORE_PKG_VERSION" ] || [ "$TAG_VERSION" != "$DUCKDB_PKG_VERSION" ] || [ "$TAG_VERSION" != "$ECHARTS_PKG_VERSION" ] || [ "$TAG_VERSION" != "$GEODA_PKG_VERSION" ]; then
-            echo "Version mismatch!"
-            echo "Tag version: $TAG_VERSION"
-            echo "Package.json version: $PKG_VERSION"
-            echo "UI package.json version: $UI_PKG_VERSION"
-            echo "Core package.json version: $CORE_PKG_VERSION"
-            echo "DuckDB package.json version: $DUCKDB_PKG_VERSION"
-            echo "ECharts package.json version: $ECHARTS_PKG_VERSION"
-            echo "GeoDa package.json version: $GEODA_PKG_VERSION"
-            exit 1
-          fi
-          echo "Versions match: $TAG_VERSION"
-
       - name: Publish packages
-        if: github.ref_type == 'tag'
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
         run: |
-          npm config set "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}"
-          npm publish --workspaces --access public
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+          yarn publish-release
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

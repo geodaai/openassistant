@@ -1,11 +1,31 @@
 # DuckDB Plugin for OpenAssistant
 
-This plugin allows you to query your dataset using DuckDB in the OpenAssistant chat interface.
+This package provides several tools for querying your data using DuckDB in browser.
+
+**localQuery**
+
+This tool helps to query any data that has been loaded in your application using user's prompt.
+
+- the data in your application will be loaded into a local duckdb instance temporarily
+- LLM will generate SQL query based on user's prompt against the data
+- the SQL query result will be executed in the local duckdb instance
+- the query result will be displayed in a React table component
+
+**dbQuery**
+
+If you have a database that you want to query, you can use the `dbQueryTool`.
+
+- the database will be connected to the local duckdb instance
+- LLM will generate SQL query based on user's prompt
+- the SQL query result will be executed in your database
+- the query result will be displayed in a React table component
+
+This example project shows how to use the `localQuery` and `dbQuery` tools in a multi-step tool.
 
 ## Installation
 
 ```bash
-yarn add @openassistant/core @openassistant/ui @openassistant/duckdb
+yarn add @openassistant/core @openassistant/duckdb
 ```
 
 ## Usage

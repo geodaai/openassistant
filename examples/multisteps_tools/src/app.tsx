@@ -39,7 +39,10 @@ export function App() {
           ? await getTemperature(cityName)
           : null;
         return {
-          llmResult: `The temperature in ${cityName} is ${temperature} degrees from weather station ${station}.`,
+          llmResult: {
+            success: true,
+            text: `The temperature in ${cityName} is ${temperature} degrees from weather station ${station}.`,
+          },
           output: {
             cityName,
             temperature,
