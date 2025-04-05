@@ -2,7 +2,7 @@
 
 > **ComputeRegressionProps**: `object`
 
-Defined in: [scatterplot/component/scatter-regression.ts:15](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/echarts/src/scatterplot/component/scatter-regression.ts#L15)
+Defined in: [scatterplot/component/scatter-regression.ts:15](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/echarts/src/scatterplot/component/scatter-regression.ts#L15)
 
 The properties of the regression.
 

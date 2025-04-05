@@ -1,0 +1,15 @@
+{
+  "name": "cli_example",
+  "version": "1.0.0",
+  "description": "CLI example for OpenAssistant",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@openassistant/core": "0.2.7",
+    "dotenv": "^16.4.5",
+    "readline-sync": "^1.4.10"
+  }
+}

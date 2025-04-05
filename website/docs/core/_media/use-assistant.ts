@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   RegisterFunctionCallingProps,
   StreamMessageCallback,
@@ -8,11 +8,11 @@ import {
 } from '../types';
 import { VercelAi } from '../llm/vercelai';
 import { createAssistant, ExtendedTool } from '../utils/create-assistant';
-import { StepResult, ToolChoice } from 'ai';
+import { Message, StepResult, ToolChoice } from 'ai';
 import { ToolSet } from 'ai';
 /**
  * Props for configuring the AI Assistant and useAssistant hook.
- * 
+ *
  * @param chatEndpoint - The server endpoint for handling chat requests (e.g. '/api/chat'). Required for server-side support.
  * @param voiceEndpoint - The server endpoint for handling voice/audio requests.
  * @param name - The display name of the assistant.
@@ -29,7 +29,6 @@ import { ToolSet } from 'ai';
  * @param toolChoice - Controls how the assistant selects tools to use.
  * @param maxSteps - Maximum number of steps/iterations in a conversation.
  * @param abortController - Optional AbortController to cancel requests.
- * @param historyMessages - Optional array of previous messages to provide conversation context.
  */
 export type UseAssistantProps = {
   chatEndpoint?: string;
@@ -44,18 +43,20 @@ export type UseAssistantProps = {
   temperature?: number;
   topP?: number;
   instructions: string;
+  historyMessages?: Message[];
   functions?:
     | Array<RegisterFunctionCallingProps>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     | Record<string, ExtendedTool<any>>;
   toolChoice?: ToolChoice<ToolSet>;
   maxSteps?: number;
+  toolCallStreaming?: boolean;
   abortController?: AbortController;
 };
 
 /**
  * Parameters for sending a text message to the assistant.
- * 
+ *
  * @param message - The text message to send to the assistant.
  * @param streamMessageCallback - Callback function to handle streaming response chunks.
  * @param onStepFinish - Optional callback triggered when a conversation step completes.
@@ -71,7 +72,7 @@ export type SendTextMessageProps = {
 
 /**
  * Parameters for sending an image with optional text to the assistant.
- * 
+ *
  * @param imageBase64String - Base64-encoded image data.
  * @param message - Optional text message to accompany the image.
  * @param streamMessageCallback - Callback function to handle streaming response chunks.
@@ -100,6 +101,12 @@ export function useAssistant(props: UseAssistantProps) {
    */
   const [apiKeyStatus, setApiKeyStatus] = useState<string>('failed');
 
+  // Add useEffect to initialize the assistant when the hook is first called
+  useEffect(() => {
+    initializeAssistant();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   /**
    * Initializes the AI assistant with the provided configuration.
    */
@@ -114,11 +121,20 @@ export function useAssistant(props: UseAssistantProps) {
       // initialize the assistant model
       assistant = await createAssistant(props);
 
+      // restore the history messages
+      if (props.historyMessages) {
+        assistant.setMessages(props.historyMessages);
+      }
+
       setApiKeyStatus('success');
     } catch (error) {
       console.error('useAssistant initialization error', error);
       setApiKeyStatus('failed');
     }
+  };
+
+  const getComponents = () => {
+    return assistant?.getComponents();
   };
 
   /**
@@ -166,7 +182,7 @@ export function useAssistant(props: UseAssistantProps) {
     await assistant?.processTextMessage({
       textMessage: message,
       streamMessageCallback,
-      onStepFinish
+      onStepFinish,
     });
   };
 
@@ -260,5 +276,10 @@ export function useAssistant(props: UseAssistantProps) {
      * @type {'failed' | 'success'}
      */
     apiKeyStatus,
+
+    /**
+     * Returns the components for the assistant.
+     */
+    getComponents,
   };
 }

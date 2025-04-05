@@ -33,8 +33,6 @@ export type QueryDuckDBOutputData = {
     selectedValues: unknown[]
   ) => void;
   isDraggable?: boolean;
-  args?: Record<string, unknown>;
-  llmResult?: Record<string, unknown>;
 };
 
 export function queryDuckDBCallbackMessage(
@@ -72,8 +70,6 @@ export function QueryDuckDBComponent({
   sql,
   dbTableName,
   onSelected,
-  args,
-  llmResult,
 }: QueryDuckDBOutputData): JSX.Element | null {
   const queryInProgress = useRef<Promise<void> | null>(null);
 
@@ -106,7 +102,6 @@ export function QueryDuckDBComponent({
       // If a query is already in progress, wait for it to complete
       if (queryInProgress.current) {
         await queryInProgress.current;
-        return;
       }
 
       // Create a new promise for this query
@@ -157,7 +152,7 @@ export function QueryDuckDBComponent({
 
     query();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [sql]);
 
   const onSyncSelection = (e: ChangeEvent<HTMLInputElement>) => {
     setSyncSelection(e.target.checked);

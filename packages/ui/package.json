@@ -30,6 +30,7 @@
     "test": "node --experimental-vm-modules ../../node_modules/.bin/jest --coverage",
     "start": "node esbuild.config.mjs --start",
     "build": "node esbuild.config.mjs",
+    "watch": "node esbuild.config.mjs --watch",
     "declaration": "tsc --project tsconfig.json",
     "prepublishOnly": "yarn build"
   },

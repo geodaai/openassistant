@@ -2,7 +2,7 @@
 
 > **ErrorCallbackResult**: `object`
 
-Defined in: [types.ts:152](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/core/src/types.ts#L152)
+Defined in: [packages/core/src/types.ts:202](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/core/src/types.ts#L202)
 
 Type of ErrorCallbackResult
 

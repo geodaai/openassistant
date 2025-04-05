@@ -2,7 +2,7 @@
 
 > **StreamMessage**: `object`
 
-Defined in: [types.ts:246](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/core/src/types.ts#L246)
+Defined in: [packages/core/src/types.ts:312](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/core/src/types.ts#L312)
 
 Type of StreamMessage. The structure of the stream message is:
 
@@ -20,6 +20,14 @@ Type of StreamMessage. The structure of the stream message is:
 
 ## Type declaration
 
+### analysis?
+
+> `optional` **analysis**: `string`
+
+### parts?
+
+> `optional` **parts**: [`StreamMessagePart`](StreamMessagePart.md)[]
+
 ### reasoning?
 
 > `optional` **reasoning**: `string`
@@ -34,12 +42,20 @@ Type of StreamMessage. The structure of the stream message is:
 
 ## Param
 
-The reasoning of the assistant
+(deprecated. use parts instead) The reasoning of the assistant
 
 ## Param
 
-The tool call messages
+(deprecated. use parts instead) The array of tool call messages. See [ToolCallMessage](ToolCallMessage.md) for more details.
 
 ## Param
 
-The text of the message
+(deprecated. use parts instead) The analysis of the message. This is the text that happens before the tool calls.
+
+## Param
+
+(deprecated. use parts instead) The text of the message. This is the text that happens after the tool calls.
+
+## Param
+
+The parts of the message. This is the text that happens after the tool calls.

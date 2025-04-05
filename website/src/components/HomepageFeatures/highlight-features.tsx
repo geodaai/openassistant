@@ -33,7 +33,65 @@ type HighlightFeature = {
 
 export const highlightFeatures: HighlightFeature[] = [
   {
-    title: <>Add AI Assistant to your app with ease</>,
+    title: (
+      <>
+        Build AI Assistant with powerful{' '}
+        <span className="text-warning">tools</span>
+      </>
+    ),
+    items: [
+      {
+        iconLabel: 'Data Analysis (GeoDa)',
+        image: '/img/geoda-light.png',
+        icon: 'gravity-ui:geo-polygons',
+        iconColor: 'text-blue-400',
+        code: [
+          {
+            title: 'page.tsx',
+            content: codeMap,
+          },
+          {
+            title: 'my-datasets.ts',
+            content: codeSampleDataset,
+          },
+        ],
+      },
+      {
+        iconLabel: 'Plots (eCharts)',
+        image: '/img/plots-dark.png',
+        icon: 'ant-design:dot-chart-outlined',
+        iconColor: 'text-blue-400',
+        code: [
+          {
+            title: 'page.tsx',
+            content: codeHistogram,
+          },
+          {
+            title: 'test-data.json',
+            content: codeSampleDataset,
+          },
+        ],
+      },
+      {
+        iconLabel: 'SQL Query (DuckDB)',
+        image: '/img/sql-dark.png',
+        icon: 'solar:database-bold',
+        iconColor: 'text-blue-400',
+        code: [
+          {
+            title: 'page.tsx',
+            content: codeSQL,
+          },
+          {
+            title: 'my-datasets.ts',
+            content: codeSampleDataset,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    title: <>Add chat component to your app with ease</>,
     items: [
       {
         image: '/img/getstart-light.png',
@@ -92,8 +150,8 @@ export const highlightFeatures: HighlightFeature[] = [
   {
     title: (
       <>
-        Supercharge your AI Assistant with{' '}
-        <span className="text-secondary-400">Interactive</span> Capabilities
+        Built-in <span className="text-secondary-400">interactive</span> AI  
+        features
       </>
     ),
     items: [
@@ -139,64 +197,6 @@ export const highlightFeatures: HighlightFeature[] = [
       },
     ],
   },
-  {
-    title: (
-      <>
-        Extend your AI Assistant with powerful{' '}
-        <span className="text-warning">Plugins</span>
-      </>
-    ),
-    items: [
-      {
-        iconLabel: 'Data Analysis (GeoDa)',
-        image: '/img/geoda-light.png',
-        icon: 'gravity-ui:geo-polygons',
-        iconColor: 'text-blue-400',
-        code: [
-          {
-            title: 'page.tsx',
-            content: codeMap,
-          },
-          {
-            title: 'my-datasets.ts',
-            content: codeSampleDataset,
-          },
-        ],
-      },
-      {
-        iconLabel: 'Plots (eCharts)',
-        image: '/img/plots-dark.png',
-        icon: 'ant-design:dot-chart-outlined',
-        iconColor: 'text-blue-400',
-        code: [
-          {
-            title: 'page.tsx',
-            content: codeHistogram,
-          },
-          {
-            title: 'test-data.json',
-            content: codeSampleDataset,
-          },
-        ],
-      },
-      {
-        iconLabel: 'SQL Query (DuckDB)',
-        image: '/img/sql-dark.png',
-        icon: 'solar:database-bold',
-        iconColor: 'text-blue-400',
-        code: [
-          {
-            title: 'page.tsx',
-            content: codeSQL,
-          },
-          {
-            title: 'my-datasets.ts',
-            content: codeSampleDataset,
-          },
-        ],
-      },
-    ],
-  },
 ];
 
 export function HighlightFeatureComponent({ title, items }: HighlightFeature) {
@@ -213,7 +213,7 @@ export function HighlightFeatureComponent({ title, items }: HighlightFeature) {
   };
 
   return (
-    <div className="w-10/12 mt-10 flex flex-col p-4 gap-4">
+    <div className="w-10/12 mt-10 flex flex-col p-4 gap-4 items-center">
       <div className=" text-gray-600 dark:text-gray-100 font-bold leading-[1.2] tracking-tighter sm:text-[36px]">
         <div className="bg-hero-section-title bg-clip-text">{title}</div>
       </div>
@@ -248,9 +248,9 @@ export function HighlightFeatureComponent({ title, items }: HighlightFeature) {
             </CardBody>
           </Card>
         </div>
-        <div className="w-[340px] min-w-[340px] sm:w-[calc(100%-500px)] sm:min-w-[500px] bg-gray-900 rounded-lg shadow-lg max-h-[400px] pb-2">
+        {/* <div className="w-[340px] min-w-[340px] sm:w-[calc(100%-500px)] sm:min-w-[500px] bg-gray-900 rounded-lg shadow-lg max-h-[400px] pb-2">
           <CodeBlock code={items[selectedIndex].code} />
-        </div>
+        </div> */}
       </div>
     </div>
   );

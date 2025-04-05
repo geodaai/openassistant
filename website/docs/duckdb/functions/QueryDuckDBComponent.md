@@ -2,7 +2,7 @@
 
 > **QueryDuckDBComponent**(`__namedParameters`): `null` \| `Element`
 
-Defined in: [queryTable.tsx:64](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/duckdb/src/queryTable.tsx#L64)
+Defined in: [packages/duckdb/src/queryTable.tsx:65](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/duckdb/src/queryTable.tsx#L65)
 
 ## Parameters
 

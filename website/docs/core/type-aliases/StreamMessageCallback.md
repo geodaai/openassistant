@@ -2,7 +2,7 @@
 
 > **StreamMessageCallback**: (`props`) => `void`
 
-Defined in: [types.ts:261](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/core/src/types.ts#L261)
+Defined in: [packages/core/src/types.ts:355](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/core/src/types.ts#L355)
 
 Type of StreamMessageCallback
 
@@ -10,31 +10,21 @@ Type of StreamMessageCallback
 
 ### props
 
-The callback properties
-
 #### customMessage?
 
 [`MessagePayload`](MessagePayload.md)
-
-Optional custom message payload
 
 #### deltaMessage
 
 `string`
 
-The incremental message update from the assistant
-
 #### isCompleted?
 
 `boolean`
 
-Optional flag indicating if the message stream is complete
-
 #### message?
 
 [`StreamMessage`](StreamMessage.md)
-
-Optional full stream message object
 
 ## Returns
 

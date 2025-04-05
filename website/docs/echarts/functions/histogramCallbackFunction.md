@@ -2,7 +2,7 @@
 
 > **histogramCallbackFunction**(`__namedParameters`): `Promise`\<`CustomFunctionOutputProps`\<`HistogramOutputResult`, [`HistogramOutputData`](../type-aliases/HistogramOutputData.md)\>\>
 
-Defined in: [histogram/callback-function.ts:36](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/echarts/src/histogram/callback-function.ts#L36)
+Defined in: [histogram/callback-function.ts:36](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/echarts/src/histogram/callback-function.ts#L36)
 
 ## Parameters
 

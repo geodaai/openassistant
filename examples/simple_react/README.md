@@ -20,7 +20,7 @@ public/
 To use OpenAssistant in your React project, you need to install the following packages:
 
 ```bash
-yarn add @openassistant/ui @openassistant/core 
+yarn add @openassistant/ui @openassistant/core
 ```
 
 ### 2. Add chat component to your app:
@@ -39,8 +39,8 @@ function App() {
         version="v1"
         modelProvider="ollama"
         model="llama3.1"
-          baseUrl="http://127.0.0.1:11434"
-          welcomeMessage="Hello, how can I help you today?"
+        baseUrl="http://127.0.0.1:11434"
+        welcomeMessage="Hello, how can I help you today?"
         instructions="You are a helpful assistant."
         functions={[]}
       />
@@ -56,7 +56,6 @@ You can see the UI interface in browser if you run `yarn start`.
 ### 3. Set up the local ollama server
 
 Download the Ollama desktop app from [https://ollama.com/download](https://ollama.com/download) and run it.
-
 
 To run a model e.g. llama3.2, type in terminal:
 
@@ -76,7 +75,7 @@ More information about ollama can be found in the [ollama documentation](https:/
 
 If you need to access your local ollama from your published React app, you need to start the ollama server with the following command:
 
-```bash 
+```bash
 OLLAMA_ORIGINS=* ollama serve
 ```
 
@@ -94,26 +93,22 @@ The UI component is using [next-themes](https://github.com/pacocoursey/next-them
 import { Assistant } from '@openassistant/ui';
 // for project not using tailwind, you need to import the css file
 import '@openassistant/ui/dist/index.css';
-import { ThemeProvider } from 'next-themes';
 
 function App() {
   return (
-    <ThemeProvider attribute="class" forcedTheme="light">
-      <div style={{ width: '400px', height: '800px', margin: '20px' }}>
-        <AiAssistant
-          name="My Assistant"
-          apiKey=""
-          version="v1"
-          modelProvider="ollama"
-          model="llama3.1"
-          baseUrl="http://127.0.0.1:11434"
-          welcomeMessage="Hello, how can I help you today?"
-          instructions="You are a helpful assistant."
-          functions={[]}
-        />
-      </div>
-    </ThemeProvider>
+    <div style={{ width: '400px', height: '800px', margin: '20px' }}>
+      <AiAssistant
+        name="My Assistant"
+        apiKey=""
+        version="v1"
+        modelProvider="ollama"
+        model="llama3.1"
+        baseUrl="http://127.0.0.1:11434"
+        welcomeMessage="Hello, how can I help you today?"
+        instructions="You are a helpful assistant."
+        functions={[]}
+      />
+    </div>
   );
 }
 ```
-

@@ -6,7 +6,6 @@ import {
   highlightFeatures,
   HighlightFeatureComponent,
 } from './highlight-features';
-import { QuickStart } from './quick-start';
 
 export default function HomepageFeatures() {
   return (
@@ -15,7 +14,6 @@ export default function HomepageFeatures() {
         <HighlightFeatureComponent key={index} {...feature} />
       ))}
       <AllFeatures />
-      <QuickStart />
     </section>
   );
 }

@@ -2,7 +2,7 @@
 
 > **ScatterplotOutputData**: `object`
 
-Defined in: [scatterplot/callback-function.ts:62](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/echarts/src/scatterplot/callback-function.ts#L62)
+Defined in: [scatterplot/callback-function.ts:62](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/echarts/src/scatterplot/callback-function.ts#L62)
 
 The data of the scatterplot function.
 

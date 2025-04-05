@@ -12,7 +12,7 @@ export const ConversationSchema = z.object({
 });
 
 /**
- * Rebuild the messages from the conversations, which is an array of {prompt, response}.
+ * Rebuild the messages from the conversations, which is an array of `{prompt, response}`.
  * The messages are in the format of the Message interface in Vercel AI SDK.
  * This function can be used to restore the messages from the persisted conversations.
  *

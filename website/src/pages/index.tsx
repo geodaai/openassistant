@@ -19,29 +19,19 @@ function HomepageHeader() {
       )}
     >
       <div className="container m-4">
-        {/*<Heading as="h1" className="hero__title">
-          {siteConfig.title}
-        </Heading>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
-         <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="/docs/intro">
-            Docusaurus Tutorial - 5min ⏱️
-          </Link>
-        </div> */}
         <div className="flex flex-col gap-2">
           <div className="text-gray-600 dark:text-gray-100 font-bold text-[46px]">
-            Build AI-Powered Applications
+            OpenAssistant
           </div>
           <div className="text-gray-400 text-[32px]">
-            with built-in{' '}
-            <span className="text-purple-400 font-bold">interactive</span>{' '}
-            features and powerful{' '}
-            <span className="text-warning font-bold">plugins</span>
+            A javascript library for building AI assistant
             <br />
-            while keeping your data{' '}
-            <span className="text-gray-400 font-bold">secure</span>
+            with powerful <span className="text-warning font-bold">
+              tools
+            </span>{' '}
+            and {' '}
+            <span className="text-purple-400 font-bold">interactive</span> React chat
+            component
           </div>
           <div className="flex flex-row gap-2 justify-center">
             <div className="mt-8 rounded-lg  w-fit bg-gray-200 dark:bg-gray-800 p-4">

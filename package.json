@@ -12,6 +12,7 @@
     "start": "lerna run start --scope=@openassistant/ui",
     "build": "lerna run build --npm-client=yarn --concurrency=1",
     "build-fast": "lerna run build --concurrency=10",
+    "watch": "lerna run watch --parallel",
     "test": "node --experimental-vm-modules node_modules/.bin/jest --coverage",
     "lint": "eslint packages/*/src --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint packages/*/src --ext .js,.jsx,.ts,.tsx --fix",

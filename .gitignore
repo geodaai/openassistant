@@ -17,3 +17,4 @@ packages/.DS_Store
 .next/
 *.log
 .turbo
+node_modules/

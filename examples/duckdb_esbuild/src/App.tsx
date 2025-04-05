@@ -1,5 +1,5 @@
 import { AiAssistant } from '@openassistant/ui';
-import { localQuery, QueryDuckDBComponent } from '@openassistant/duckdb';
+import { localQuery } from '@openassistant/duckdb';
 import { SAMPLE_DATASETS } from './dataset';
 
 import '@openassistant/ui/dist/index.css';
@@ -18,7 +18,6 @@ const localQueryTool = {
       );
     },
   },
-  component: QueryDuckDBComponent,
 };
 
 const instructions = `

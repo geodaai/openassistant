@@ -2,7 +2,7 @@
 
 > **useAssistant**(`props`): `object`
 
-Defined in: [hooks/use-assistant.ts:90](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/core/src/hooks/use-assistant.ts#L90)
+Defined in: [packages/core/src/hooks/use-assistant.ts:95](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/core/src/hooks/use-assistant.ts#L95)
 
 A custom hook for managing an AI assistant.
 This hook provides functionality to initialize, send messages to, and control an AI assistant.
@@ -86,6 +86,16 @@ The audio data to transcribe
 #### Returns
 
 The transcribed text
+
+### getComponents()
+
+> **getComponents**: () => `undefined` \| [`ToolCallComponents`](../type-aliases/ToolCallComponents.md)
+
+Returns the components for the assistant.
+
+#### Returns
+
+`undefined` \| [`ToolCallComponents`](../type-aliases/ToolCallComponents.md)
 
 ### initializeAssistant()
 

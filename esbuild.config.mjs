@@ -16,7 +16,7 @@ export const createBaseConfig = (options = {}) => {
   return {
     bundle: true,
     minify: !isStart,
-    sourcemap: true,
+    sourcemap: !isStart,
     metafile: true,
     target: ['esnext'],
     format: 'esm',

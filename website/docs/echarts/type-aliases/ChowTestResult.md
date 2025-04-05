@@ -2,7 +2,7 @@
 
 > **ChowTestResult**: `object`
 
-Defined in: [math/linear-regression.ts:326](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/echarts/src/math/linear-regression.ts#L326)
+Defined in: [math/linear-regression.ts:326](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/echarts/src/math/linear-regression.ts#L326)
 
 Performs Chow test to check for structural break in linear regression
 The fStat is the F-statistic and the pValue is the p-value.

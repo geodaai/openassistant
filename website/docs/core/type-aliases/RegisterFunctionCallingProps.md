@@ -2,7 +2,7 @@
 
 > **RegisterFunctionCallingProps**: `object`
 
-Defined in: [types.ts:346](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/core/src/types.ts#L346)
+Defined in: [packages/core/src/types.ts:440](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/core/src/types.ts#L440)
 
 Type of RegisterFunctionCallingProps
 
@@ -16,9 +16,19 @@ Type of RegisterFunctionCallingProps
 
 > `optional` **callbackFunctionContext**: [`CustomFunctionContext`](CustomFunctionContext.md)\<`any`\>
 
-### callbackMessage?
+### ~~callbackMessage?~~
 
 > `optional` **callbackMessage**: [`CustomMessageCallback`](CustomMessageCallback.md)
+
+#### Deprecated
+
+Callback function to create custom UI elements like plots or maps
+
+### component?
+
+> `optional` **component**: `React.ComponentType`
+
+Component for the tool call
 
 ### description
 

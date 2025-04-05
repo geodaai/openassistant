@@ -56,8 +56,8 @@ export type ToolCallElement = {
  * @param text - The streaming text of the tool
  * @param isCompleted - The flag indicating if the tool call is completed. Note: there are three stages of the tool call:
  * 1. The tool call is requested by the LLM with the tool name and arguments.
- * 2. The tool call is executing and {llmResult, additionalData} will be updated.
- * 3. The tool call is completed and {llmResult} will be sent back to the LLM as response.
+ * 2. The tool call is executing and `{llmResult, additionalData}` will be updated.
+ * 3. The tool call is completed and `{llmResult}` will be sent back to the LLM as response.
  */
 export type ToolCallMessage = {
   toolName: string;

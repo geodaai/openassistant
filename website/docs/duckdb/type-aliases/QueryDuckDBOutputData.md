@@ -2,7 +2,7 @@
 
 > **QueryDuckDBOutputData**: `object`
 
-Defined in: [queryTable.tsx:22](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/duckdb/src/queryTable.tsx#L22)
+Defined in: [packages/duckdb/src/queryTable.tsx:23](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/duckdb/src/queryTable.tsx#L23)
 
 ## Type declaration
 
@@ -18,9 +18,9 @@ Defined in: [queryTable.tsx:22](https://github.com/GeoDaCenter/openassistant/blo
 
 > **datasetName**: `string`
 
-### db
+### db?
 
-> **db**: `duckdb.AsyncDuckDB` \| `null`
+> `optional` **db**: `duckdb.AsyncDuckDB`
 
 ### dbTableName
 

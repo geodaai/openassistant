@@ -1,6 +1,7 @@
 import {
   createBaseConfig,
   createDevServer,
+  createWatchMode,
   buildFormat,
 } from '../../esbuild.config.mjs';
 import tailwindPlugin from 'esbuild-plugin-tailwindcss';
@@ -73,9 +74,15 @@ const serverConfig = {
 };
 
 const isStart = process.argv.includes('--start');
+const isWatch = process.argv.includes('--watch');
 
 if (isStart) {
   createDevServer(serverConfig, 3001).catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+} else if (isWatch) {
+  createWatchMode({ ...baseConfig, outdir: 'dist' }, 3001).catch((e) => {
     console.error(e);
     process.exit(1);
   });

@@ -4,43 +4,90 @@ sidebar_position: 1
 
 # Quick Start
 
-Transform Your React Apps with OpenAssistant: The AI Integration Library You've Been Waiting For
+OpenAssistant is not only a LLM based chatbot, it is engineered to
+help users analyzing their data by levaraging the existing
+functions and tools in your application. OpenAssistant provides a
+new way that allows users to interact with your application in a
+more natural and creative way.
 
-Looking to supercharge your React applications with AI capabilities? Meet OpenAssistant - your new favorite tool for seamlessly integrating AI power into existing React apps without the hassle.
+## Getting Started
 
-Unlike general-purpose chatbots such as ChatGPT or Google Gemini, OpenAssistant takes a different approach. It's specifically engineered to be the bridge between Large Language Models (LLMs) and your application's functionality. Think of it as your application's AI co-pilot that can not only chat with users but also execute complex tasks by leveraging your app's features and external AI plugins.
+Here's a basic example of using OpenAssistant in your javascript application:
 
-## **Installation**
+### Installation
 
 Install the core packages using npm:
 
 ```bash
-npm install @openassistant/core @openassistant/ui
+npm install @openassistant/core
 ```
 
-### **Dependencies**
+### Usage
 
-The following dependencies are required and should be installed in your project:
+Then, you can use the OpenAssistant in your application:
 
-<li> react </li>
-<li> @ai-sdk/core </li>
-<li> @ai-sdk/google </li>
-<li> @ai-sdk/openai </li>
-<li> @ai-sdk/xai </li>
-<li> ollama-ai-provider </li>
-<li> html2canvas </li>
-<li> next-themes </li>
-<li> @nextui-org/react </li>
-<li> framer-motion </li>
+```ts
+import { createAssistant } from '@openassistant/core';
 
-## **Getting Started**
+// get the singleton assistant instance
+const assistant = await createAssistant({
+  name: 'assistant',
+  modelProvider: 'openai',
+  model: 'gpt-4o',
+  apiKey: 'your-api-key',
+  version: '0.0.1',
+  instructions: 'You are a helpful assistant',
+  functions: tools,
+});
 
-Here's a basic example of using OpenAssistant in your React app:
+// now you can send prompts to the assistant
+await assistant.processTextMessage({
+  textMessage: 'Hello, how are you?',
+  streamMessageCallback: ({ isCompleted, message }) => {
+    console.log(isCompleted, message);
+  },
+});
+```
+
+See the source code of the example 🔗 [here](https://github.com/openassistant/openassistant/tree/main/examples/cli_example).
+
+:::tip
+If you want to use Google Gemini as the model provider, you can do the following:
+
+Install vercel google gemini client:
+
+```bash
+npm install @ai-sdk/google
+```
+
+Then, you can use update the assistant configuration to use Google Gemini.
+
+OpenAssistant also supports the following model providers:
+
+| Model Provider | Models | Dependency |
+| -------------- | ------ | ---------- |
+| OpenAI         | [link](https://sdk.vercel.ai/providers/ai-sdk-providers/openai#model-capabilities) | @ai-sdk/openai  |
+| Google         | [models](https://sdk.vercel.ai/providers/ai-sdk-providers/google-generative-ai#model-capabilities) | @ai-sdk/google |
+| Anthropic      | [models](https://sdk.vercel.ai/providers/ai-sdk-providers/anthropic#model-capabilities) | @ai-sdk/anthropic |
+| DeepSeek       | [models](https://sdk.vercel.ai/providers/ai-sdk-providers/deepseek#model-capabilities) | @ai-sdk/deepseek |
+| xAI            | [models](https://sdk.vercel.ai/providers/ai-sdk-providers/xai#model-capabilities) | @ai-sdk/xai |
+| Ollama         | [models](https://ollama.com/models) | ollama-ai-provider |
+:::
+
+## Add a Chat Component to your App
+
+### Installation
+
+```bash
+npm install @openassistant/ui @openassistant/core
+```
+
+### Usage
 
 ```tsx
 import { AiAssistant } from '@openassistant/ui';
-// only for React app without tailwindcss
-import '@openassistant/ui/dist/index.css';
+// for React app without tailwindcss, you can import the css file
+// import '@openassistant/ui/dist/index.css';
 
 function App() {
   return (
@@ -48,41 +95,35 @@ function App() {
       modelProvider="openai"
       model="gpt-4"
       apiKey="your-api-key"
-      enableVoice={true}
+      version="v1"
       welcomeMessage="Hello! How can I help you today?"
+      instructions="You are a helpful assistant."
+      functions={[]}
+      theme='dark'
     />
   );
 }
 ```
 
-## **Key Features**
+See the source code of the example 🔗 [here](https://github.com/openassistant/openassistant/tree/main/examples/simple_react).
 
-OpenAssistant comes with powerful features:
+<img src="https://github.com/user-attachments/assets/394a9bb6-6022-477d-a98d-f85db043ce71" alt="Screen Capture" width={400} />
 
-🤖 **Multiple AI Provider Support**
-  <li> OpenAI (GPT models) </li>
-  <li> Google Gemini </li>
-  <li> Ollama (local AI models) </li>
+:::tip
 
-🎯 **Advanced Capabilities**
-  <li> Take screenshot to ask </li>
-  <li> Talk to ask </li>
-  <li> Function calling support </li>
+If you are using TailwindCSS, you need to add the following configurations to your `tailwind.config.js` file:
 
-🌟 **AI Assistant Plugins**
-  <li> DuckDB: in-browser query data using duckdb via prompt </li>
-  <li> ECharts: visualize data using echarts via prompt </li>
-  <li> GeoDa: apply spatial data analysis using geoda wasm via prompt </li>
-
-🎨 **Customizable UI Components**
-  <li> Pre-built chat interface </li>
-  <li> Pre-built LLM configuration interface </li>
-  <li> Screenshot wrapper for your app </li>
-  <li> Theme support </li>
-
-For more detailed documentation and examples, check out our package-specific guides:
-
-- Core Package Documentation
-- UI Components Guide
-- CLI Tool Tutorial
-- Plugin Documentation (DuckDB, GeoDa, ECharts)
+```tsx
+module.exports = {
+  content: [
+    ...
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@openassistant/ui/dist/**/*.{js,ts,jsx,tsx}"
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [nextui()],
+};
+```
+:::

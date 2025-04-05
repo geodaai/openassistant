@@ -18,6 +18,7 @@ import {
   Card,
   CardBody,
 } from '@nextui-org/react';
+import { Icon } from '@iconify/react';
 
 const MarkdownContent = ({
   text,
@@ -131,8 +132,6 @@ export function ToolCallComponent({
     (component) => component.toolName === toolName
   )?.component;
 
-  // check if toolCallMessage.args has a property called 'reason'
-  const reason = toolCallMessage.args?.reason as string;
   const llmResultTable = llmResult as Record<string, unknown> | undefined;
   const tableItems = llmResultTable
     ? Object.entries(llmResultTable).map(([key, value]) => ({
@@ -157,7 +156,12 @@ export function ToolCallComponent({
             <AccordionItem
               key="1"
               aria-label={toolName}
-              title={`> call ${toolName} ${isCompleted ? '✅' : '⏳'}`}
+              title={`> call ${toolName}`}
+              startContent={
+                !isCompleted && (
+                  <Icon icon="svg-spinners:clock" width="12" height="12" />
+                )
+              }
             >
               <div className="flex flex-col gap-1 p-4">
                 <div className="text-tiny font-bold">function call:</div>
@@ -201,7 +205,6 @@ export function ToolCallComponent({
                 </div>
               )}
               {text}
-              {reason && <span>{reason}</span>}
             </AccordionItem>
           </Accordion>
         </CardBody>

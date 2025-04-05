@@ -15,7 +15,11 @@ const FeatureList: FeatureItem[] = [
       <>
         <li>OpenAI (GPT models)</li>
         <li>Google Gemini</li>
+        <li>Anthropic (Claude models)</li>
+        <li>xAI (Groq models)</li>
+        <li>DeepSeek</li>
         <li>Ollama (local AI models)</li>
+        <li>...</li>
       </>
     ),
   },

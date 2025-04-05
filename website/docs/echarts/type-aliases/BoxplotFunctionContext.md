@@ -2,7 +2,7 @@
 
 > **BoxplotFunctionContext**: `object`
 
-Defined in: [boxplot/definition.ts:37](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/echarts/src/boxplot/definition.ts#L37)
+Defined in: [boxplot/definition.ts:37](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/echarts/src/boxplot/definition.ts#L37)
 
 Configuration and callback context for the boxplot function.
 

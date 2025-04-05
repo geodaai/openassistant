@@ -2,7 +2,7 @@
 
 > **UseAssistantProps**: `object`
 
-Defined in: [hooks/use-assistant.ts:30](https://github.com/GeoDaCenter/openassistant/blob/65e761aafcb8b3d759c0e5ae9c1cbe8e024f7128/packages/core/src/hooks/use-assistant.ts#L30)
+Defined in: [packages/core/src/hooks/use-assistant.ts:33](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/core/src/hooks/use-assistant.ts#L33)
 
 Props for configuring the AI Assistant and useAssistant hook.
 
@@ -30,7 +30,11 @@ Props for configuring the AI Assistant and useAssistant hook.
 
 ### functions?
 
-> `optional` **functions**: [`OpenAIFunctionTool`](OpenAIFunctionTool.md)[] \| `Record`\<`string`, [`ExtendedTool`](ExtendedTool.md)\<`any`\>\>
+> `optional` **functions**: [`RegisterFunctionCallingProps`](RegisterFunctionCallingProps.md)[] \| `Record`\<`string`, [`ExtendedTool`](ExtendedTool.md)\<`any`\>\>
+
+### historyMessages?
+
+> `optional` **historyMessages**: `Message`[]
 
 ### instructions
 
@@ -55,6 +59,10 @@ Props for configuring the AI Assistant and useAssistant hook.
 ### temperature?
 
 > `optional` **temperature**: `number`
+
+### toolCallStreaming?
+
+> `optional` **toolCallStreaming**: `boolean`
 
 ### toolChoice?
 
@@ -135,7 +143,3 @@ Maximum number of steps/iterations in a conversation.
 ## Param
 
 Optional AbortController to cancel requests.
-
-## Param
-
-Optional array of previous messages to provide conversation context.

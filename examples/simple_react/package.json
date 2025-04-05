@@ -11,8 +11,8 @@
   "author": "Xun Li <lixun910@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "@openassistant/core": "latest",
-    "@openassistant/ui": "latest",
+    "@openassistant/core": "0.2.7",
+    "@openassistant/ui": "0.2.0",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
