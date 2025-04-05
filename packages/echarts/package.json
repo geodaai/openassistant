@@ -16,7 +16,8 @@
   },
   "scripts": {
     "build": "node esbuild.config.mjs",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
   },
   "keywords": [],
   "license": "MIT",

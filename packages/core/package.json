@@ -3,7 +3,6 @@
   "version": "0.2.7",
   "author": "Xun Li<lixun910@gmail.com>",
   "description": "Core library using Vercel AI SDK for OpenAssistant",
-  "type": "module",
   "main": "src/index.ts",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
@@ -17,7 +16,8 @@
   "scripts": {
     "test": "node --experimental-vm-modules ../../node_modules/.bin/jest --coverage",
     "build": "node esbuild.config.mjs",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
   },
   "keywords": [
     "vercelai",
