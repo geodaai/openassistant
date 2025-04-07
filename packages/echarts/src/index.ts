@@ -16,6 +16,7 @@ export * from './histogram/component/histogram-option';
 export * from './histogram/component/utils';
 
 export * from './boxplot/definition';
+export * from './boxplot/tool';
 export * from './boxplot/callback-function';
 export * from './boxplot/callback-component';
 export * from './boxplot/component/box-plot';

@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { tool } from '@openassistant/core';
 import { Table as ArrowTable, tableFromArrays } from 'apache-arrow';
 import { z } from 'zod';
-import { getDuckDB } from './query';
+import { getDuckDB, QueryDuckDBFunctionContext } from './query';
 import { QueryDuckDBComponent } from './queryTable';
 
 async function executeLocalQuery(
@@ -10,7 +9,8 @@ async function executeLocalQuery(
   options
 ) {
   try {
-    const { getValues, onSelected, config, duckDB } = options.context;
+    const { getValues, config, duckDB } =
+      options.context as QueryDuckDBFunctionContext;
     // if the variable names contain 'row_index', ignore it
     // the row_index will be added later based on the columnData length
     // the row_index is used to sync the selections of the query result table with the original dataset
@@ -70,7 +70,7 @@ async function executeLocalQuery(
         variableNames,
         datasetName,
         dbTableName,
-        onSelected,
+        config,
       },
     };
   } catch (error) {
@@ -104,22 +104,20 @@ async function executeLocalQuery(
  * }
  * ```
  *
- * - getValues()
+ * ### getValues()
  *
  * User implements this function to get the values of the variable from dataset.
- * See @see {LocalQueryContext.getValues}
  *
- * For prompts like "Show me the revenue per capita for each location in dataset myVenues", the tool will
+ * For prompts like "_Show me the revenue per capita for each location in dataset myVenues_", the tool will
  * call the `getValues()` function twice:
- * - first time to get the values of revenue from dataset: getValues('myVenues', 'revenue')
- * - second time to get the values of population from dataset: getValues('myVenues', 'population')
+ * - get the values of **revenue** from dataset: getValues('myVenues', 'revenue')
+ * - get the values of **population** from dataset: getValues('myVenues', 'population')
  *
  * A duckdb table will be created using the values returned from `getValues()`, and LLM will generate a sql query to query the table to answer the user's prompt.
  *
- * - onSelected()
+ * ### onSelected()
  *
  * User implements this function to sync the selections of the query result table with the original dataset.
- * See @see {LocalQueryContext.onSelected}
  *
  */
 export const localQuery = tool({
@@ -141,27 +139,14 @@ export const localQuery = tool({
   }),
   execute: executeLocalQuery,
   context: {
-    getValues: ({
-      datasetName,
-      variableName,
-    }: {
-      datasetName: string;
-      variableName: string;
-    }): unknown[] => {
+    getValues: () => {
       // get the values of the variable from the dataset,
       // the values will be used to create and plot the histogram
-      return [];
+      throw new Error('getValues() of LocalQueryTool is not implemented');
     },
-    onSelected: ({
-      datasetName,
-      columnName,
-      selectedValues,
-    }: {
-      datasetName: string;
-      columnName: string;
-      selectedValues: unknown[];
-    }) => {
+    onSelected: () => {
       // sync the selections of the query result table with the original dataset
+      throw new Error('onSelected() of LocalQueryTool is not implemented');
     },
     config: {
       isDraggable: false,

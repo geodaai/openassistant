@@ -7243,20 +7243,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openassistant/common@npm:0.2.0, @openassistant/common@workspace:*, @openassistant/common@workspace:packages/common":
-  version: 0.0.0-use.local
-  resolution: "@openassistant/common@workspace:packages/common"
-  dependencies:
-    "@iconify/react": "npm:^5.1.0"
-    "@nextui-org/react": "npm:^2.6.10"
-    framer-motion: "npm:^11.15.0"
-    re-resizable: "npm:^6.10.3"
-  peerDependencies:
-    react: ">=18.2"
-    react-dom: ">=18.2"
-  languageName: unknown
-  linkType: soft
-
 "@openassistant/common@npm:latest":
   version: 0.1.5
   resolution: "@openassistant/common@npm:0.1.5"
@@ -7272,28 +7258,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openassistant/core@npm:0.2.0":
-  version: 0.2.0
-  resolution: "@openassistant/core@npm:0.2.0"
+"@openassistant/common@workspace:*, @openassistant/common@workspace:packages/common":
+  version: 0.0.0-use.local
+  resolution: "@openassistant/common@workspace:packages/common"
   dependencies:
-    "@ai-sdk/deepseek": "npm:^0.1.8"
-    "@ai-sdk/google": "npm:^1.1.8"
-    "@ai-sdk/openai": "npm:^1.1.5"
-    "@ai-sdk/react": "npm:^1.1.7"
-    "@ai-sdk/ui-utils": "npm:^1.1.8"
-    "@ai-sdk/xai": "npm:^1.1.8"
-    "@langchain/core": "npm:^0.3.38"
-    ai: "npm:^4.1.12"
-    ollama-ai-provider: "npm:^1.2.0"
-    openai: "npm:^4.82.0"
-    openai-zod-functions: "npm:^0.1.2"
-    zod: "npm:^3.24.1"
-    zod-to-json-schema: "npm:^3.24.1"
+    "@iconify/react": "npm:^5.1.0"
+    "@nextui-org/react": "npm:^2.6.10"
+    framer-motion: "npm:^11.15.0"
+    re-resizable: "npm:^6.10.3"
   peerDependencies:
     react: ">=18.2"
-  checksum: 2f0eec4ba1a86143dfdfcf936fda3cae99326e779b6e7dd3d1753244fa5272a2eb54b23aff1b59193a36ae97d271daa7678f6d1c32e1313d84d9acd1aea3fd05
-  languageName: node
-  linkType: hard
+    react-dom: ">=18.2"
+  languageName: unknown
+  linkType: soft
 
 "@openassistant/core@npm:0.2.7, @openassistant/core@workspace:*, @openassistant/core@workspace:packages/core":
   version: 0.0.0-use.local
@@ -7351,22 +7328,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openassistant/duckdb@npm:0.2.0, @openassistant/duckdb@workspace:*, @openassistant/duckdb@workspace:packages/duckdb":
-  version: 0.0.0-use.local
-  resolution: "@openassistant/duckdb@workspace:packages/duckdb"
-  dependencies:
-    "@duckdb/duckdb-wasm": "npm:^1.29.0"
-    "@nextui-org/react": "npm:^2.6.8"
-    "@openassistant/core": "workspace:*"
-    apache-arrow: "npm:^17.0.0"
-    framer-motion: "npm:^11.15.0"
-    tailwindcss: "npm:^3.4.17"
-  peerDependencies:
-    react: ">=18.2"
-    react-dom: ">=18.2"
-  languageName: unknown
-  linkType: soft
-
 "@openassistant/duckdb@npm:latest":
   version: 0.1.5
   resolution: "@openassistant/duckdb@npm:0.1.5"
@@ -7384,22 +7345,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openassistant/echarts@npm:0.2.0, @openassistant/echarts@workspace:*, @openassistant/echarts@workspace:packages/echarts":
+"@openassistant/duckdb@workspace:*, @openassistant/duckdb@workspace:packages/duckdb":
   version: 0.0.0-use.local
-  resolution: "@openassistant/echarts@workspace:packages/echarts"
+  resolution: "@openassistant/duckdb@workspace:packages/duckdb"
   dependencies:
-    "@iconify/react": "npm:^5.1.0"
-    "@nextui-org/react": "npm:^2.6.10"
-    "@nextui-org/theme": "npm:^2.4.4"
+    "@duckdb/duckdb-wasm": "npm:^1.29.0"
+    "@nextui-org/react": "npm:^2.6.8"
     "@openassistant/core": "workspace:*"
-    echarts: "npm:^5.5.1"
-    echarts-for-react: "npm:^3.0.2"
+    apache-arrow: "npm:^17.0.0"
     framer-motion: "npm:^11.15.0"
-    jstat: "npm:^1.9.6"
-    next-themes: "npm:^0.4.4"
-    re-resizable: "npm:^6.10.3"
-    react-virtualized-auto-sizer: "npm:^1.0.24"
-    simple-statistics: "npm:^7.8.7"
     tailwindcss: "npm:^3.4.17"
   peerDependencies:
     react: ">=18.2"
@@ -7431,6 +7385,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@openassistant/echarts@workspace:*, @openassistant/echarts@workspace:packages/echarts":
+  version: 0.0.0-use.local
+  resolution: "@openassistant/echarts@workspace:packages/echarts"
+  dependencies:
+    "@iconify/react": "npm:^5.1.0"
+    "@nextui-org/react": "npm:^2.6.10"
+    "@nextui-org/theme": "npm:^2.4.4"
+    "@openassistant/core": "workspace:*"
+    echarts: "npm:^5.5.1"
+    echarts-for-react: "npm:^3.0.2"
+    framer-motion: "npm:^11.15.0"
+    jstat: "npm:^1.9.6"
+    next-themes: "npm:^0.4.4"
+    re-resizable: "npm:^6.10.3"
+    react-virtualized-auto-sizer: "npm:^1.0.24"
+    simple-statistics: "npm:^7.8.7"
+    tailwindcss: "npm:^3.4.17"
+  peerDependencies:
+    react: ">=18.2"
+    react-dom: ">=18.2"
+  languageName: unknown
+  linkType: soft
+
 "@openassistant/geoda@workspace:packages/geoda":
   version: 0.0.0-use.local
   resolution: "@openassistant/geoda@workspace:packages/geoda"
@@ -7447,37 +7424,6 @@ __metadata:
   peerDependencies:
     react: ">=18.2"
     react-dom: ">=18.2"
-  languageName: unknown
-  linkType: soft
-
-"@openassistant/keplergl@npm:0.2.0, @openassistant/keplergl@workspace:packages/keplergl":
-  version: 0.0.0-use.local
-  resolution: "@openassistant/keplergl@workspace:packages/keplergl"
-  dependencies:
-    "@kepler.gl/actions": "npm:3.0.0"
-    "@kepler.gl/components": "npm:3.0.0"
-    "@kepler.gl/constants": "npm:3.0.0"
-    "@kepler.gl/layers": "npm:3.0.0"
-    "@kepler.gl/localization": "npm:3.0.0"
-    "@kepler.gl/reducers": "npm:3.0.0"
-    "@kepler.gl/styles": "npm:3.0.0"
-    "@kepler.gl/utils": "npm:3.0.0"
-    "@loaders.gl/core": "npm:4.3.3"
-    "@loaders.gl/schema": "npm:4.3.3"
-    "@openassistant/common": "workspace:*"
-    "@openassistant/core": "workspace:*"
-    "@types/redux-logger": "npm:^3"
-    esbuild-plugin-polyfill-node: "npm:^0.3.0"
-    react-intl: "npm:^6.3.0"
-    react-palm: "npm:^3.3.8"
-    react-redux: "npm:^9.2.0"
-    react-virtualized-auto-sizer: "npm:^1.0.25"
-    redux: "npm:^4.2.1"
-    redux-logger: "npm:^3.0.6"
-    styled-components: "npm:6.1.8"
-  peerDependencies:
-    react: ">=18"
-    react-dom: ">=18"
   languageName: unknown
   linkType: soft
 
@@ -7508,6 +7454,37 @@ __metadata:
   checksum: 01635aafa9c3dd55f746ed22978a17e899c5afa6341e6daa757ad9d34a298b47899a278700d851606078d5e6e16e3746e752eadf6a57dd22b1f1e67ca982944b
   languageName: node
   linkType: hard
+
+"@openassistant/keplergl@workspace:packages/keplergl":
+  version: 0.0.0-use.local
+  resolution: "@openassistant/keplergl@workspace:packages/keplergl"
+  dependencies:
+    "@kepler.gl/actions": "npm:3.0.0"
+    "@kepler.gl/components": "npm:3.0.0"
+    "@kepler.gl/constants": "npm:3.0.0"
+    "@kepler.gl/layers": "npm:3.0.0"
+    "@kepler.gl/localization": "npm:3.0.0"
+    "@kepler.gl/reducers": "npm:3.0.0"
+    "@kepler.gl/styles": "npm:3.0.0"
+    "@kepler.gl/utils": "npm:3.0.0"
+    "@loaders.gl/core": "npm:4.3.3"
+    "@loaders.gl/schema": "npm:4.3.3"
+    "@openassistant/common": "workspace:*"
+    "@openassistant/core": "workspace:*"
+    "@types/redux-logger": "npm:^3"
+    esbuild-plugin-polyfill-node: "npm:^0.3.0"
+    react-intl: "npm:^6.3.0"
+    react-palm: "npm:^3.3.8"
+    react-redux: "npm:^9.2.0"
+    react-virtualized-auto-sizer: "npm:^1.0.25"
+    redux: "npm:^4.2.1"
+    redux-logger: "npm:^3.0.6"
+    styled-components: "npm:6.1.8"
+  peerDependencies:
+    react: ">=18"
+    react-dom: ">=18"
+  languageName: unknown
+  linkType: soft
 
 "@openassistant/ui@npm:0.2.0, @openassistant/ui@workspace:*, @openassistant/ui@workspace:packages/ui":
   version: 0.0.0-use.local
@@ -16579,6 +16556,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"echarts-tools-example@workspace:examples/echarts_tools":
+  version: 0.0.0-use.local
+  resolution: "echarts-tools-example@workspace:examples/echarts_tools"
+  dependencies:
+    "@openassistant/core": "npm:latest"
+    "@openassistant/echarts": "npm:latest"
+    "@openassistant/ui": "npm:latest"
+    "@types/react": "npm:^18.3.1"
+    "@types/react-dom": "npm:^18.3.1"
+    autoprefixer: "npm:^10.4.20"
+    esbuild: "npm:^0.24.2"
+    esbuild-plugin-tailwindcss: "npm:^1.2.1"
+    esbuild-style-plugin: "npm:^1.6.3"
+    open: "npm:^10.1.0"
+    postcss: "npm:^8.4.49"
+    react: "npm:18.3.1"
+    react-dom: "npm:18.3.1"
+    tailwind: "npm:^4.0.0"
+  languageName: unknown
+  linkType: soft
+
 "echarts@npm:^5.5.1":
   version: 5.6.0
   resolution: "echarts@npm:5.6.0"
@@ -25622,12 +25620,12 @@ __metadata:
     "@lexical/react": "npm:^0.23.1"
     "@next/eslint-plugin-next": "npm:^15.1.5"
     "@nextui-org/theme": "npm:^2.4.4"
-    "@openassistant/common": "npm:0.2.0"
-    "@openassistant/core": "npm:0.2.0"
-    "@openassistant/duckdb": "npm:0.2.0"
-    "@openassistant/echarts": "npm:0.2.0"
-    "@openassistant/keplergl": "npm:0.2.0"
-    "@openassistant/ui": "npm:0.2.0"
+    "@openassistant/common": "npm:latest"
+    "@openassistant/core": "npm:latest"
+    "@openassistant/duckdb": "npm:latest"
+    "@openassistant/echarts": "npm:latest"
+    "@openassistant/keplergl": "npm:latest"
+    "@openassistant/ui": "npm:latest"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
     "@types/react-grid-layout": "npm:^1"

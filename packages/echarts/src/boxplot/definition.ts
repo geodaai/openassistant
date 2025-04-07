@@ -40,6 +40,19 @@ export type BoxplotFunctionContext = {
   config?: { isDraggable?: boolean; theme?: string };
 };
 
+/**
+ * Check if the context is a BoxplotFunctionContext.
+ * @param context - The context to check.
+ * @returns True if the context is a BoxplotFunctionContext, false otherwise.
+ */
+export function isBoxplotFunctionContext(
+  context: unknown
+): context is BoxplotFunctionContext {
+  return (
+    typeof context === 'object' && context !== null && 'getValues' in context
+  );
+}
+
 type ValueOf<T> = T[keyof T];
 type BoxplotFunctionContextValues = ValueOf<BoxplotFunctionContext>;
 
@@ -115,7 +128,7 @@ export type BoxplotToolProps = {
  * To use this tool, you need to provide the implementation of the `getValues` function.
  * This function will be used to retrieve the values of the variable from the dataset.
  * Note: the values are only used to create the box plot, and are not sent to the LLM.
- * 
+ *
  * For example:
  *
  * ```ts

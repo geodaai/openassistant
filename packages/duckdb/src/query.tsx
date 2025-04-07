@@ -88,7 +88,7 @@ type OnSelectedCallback = (
  * @property duckDB - The duckdb instance. It's optional. If not provided, the function will initialize a new duckdb instance, and create a new table using {@link getValues}.
  * @property onSelected - The callback function can be used to sync the selections of the query result table with the original dataset. See {@link OnSelectedCallback} for more details.
  */
-type QueryDuckDBFunctionContext = {
+export type QueryDuckDBFunctionContext = {
   getValues: (datasetName: string, variableName: string) => unknown[];
   duckDB?: duckdb.AsyncDuckDB;
   onSelected?: OnSelectedCallback;
