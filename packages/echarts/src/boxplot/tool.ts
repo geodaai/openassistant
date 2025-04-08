@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { isBoxplotFunctionContext } from './definition';
 import { BoxplotDataProps, createBoxplot } from './component/utils';
 import { generateId } from '@openassistant/common';
-import { BoxplotComponent } from './component/box-plot-component';
+import { BoxplotComponent, BoxplotComponentContainer } from './component/box-plot-component';
 
 async function executeBoxplot(
   { datasetName, variableNames, boundIQR = 1.5 },
@@ -44,12 +44,13 @@ async function executeBoxplot(
       additionalData: {
         id: boxplotId,
         datasetName,
-        variableNames,
+        variables: variableNames,
         boxplotData,
         boundIQR,
         data,
-        theme: config?.theme,
-        isDraggable: config?.isDraggable,
+        theme: config?.theme || 'light',
+        isDraggable: config?.isDraggable || false,
+        isExpanded: config?.isExpanded || false,
       },
     };
   } catch (error) {
@@ -125,5 +126,5 @@ export const boxplot = tool({
       isDraggable: false,
     },
   },
-  component: BoxplotComponent,
+  component: BoxplotComponentContainer,
 });

@@ -1,4 +1,4 @@
-import { useCallback, DragEvent } from 'react';
+import { useCallback, DragEvent, useState } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import {
   Button,
@@ -28,6 +28,8 @@ import { ExpandableContainer } from '@openassistant/common';
 export function BoxplotComponentContainer(
   props: BoxplotOutputData
 ): JSX.Element | null {
+  const [isExpanded, setIsExpanded] = useState(props.isExpanded);
+
   const onDragStart = (e: DragEvent<HTMLButtonElement>) => {
     e.dataTransfer.setData(
       'text/plain',
@@ -42,12 +44,17 @@ export function BoxplotComponentContainer(
     e.stopPropagation();
   };
 
+  const onExpanded = (flag: boolean) => {
+    setIsExpanded(flag);
+  };
+
   return (
     <ExpandableContainer
-      defaultWidth={600}
-      defaultHeight={800}
+      defaultWidth={isExpanded ? 600 : undefined}
+      defaultHeight={isExpanded ? 600 : props.variables.length * 100 + 120}
       draggable={props.isDraggable || false}
       onDragStart={onDragStart}
+      onExpanded={onExpanded}
     >
       <BoxplotComponent {...props} />
     </ExpandableContainer>
@@ -101,12 +108,7 @@ export function BoxplotComponent(props: BoxplotOutputData): JSX.Element | null {
   };
 
   return (
-    <AutoSizer>
-      {({ height, width }) => (
-        <div
-          style={{ height: Math.max(height, 200), width }}
-          className="relative"
-        >
+    <div className="relative w-full h-full">
           <div className="h-full w-full flex flex-col rounded-lg gap-2 shadow-secondary-1 dark:text-gray-100">
             <div className="relative h-full py-2 flex-grow">
               <div className="absolute left-0 top-0 h-full w-full">
@@ -114,7 +116,7 @@ export function BoxplotComponent(props: BoxplotOutputData): JSX.Element | null {
               </div>
             </div>
             <div className="footer text-xs">
-              {!props.isExpanded && (
+              {props.showMore && (
                 <div className="flex w-full justify-end">
                   <Button
                     size="sm"
@@ -170,9 +172,7 @@ export function BoxplotComponent(props: BoxplotOutputData): JSX.Element | null {
                 </div>
               )}
             </div>
-          </div>
-        </div>
-      )}
-    </AutoSizer>
+      </div>
+    </div>
   );
 }

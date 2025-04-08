@@ -38,7 +38,7 @@ export const MessageActions = ({
   };
 
   return (
-    <div className="">
+    <div className="opacity-50">
       <Tooltip content="Drag to move">
         <Button
           isIconOnly

@@ -1,40 +1,67 @@
-import esbuild from 'esbuild';
-import { sassPlugin } from 'esbuild-sass-plugin';
+import * as esbuild from 'esbuild';
 import { tailwindPlugin } from 'esbuild-plugin-tailwindcss';
-import { stylePlugin } from 'esbuild-style-plugin';
-import { open } from 'open';
+import open from 'open';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const isDev = process.argv.includes('--start');
 
 const config = {
-  entryPoints: [path.join(__dirname, 'src/main.tsx')],
+  entryPoints: ['src/main.tsx'],
   bundle: true,
-  outdir: path.join(__dirname, 'build'),
+  outfile: 'dist/main.js',
+  platform: 'browser',
   minify: !isDev,
   sourcemap: isDev,
-  target: ['es2020'],
-  format: 'esm',
-  platform: 'browser',
+  loader: {
+    '.svg': 'file',
+    '.png': 'file',
+    '.jpg': 'file',
+    '.jpeg': 'file',
+    '.gif': 'file',
+    '.ico': 'file',
+    '.webp': 'file',
+    '.css': 'css',
+  },
+  define: {
+    'process.env.OPENAI_API_KEY': JSON.stringify(process.env.OPENAI_API_KEY),
+  },
   plugins: [
     tailwindPlugin({
       tailwindConfig: path.join(__dirname, 'tailwind.config.js'),
     }),
-    stylePlugin(),
   ],
 };
 
 if (isDev) {
-  const ctx = await esbuild.context(config);
+  const ctx = await esbuild.context({
+    ...config,
+    minify: false,
+    sourcemap: true,
+    banner: {
+      js: `new EventSource('/esbuild').addEventListener('change', () => location.reload());`,
+    },
+  });
   await ctx.watch();
   await ctx.serve({
-    servedir: path.join(__dirname, 'build'),
+    servedir: '.',
     port: 3000,
+    fallback: 'index.html',
+    onRequest: ({ remoteAddress, method, path, status, timeInMS }) => {
+      console.info(
+        remoteAddress,
+        status,
+        `"${method} ${path}" [${timeInMS}ms]`
+      );
+    },
   });
+  console.info(
+    `Development server running at http://localhost:3000, press Ctrl+C to stop`
+  );
   await open('http://localhost:3000');
 } else {
   await esbuild.build(config);
-} 
+}

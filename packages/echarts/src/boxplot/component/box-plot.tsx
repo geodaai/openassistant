@@ -1,5 +1,4 @@
 import { useMemo, useRef, useState } from 'react';
-import AutoSizer from 'react-virtualized-auto-sizer';
 import ReactEChartsCore from 'echarts-for-react/lib/core';
 import * as echarts from 'echarts/core';
 import { BoxplotChart, ScatterChart } from 'echarts/charts';
@@ -55,9 +54,12 @@ export type BoxplotOutputData = {
   variables: string[];
   boxplotData: BoxplotDataProps;
   theme?: string;
+  showMore?: boolean;
   isExpanded?: boolean;
   isDraggable?: boolean;
   setIsExpanded?: (isExpanded: boolean) => void;
+  height?: number;
+  width?: number;
 } & CreateBoxplotProps;
 
 /**
@@ -139,35 +141,24 @@ export const Boxplot = (props: BoxplotOutputData) => {
 
   return useMemo(
     () => (
-      <AutoSizer>
-        {({ height, width }) => (
-          <div style={{ height, width }}>
-            <div
-              style={{ height: '100%' }}
-              className="h-full w-full flex flex-col rounded-lg p-6 text-gray-900 dark:text-gray-100"
-            >
-              <div className="flex-col items-start p-2">
-                <p className="text-tiny font-bold uppercase">
-                  {variables.join(',')}
-                </p>
-                <small className="text-default-500">{datasetName}</small>
-              </div>
-              <div style={{ height: '100%' }} className="py-2 flex-grow">
-                <ReactEChartsCore
-                  echarts={echarts}
-                  option={option}
-                  notMerge={true}
-                  lazyUpdate={true}
-                  theme={theme || 'dark'}
-                  onEvents={bindEvents}
-                  style={{ height: '100%', width: '100%' }}
-                  ref={eChartsRef}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-      </AutoSizer>
+      <div className="h-full w-full flex flex-col rounded-lg p-6 text-gray-900 dark:text-gray-100">
+        <div className="flex-col items-start p-2">
+          <p className="text-tiny font-bold uppercase">{variables.join(',')}</p>
+          <small className="text-default-500">{datasetName}</small>
+        </div>
+        <div style={{ height: '100%' }} className="py-2 flex-grow">
+          <ReactEChartsCore
+            echarts={echarts}
+            option={option}
+            notMerge={true}
+            lazyUpdate={true}
+            theme={theme || 'dark'}
+            onEvents={bindEvents}
+            style={{ height: '100%', width: '100%' }}
+            ref={eChartsRef}
+          />
+        </div>
+      </div>
     ),
     [variables, datasetName, option, theme, bindEvents]
   );

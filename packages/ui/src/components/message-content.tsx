@@ -44,7 +44,7 @@ export function MessageContent({
   components,
 }: MessageContentProps) {
   return (
-    <>
+    <div style={{ paddingRight: '30px' }}>
       <div className="flex flex-col gap-4">
         {/* show screenshot image */}
         {customMessage &&
@@ -79,6 +79,6 @@ export function MessageContent({
           data-testid="spinner-icon"
         />
       )}
-    </>
+    </div>
   );
 }

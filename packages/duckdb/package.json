@@ -26,7 +26,6 @@
   "scripts": {
     "build": "node esbuild.config.mjs",
     "prepublishOnly": "yarn build",
-    "watch": "node esbuild.config.mjs --watch",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {

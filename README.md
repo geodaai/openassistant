@@ -15,7 +15,7 @@ Check out the following examples using OpenAssistant in action:
 
 ### Installation
 
-Install the core packages using npm:
+Install the core packages:
 
 ```bash
 npm install @openassistant/core
@@ -23,7 +23,7 @@ npm install @openassistant/core
 
 ### Basic Usage
 
-Then, you can use the OpenAssistant in your application:
+Then, you can use the OpenAssistant in your application. For example:
 
 ```ts
 import { createAssistant } from '@openassistant/core';
@@ -73,7 +73,7 @@ OpenAssistant also supports the following model providers:
 
 ### Add a React Chat Component to your App
 
-OpenAssistant provides a pre-built chat component that you can use in your React application.
+If you don't want to build your own chat interface, OpenAssistant provides a pre-built chat component that you can use in your React application. 
 
 #### Installation
 
@@ -109,6 +109,8 @@ function App() {
 }
 ```
 
+Note: you don't need to use `createAssistant()` to create the assistant instance, you can use the `AiAssistant` component directly.
+
 <img src="https://openassistant-doc.vercel.app/assets/images/getstart-dark-499fd880728b7978a32aa9e8742a0f38.png" width="300" />
 
 
@@ -117,21 +119,32 @@ See the source code of the example 🔗 [here](https://github.com/geodacenter/op
 If you are using TailwindCSS, you need to add the following configurations to your `tailwind.config.js` file:
 
 ```tsx
+import { nextui } from '@nextui-org/react';
+...
+
 module.exports = {
   content: [
-    ...'./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
+    ...,
+    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
     './node_modules/@openassistant/ui/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {},
   },
+  darkMode: 'class',
   plugins: [nextui()],
 };
 ```
 
 ## OpenAssistant Tools
 
-OpenAssistant provides a set of tools that you can use in your AI application. For a quick example:
+OpenAssistant provides a set of tools that you can use in your AI application. 
+- [DuckDB tools](https://openassistant-doc.vercel.app/docs/tutorial-extras/duckdb-plugin)
+- [ECharts tools](https://openassistant-doc.vercel.app/docs/tutorial-extras/echarts-plugin)
+- [Kepler.gl tools](https://openassistant-doc.vercel.app/docs/tutorial-extras/keplergl-plugin)
+- [Data Analysis tools](https://openassistant-doc.vercel.app/docs/tutorial-extras/geoda-plugin)
+
+For a quick example:
 
 **localQuery** in @openassistant/duckdb
 
@@ -199,7 +212,7 @@ const localQueryTool = {
 
 <img width="300" src="https://private-user-images.githubusercontent.com/2423887/430499610-4115b474-13af-48ba-b69e-b39cc325f1b1.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDM4MzE5MTksIm5iZiI6MTc0MzgzMTYxOSwicGF0aCI6Ii8yNDIzODg3LzQzMDQ5OTYxMC00MTE1YjQ3NC0xM2FmLTQ4YmEtYjY5ZS1iMzljYzMyNWYxYjEucG5nP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI1MDQwNSUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNTA0MDVUMDU0MDE5WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9NmI2NDY5MDcwZTY3NDlmM2I3NmFjY2YyYWU3YjIxYjA2NTFkNzY2OTU2NTQ4OGJkYWVkMThkNWMzNWI5N2JmMSZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.AzgoJi2_TSpal0dBV9DOQ4D3W7dfpskz5Nh-ihMLkMI"/>
 
-See the source code of the example 🔗 [here](https://github.com/openassistant/openassistant/tree/main/examples/duckdb_esbuild).
+See the source code of the example 🔗 [here](https://github.com/geodacenter/openassistant/tree/main/examples/duckdb_esbuild).
 
 ## 🌟 Features
 
@@ -265,9 +278,9 @@ Yes, the data you used in your application stays within the browser, and will **
 
 OpenAssistant provides function tools, which you can use in your application with just a few lines of code. For example,
 
-- the [DuckDB plugin](https://openassistant-doc.vercel.app/docs/tutorial-basics/add-function-tool) allows the AI assistant to query your data using DuckDB. See a tutorial [here](https://openassistant-doc.vercel.app/docs/tutorial-extras/duckdb-plugin).
-- the [ECharts plugin](https://openassistant-doc.vercel.app/docs/tutorial-basics/add-function-tool) allows the AI assistant to visualize data using ECharts. See a tutorial [here](https://openassistant-doc.vercel.app/docs/tutorial-extras/echarts-plugin).
-- the [Kepler.gl plugin](https://openassistant-doc.vercel.app/docs/tutorial-basics/add-function-tool) allows the AI assistant to create beautiful maps. See a tutorial [here](https://openassistant-doc.vercel.app/docs/tutorial-extras/keplergl-plugin).
-- the [GeoDa plugin](https://openassistant-doc.vercel.app/docs/tutorial-basics/add-function-tool) allows the AI assistant to apply spatial data analysis using GeoDa. See a tutorial [here](https://openassistant-doc.vercel.app/docs/tutorial-extras/geoda-plugin).
+- the [DuckDB tools](https://openassistant-doc.vercel.app/docs/tutorial-basics/add-function-tool) allows the AI assistant to query your data using DuckDB. See a tutorial [here](https://openassistant-doc.vercel.app/docs/tutorial-extras/duckdb-plugin).
+- the [ECharts tools](https://openassistant-doc.vercel.app/docs/tutorial-basics/add-function-tool) allows the AI assistant to visualize data using ECharts. See a tutorial [here](https://openassistant-doc.vercel.app/docs/tutorial-extras/echarts-plugin).
+- the [Kepler.gl tools](https://openassistant-doc.vercel.app/docs/tutorial-basics/add-function-tool) allows the AI assistant to create beautiful maps. See a tutorial [here](https://openassistant-doc.vercel.app/docs/tutorial-extras/keplergl-plugin).
+- the [Data Analysis tools](https://openassistant-doc.vercel.app/docs/tutorial-basics/add-function-tool) allows the AI assistant to apply spatial data analysis using GeoDa. See a tutorial [here](https://openassistant-doc.vercel.app/docs/tutorial-extras/geoda-plugin).
 
 If you want to create your own function tool, you can follow the tutorial [here](https://openassistant-doc.vercel.app/docs/tutorial-basics/add-function-tool).

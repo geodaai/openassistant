@@ -12,11 +12,11 @@ export function ResizablePlotContainer({
   handlePosition?: 'bottomRight' | 'bottomLeft' | 'topRight' | 'topLeft';
 }) {
   return (
-    <div className="w-full mt-4 mb-8">
+    <div className="w-full h-full mt-4 mb-2">
       <Resizable
         defaultSize={{
           width: defaultWidth ?? '100%',
-          height: defaultHeight ?? 380,
+          height: defaultHeight ?? '100%',
         }}
         minWidth={200}
         minHeight={80}

@@ -16,18 +16,21 @@ export function ExpandableContainer({
   defaultHeight,
   draggable = false,
   onDragStart,
+  onExpanded,
 }: {
   children: JSX.Element;
   defaultWidth?: number;
   defaultHeight?: number;
   draggable?: boolean;
   onDragStart?: DragEventHandler<HTMLButtonElement>;
+  onExpanded?: (isExpanded: boolean) => void;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const targetRef = useRef(null);
   const { moveProps } = useDraggable({ targetRef, isDisabled: !isExpanded });
 
   const onExpandComponent = () => {
+    onExpanded?.(!isExpanded);
     setIsExpanded(!isExpanded);
   };
 
@@ -65,9 +68,10 @@ export function ExpandableContainer({
           )}
           <Popover
             isOpen={isExpanded}
-            placement="left"
-            offset={100}
+            placement="right"
             ref={targetRef}
+            backdrop="opaque"
+            shouldFlip={true}
           >
             <PopoverTrigger>
               <Button
@@ -91,8 +95,8 @@ export function ExpandableContainer({
               {isExpanded && (
                 <>
                   <ResizablePlotContainer
-                    defaultHeight={defaultHeight}
-                    defaultWidth={defaultWidth}
+                    {...(defaultWidth ? { defaultWidth } : {})}
+                    {...(defaultHeight ? { defaultHeight } : {})}
                   >
                     <div className="h-full w-full relative mb-2">
                       {cloneElement(children, { isExpanded: true })}

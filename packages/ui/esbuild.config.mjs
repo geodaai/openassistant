@@ -82,10 +82,23 @@ if (isStart) {
     process.exit(1);
   });
 } else if (isWatch) {
-  createWatchMode({ ...baseConfig, outdir: 'dist' }, 3001).catch((e) => {
-    console.error(e);
-    process.exit(1);
-  });
+  // Create watch mode for both ESM and CJS formats
+  const esmConfig = {
+    ...baseConfig,
+    format: 'esm',
+    outfile: 'dist/index.esm.js',
+  };
+  const cjsConfig = {
+    ...baseConfig,
+    format: 'cjs',
+    outfile: 'dist/index.cjs.js',
+    platform: 'node',
+    target: ['es2017'],
+  };
+
+  // Start watching both formats
+  await createWatchMode(esmConfig);
+  await createWatchMode(cjsConfig);
 } else {
   // Build all formats
   Promise.all([

@@ -129,7 +129,7 @@ const MessageCard = forwardRef<HTMLDivElement, MessageCardProps>(
         <div className="relative flex-none">
           <AvatarBadge avatar={avatar} hasFailed={hasFailed} />
         </div>
-        <div className="flex w-full flex-col gap-4 overflow-x-auto">
+        <div className="flex w-full flex-col gap-4 overflow-x-auto relative">
           <div
             className={cn(
               'group relative w-full rounded-medium px-4 py-3',
@@ -152,7 +152,9 @@ const MessageCard = forwardRef<HTMLDivElement, MessageCardProps>(
               />
             </div>
             <div
-              className={`opacity-0 group-hover:opacity-100 absolute right-2 top-2 flex rounded-full shadow-small bg-content2`}
+              className={
+                'opacity-0 group-hover:opacity-100 absolute right-2 top-1 flex rounded-full shadow-small bg-content2'
+              }
             >
               {showFeedback && !hasFailed && status !== 'pending' && (
                 <MessageActions

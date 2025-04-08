@@ -15,12 +15,7 @@
     "checkJs": false,
     "skipLibCheck": true,
     "noImplicitAny": false,
-    "baseUrl": ".",
-    "paths": {
-      "@openassistant/core": ["./packages/core/src"],
-      "@openassistant/echarts": ["./packages/echarts/src"],
-      "@openassistant/common": ["./packages/common/src"],
-    }
+    "baseUrl": "."
   },
   "exclude": [
     "node_modules",
