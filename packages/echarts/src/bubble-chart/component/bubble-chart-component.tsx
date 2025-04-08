@@ -3,7 +3,7 @@ import { BubbleChartOutputData, BubbleChart } from './bubble-chart';
 
 /**
  * A React component that renders an interactive bubble chart visualization.
- * 
+ *
  * @param props BubbleChartOutputData - The configuration and data for the bubble chart:
  *   - datasetName: string - The name of the dataset being visualized
  *   - data: object - The chart data containing:
@@ -14,9 +14,9 @@ import { BubbleChartOutputData, BubbleChart } from './bubble-chart';
  *   - theme?: string - Optional theme setting for the chart
  *   - isExpanded?: boolean - Optional flag to control chart expansion state
  *   - isDraggable?: boolean - Optional flag to enable/disable drag functionality
- * 
+ *
  * @returns A responsive bubble chart wrapped in an auto-sizing container
- * 
+ *
  * @example
  * <BubbleChartComponent
  *   datasetName="Sample Dataset"

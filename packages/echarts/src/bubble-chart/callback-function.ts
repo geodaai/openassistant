@@ -17,7 +17,7 @@ export type BubbleChartOutputResult =
       details: string;
     };
 
-function isBubbleChartFunctionArgs(
+export function isBubbleChartFunctionArgs(
   data: unknown
 ): data is BubbleChartFunctionArgs {
   return typeof data === 'object' && data !== null && 'datasetName' in data
@@ -26,12 +26,15 @@ function isBubbleChartFunctionArgs(
     && 'variableSize' in data;
 }
 
-function isBubbleChartFunctionContext(
+export function isBubbleChartFunctionContext(
   data: unknown
 ): data is BubbleChartFunctionContext {
   return typeof data === 'object' && data !== null && 'getValues' in data;
 }
 
+/**
+ * @internal @deprecated Use the `bubbleChart` tool instead.
+ */
 export async function BubbleChartCallbackFunction({
   functionName,
   functionArgs,

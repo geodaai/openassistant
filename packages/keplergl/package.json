@@ -8,7 +8,8 @@
   "scripts": {
     "build": "node esbuild.config.mjs",
     "prepublishOnly": "yarn build",
-    "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
+    "watch": "node esbuild.config.mjs --watch"
   },
   "keywords": [],
   "license": "MIT",

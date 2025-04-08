@@ -24,17 +24,17 @@ export type inferParameters<PARAMETERS extends Parameters> =
 /**
  * Represents the result of executing a custom function
  */
-type ExecuteFunctionResult = {
+type ExecuteFunctionResult<RETURN_TYPE = never, ADDITIONAL_DATA = never> = {
   /**
    * The formatted result string that will be sent back to the LLM
    * @type {object}
    */
-  llmResult: object;
+  llmResult: RETURN_TYPE extends never ? RETURN_TYPE : object;
   /**
    * Additional data returned by the function that can be used by the UI
    * @type {object}
    */
-  additionalData?: object;
+  additionalData?: ADDITIONAL_DATA extends never ? ADDITIONAL_DATA : object;
 };
 
 /**
@@ -42,7 +42,12 @@ type ExecuteFunctionResult = {
  * @param PARAMETERS - The parameters of the tool
  * @returns The function that will be called when the tool is executed
  */
-type ExecuteFunction<PARAMETERS extends Parameters> = (
+type ExecuteFunction<
+  PARAMETERS extends Parameters,
+  RETURN_TYPE = never,
+  ADDITIONAL_DATA = never,
+  CONTEXT = never,
+> = (
   /**
    * The arguments of the tool
    */
@@ -57,12 +62,14 @@ type ExecuteFunction<PARAMETERS extends Parameters> = (
          * The context of the tool
          * @type {CustomFunctionContext<unknown> | CustomFunctionContextCallback<unknown>}
          */
-        context?:
-          | CustomFunctionContext<unknown>
-          | CustomFunctionContextCallback<unknown>;
+        context?: CONTEXT extends never
+          ? CONTEXT
+          :
+              | CustomFunctionContext<unknown>
+              | CustomFunctionContextCallback<unknown>;
       }
     | ToolExecutionOptions
-) => PromiseLike<ExecuteFunctionResult>;
+) => PromiseLike<ExecuteFunctionResult<RETURN_TYPE, ADDITIONAL_DATA>>;
 
 /**
 A tool contains the description and the schema of the input that the tool expects.
@@ -74,22 +81,26 @@ The tool can also contain:
 - an optional context for providing additional data for the tool execution.
 - an optional component for rendering additional information (e.g. chart or map) of LLM response.
  */
-export type ExtendedTool<PARAMETERS extends Parameters = never> =
-  Tool<PARAMETERS> & {
-    /** test */
-    execute: ExecuteFunction<PARAMETERS>;
-    /**
-     * The context that will be passed to the function
-     */
-    context?:
-      | CustomFunctionContext<unknown>
-      | CustomFunctionContextCallback<unknown>;
-    /**
-     * The component that will be rendered when the tool is executed
-     * @type {React.ReactNode}
-     */
-    component?: React.ElementType;
-  };
+export type ExtendedTool<
+  PARAMETERS extends Parameters = never,
+  RETURN_TYPE = never,
+  ADDITIONAL_DATA = never,
+  CONTEXT =
+    | CustomFunctionContext<unknown>
+    | CustomFunctionContextCallback<unknown>,
+> = Tool<PARAMETERS> & {
+  /** test */
+  execute: ExecuteFunction<PARAMETERS, RETURN_TYPE, ADDITIONAL_DATA, CONTEXT>;
+  /**
+   * The context that will be passed to the function
+   */
+  context?: CONTEXT;
+  /**
+   * The component that will be rendered when the tool is executed
+   * @type {React.ReactNode}
+   */
+  component?: React.ElementType;
+};
 
 /**
  * Extends the vercel AI tool (see https://sdk.vercel.ai/docs/reference/ai-sdk-core/tool) with additional properties:
@@ -126,13 +137,18 @@ export type ExtendedTool<PARAMETERS extends Parameters = never> =
  * @param tool - The vercel AI tool to extend
  * @returns The extended tool
  */
-export function tool<PARAMETERS extends Parameters = never>(
+export function tool<
+  PARAMETERS extends Parameters = never,
+  RETURN_TYPE = never,
+  ADDITIONAL_DATA = never,
+  CONTEXT = never,
+>(
   /**
    * The vercel AI tool to extend
-   * @type {ExtendedTool<PARAMETERS>}
+   * @type {ExtendedTool<PARAMETERS, RETURN_TYPE, ADDITIONAL_DATA>}
    */
-  tool: ExtendedTool<PARAMETERS>
-): ExtendedTool<PARAMETERS> {
+  tool: ExtendedTool<PARAMETERS, RETURN_TYPE, ADDITIONAL_DATA, CONTEXT>
+): ExtendedTool<PARAMETERS, RETURN_TYPE, ADDITIONAL_DATA, CONTEXT> {
   return tool;
 }
 
@@ -294,7 +310,8 @@ function createCallbackFunction<PARAMETERS extends Parameters>(
     const context = functionContext;
 
     try {
-      const result = await execute?.(args, { context });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const result = await execute?.(args, { context: context as any });
 
       // check result type: {llmResult, outputData}
       if (!isExecuteFunctionResult(result)) {

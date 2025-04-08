@@ -1,4 +1,4 @@
-export const SAMPLE_DATASETS = {
+export const SAMPLE_DATASETS: Record<string, any[]> = {
   myVenues: [
     {
       index: 0,

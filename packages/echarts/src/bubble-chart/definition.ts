@@ -23,6 +23,9 @@ export type BubbleChartFunctionContextValues =
   BubbleChartFunctionContext[keyof BubbleChartFunctionContext];
 
 /**
+ * @internal
+ * @deprecated Use `bubbleChart` tool instead.
+ * 
  * ## Summary
  *
  * Defines the bubble chart function for LLM function calling tool.

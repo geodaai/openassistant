@@ -1,21 +1,50 @@
-import React from 'react';
-import { boxplot } from '@openassistant/echarts';
+import React, { useEffect, useState } from 'react';
+import {
+  boxplot,
+  BoxplotComponentContainer,
+  BoxplotOutputData,
+  BoxplotTool,
+} from '@openassistant/echarts';
 import { AiAssistant } from '@openassistant/ui';
 import { SAMPLE_DATASETS } from './dataset';
 
+const getValues = async (datasetName: string, variableName: string) => {
+  return (SAMPLE_DATASETS[datasetName] as any[]).map(
+    (item) => item[variableName]
+  );
+};
+
+// Extends from BoxplotComponentContainer with custom props
+const BoxplotComponentContainerWithCustomProps = (props: BoxplotOutputData) => {
+  const [rawData, setRawData] = useState<Record<string, number[]>>({});
+
+  useEffect(() => {
+    // get raw data from the props.datasetName and props.variables
+    const fetchData = async () => {
+      const promises = props.variables.map(async (variable) => {
+        const values = await getValues(props.datasetName, variable);
+        return { [variable]: values };
+      });
+      const resolvedDataArray = await Promise.all(promises);
+      const formattedData = resolvedDataArray.reduce(
+        (acc, curr) => ({ ...acc, ...curr }),
+        {}
+      );
+      setRawData(formattedData);
+    };
+
+    fetchData();
+  }, [props.datasetName, props.variables]);
+
+  return <BoxplotComponentContainer {...props} data={rawData} />;
+};
+
 // Create the boxplot tool with the getValues implementation
-const boxplotTool = {
+const boxplotTool: BoxplotTool = {
   ...boxplot,
   context: {
     ...boxplot.context,
-    getValues: async (
-      datasetName: keyof typeof SAMPLE_DATASETS,
-      variableName: string
-    ) => {
-      return (SAMPLE_DATASETS[datasetName] as any[]).map(
-        (item) => item[variableName]
-      );
-    },
+    getValues: getValues,
   },
 };
 

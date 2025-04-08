@@ -1,7 +1,6 @@
 // duckdb/esbuild.config.mjs
 import {
   createBaseConfig,
-  createDevServer,
   createWatchMode,
   buildFormat,
 } from '../../esbuild.config.mjs';
@@ -38,20 +37,26 @@ const baseConfig = createBaseConfig({
   ],
 });
 
-if (process.argv.includes('--watch')) {
-  createWatchMode(baseConfig).catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
-}
+const isWatch = process.argv.includes('--watch');
 
-const isStart = process.argv.includes('--start');
+if (isWatch) {
+  // Create watch mode for both ESM and CJS formats
+  const esmConfig = {
+    ...baseConfig,
+    format: 'esm',
+    outfile: 'dist/index.esm.js',
+  };
+  const cjsConfig = {
+    ...baseConfig,
+    format: 'cjs',
+    outfile: 'dist/index.cjs.js',
+    platform: 'node',
+    target: ['es2017'],
+  };
 
-if (isStart) {
-  createDevServer(baseConfig, 3002).catch((e) => {
-    console.error(e);
-    process.exit(1);
-  });
+  // Start watching both formats
+  await createWatchMode(esmConfig);
+  await createWatchMode(cjsConfig);
 } else {
   // Build all formats
   Promise.all([
