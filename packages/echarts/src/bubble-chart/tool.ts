@@ -7,7 +7,21 @@ import {
 import { generateId } from '@openassistant/common';
 import { BubbleChartComponentContainer } from './component/bubble-chart-component';
 
-export const bubbleChart = tool({
+/**
+ * The bubble chart tool.
+ */
+export const bubbleChart = tool<
+  z.ZodObject<{
+    datasetName: z.ZodString;
+    variableX: z.ZodString;
+    variableY: z.ZodString;
+    variableSize: z.ZodString;
+    variableColor: z.ZodOptional<z.ZodString>;
+  }>,
+  ExecuteBubbleChartResult['llmResult'],
+  ExecuteBubbleChartResult['additionalData'],
+  BubbleChartToolContext
+>({
   description: 'create a bubble chart',
   parameters: z.object({
     datasetName: z.string().describe('The name of the dataset.'),
@@ -32,12 +46,16 @@ export const bubbleChart = tool({
     },
     config: {
       isDraggable: false,
+      theme: 'light',
     },
   },
   component: BubbleChartComponentContainer,
 });
 
-async function executeBubbleChart(args, options) {
+async function executeBubbleChart(
+  args,
+  options
+): Promise<ExecuteBubbleChartResult> {
   try {
     if (!isBubbleChartFunctionArgs(args)) {
       throw new Error(
@@ -76,25 +94,97 @@ async function executeBubbleChart(args, options) {
       additionalData: {
         id,
         datasetName,
-        variableX: { name: variableX, values: xData },
-        variableY: { name: variableY, values: yData },
-        variableSize: { name: variableSize, values: sizeData },
-        ...(variableColor && colorData
-          ? { variableColor: { name: variableColor, values: colorData } }
-          : {}),
-        config,
+        data: {
+          variableX: { name: variableX, values: xData },
+          variableY: { name: variableY, values: yData },
+          variableSize: { name: variableSize, values: sizeData },
+          ...(variableColor && colorData
+            ? { variableColor: { name: variableColor, values: colorData } }
+            : {}),
+        },
+        isDraggable: config?.isDraggable || false,
+        isExpanded: config?.isExpanded || false,
+        theme: config?.theme || 'light',
       },
     };
   } catch (error) {
     return {
       llmResult: {
         success: false,
-        data: {
-          details: `Failed to create bubble chart. ${error}`,
-          instructions:
-            'Pause the execution and ask the user to try with different prompt and context.',
-        },
+        error: `Failed to create bubble chart. ${error}`,
+        instruction:
+          'Pause the execution and ask the user to try with different prompt and context.',
       },
     };
   }
 }
+
+/**
+ * The bubble chart tool.
+ *
+ * To use it, you need to provide the implementation of the `getValues` function.
+ *
+ * @example
+ * ```ts
+ * import { bubbleChart } from '@openassistant/echarts';
+ *
+ * const bubbleChartTool = {
+ *   ...bubbleChart,
+ *   context: {
+ *     getValues: async (datasetName, variableName) => {
+ *       // return the values of the variable from the dataset
+ *       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+ *     },
+ *   },
+ * };
+ * ```
+ *
+ * ### getValues()
+ *
+ * See {@link BubbleChartFunctionContext} for detailed usage.
+ *
+ */
+export type BubbleChartTool = typeof bubbleChart;
+
+export type ExecuteBubbleChartResult = {
+  llmResult: {
+    success: boolean;
+    data?: {
+      id: string;
+      datasetName: string;
+      details: string;
+    };
+    error?: string;
+    instruction?: string;
+  };
+  additionalData?: {
+    id: string;
+    datasetName: string;
+    data: {
+      variableX: { name: string; values: number[] };
+      variableY: { name: string; values: number[] };
+      variableSize: { name: string; values: number[] };
+      variableColor?: { name: string; values: number[] };
+    };
+    isDraggable?: boolean;
+    isExpanded?: boolean;
+    theme?: string;
+  };
+};
+
+/**
+ * The context for the bubble chart tool.
+ *
+ * @param getValues - The function to get the values of the variable from the dataset.
+ * @param onSelected - The function to handle the selected indices of the bubble chart.
+ * @param config - The configuration for the bubble chart.
+ */
+export type BubbleChartToolContext = {
+  getValues: (datasetName: string, variableName: string) => Promise<number[]>;
+  onSelected?: (datasetName: string, selectedIndices: number[]) => void;
+  config?: {
+    isDraggable?: boolean;
+    isExpanded?: boolean;
+    theme?: string;
+  };
+};

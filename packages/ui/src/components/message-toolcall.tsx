@@ -19,8 +19,9 @@ import {
   CardBody,
 } from '@nextui-org/react';
 import { Icon } from '@iconify/react';
+import '../index.css';
 
-const MarkdownContent = ({
+export const MarkdownContent = ({
   text,
   showMarkdown = true,
 }: {
@@ -40,76 +41,22 @@ const MarkdownContent = ({
       <Markdown
         remarkPlugins={[remarkGfm]}
         components={{
-          pre: ({ children }) => (
-            <pre className="max-w-full overflow-x-auto bg-gray-100 dark:bg-gray-800 p-4 rounded-md my-2">
-              {children}
-            </pre>
-          ),
-          code: ({ children }) => (
-            <code className="max-w-full overflow-x-auto bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md text-sm">
-              {children}
-            </code>
-          ),
-          p: ({ children }) => <p className="leading-relaxed">{children}</p>,
-          h1: ({ children }) => (
-            <h1 className="text-2xl font-bold my-4">{children}</h1>
-          ),
-          h2: ({ children }) => (
-            <h2 className="text-xl font-bold my-3">{children}</h2>
-          ),
-          h3: ({ children }) => (
-            <h3 className="text-lg font-bold my-2">{children}</h3>
-          ),
-          ul: ({ children }) => (
-            <ul className="list-disc pl-6 my-2">{children}</ul>
-          ),
+          ul: ({ children }) => <ul className="list-disc ml-5">{children}</ul>,
           ol: ({ children }) => (
-            <ol
-              className="pl-6 ps-4 my-0 mb-5 flex flex-col gap-4"
-              style={{ listStyleType: 'decimal', paddingLeft: '16px' }}
-            >
-              {children}
-            </ol>
+            <ol className="list-decimal ml-8 -mt-5">{children}</ol>
           ),
           li: ({ children }) => (
-            <li
-              className="m-0 ps-0 flex items-start relative"
-              style={{ paddingLeft: '16px' }}
-            >
-              <span className="absolute left-0 top-0">•</span>
+            // Used Tailwind's CSS nesting syntax to target p tags directly inside li elements with [&>p]
+            // Added !mt-0 to force margin-top to 0
+            // Used -translate-y-5 to move the paragraph up by 1.25rem to align with the marker
+            // Added negative margin bottom to compensate for the translated paragraph
+            <li className="my-0 h-fit min-h-0 [&>p]:-mb-6 [&>p]:!mt-0 [&>p]:-translate-y-5 [&>p]:h-fit [&>p]:leading-5">
               {children}
             </li>
           ),
-          blockquote: ({ children }) => (
-            <blockquote className="border-l-4 border-gray-300 dark:border-gray-600 pl-4 my-2 italic">
-              {children}
-            </blockquote>
+          p: ({ children }) => (
+            <p className="text-sm whitespace-pre-wrap m-0 p-0">{children}</p>
           ),
-          table: ({ children }) => (
-            <table className="w-full border-collapse my-4">{children}</table>
-          ),
-          th: ({ children }) => (
-            <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 bg-gray-100 dark:bg-gray-800">
-              {children}
-            </th>
-          ),
-          td: ({ children }) => (
-            <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">
-              {children}
-            </td>
-          ),
-          a: ({ children, href }) => (
-            <a
-              href={href}
-              className="text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              {children}
-            </a>
-          ),
-          strong: ({ children }) => (
-            <strong className="font-bold">{children}</strong>
-          ),
-          em: ({ children }) => <em className="italic">{children}</em>,
         }}
       >
         {text}
@@ -207,11 +154,12 @@ export function ToolCallComponent({
 
   return (
     <div className="flex flex-col gap-2">
-      <Card>
-        <CardBody>
+      <Card radius="none" classNames={{ body: 'p-0 pl-2 pr-2' }}>
+        <CardBody className="opacity-50">
           <Accordion
             variant="light"
             isCompact={true}
+            className="p-0 text-tiny"
             itemClasses={{
               title: 'text-tiny',
               content: 'text-tiny',
@@ -219,6 +167,7 @@ export function ToolCallComponent({
           >
             <AccordionItem
               key="1"
+              isCompact={true}
               aria-label={toolName}
               title={`> ${toolName}`}
               startContent={

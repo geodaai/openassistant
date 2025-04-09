@@ -33,11 +33,12 @@ export type OnSelectedCallback = (
  * @param config - Optional configuration object for the boxplot.
  * @param config.theme - Visual theme for the boxplot ('light' or 'dark').
  * @param config.isDraggable - Whether the boxplot can be dragged to other containers.
+ * @param config.isExpanded - Whether the boxplot is expanded.
  */
 export type BoxplotFunctionContext = {
   getValues: GetValues;
   onSelected?: OnSelectedCallback;
-  config?: { isDraggable?: boolean; theme?: string };
+  config?: { isDraggable?: boolean; theme?: string; isExpanded?: boolean };
 };
 
 /**

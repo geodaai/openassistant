@@ -83,13 +83,13 @@ export const boxplot = tool<
 
 /**
  * The type of the boxplot tool, which contains the following properties:
- * 
+ *
  * - description: The description of the tool.
  * - parameters: The parameters of the tool.
  * - execute: The function that will be called when the tool is executed.
  * - context: The context of the tool.
  * - component: The component that will be used to render the tool.
- * 
+ *
  * The implementation of the tool is defined in {@link boxplot}.
  */
 export type BoxplotTool = typeof boxplot;
@@ -98,86 +98,27 @@ export type BoxplotTool = typeof boxplot;
  * The result of the boxplot tool.
  */
 export type ExecuteBoxplotResult = {
-  /**
-   * The result object that will be returned to the LLM.
-   */
   llmResult: {
-    /**
-     * Indicates whether the execution was successful.
-     */
     success: boolean;
-    /**
-     * The result data if the execution was successful.
-     */
     result?: {
-      /**
-       * The unique ID of the boxplot chart.
-       */
       id: string;
-      /**
-       * The data required to render the boxplot.
-       */
       boxplotData: BoxplotDataProps;
-      /**
-       * The bound IQR value used for the boxplot calculation.
-       */
       boundIQR: number;
-      /**
-       * The name of the dataset used.
-       */
       datasetName: string;
     };
-    /**
-     * The error message if the execution failed.
-     */
     error?: string;
-    /**
-     * Instructions for the LLM in case of failure.
-     */
     instruction?: string;
   };
-  /**
-   * Additional data associated with the boxplot result, primarily for rendering the component.
-   */
   additionalData?: {
-    /**
-     * The unique ID of the boxplot chart, matching the one in `llmResult.result`.
-     */
     id: string;
-    /**
-     * The name of the dataset used.
-     */
     datasetName: string;
-    /**
-     * The names of the variables included in the boxplot.
-     */
     variables: string[];
-    /**
-     * The data required to render the boxplot, matching the one in `llmResult.result`.
-     */
     boxplotData: BoxplotDataProps;
-    /**
-     * The bound IQR value used for the boxplot calculation.
-     */
     boundIQR: number;
-    /**
-     * The theme to be used for rendering the chart ('light' or 'dark').
-     */
-    theme: string;
-    /**
-     * Indicates whether the chart component is draggable.
-     */
-    isDraggable: boolean;
-    /**
-     * Indicates whether the chart component should be initially expanded.
-     */
-    isExpanded: boolean;
-    /**
-     * The raw data used to generate the boxplot. Keys are variable names, values are arrays of numbers.
-     * This is populated by the `getValues` function.
-     */
-    // The raw data of the dataset, which is used to render the boxplot chart.
     data?: Record<string, number[]>;
+    theme?: string;
+    isDraggable?: boolean;
+    isExpanded?: boolean;
   };
 };
 

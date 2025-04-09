@@ -4,7 +4,7 @@ import {
   StreamMessage,
   ToolCallComponents,
 } from '@openassistant/core';
-import { PartComponent } from './message-toolcall';
+import { MarkdownContent, PartComponent } from './message-toolcall';
 
 const FailedMessage = ({ githubIssueLink }: { githubIssueLink?: string }) => (
   <p className="mb-2" data-testid="failed-message">
@@ -70,7 +70,7 @@ export function MessageContent({
         {!message?.parts &&
           message?.text &&
           (useMarkdown ? (
-            <div className="markdown-body">{message.text}</div>
+            <MarkdownContent text={message.text} />
           ) : (
             <div>{message.text}</div>
           ))}
