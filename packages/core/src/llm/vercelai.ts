@@ -112,7 +112,7 @@ export class VercelAi extends AbstractAssistant {
   protected static instructions = '';
   protected static toolChoice: ToolChoice<ToolSet> = 'auto';
   protected static toolCallStreaming = false;
-  protected static maxSteps = 4;
+  protected static maxSteps = 20;
   protected static additionalContext = '';
   protected static temperature = 0.0;
   protected static topP: number | undefined = undefined;

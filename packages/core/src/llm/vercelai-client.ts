@@ -390,7 +390,7 @@ export abstract class VercelAiClient extends VercelAi {
       totalTokens: 0,
     };
 
-    const maxSteps = VercelAiClient.maxSteps || 4;
+    const maxSteps = VercelAiClient.maxSteps || 20;
     const messageCount = this.messages.length;
     const maxStep = extractMaxToolInvocationStep(
       this.messages[this.messages.length - 1]?.toolInvocations

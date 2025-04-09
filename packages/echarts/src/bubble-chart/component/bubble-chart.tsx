@@ -13,7 +13,6 @@ import ReactEChartsCore from 'echarts-for-react/lib/core';
 
 import { ECHARTS_DARK_THEME } from '../../echarts-theme';
 import { handleBrushSelection } from '../../echarts-updater';
-import AutoSizer from 'react-virtualized-auto-sizer';
 import { createBubbleChartOption } from './bubble-chart-option';
 
 // Register the required components
@@ -128,36 +127,27 @@ export function BubbleChart(props: BubbleChartOutputData): JSX.Element | null {
 
   return useMemo(
     () => (
-      <AutoSizer>
-        {({ height, width }) => (
-          <div style={{ height, width }}>
-            <div
-              style={{ height: '100%' }}
-              className="h-full w-full flex flex-col rounded-lg bg-default-100 p-6 text-gray-900 shadow-secondary-1 dark:bg-gray-950 dark:text-gray-100"
-            >
-              <div className="flex-col items-start p-2">
-                <p className="text-tiny font-bold uppercase">
-                  {`x: ${data.variableX.name}, y: ${data.variableY.name}, size: ${data.variableSize.name}`}
-                  {data.variableColor && `, color: ${data.variableColor.name}`}
-                </p>
-                <small className="text-default-500">{datasetName}</small>
-              </div>
-              <div style={{ height: '100%' }} className="py-2 flex-grow">
-                <ReactEChartsCore
-                  echarts={echarts}
-                  option={option}
-                  notMerge={true}
-                  lazyUpdate={true}
-                  theme={theme || 'dark'}
-                  onEvents={bindEvents}
-                  style={{ height: '100%', width: '100%' }}
-                  ref={eChartsRef}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-      </AutoSizer>
+      <div className="h-full w-full flex flex-col rounded-lg bg-default-100 p-6 text-gray-900 shadow-secondary-1 dark:bg-gray-950 dark:text-gray-100">
+        <div className="flex-col items-start p-2">
+          <p className="text-tiny font-bold uppercase">
+            {`x: ${data.variableX.name}, y: ${data.variableY.name}, size: ${data.variableSize.name}`}
+            {data.variableColor && `, color: ${data.variableColor.name}`}
+          </p>
+          <small className="text-default-500">{datasetName}</small>
+        </div>
+        <div style={{ height: '100%' }} className="py-2 flex-grow">
+          <ReactEChartsCore
+            echarts={echarts}
+            option={option}
+            notMerge={true}
+            lazyUpdate={true}
+            theme={theme || 'dark'}
+            onEvents={bindEvents}
+            style={{ height: '100%', width: '100%' }}
+            ref={eChartsRef}
+          />
+        </div>
+      </div>
     ),
     [
       data.variableX.name,

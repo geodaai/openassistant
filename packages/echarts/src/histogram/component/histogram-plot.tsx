@@ -1,6 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
 import ReactEChartsCore from 'echarts-for-react';
-import AutoSizer from 'react-virtualized-auto-sizer';
 
 import {
   use as echartsUse,
@@ -32,6 +31,7 @@ echartsUse([
 echartsRegisterTheme('dark', ECHARTS_DARK_THEME);
 
 export type HistogramOutputData = {
+  id?: string;
   datasetName: string;
   variableName: string;
   histogramData: HistogramDataProps[];
@@ -114,36 +114,25 @@ export function HistogramComponent({
   }
 
   return (
-    <AutoSizer>
-      {({ height, width }) => (
-        <div style={{ height, width }}>
-          <div
-            style={{ height: '100%' }}
-            className="h-full w-full flex flex-col rounded-lg bg-default-100 p-6 text-gray-900 shadow-secondary-1 dark:bg-gray-950 dark:text-gray-100"
-          >
-            <div className="flex-col items-start p-2">
-              <p className="text-tiny font-bold uppercase">{variableName}</p>
-              <small className="truncate text-default-500">
-                {variableName}
-              </small>
-            </div>
-            <div style={{ height: '100%' }} className="py-2 flex-grow">
-              <ReactEChartsCore
-                option={option}
-                notMerge={true}
-                lazyUpdate={true}
-                style={{ height: '100%', width: '100%' }}
-                ref={eChartsRef}
-                theme={theme || 'dark'}
-                onEvents={bindEvents}
-                onChartReady={() => {
-                  setRendered(true);
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-    </AutoSizer>
+    <div className="h-full w-full flex flex-col rounded-lg bg-default-100 p-6 text-gray-900 shadow-secondary-1 dark:bg-gray-950 dark:text-gray-100">
+      <div className="flex-col items-start p-2">
+        <p className="text-tiny font-bold uppercase">{variableName}</p>
+        <small className="truncate text-default-500">{variableName}</small>
+      </div>
+      <div style={{ height: '100%' }} className="py-2 flex-grow">
+        <ReactEChartsCore
+          option={option}
+          notMerge={true}
+          lazyUpdate={true}
+          style={{ height: '100%', width: '100%' }}
+          ref={eChartsRef}
+          theme={theme || 'dark'}
+          onEvents={bindEvents}
+          onChartReady={() => {
+            setRendered(true);
+          }}
+        />
+      </div>
+    </div>
   );
 }

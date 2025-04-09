@@ -9,11 +9,13 @@ export * from './scatterplot/component/scatter-regression-plot';
 export * from './scatterplot/component/simple-scatter-plots';
 
 export * from './histogram/definition';
+export * from './histogram/tool';
 export * from './histogram/callback-function';
 export * from './histogram/callback-component';
 export * from './histogram/component/histogram-plot';
 export * from './histogram/component/histogram-option';
 export * from './histogram/component/utils';
+export * from './histogram/component/histogram-component';
 
 export * from './boxplot/definition';
 export * from './boxplot/tool';

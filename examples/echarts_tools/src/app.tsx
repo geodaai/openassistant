@@ -6,6 +6,8 @@ import {
   BoxplotTool,
   bubbleChart,
   BubbleChartTool,
+  histogram,
+  HistogramTool,
 } from '@openassistant/echarts';
 import { AiAssistant } from '@openassistant/ui';
 import { tool } from '@openassistant/core';
@@ -70,6 +72,19 @@ const bubbleChartTool: BubbleChartTool = {
     },
   },
 };
+
+const histogramTool: HistogramTool = {
+  ...histogram,
+  context: {
+    ...histogram.context,
+    getValues: getValues,
+    config: {
+      ...histogram.context?.config,
+      theme,
+    },
+  },
+};
+
 const thinkTool = tool({
   description: 'Think about the question and provide a plan',
   parameters: z.object({
@@ -94,21 +109,19 @@ Welcome to the ECharts Tools Example! You can ask me to create boxplots of the s
 
 1. check the distribution of population of myVenues using box plot
 2. create a bubble chart using latitude and longitude of myVenues, use revenue as the bubble size
-
+3. summarize the dataset myVenues
+4. create a histogram of the population of myVenues
 `;
 
 const instructions = `
 You are a helpful assistant that can create boxplots using ECharts.
 
-Please always use the think tool to think about the question and provide a plan before calling any tools to solve the question.
-Before using any tools, please summarize the plan.
+Please note:
 
-You can use the following tools to solve the question:
-- boxplot: to create a boxplot
-- bubbleChart: to create a bubble chart
-
-When executing the plan, please try to fix the error, e.g. provide correct parameters, if there is any.
-After executing the plan, please summarize the result.
+- Please ALWAYS use the think tool to think about the question and provide a plan before calling any tools to solve the question.
+- Before using any tools, please make a summary of the plan in a markdown format.
+- When executing the plan, please try to fix the error if there is any.
+- After executing the plan, please summarize the result and provide the result in a markdown format.
 
 Please use the following datasets:
 
@@ -138,6 +151,7 @@ export default function App() {
               boxplot: boxplotTool,
               think: thinkTool,
               bubbleChart: bubbleChartTool,
+              histogram: histogramTool,
             }}
             welcomeMessage={welcomeMessage}
             theme={theme}
