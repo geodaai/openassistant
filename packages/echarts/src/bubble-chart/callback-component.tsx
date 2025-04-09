@@ -1,10 +1,10 @@
-import { DragEvent } from 'react';
 import { CustomFunctionCall } from '@openassistant/core';
 
 import { BubbleChartOutputResult } from './callback-function';
 import { ExpandableContainer, generateId } from '@openassistant/common';
 import { BubbleChartOutputData } from './component/bubble-chart';
 import { BubbleChartComponent } from './component/bubble-chart-component';
+import { useDraggable } from '../hooks/useDraggable';
 
 function isBubbleChartOutputData(
   outputData: unknown
@@ -24,25 +24,16 @@ export function BubbleChartCallbackMessage(
   props: CustomFunctionCall
 ): JSX.Element | null {
   const id = generateId();
-  const data = props.output.data as BubbleChartOutputData | undefined;
+  const onDragStart = useDraggable({
+    id: `bubble-${id}`,
+    type: 'bubble',
+    data: props.output.data,
+  });
 
+  const data = props.output.data as BubbleChartOutputData | undefined;
   if (!isBubbleChartOutputData(data)) {
     return null;
   }
-
-  const onDragStart = (e: DragEvent<HTMLButtonElement>) => {
-    e.dataTransfer.setData(
-      'text/plain',
-      JSON.stringify({
-        id: `histogram-${id}`,
-        type: 'histogram',
-        data: data,
-      })
-    );
-
-    // prevent the event from propagating
-    e.stopPropagation();
-  };
 
   return (
     <ExpandableContainer

@@ -67,7 +67,13 @@ export function MessageContent({
         ))}
 
         {/* show markdown message */}
-        {useMarkdown && !message?.parts && message?.text}
+        {!message?.parts &&
+          message?.text &&
+          (useMarkdown ? (
+            <div className="markdown-body">{message.text}</div>
+          ) : (
+            <div>{message.text}</div>
+          ))}
       </div>
 
       {/* show loading spinner */}

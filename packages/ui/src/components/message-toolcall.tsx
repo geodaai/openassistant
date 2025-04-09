@@ -29,23 +29,87 @@ const MarkdownContent = ({
 }) => {
   if (!showMarkdown) {
     return (
-      <div className="max-w-full overflow-hidden whitespace-pre-wrap break-words">
+      <div className="max-w-full overflow-hidden whitespace-pre-wrap break-words line-[0.5]">
         {text}
       </div>
     );
   }
 
   return (
-    <div className="markdown-body max-w-full overflow-hidden whitespace-pre-wrap break-words">
+    <div className="max-w-full overflow-hidden whitespace-pre-wrap break-words">
       <Markdown
         remarkPlugins={[remarkGfm]}
         components={{
           pre: ({ children }) => (
-            <pre className="max-w-full overflow-x-auto">{children}</pre>
+            <pre className="max-w-full overflow-x-auto bg-gray-100 dark:bg-gray-800 p-4 rounded-md my-2">
+              {children}
+            </pre>
           ),
           code: ({ children }) => (
-            <code className="max-w-full overflow-x-auto">{children}</code>
+            <code className="max-w-full overflow-x-auto bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md text-sm">
+              {children}
+            </code>
           ),
+          p: ({ children }) => <p className="leading-relaxed">{children}</p>,
+          h1: ({ children }) => (
+            <h1 className="text-2xl font-bold my-4">{children}</h1>
+          ),
+          h2: ({ children }) => (
+            <h2 className="text-xl font-bold my-3">{children}</h2>
+          ),
+          h3: ({ children }) => (
+            <h3 className="text-lg font-bold my-2">{children}</h3>
+          ),
+          ul: ({ children }) => (
+            <ul className="list-disc pl-6 my-2">{children}</ul>
+          ),
+          ol: ({ children }) => (
+            <ol
+              className="pl-6 ps-4 my-0 mb-5 flex flex-col gap-4"
+              style={{ listStyleType: 'decimal', paddingLeft: '16px' }}
+            >
+              {children}
+            </ol>
+          ),
+          li: ({ children }) => (
+            <li
+              className="m-0 ps-0 flex items-start relative"
+              style={{ paddingLeft: '16px' }}
+            >
+              <span className="absolute left-0 top-0">•</span>
+              {children}
+            </li>
+          ),
+          blockquote: ({ children }) => (
+            <blockquote className="border-l-4 border-gray-300 dark:border-gray-600 pl-4 my-2 italic">
+              {children}
+            </blockquote>
+          ),
+          table: ({ children }) => (
+            <table className="w-full border-collapse my-4">{children}</table>
+          ),
+          th: ({ children }) => (
+            <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 bg-gray-100 dark:bg-gray-800">
+              {children}
+            </th>
+          ),
+          td: ({ children }) => (
+            <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">
+              {children}
+            </td>
+          ),
+          a: ({ children, href }) => (
+            <a
+              href={href}
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              {children}
+            </a>
+          ),
+          strong: ({ children }) => (
+            <strong className="font-bold">{children}</strong>
+          ),
+          em: ({ children }) => <em className="italic">{children}</em>,
         }}
       >
         {text}
@@ -156,7 +220,7 @@ export function ToolCallComponent({
             <AccordionItem
               key="1"
               aria-label={toolName}
-              title={`> call ${toolName}`}
+              title={`> ${toolName}`}
               startContent={
                 !isCompleted && (
                   <Icon icon="svg-spinners:clock" width="12" height="12" />

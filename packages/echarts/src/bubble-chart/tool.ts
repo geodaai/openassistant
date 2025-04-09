@@ -5,6 +5,7 @@ import {
   isBubbleChartFunctionContext,
 } from './callback-function';
 import { generateId } from '@openassistant/common';
+import { BubbleChartComponentContainer } from './component/bubble-chart-component';
 
 export const bubbleChart = tool({
   description: 'create a bubble chart',

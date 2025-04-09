@@ -32,6 +32,7 @@ export * from './pcp/component/pcp-option';
 export * from './pcp/component/utils';
 
 export * from './bubble-chart/definition';
+export * from './bubble-chart/tool';
 export * from './bubble-chart/callback-function';
 export * from './bubble-chart/callback-component';
 export * from './bubble-chart/component/bubble-chart';

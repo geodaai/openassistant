@@ -19,8 +19,6 @@ import { AvatarBadge } from './avatar-badge';
 import { MessageContent } from './message-content';
 import { MessageActions } from './message-action';
 import { AttemptsNavigation, AttemptFeedback } from './message-feedback';
-// local css for markdown
-import './assistant.css';
 
 export type MessageCardProps = HTMLAttributes<HTMLDivElement> & {
   index: number;

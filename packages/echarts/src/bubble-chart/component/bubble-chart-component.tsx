@@ -1,6 +1,8 @@
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { BubbleChartOutputData, BubbleChart } from './bubble-chart';
-
+import { useDraggable } from 'src/hooks/useDraggable';
+import { useState } from 'react';
+import { ExpandableContainer, generateId } from '@openassistant/common';
 /**
  * A React component that renders an interactive bubble chart visualization.
  *
@@ -45,5 +47,33 @@ export function BubbleChartComponent(
         </div>
       )}
     </AutoSizer>
+  );
+}
+
+export function BubbleChartComponentContainer(
+  props: BubbleChartOutputData
+): JSX.Element | null {
+  const [isExpanded, setIsExpanded] = useState(props.isExpanded);
+
+  const onDragStart = useDraggable({
+    id: props.id || generateId(),
+    type: 'bubble',
+    data: props,
+  });
+
+  const onExpanded = (flag: boolean) => {
+    setIsExpanded(flag);
+  };
+
+  return (
+    <ExpandableContainer
+      defaultWidth={isExpanded ? 600 : undefined}
+      defaultHeight={isExpanded ? 600 : 380}
+      draggable={props.isDraggable || false}
+      onDragStart={onDragStart}
+      onExpanded={onExpanded}
+    >
+      <BubbleChartComponent {...props} />
+    </ExpandableContainer>
   );
 }

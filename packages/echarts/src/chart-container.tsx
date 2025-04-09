@@ -1,54 +1,53 @@
-import { Children, useState } from "react";
-import { ExpandableContainer } from "@openassistant/common";
+import { useState } from 'react';
+import { ExpandableContainer } from '@openassistant/common';
+import { useDraggable } from './hooks/useDraggable';
 
 export type DraggableDroppableContainerProps = {
-  isExpanded: boolean;
+  initialIsExpanded: boolean;
   isDraggable: boolean;
   id: string;
+  type: string;
+  data: unknown;
+  variables: unknown[];
   children: React.ReactNode;
 };
 
 /**
- * BoxplotComponentContainer for rendering box plot visualizations with expandable container.
- * With expandable container, the box plot can be:
- * - expanded to a modal dialog with box plots rendered in vertical direction and with detailed statistics table.
- * - dragged and dropped to other places.
- * - resized.
- * - have a tooltip with detailed statistics.
- *
- * @param props {@link BoxplotOutputData} Configuration and data for the box plot
- * @returns Box plot visualization with optional detailed statistics table
+ * DraggableDroppableContainer for rendering chart visualizations within an expandable and draggable container.
+ * @param props {@link DraggableDroppableContainerProps} Configuration and data for the container
+ * @returns A container component for charts
  */
-export function DraggableDroppableContainer(props: DraggableDroppableContainerProps): JSX.Element | null {
-  const [isExpanded, setIsExpanded] = useState(props.isExpanded);
+export function DraggableDroppableContainer({
+  initialIsExpanded,
+  isDraggable,
+  id,
+  type,
+  data,
+  variables,
+  children,
+}: DraggableDroppableContainerProps): JSX.Element | null {
+  const [isExpanded, setIsExpanded] = useState(initialIsExpanded);
 
-  const onDragStart = (e: React.DragEvent<HTMLButtonElement>) => {
-    e.dataTransfer.setData(
-      'text/plain',
-      JSON.stringify({
-        id: props.id,
-        type: 'boxplot',
-        data: props,
-      })
-    );
-
-    // prevent the event from propagating
-    e.stopPropagation();
-  };
+  const onDragStart = useDraggable({ id, type, data });
 
   const onExpanded = (flag: boolean) => {
     setIsExpanded(flag);
   };
 
+  const calculatedHeight =
+    Array.isArray(variables) && variables.length > 0
+      ? variables.length * 100 + 120
+      : 600;
+
   return (
     <ExpandableContainer
       defaultWidth={isExpanded ? 600 : undefined}
-      defaultHeight={isExpanded ? 600 : props.variables.length * 100 + 120}
-      draggable={props.isDraggable || false}
+      defaultHeight={isExpanded ? 600 : calculatedHeight}
+      draggable={isDraggable || false}
       onDragStart={onDragStart}
       onExpanded={onExpanded}
     >
-      {Children} 
+      <>{children}</>
     </ExpandableContainer>
   );
 }

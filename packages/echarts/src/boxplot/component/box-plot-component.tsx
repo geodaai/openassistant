@@ -1,5 +1,4 @@
-import { useCallback, DragEvent, useState } from 'react';
-import AutoSizer from 'react-virtualized-auto-sizer';
+import { useCallback, useState } from 'react';
 import {
   Button,
   Table,
@@ -13,6 +12,13 @@ import { Icon } from '@iconify/react';
 import { Boxplot, BoxplotOutputData } from './box-plot';
 import { BoxplotDataProps } from './utils';
 import { ExpandableContainer } from '@openassistant/common';
+import { useDraggable } from '../../hooks/useDraggable';
+
+export function BoxplotToolComponent(
+  props: BoxplotOutputData
+): JSX.Element | null {
+  return <BoxplotComponent {...props} />;
+}
 
 /**
  * BoxplotComponentContainer for rendering box plot visualizations with expandable container.
@@ -30,19 +36,11 @@ export function BoxplotComponentContainer(
 ): JSX.Element | null {
   const [isExpanded, setIsExpanded] = useState(props.isExpanded);
 
-  const onDragStart = (e: DragEvent<HTMLButtonElement>) => {
-    e.dataTransfer.setData(
-      'text/plain',
-      JSON.stringify({
-        id: props.id,
-        type: 'boxplot',
-        data: props,
-      })
-    );
-
-    // prevent the event from propagating
-    e.stopPropagation();
-  };
+  const onDragStart = useDraggable({
+    id: props.id,
+    type: 'boxplot',
+    data: props,
+  });
 
   const onExpanded = (flag: boolean) => {
     setIsExpanded(flag);

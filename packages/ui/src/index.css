@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.markdown-body ul {
+  @apply flex flex-col gap-2 list-disc;
+}
+
+.markdown-body ul li {
+  @apply ml-8 text-left;
+}
+
+.markdown-body ol {
+  @apply flex flex-col gap-2 list-decimal;
+}
+
+.markdown-body ol li {
+  @apply ml-8 flex items-center text-left;
+}
+
+.markdown-body p {
+  @apply text-sm font-normal whitespace-pre-wrap;
+}
