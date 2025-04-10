@@ -296,7 +296,7 @@ export function AiAssistant(props: AiAssistantProps) {
                     message.direction === 'outgoing'
                       ? props.userMessageClassName ||
                         'bg-content3 text-content3-foreground'
-                      : props.botMessageClassName || 'bg-content2'
+                      : props.botMessageClassName || 'bg-transparent'
                   }
                   showFeedback={message.direction === 'incoming'}
                   status={

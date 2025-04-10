@@ -2,7 +2,7 @@ import { CustomFunctionCall } from '@openassistant/core';
 import { ScatterplotComponent } from './component/scatter-plot-component';
 import { ScatterplotOutputData } from './callback-function';
 import { ExpandableContainer, generateId } from '@openassistant/common';
-import { DragEvent } from 'react';
+import { useDraggable } from '../hooks/useDraggable';
 
 // type guard
 function isScatterplotOutputData(data: unknown): data is ScatterplotOutputData {
@@ -26,26 +26,17 @@ function isScatterplotOutputData(data: unknown): data is ScatterplotOutputData {
 export function ScatterplotCallbackComponent(
   props: CustomFunctionCall
 ): JSX.Element | null {
-  const id = generateId();
   const data = props.output.data as ScatterplotOutputData | undefined;
+  const id = generateId();
+  const onDragStart = useDraggable({
+    id,
+    type: 'scatterplot',
+    data: data,
+  });
 
   if (!data || !isScatterplotOutputData(data)) {
     return null;
   }
-
-  const onDragStart = (e: DragEvent<HTMLButtonElement>) => {
-    e.dataTransfer.setData(
-      'text/plain',
-      JSON.stringify({
-        id: `scatterplot-${id}`,
-        type: 'scatterplot',
-        data: data,
-      })
-    );
-
-    // prevent the event from propagating
-    e.stopPropagation();
-  };
 
   return (
     <ExpandableContainer

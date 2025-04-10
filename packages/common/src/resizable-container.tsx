@@ -1,4 +1,5 @@
 import { Resizable } from 're-resizable';
+import { useState, useEffect } from 'react';
 
 export function ResizablePlotContainer({
   children,
@@ -11,13 +12,39 @@ export function ResizablePlotContainer({
   defaultHeight?: number;
   handlePosition?: 'bottomRight' | 'bottomLeft' | 'topRight' | 'topLeft';
 }) {
+  const [size, setSize] = useState({
+    width: defaultWidth ?? '100%',
+    height: defaultHeight ?? '100%',
+  });
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    // Calculate scale based on size changes
+    const newScale = typeof size.width === 'number' 
+      ? Math.min(1, Math.max(0.5, size.width / (defaultWidth ?? 800)))
+      : 1;
+    setScale(newScale);
+  }, [size.width, defaultWidth]);
+
+  const handleResizeStop = (
+    e: MouseEvent | TouchEvent,
+    direction: string,
+    ref: HTMLElement,
+    d: { width: number; height: number }
+  ) => {
+    if (typeof size.width === 'number' && typeof size.height === 'number') {
+      setSize({
+        width: size.width + d.width,
+        height: size.height + d.height,
+      });
+    }
+  };
+
   return (
     <div className="w-full h-full mt-4 mb-2">
       <Resizable
-        defaultSize={{
-          width: defaultWidth ?? '100%',
-          height: defaultHeight ?? '100%',
-        }}
+        size={size}
+        onResizeStop={handleResizeStop}
         minWidth={200}
         minHeight={80}
         maxHeight={800}
@@ -44,7 +71,16 @@ export function ResizablePlotContainer({
           ),
         }}
       >
-        {children}
+        <div 
+          style={{ 
+            transform: `scale(${scale})`,
+            transformOrigin: 'top left',
+            width: '100%',
+            height: '100%'
+          }}
+        >
+          {children}
+        </div>
       </Resizable>
     </div>
   );

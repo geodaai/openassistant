@@ -1,6 +1,7 @@
 export * from './math/linear-regression';
 
 export * from './scatterplot/definition';
+export * from './scatterplot/tool';
 export * from './scatterplot/callback-function';
 export * from './scatterplot/callback-component';
 export * from './scatterplot/component/scatter-plot-component';

@@ -80,7 +80,7 @@ export type ScatterplotOutputData = {
 /**
  * Type guard of ScatterplotFunctionArgs
  */
-function isScatterplotFunctionArgs(
+export function isScatterplotFunctionArgs(
   data: unknown
 ): data is ScatterplotFunctionArgs {
   return (
@@ -95,7 +95,7 @@ function isScatterplotFunctionArgs(
 /**
  * Type guard of ScatterplotFunctionContext
  */
-function isScatterplotFunctionContext(
+export function isScatterplotFunctionContext(
   data: unknown
 ): data is ScatterplotFunctionContext {
   return typeof data === 'object' && data !== null && 'getValues' in data;

@@ -18,7 +18,8 @@ import {
   computeRegression,
   ComputeRegressionResult,
 } from './scatter-regression';
-
+import { ExpandableContainer, generateId } from '@openassistant/common';
+import { useDraggable } from '../../hooks/useDraggable';
 export function ScatterplotComponent({
   id,
   datasetName,
@@ -109,137 +110,157 @@ export function ScatterplotComponent({
   ];
 
   return (
-    <AutoSizer>
-      {({ height, width }) => (
-        <div style={{ height, width }} className="relative">
-          <div className="h-full w-full flex flex-col rounded-lg p-6 text-gray-900 shadow-secondary-1 dark:bg-gray-950 dark:text-gray-100">
-            <div className="flex-col items-start p-2">
-              <p className="text-tiny font-bold uppercase">Scatterplot</p>
-              <small className="truncate text-default-500">
-                {xVariableName} vs {yVariableName} {slopeTitle}
+    <div className="relative h-full w-full flex flex-col rounded-lg p-6 text-gray-900 shadow-secondary-1 dark:bg-gray-950 dark:text-gray-100">
+      <div className="flex-col items-start p-2">
+        <p className="text-tiny font-bold uppercase">Scatterplot</p>
+        <small className="truncate text-default-500">
+          {xVariableName} vs {yVariableName} {slopeTitle}
+        </small>
+      </div>
+      <div className="relative h-full py-2 flex-grow dark:bg-black">
+        <div className="absolute left-0 top-0 h-full w-full">
+          <ScatterRegressionPlot
+            filteredIndex={filteredIndex}
+            regressionResults={regressionResults}
+            xData={xData}
+            yData={yData}
+            showLoess={false}
+            showRegressionLine={true}
+            theme={theme}
+            filteredIndexes={filteredIndexes}
+          />
+        </div>
+        <div className="absolute left-0 top-0 h-full w-full">
+          <SimpleScatterPlot
+            id={id}
+            datasetName={datasetName}
+            variableX={xVariableName}
+            xData={xData}
+            variableY={yVariableName}
+            yData={yData}
+            theme={theme}
+            onSelected={onSelected}
+            setFilteredIndexes={setFilteredIndexes}
+          />
+        </div>
+      </div>
+      <div className="footer text-xs">
+        {!isExpanded && (
+          <div className="flex w-full justify-end">
+            <Button
+              size="sm"
+              variant="light"
+              startContent={
+                <Icon
+                  icon="material-symbols-light:query-stats"
+                  width="18"
+                  height="18"
+                />
+              }
+              endContent={
+                showMore && (
+                  <Icon
+                    icon="solar:alt-arrow-up-line-duotone"
+                    width="18"
+                    height="18"
+                  />
+                )
+              }
+              onPress={handleMorePress}
+            >
+              More
+            </Button>
+          </div>
+        )}
+        {showMore && regression && (
+          <div className="w-full text-tiny">
+            <div className="mb-2">
+              <small className="text-tiny text-default-500">
+                R² (All) = {regression.regression.rSquared.toFixed(4)}
+                {regressionResults?.regressionSelected &&
+                  ` | R² (Selected) = ${regressionResults.regressionSelected.rSquared.toFixed(4)}`}
+                {regressionResults?.regressionUnselected &&
+                  ` | R² (Unselected) = ${regressionResults.regressionUnselected.rSquared.toFixed(4)}`}
               </small>
             </div>
-            <div className="relative h-full py-2 flex-grow dark:bg-black">
-              <div className="absolute left-0 top-0 h-full w-full">
-                <ScatterRegressionPlot
-                  filteredIndex={filteredIndex}
-                  regressionResults={regressionResults}
-                  xData={xData}
-                  yData={yData}
-                  showLoess={false}
-                  showRegressionLine={true}
-                  theme={theme}
-                  filteredIndexes={filteredIndexes}
-                />
-              </div>
-              <div className="absolute left-0 top-0 h-full w-full">
-                <SimpleScatterPlot
-                  id={id}
-                  datasetName={datasetName}
-                  variableX={xVariableName}
-                  xData={xData}
-                  variableY={yVariableName}
-                  yData={yData}
-                  theme={theme}
-                  onSelected={onSelected}
-                  setFilteredIndexes={setFilteredIndexes}
-                />
-              </div>
-            </div>
-            <div className="footer text-xs">
-              {!isExpanded && (
-                <div className="flex w-full justify-end">
-                  <Button
-                    size="sm"
-                    variant="light"
-                    startContent={
-                      <Icon
-                        icon="material-symbols-light:query-stats"
-                        width="18"
-                        height="18"
-                      />
-                    }
-                    endContent={
-                      showMore && (
-                        <Icon
-                          icon="solar:alt-arrow-up-line-duotone"
-                          width="18"
-                          height="18"
-                        />
-                      )
-                    }
-                    onPress={handleMorePress}
-                  >
-                    More
-                  </Button>
-                </div>
-              )}
-              {showMore && regression && (
-                <div className="w-full text-tiny">
-                  <div className="mb-2">
-                    <small className="text-tiny text-default-500">
-                      R² (All) = {regression.regression.rSquared.toFixed(4)}
-                      {regressionResults?.regressionSelected &&
-                        ` | R² (Selected) = ${regressionResults.regressionSelected.rSquared.toFixed(4)}`}
-                      {regressionResults?.regressionUnselected &&
-                        ` | R² (Unselected) = ${regressionResults.regressionUnselected.rSquared.toFixed(4)}`}
-                    </small>
-                  </div>
-                  <Table
-                    aria-label="Regression Results"
-                    classNames={{
-                      base: 'overflow-scroll p-0 m-0 text-tiny',
-                      table: 'p-0 m-0 text-tiny',
-                      wrapper: 'p-0 pr-2',
-                      th: 'text-tiny',
-                      td: 'text-tiny text-default-500',
-                    }}
-                    isCompact={true}
-                    removeWrapper={true}
-                  >
-                    <TableHeader>
-                      <TableColumn>Parameter</TableColumn>
-                      <TableColumn>Estimate</TableColumn>
-                      <TableColumn>p-Value</TableColumn>
-                      <TableColumn>Std. Error</TableColumn>
-                      <TableColumn>t-Statistic</TableColumn>
-                    </TableHeader>
-                    <TableBody>
-                      {[
-                        // All Data Results
-                        ...generateRegressionRows('All', regression.regression),
-                        // Selected Data Results
-                        ...generateRegressionRows(
-                          'Selected',
-                          regressionResults?.regressionSelected
-                        ),
-                        // Unselected Data Results
-                        ...generateRegressionRows(
-                          'Unselected',
-                          regressionResults?.regressionUnselected
-                        ),
-                      ]}
-                    </TableBody>
-                  </Table>
+            <Table
+              aria-label="Regression Results"
+              classNames={{
+                base: 'overflow-scroll p-0 m-0 text-tiny',
+                table: 'p-0 m-0 text-tiny',
+                wrapper: 'p-0 pr-2',
+                th: 'text-tiny',
+                td: 'text-tiny text-default-500',
+              }}
+              isCompact={true}
+              removeWrapper={true}
+            >
+              <TableHeader>
+                <TableColumn>Parameter</TableColumn>
+                <TableColumn>Estimate</TableColumn>
+                <TableColumn>p-Value</TableColumn>
+                <TableColumn>Std. Error</TableColumn>
+                <TableColumn>t-Statistic</TableColumn>
+              </TableHeader>
+              <TableBody>
+                {[
+                  // All Data Results
+                  ...generateRegressionRows('All', regression.regression),
+                  // Selected Data Results
+                  ...generateRegressionRows(
+                    'Selected',
+                    regressionResults?.regressionSelected
+                  ),
+                  // Unselected Data Results
+                  ...generateRegressionRows(
+                    'Unselected',
+                    regressionResults?.regressionUnselected
+                  ),
+                ]}
+              </TableBody>
+            </Table>
 
-                  <div className="mt-2">
-                    <small className="text-tiny text-default-500">
-                      Chow test for sel/unsel regression subsets: distrib=F(2,{' '}
-                      {yData.length - 4}
-                      ), ratio=
-                      {regressionResults?.chowResults?.fStat.toFixed(4) ||
-                        'N/A'}
-                      , p-val=
-                      {regressionResults?.chowResults?.pValue.toFixed(4) ||
-                        'N/A'}
-                    </small>
-                  </div>
-                </div>
-              )}
+            <div className="mt-2">
+              <small className="text-tiny text-default-500">
+                Chow test for sel/unsel regression subsets: distrib=F(2,{' '}
+                {yData.length - 4}
+                ), ratio=
+                {regressionResults?.chowResults?.fStat.toFixed(4) || 'N/A'},
+                p-val=
+                {regressionResults?.chowResults?.pValue.toFixed(4) || 'N/A'}
+              </small>
             </div>
           </div>
-        </div>
-      )}
-    </AutoSizer>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export function ScatterplotComponentContainer(
+  props: ScatterplotOutputData
+): JSX.Element | null {
+  const [isExpanded, setIsExpanded] = useState(props.isExpanded);
+
+  const onDragStart = useDraggable({
+    id: props.id || generateId(),
+    type: 'scatterplot',
+    data: props,
+  });
+
+  const onExpanded = (flag: boolean) => {
+    setIsExpanded(flag);
+  };
+
+  return (
+    <ExpandableContainer
+      defaultWidth={isExpanded ? 600 : undefined}
+      defaultHeight={600}
+      draggable={props.isDraggable || false}
+      onDragStart={onDragStart}
+      onExpanded={onExpanded}
+    >
+      <ScatterplotComponent {...props} />
+    </ExpandableContainer>
   );
 }

@@ -45,6 +45,7 @@ export function SimpleScatterPlot({
   variableY,
   yData,
   theme = 'dark',
+  setFilteredIndexes,
 }: SimpleScatterPlotProps) {
   // ref for the echarts instance
   const eChartsRef = useRef<ReactEChartsCore>(null);
@@ -113,12 +114,16 @@ export function SimpleScatterPlot({
         }, 100);
 
         handleBrushSelection(eChart, brushed, datasetName, brush);
+        // update the filtered indexes
+        if (setFilteredIndexes) {
+          setFilteredIndexes(brushed);
+        }
       },
       rendered: function () {
         setRendered(true);
       },
     }),
-    [brush, datasetName]
+    [brush, datasetName, setFilteredIndexes]
   );
 
   return (

@@ -154,7 +154,7 @@ export function ToolCallComponent({
 
   return (
     <div className="flex flex-col gap-2">
-      <Card radius="none" classNames={{ body: 'p-0 pl-2 pr-2' }}>
+      <Card radius="none" shadow="none" classNames={{ body: 'p-0 pl-2 pr-2' }}>
         <CardBody className="opacity-50">
           <Accordion
             variant="light"
