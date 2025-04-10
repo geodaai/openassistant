@@ -126,6 +126,11 @@ export function useAssistant(props: UseAssistantProps) {
         assistant.setMessages(props.historyMessages);
       }
 
+      // set the abort controller
+      if (props.abortController) {
+        assistant.setAbortController(props.abortController);
+      }
+
       setApiKeyStatus('success');
     } catch (error) {
       console.error('useAssistant initialization error', error);

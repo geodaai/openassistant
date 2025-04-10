@@ -32,6 +32,7 @@ type MessageContentProps = {
   status?: 'success' | 'failed' | 'pending';
   useMarkdown?: boolean;
   components?: ToolCallComponents;
+  showTools?: boolean;
 };
 
 export function MessageContent({
@@ -42,6 +43,7 @@ export function MessageContent({
   status,
   useMarkdown,
   components,
+  showTools,
 }: MessageContentProps) {
   return (
     <div style={{ paddingRight: '30px' }}>
@@ -63,6 +65,7 @@ export function MessageContent({
             part={part}
             components={components}
             useMarkdown={useMarkdown}
+            showTools={showTools}
           />
         ))}
 

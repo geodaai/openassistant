@@ -2,7 +2,7 @@
 
 > **BoxplotToolProps**: `object`
 
-Defined in: [boxplot/definition.ts:105](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/echarts/src/boxplot/definition.ts#L105)
+Defined in: [packages/echarts/src/boxplot/definition.ts:119](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/echarts/src/boxplot/definition.ts#L119)
 
 Properties for configuring the boxplot tool.
 

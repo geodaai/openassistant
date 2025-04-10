@@ -2,15 +2,17 @@
 
 > **MessageModel**: `object`
 
-Defined in: [packages/core/src/types.ts:122](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/core/src/types.ts#L122)
+Defined in: [packages/core/src/types.ts:114](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/core/src/types.ts#L114)
 
-Type of Message model
+Type of Message model used in the chat component
 
 ## Type declaration
 
 ### direction
 
 > **direction**: [`MessageDirection`](MessageDirection.md)
+
+The direction of the message
 
 ### ~~message?~~
 
@@ -26,50 +28,34 @@ Use messageContent.text instead
 
 > `optional` **messageContent**: [`StreamMessage`](StreamMessage.md)
 
+The content of the message
+
 ### payload?
 
 > `optional` **payload**: [`MessagePayload`](MessagePayload.md)
+
+The payload of the message
 
 ### position
 
 > **position**: `"single"` \| `"first"` \| `"normal"` \| `"last"` \| `0` \| `1` \| `2` \| `3`
 
+The position of the message
+
 ### sender?
 
-> `optional` **sender**: `string`
+> `optional` **sender**: `"user"` \| `"assistant"` \| `"error"`
+
+The sender of the message
 
 ### sentTime?
 
 > `optional` **sentTime**: `string`
 
+The time the message was sent
+
 ### type?
 
 > `optional` **type**: [`MessageType`](MessageType.md)
 
-## Param
-
-The message to be sent
-
-## Param
-
-The time the message was sent
-
-## Param
-
-The sender of the message
-
-## Param
-
-The direction of the message
-
-## Param
-
-The position of the message
-
-## Param
-
 The type of the message
-
-## Param
-
-The payload of the message, can be string, object, image or custom

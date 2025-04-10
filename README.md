@@ -71,9 +71,10 @@ OpenAssistant also supports the following model providers:
 | xAI            | [models](https://sdk.vercel.ai/providers/ai-sdk-providers/xai#model-capabilities)                  | @ai-sdk/xai        |
 | Ollama         | [models](https://ollama.com/models)                                                                | ollama-ai-provider |
 
+
 ### Add a React Chat Component to your App
 
-If you don't want to build your own chat interface, OpenAssistant provides a pre-built chat component that you can use in your React application. 
+If you don't want to build your own chat interface, OpenAssistant provides a pre-built chat component that you can use in your React application.
 
 #### Installation
 
@@ -111,8 +112,7 @@ function App() {
 
 Note: you don't need to use `createAssistant()` to create the assistant instance, you can use the `AiAssistant` component directly.
 
-<img src="https://openassistant-doc.vercel.app/assets/images/getstart-dark-499fd880728b7978a32aa9e8742a0f38.png" width="300" />
-
+<img src="https://openassistant-doc.vercel.app/assets/images/getstart-dark.png" width="300" />
 
 See the source code of the example 🔗 [here](https://github.com/geodacenter/openassistant/tree/main/examples/simple_react).
 
@@ -138,7 +138,8 @@ module.exports = {
 
 ## OpenAssistant Tools
 
-OpenAssistant provides a set of tools that you can use in your AI application. 
+OpenAssistant provides a set of tools that helps you build your AI application.
+
 - [DuckDB tools](https://openassistant-doc.vercel.app/docs/tutorial-extras/duckdb-plugin)
 - [ECharts tools](https://openassistant-doc.vercel.app/docs/tutorial-extras/echarts-plugin)
 - [Kepler.gl tools](https://openassistant-doc.vercel.app/docs/tutorial-extras/keplergl-plugin)
@@ -153,7 +154,7 @@ This tool helps to query any data that has been loaded in your application using
 - the data in your application will be loaded into a local duckdb instance temporarily
 - LLM will generate SQL query based on user's prompt against the data
 - the SQL query result will be executed in the local duckdb instance
-- the query result will be displayed in a React table component 
+- the query result will be displayed in a React table component
 
 Let's say you have a dataset in your application, you can use the `localQuery` tool to query the data using user's prompt.
 
@@ -179,9 +180,10 @@ export const SAMPLE_DATASETS = {
 - Provide the `getValues` function in the `context` to get the values from your data.
 
 ```ts
-import { localQuery } from '@openassistent/duckdb';
+import { localQuery, LocalQueryTool } from '@openassistent/duckdb';
 
-const localQueryTool = {
+// type safety for the localQuery tool
+const localQueryTool: LocalQueryTool = {
   ...localQuery,
   context: {
     ...localQuery.context,
@@ -195,24 +197,38 @@ const localQueryTool = {
 - Use the tool in your AI assistant chat component
 
 ```tsx
-<AiAssistant
-  name="My Assistant"
-  apiKey={process.env.OPENAI_TOKEN || ''}
-  version="v1"
-  modelProvider="openai"
-  model="gpt-4o"
-  welcomeMessage="Hello, how can I help you today?"
-  instructions="You are a duckDB expert. You can help users to query their data using duckdb. Explain the steps you are taking to solve the user's problem."
-  functions={{ localQuery: localQueryTool }}
-  useMarkdown={true}
-/>
+// load your data
+// pass the metadata of the data to the assistant
+
+// get the singleton assistant instance
+const assistant = await createAssistant({
+  name: 'assistant',
+  modelProvider: 'openai',
+  model: 'gpt-4o',
+  apiKey: 'your-api-key',
+  version: '0.0.1',
+  instructions: `You are a helpful assistant. You can use the following datasets to answer the user's question: 
+  datasetName: myVenues,
+  variables: index, location, latitude, longitude, revenue, population
+  `,
+  functions: { localQuery: localQueryTool },
+});
+
+// now you can send prompts to the assistant
+await assistant.processTextMessage({
+  textMessage: 'which location has the highest revenue?',
+  streamMessageCallback: ({ isCompleted, message }) => {
+    console.log(isCompleted, message);
+  },
+});
 ```
 
 🚀 Try it out!
 
-<img width="300" src="https://private-user-images.githubusercontent.com/2423887/430499610-4115b474-13af-48ba-b69e-b39cc325f1b1.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDM4MzE5MTksIm5iZiI6MTc0MzgzMTYxOSwicGF0aCI6Ii8yNDIzODg3LzQzMDQ5OTYxMC00MTE1YjQ3NC0xM2FmLTQ4YmEtYjY5ZS1iMzljYzMyNWYxYjEucG5nP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI1MDQwNSUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNTA0MDVUMDU0MDE5WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9NmI2NDY5MDcwZTY3NDlmM2I3NmFjY2YyYWU3YjIxYjA2NTFkNzY2OTU2NTQ4OGJkYWVkMThkNWMzNWI5N2JmMSZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.AzgoJi2_TSpal0dBV9DOQ4D3W7dfpskz5Nh-ihMLkMI"/>
+<img width="400" src="https://github.com/user-attachments/assets/4115b474-13af-48ba-b69e-b39cc325f1b1"/>
 
 See the source code of the example 🔗 [here](https://github.com/geodacenter/openassistant/tree/main/examples/duckdb_esbuild).
+
 
 ## 🌟 Features
 
@@ -268,19 +284,8 @@ Check out our example projects:
 
 MIT © [Xun Li](mailto:lixun910@gmail.com)
 
-### 📚 FAQ
+## 📚 FAQ
 
-#### 🔒 Is my data secure?
+### 🔒 Is my data secure?
 
 Yes, the data you used in your application stays within the browser, and will **never** be sent to the LLM. Using function tools, we can engineer the AI assistant to use only the meta data for function calling, e.g. the name of the dataset, the name of the layer, the name of the variables, etc. Here is a process diagram to show how the AI assistant works:
-
-#### How to create a function tool?
-
-OpenAssistant provides function tools, which you can use in your application with just a few lines of code. For example,
-
-- the [DuckDB tools](https://openassistant-doc.vercel.app/docs/tutorial-basics/add-function-tool) allows the AI assistant to query your data using DuckDB. See a tutorial [here](https://openassistant-doc.vercel.app/docs/tutorial-extras/duckdb-plugin).
-- the [ECharts tools](https://openassistant-doc.vercel.app/docs/tutorial-basics/add-function-tool) allows the AI assistant to visualize data using ECharts. See a tutorial [here](https://openassistant-doc.vercel.app/docs/tutorial-extras/echarts-plugin).
-- the [Kepler.gl tools](https://openassistant-doc.vercel.app/docs/tutorial-basics/add-function-tool) allows the AI assistant to create beautiful maps. See a tutorial [here](https://openassistant-doc.vercel.app/docs/tutorial-extras/keplergl-plugin).
-- the [Data Analysis tools](https://openassistant-doc.vercel.app/docs/tutorial-basics/add-function-tool) allows the AI assistant to apply spatial data analysis using GeoDa. See a tutorial [here](https://openassistant-doc.vercel.app/docs/tutorial-extras/geoda-plugin).
-
-If you want to create your own function tool, you can follow the tutorial [here](https://openassistant-doc.vercel.app/docs/tutorial-basics/add-function-tool).

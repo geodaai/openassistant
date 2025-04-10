@@ -2,7 +2,7 @@
 
 > **standardize**(`data`): `number`[]
 
-Defined in: [math/linear-regression.ts:9](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/echarts/src/math/linear-regression.ts#L9)
+Defined in: [packages/echarts/src/math/linear-regression.ts:9](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/echarts/src/math/linear-regression.ts#L9)
 
 Standardize the data to have a mean of 0 and a standard deviation of 1.
 

@@ -253,7 +253,7 @@ export function QuickStart() {
                   function tools. You can create a function tool by following
                   the tutorial{' '}
                   <a
-                    href="https://openassistant-doc.vercel.app/tutorial-basics/add-function-tool"
+                    href="https://openassistant-doc.vercel.app/chatui/add-function-tool"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-500"
@@ -296,7 +296,7 @@ export function QuickStart() {
                   the DuckDB plugin allows the AI assistant to query your data
                   using DuckDB. See a tutorial{' '}
                   <a
-                    href="https://openassistant-doc.vercel.app/docs/tutorial-extras/duckdb-plugin"
+                    href="https://openassistant-doc.vercel.app/docs/tools/duckdb-plugin"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-500"
@@ -309,7 +309,7 @@ export function QuickStart() {
                   the ECharts plugin allows the AI assistant to visualize data
                   using ECharts. See a tutorial{' '}
                   <a
-                    href="https://openassistant-doc.vercel.app/docs/tutorial-extras/echarts-plugin"
+                    href="https://openassistant-doc.vercel.app/docs/tools/echarts-plugin"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-500"
@@ -322,7 +322,7 @@ export function QuickStart() {
                   the Kepler.gl plugin allows the AI assistant to create
                   beautiful maps. See a tutorial{' '}
                   <a
-                    href="https://openassistant-doc.vercel.app/docs/tutorial-extras/keplergl-plugin"
+                    href="https://openassistant-doc.vercel.app/docs/tools/keplergl-plugin"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-500"
@@ -335,7 +335,7 @@ export function QuickStart() {
                   the GeoDa plugin allows the AI assistant to apply spatial data
                   analysis using GeoDa. See a tutorial{' '}
                   <a
-                    href="https://openassistant-doc.vercel.app/docs/tutorial-extras/geoda-plugin"
+                    href="https://openassistant-doc.vercel.app/docs/tools/geoda-plugin"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-500"

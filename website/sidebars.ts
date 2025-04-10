@@ -24,34 +24,26 @@ const sidebars: SidebarsConfig = {
       label: 'Tutorial',
       collapsed: false,
       items: [
-        'tutorial-basics/add-config-ui',
-        'tutorial-basics/screencapture',
-        'tutorial-basics/voice-to-text',
-        'tutorial-basics/theme-config',
-        'tutorial-basics/function-call',
         {
           type: 'category',
-          label: 'Use Plugins',
+          label: 'Use Tools',
           items: [
-            'tutorial-extras/echarts-plugin',
-            'tutorial-extras/duckdb-plugin',
-            'tutorial-extras/geoda-plugin',
-            'tutorial-extras/keplergl-plugin',
+            'tools/get-started',
+            'tools/echarts-plugin',
+            'tools/duckdb-plugin',
+            'tools/geoda-plugin',
+            'tools/keplergl-plugin',
           ],
         },
-      ],
-    },
-  ],
-
-  pluginSidebar: [
-    {
-      type: 'category',
-      label: 'Plugins',
-      items: [
-        'tutorial-extras/echarts-plugin',
-        'tutorial-extras/duckdb-plugin',
-        'tutorial-extras/geoda-plugin',
-        'tutorial-extras/keplergl-plugin',
+        {
+          type: 'category',
+          label: 'Add React Chat Component',
+          items: [
+            'chatui/add-config-ui',
+            'chatui/screencapture',
+            'chatui/voice-to-text',
+          ],
+        },
       ],
     },
   ],

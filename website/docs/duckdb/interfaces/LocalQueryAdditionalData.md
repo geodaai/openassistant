@@ -1,6 +1,6 @@
 # Interface: LocalQueryAdditionalData
 
-Defined in: packages/duckdb/src/types.ts:85
+Defined in: [packages/duckdb/src/types.ts:85](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/duckdb/src/types.ts#L85)
 
 Additional data returned with the query result
 
@@ -10,7 +10,7 @@ Additional data returned with the query result
 
 > **columnData**: `Record`\<`string`, `unknown`[]\>
 
-Defined in: packages/duckdb/src/types.ts:88
+Defined in: [packages/duckdb/src/types.ts:88](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/duckdb/src/types.ts#L88)
 
 ***
 
@@ -18,7 +18,7 @@ Defined in: packages/duckdb/src/types.ts:88
 
 > **datasetName**: `string`
 
-Defined in: packages/duckdb/src/types.ts:90
+Defined in: [packages/duckdb/src/types.ts:90](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/duckdb/src/types.ts#L90)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: packages/duckdb/src/types.ts:90
 
 > **dbTableName**: `string`
 
-Defined in: packages/duckdb/src/types.ts:91
+Defined in: [packages/duckdb/src/types.ts:91](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/duckdb/src/types.ts#L91)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: packages/duckdb/src/types.ts:91
 
 > `optional` **onSelected**: (`datasetName`, `columnName`, `selectedValues`) => `void`
 
-Defined in: packages/duckdb/src/types.ts:92
+Defined in: [packages/duckdb/src/types.ts:92](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/duckdb/src/types.ts#L92)
 
 #### Parameters
 
@@ -60,7 +60,7 @@ Defined in: packages/duckdb/src/types.ts:92
 
 > **sql**: `string`
 
-Defined in: packages/duckdb/src/types.ts:87
+Defined in: [packages/duckdb/src/types.ts:87](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/duckdb/src/types.ts#L87)
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: packages/duckdb/src/types.ts:87
 
 > **title**: `string`
 
-Defined in: packages/duckdb/src/types.ts:86
+Defined in: [packages/duckdb/src/types.ts:86](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/duckdb/src/types.ts#L86)
 
 ***
 
@@ -76,4 +76,4 @@ Defined in: packages/duckdb/src/types.ts:86
 
 > **variableNames**: `string`[]
 
-Defined in: packages/duckdb/src/types.ts:89
+Defined in: [packages/duckdb/src/types.ts:89](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/duckdb/src/types.ts#L89)

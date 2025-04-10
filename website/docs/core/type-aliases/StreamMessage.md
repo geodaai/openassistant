@@ -2,7 +2,7 @@
 
 > **StreamMessage**: `object`
 
-Defined in: [packages/core/src/types.ts:312](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/core/src/types.ts#L312)
+Defined in: [packages/core/src/types.ts:325](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/core/src/types.ts#L325)
 
 Type of StreamMessage. The structure of the stream message is:
 
@@ -20,25 +20,47 @@ Type of StreamMessage. The structure of the stream message is:
 
 ## Type declaration
 
-### analysis?
+### ~~analysis?~~
 
 > `optional` **analysis**: `string`
+
+The analysis of the message
+
+#### Deprecated
+
+Use parts instead
 
 ### parts?
 
 > `optional` **parts**: [`StreamMessagePart`](StreamMessagePart.md)[]
 
-### reasoning?
+The parts of the message. It is used for storing the returning result from LLM.
+
+### ~~reasoning?~~
 
 > `optional` **reasoning**: `string`
+
+The reasoning of the assistant
+
+#### Deprecated
+
+Use parts instead
 
 ### text?
 
 > `optional` **text**: `string`
 
-### toolCallMessages?
+The text of the message. Normally, it is used for storing user's prompting text.
+
+### ~~toolCallMessages?~~
 
 > `optional` **toolCallMessages**: [`ToolCallMessage`](ToolCallMessage.md)[]
+
+The tool call messages
+
+#### Deprecated
+
+Use parts instead
 
 ## Param
 

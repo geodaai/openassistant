@@ -14372,7 +14372,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "cli_example@workspace:examples/cli_example"
   dependencies:
-    "@openassistant/core": "npm:0.2.7"
+    "@openassistant/core": "workspace:*"
     dotenv: "npm:^16.4.5"
     readline-sync: "npm:^1.4.10"
   languageName: unknown
@@ -23531,8 +23531,8 @@ __metadata:
   resolution: "message-persistent-example@workspace:examples/message_persistent"
   dependencies:
     "@nextui-org/react": "npm:^2.6.10"
-    "@openassistant/core": "npm:latest"
-    "@openassistant/ui": "npm:latest"
+    "@openassistant/core": "workspace:*"
+    "@openassistant/ui": "workspace:*"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
     autoprefixer: "npm:^10.4.20"

@@ -1,0 +1,7 @@
+# Variable: scatterplot
+
+> `const` **scatterplot**: `ExtendedTool`\<`ZodObject`\<\{ `datasetName`: `ZodString`; `xVariableName`: `ZodString`; `yVariableName`: `ZodString`; \}, `UnknownKeysParam`, `ZodTypeAny`, \{ `datasetName`: `string`; `xVariableName`: `string`; `yVariableName`: `string`; \}, \{ `datasetName`: `string`; `xVariableName`: `string`; `yVariableName`: `string`; \}\>, \{ `error`: `string`; `instruction`: `string`; `result`: \{ `datasetName`: `string`; `details`: `string`; `id`: `string`; `xVariableName`: `string`; `yVariableName`: `string`; \}; `success`: `boolean`; \}, `undefined` \| \{ `datasetName`: `string`; `id`: `string`; `isDraggable`: `boolean`; `isExpanded`: `boolean`; `onSelected`: (`datasetName`, `selectedIndices`) => `void`; `regressionResults`: \{ `regression`: \{ `intercept`: \{ `estimate`: `number`; `pValue`: `number`; `standardError`: `number`; `tStatistic`: `number`; \}; `rSquared`: `number`; `slope`: \{ `estimate`: `number`; `pValue`: `number`; `standardError`: `number`; `tStatistic`: `number`; \}; \}; \}; `showLoess`: `boolean`; `showRegressionLine`: `boolean`; `theme`: `string`; `xData`: `number`[]; `xVariableName`: `string`; `yData`: `number`[]; `yVariableName`: `string`; \}, [`ScatterplotToolContext`](../type-aliases/ScatterplotToolContext.md)\>
+
+Defined in: [packages/echarts/src/scatterplot/tool.ts:14](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/echarts/src/scatterplot/tool.ts#L14)
+
+The scatterplot tool.

@@ -2,7 +2,7 @@
 
 > **ExpandableContainer**(`__namedParameters`): `Element`
 
-Defined in: [expandable-container.tsx:13](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/common/src/expandable-container.tsx#L13)
+Defined in: [expandable-container.tsx:13](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/common/src/expandable-container.tsx#L13)
 
 ## Parameters
 
@@ -27,6 +27,10 @@ Defined in: [expandable-container.tsx:13](https://github.com/GeoDaCenter/openass
 #### onDragStart?
 
 `DragEventHandler`\<`HTMLButtonElement`\>
+
+#### onExpanded?
+
+(`isExpanded`) => `void`
 
 ## Returns
 

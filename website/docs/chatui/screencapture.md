@@ -2,23 +2,21 @@
 sidebar_position: 3
 ---
 
-# Screen Capture Within your Application
+# Screen Capture
 
 import screencapture from '../../static/img/screenshot-dark.png';
 
-The Screen Capture feature enables users to take screenshots within your application and ask questions about specific UI elements or issues. This guide will walk you through the implementation and usage.
+The Screen Capture feature allows users to take screenshots within your application and ask questions about specific UI elements or issues. This guide will walk you through the implementation and usage.
 
 <img src={screencapture} alt="Screen Capture" width={400} />
 
 ## Installation
 
 ```bash
-yarn add @openassistant/core @openassistant/ui @nextui-org/react framer-motion html2canvas
+npm install @openassistant/ui
 ```
 
-## Basic Implementation
-
-### 1. Wrap Your Application
+## Usage 
 
 First, wrap your application with the `ScreenshotWrapper` component:
 
@@ -42,9 +40,12 @@ function App() {
 }
 ```
 
-### 2. Add the AI Assistant
+Integrate the AI Assistant component with screen capture capabilities by setting the following props:
 
-Integrate the AI Assistant component with screen capture capabilities:
+- `enableScreenCapture`: Enable screen capture
+- `screenCapturedBase64`: The base64 encoded screenshot
+- `onScreenshotClick`: The callback function when the user clicks the screenshot button
+- `onRemoveScreenshot`: The callback function when the user removes the screenshot
 
 ```jsx
 <AiAssistant
@@ -79,56 +80,16 @@ Integrate the AI Assistant component with screen capture capabilities:
 - Click the "X" button on the screenshot preview to remove it
 - Use `onRemoveScreenshot` callback for programmatic removal
 
-## Advanced Configuration
+## Other Configuration
 
-### Customization Options
+You can save the screenshot to a file by setting the `saveScreenshot` prop to `true`.
 
 ```jsx
 <ScreenshotWrapper
+  ...
   setScreenCaptured={setScreenCaptured}
   startScreenCapture={startScreenCapture}
   setStartScreenCapture={setStartScreenCapture}
   saveScreenshot={false} // Enable automatic download
-  className="custom-wrapper-class"
 />
 ```
-
-### Event Handling
-
-```jsx
-<AiAssistant
-  // ... other props
-  onScreenshotClick={() => {
-    setStartScreenCapture(true);
-    console.log('Screenshot capture started');
-  }}
-  onRemoveScreenshot={() => {
-    setScreenCaptured('');
-    console.log('Screenshot removed');
-  }}
-/>
-```
-
-## Common Use Cases
-
-1. **Technical Support**
-   - Capture error messages
-   - Highlight UI issues
-   - Document unexpected behavior
-
-2. **Data Analysis**
-   - Screenshot charts and graphs
-   - Capture data visualizations
-   - Ask questions about specific data points
-
-3. **UI/UX Feedback**
-   - Get explanations about interface elements
-   - Request design improvement suggestions
-   - Document accessibility concerns
-
-## Technical Notes
-
-- **WebGL Support**: Special handling ensures proper capture of WebGL canvases and dynamic content
-- **Error Handling**: Built-in error management with user-friendly feedback
-- **Accessibility**: ARIA labels and keyboard support included
-

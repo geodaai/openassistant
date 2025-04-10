@@ -59,6 +59,7 @@ export type AiAssistantProps = UseAssistantProps & {
   userMessageClassName?: string;
   githubIssueLink?: string;
   useMarkdown?: boolean;
+  showTools?: boolean;
   initialMessages?: MessageModel[];
 };
 
@@ -302,7 +303,7 @@ export function AiAssistant(props: AiAssistantProps) {
                   status={
                     isPrompting && i === messages.length - 1
                       ? 'pending'
-                      : message.sender === 'Error'
+                      : message.sender === 'error'
                         ? 'failed'
                         : 'success'
                   }
@@ -311,6 +312,7 @@ export function AiAssistant(props: AiAssistantProps) {
                   unselectable="on"
                   githubIssueLink={props.githubIssueLink}
                   useMarkdown={props.useMarkdown}
+                  showTools={props.showTools}
                 />
               );
             })}

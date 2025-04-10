@@ -16,9 +16,9 @@ function WeatherStation({
 }) {
   return (
     <div className="flex flex-col gap-2 rounded-md border p-2 bg-gray-100">
-      <div>{reason}</div>
+      <div>Reason: {reason}</div>
       <div className="flex flex-row gap-2">
-        <div>{cityName}</div>
+        <div>🏙️ {cityName}</div>
         <div>{temperature}°F</div>
         <div>Station: {station}</div>
       </div>
@@ -43,7 +43,7 @@ export function App() {
             success: true,
             message: `The temperature in ${cityName} is ${temperature} degrees from weather station ${station}.`,
           },
-          output: {
+          additionalData: {
             cityName,
             temperature,
             station,
@@ -74,24 +74,31 @@ export function App() {
   };
 
   const onMessagesUpdated = (messages: MessageModel[]) => {
+    // you can persist the messages to your redux store or local storage
     console.log(messages);
   };
 
   return (
-    <div className="w-[400px] h-[800px] m-4">
-      <AiAssistant
-        name="My Assistant"
-        apiKey={process.env.OPENAI_TOKEN || ''}
-        version="v1"
-        modelProvider="openai"
-        model="gpt-4o"
-        welcomeMessage="Hello, how can I help you today?"
-        instructions="You are a helpful assistant."
-        functions={functions}
-        useMarkdown={true}
-        onMessagesUpdated={onMessagesUpdated}
-        initialMessages={SAVED_MESSAGES}
-      />
+    <div className="min-h-screen">
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold mb-8">Chat Message Persistent Example</h1>
+        <div className="rounded-lg shadow-lg p-6 h-[800px]">
+          <AiAssistant
+            name="My Assistant"
+            apiKey={process.env.OPENAI_API_KEY || ''}
+            version="v1"
+            modelProvider="openai"
+            model="gpt-4o"
+            welcomeMessage="Hello, how can I help you today?"
+            instructions="You are a helpful assistant."
+            functions={functions}
+            useMarkdown={true}
+            onMessagesUpdated={onMessagesUpdated}
+            initialMessages={SAVED_MESSAGES}
+            showTools={true}
+          />
+        </div>
+      </div>
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 > **Boxplot**(`props`): `Element`
 
-Defined in: [boxplot/component/box-plot.tsx:66](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/echarts/src/boxplot/component/box-plot.tsx#L66)
+Defined in: [packages/echarts/src/boxplot/component/box-plot.tsx:68](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/echarts/src/boxplot/component/box-plot.tsx#L68)
 
 The react component of a box plot using eCharts
 

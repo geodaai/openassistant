@@ -40,6 +40,8 @@ const config: Config = {
   // Correct webpack configuration syntax for Docusaurus
   // clientModules: [require.resolve('./src/client-modules/webpack-fallback.ts')],
   plugins: [
+    './plugins/readme-to-intro',
+    './plugins/ui-readme-to-docs',
     [
       'docusaurus-plugin-typedoc',
       {
@@ -150,12 +152,6 @@ const config: Config = {
           sidebarId: 'tutorialSidebar',
           position: 'left',
           label: 'Tutorial',
-        },
-        {
-          type: 'docSidebar',
-          sidebarId: 'pluginSidebar',
-          position: 'left',
-          label: 'Plugins',
         },
         {
           type: 'docSidebar',

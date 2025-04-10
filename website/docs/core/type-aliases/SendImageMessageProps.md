@@ -2,7 +2,7 @@
 
 > **SendImageMessageProps**: `object`
 
-Defined in: [packages/core/src/hooks/use-assistant.ts:80](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/core/src/hooks/use-assistant.ts#L80)
+Defined in: [packages/core/src/hooks/use-assistant.ts:80](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/core/src/hooks/use-assistant.ts#L80)
 
 Parameters for sending an image with optional text to the assistant.
 

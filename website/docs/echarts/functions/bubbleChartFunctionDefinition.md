@@ -1,8 +1,32 @@
-# Function: bubbleChartFunctionDefinition()
+# Function: ~~bubbleChartFunctionDefinition()~~
 
 > **bubbleChartFunctionDefinition**(`context`): `RegisterFunctionCallingProps`
 
-Defined in: [bubble-chart/definition.ts:72](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/echarts/src/bubble-chart/definition.ts#L72)
+Defined in: [packages/echarts/src/bubble-chart/definition.ts:75](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/echarts/src/bubble-chart/definition.ts#L75)
+
+**`Internal`**
+
+## Parameters
+
+### context
+
+`CustomFunctionContext`\<[`BubbleChartFunctionContextValues`](../type-aliases/BubbleChartFunctionContextValues.md)\>
+
+The context object used by the bubble chart function. See BubbleChartFunctionContext for more details.
+
+:::note
+You are responsible to provide the context object, which are `getValues` and `config` as shown in the example above, to the bubble chart function.
+:::
+
+## Returns
+
+`RegisterFunctionCallingProps`
+
+Configuration object for function registration
+
+## Deprecated
+
+Use `bubbleChart` tool instead.
 
 ## Summary
 
@@ -41,21 +65,3 @@ The bubble chart is particularly useful for visualizing relationships between th
 where X and Y coordinates represent two variables, bubble size represents a third variable,
 and optionally, bubble color can represent a fourth variable.
 :::
-
-## Parameters
-
-### context
-
-`CustomFunctionContext`\<[`BubbleChartFunctionContextValues`](../type-aliases/BubbleChartFunctionContextValues.md)\>
-
-The context object used by the bubble chart function. See BubbleChartFunctionContext for more details.
-
-:::note
-You are responsible to provide the context object, which are `getValues` and `config` as shown in the example above, to the bubble chart function.
-:::
-
-## Returns
-
-`RegisterFunctionCallingProps`
-
-Configuration object for function registration

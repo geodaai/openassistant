@@ -1,8 +1,8 @@
-# Type Alias: ExtendedTool\<PARAMETERS\>
+# Type Alias: ExtendedTool\<PARAMETERS, RETURN_TYPE, ADDITIONAL_DATA, CONTEXT\>
 
-> **ExtendedTool**\<`PARAMETERS`\>: `Tool`\<`PARAMETERS`\> & `object`
+> **ExtendedTool**\<`PARAMETERS`, `RETURN_TYPE`, `ADDITIONAL_DATA`, `CONTEXT`\>: `Tool`\<`PARAMETERS`\> & `object`
 
-Defined in: [packages/core/src/utils/create-assistant.ts:77](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/core/src/utils/create-assistant.ts#L77)
+Defined in: [packages/core/src/utils/create-assistant.ts:84](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/core/src/utils/create-assistant.ts#L84)
 
 A tool contains the description and the schema of the input that the tool expects.
 This enables the language model to generate the input.
@@ -23,16 +23,22 @@ The component that will be rendered when the tool is executed
 
 ### context?
 
-> `optional` **context**: [`CustomFunctionContext`](CustomFunctionContext.md)\<`unknown`\> \| [`CustomFunctionContextCallback`](CustomFunctionContextCallback.md)\<`unknown`\>
+> `optional` **context**: `CONTEXT`
 
 The context that will be passed to the function
 
 ### execute
 
-> **execute**: `ExecuteFunction`\<`PARAMETERS`\>
+> **execute**: `ExecuteFunction`\<`PARAMETERS`, `RETURN_TYPE`, `ADDITIONAL_DATA`, `CONTEXT`\>
 
 test
 
 ## Type Parameters
 
 • **PARAMETERS** *extends* `Parameters` = `never`
+
+• **RETURN_TYPE** = `never`
+
+• **ADDITIONAL_DATA** = `never`
+
+• **CONTEXT** = [`CustomFunctionContext`](CustomFunctionContext.md)\<`unknown`\> \| [`CustomFunctionContextCallback`](CustomFunctionContextCallback.md)\<`unknown`\>

@@ -1,4 +1,3 @@
-import AutoSizer from 'react-virtualized-auto-sizer';
 import { ParallelCoordinateOutputData, ParallelCoordinatePlot } from './pcp';
 import { ExpandableContainer, generateId } from '@openassistant/common';
 import { useState } from 'react';

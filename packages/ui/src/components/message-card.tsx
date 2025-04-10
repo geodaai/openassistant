@@ -39,6 +39,7 @@ export type MessageCardProps = HTMLAttributes<HTMLDivElement> & {
   githubIssueLink?: string;
   isMessageDraggable?: boolean;
   useMarkdown?: boolean;
+  showTools?: boolean;
 };
 
 const MessageCard = forwardRef<HTMLDivElement, MessageCardProps>(
@@ -61,6 +62,7 @@ const MessageCard = forwardRef<HTMLDivElement, MessageCardProps>(
       githubIssueLink,
       useMarkdown = true,
       isMessageDraggable = false,
+      showTools = true,
       ...props
     },
     ref
@@ -147,6 +149,7 @@ const MessageCard = forwardRef<HTMLDivElement, MessageCardProps>(
                 components={components}
                 status={status}
                 useMarkdown={useMarkdown}
+                showTools={showTools}
               />
             </div>
             <div

@@ -2,7 +2,7 @@
 
 > **DataClassifyFunctionContext**: `object`
 
-Defined in: [packages/geoda/src/data-classify.ts:32](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/geoda/src/data-classify.ts#L32)
+Defined in: [packages/geoda/src/data-classify.ts:32](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/geoda/src/data-classify.ts#L32)
 
 The context of the data classify function.
 

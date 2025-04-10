@@ -1,8 +1,8 @@
 # Variable: localQuery
 
-> `const` **localQuery**: `ExtendedTool`\<`ZodObject`\<\{ `datasetName`: `ZodString`; `dbTableName`: `ZodString`; `sql`: `ZodString`; `variableNames`: `ZodArray`\<`ZodString`, `"many"`\>; \}, `"strip"`, `ZodTypeAny`, \{ `datasetName`: `string`; `dbTableName`: `string`; `sql`: `string`; `variableNames`: `string`[]; \}, \{ `datasetName`: `string`; `dbTableName`: `string`; `sql`: `string`; `variableNames`: `string`[]; \}\>\>
+> `const` **localQuery**: `ExtendedTool`\<`ZodObject`\<\{ `datasetName`: `ZodString`; `dbTableName`: `ZodString`; `sql`: `ZodString`; `variableNames`: `ZodArray`\<`ZodString`, `"many"`\>; \}, `"strip"`, `ZodTypeAny`, \{ `datasetName`: `string`; `dbTableName`: `string`; `sql`: `string`; `variableNames`: `string`[]; \}, \{ `datasetName`: `string`; `dbTableName`: `string`; `sql`: `string`; `variableNames`: `string`[]; \}\>, \{ `data`: \{ `firstTwoRows`: `any`[]; \}; `error`: `undefined`; `instruction`: `undefined`; `success`: `boolean`; \}, \{ `columnData`: `any`; `config`: \{ `isDraggable`: `boolean`; \}; `datasetName`: `any`; `dbTableName`: `any`; `sql`: `any`; `title`: `string`; `variableNames`: `any`; \}, \{ `config`: \{ `isDraggable`: `boolean`; \}; `duckDB`: `null`; `getValues`: () => `never`; `onSelected`: () => `never`; \}\>
 
-Defined in: [packages/duckdb/src/tool.ts:125](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/duckdb/src/tool.ts#L125)
+Defined in: [packages/duckdb/src/tool.ts:42](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/duckdb/src/tool.ts#L42)
 
 The localQuery tool is used to execute a query against a local dataset.
 
@@ -23,22 +23,17 @@ const localQueryTool = {
 }
 ```
 
-- getValues()
+### getValues()
 
 User implements this function to get the values of the variable from dataset.
-See
 
-## See
-
- - For prompts like "Show me the revenue per capita for each location in dataset myVenues", the tool will
+For prompts like "_Show me the revenue per capita for each location in dataset myVenues_", the tool will
 call the `getValues()` function twice:
-- first time to get the values of revenue from dataset: getValues('myVenues', 'revenue')
-- second time to get the values of population from dataset: getValues('myVenues', 'population')
+- get the values of **revenue** from dataset: getValues('myVenues', 'revenue')
+- get the values of **population** from dataset: getValues('myVenues', 'population')
 
 A duckdb table will be created using the values returned from `getValues()`, and LLM will generate a sql query to query the table to answer the user's prompt.
 
-- onSelected()
+### onSelected()
 
 User implements this function to sync the selections of the query result table with the original dataset.
-See
- -

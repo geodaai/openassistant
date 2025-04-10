@@ -2,7 +2,7 @@
 
 > **BoxplotOutputData**: `object` & [`CreateBoxplotProps`](CreateBoxplotProps.md)
 
-Defined in: [boxplot/component/box-plot.tsx:51](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/echarts/src/boxplot/component/box-plot.tsx#L51)
+Defined in: [packages/echarts/src/boxplot/component/box-plot.tsx:50](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/echarts/src/boxplot/component/box-plot.tsx#L50)
 
 The data for the box plot
 
@@ -19,6 +19,10 @@ The data for the box plot
 ### datasetName
 
 > **datasetName**: `string`
+
+### height?
+
+> `optional` **height**: `number`
 
 ### id
 
@@ -46,6 +50,10 @@ The data for the box plot
 
 `void`
 
+### showMore?
+
+> `optional` **showMore**: `boolean`
+
 ### theme?
 
 > `optional` **theme**: `string`
@@ -53,3 +61,7 @@ The data for the box plot
 ### variables
 
 > **variables**: `string`[]
+
+### width?
+
+> `optional` **width**: `number`

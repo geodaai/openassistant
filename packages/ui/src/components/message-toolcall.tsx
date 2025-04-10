@@ -100,10 +100,12 @@ export function PartComponent({
   part,
   components,
   useMarkdown,
+  showTools,
 }: {
   part: StreamMessagePart;
   components?: ToolCallComponents;
   useMarkdown?: boolean;
+  showTools?: boolean;
 }) {
   if (part.type === 'text') {
     return (
@@ -113,7 +115,7 @@ export function PartComponent({
         </div>
       </div>
     );
-  } else if (part.type === 'tool') {
+  } else if (part.type === 'tool' && showTools) {
     return (
       <>
         {part.toolCallMessages.map((toolCallMessage) => (

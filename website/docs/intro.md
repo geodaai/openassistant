@@ -2,29 +2,32 @@
 sidebar_position: 1
 ---
 
-# Quick Start
+# OpenAssistant
 
-OpenAssistant is not only a LLM based chatbot, it is engineered to
-help users analyzing their data by levaraging the existing
-functions and tools in your application. OpenAssistant provides a
-new way that allows users to interact with your application in a
-more natural and creative way.
+[Documentation](https://openassistant-doc.vercel.app) |
+[Playground](https://openassistant-playground.vercel.app)
+
+OpenAssistant is a javascript library for building AI assistant with powerful **tools** and interactive React chat component.
+
+Check out the following examples using OpenAssistant in action:
+
+- [kepler.gl AI Assistant (kepler.gl)](https://location.foursquare.com/resources/blog/products/foursquare-brings-enterprise-grade-spatial-analytics-to-your-browser-with-kepler-gl-3-1/)
+- [GeoDa.AI AI Assistant (geoda.ai)](https://geoda.ai)
+- [SqlRooms (sqlrooms.org)](https://sqlrooms-ai.netlify.app/)
 
 ## Getting Started
 
-Here's a basic example of using OpenAssistant in your javascript application:
-
 ### Installation
 
-Install the core packages using npm:
+Install the core packages:
 
 ```bash
 npm install @openassistant/core
 ```
 
-### Usage
+### Basic Usage
 
-Then, you can use the OpenAssistant in your application:
+Then, you can use the OpenAssistant in your application. For example:
 
 ```ts
 import { createAssistant } from '@openassistant/core';
@@ -49,9 +52,8 @@ await assistant.processTextMessage({
 });
 ```
 
-See the source code of the example 🔗 [here](https://github.com/openassistant/openassistant/tree/main/examples/cli_example).
+See the source code of the example 🔗 [here](https://github.com/GeoDaCenter/openassistant/tree/main/examples/cli_example).
 
-:::tip
 If you want to use Google Gemini as the model provider, you can do the following:
 
 Install vercel google gemini client:
@@ -64,25 +66,118 @@ Then, you can use update the assistant configuration to use Google Gemini.
 
 OpenAssistant also supports the following model providers:
 
-| Model Provider | Models | Dependency |
-| -------------- | ------ | ---------- |
-| OpenAI         | [link](https://sdk.vercel.ai/providers/ai-sdk-providers/openai#model-capabilities) | @ai-sdk/openai  |
-| Google         | [models](https://sdk.vercel.ai/providers/ai-sdk-providers/google-generative-ai#model-capabilities) | @ai-sdk/google |
-| Anthropic      | [models](https://sdk.vercel.ai/providers/ai-sdk-providers/anthropic#model-capabilities) | @ai-sdk/anthropic |
-| DeepSeek       | [models](https://sdk.vercel.ai/providers/ai-sdk-providers/deepseek#model-capabilities) | @ai-sdk/deepseek |
-| xAI            | [models](https://sdk.vercel.ai/providers/ai-sdk-providers/xai#model-capabilities) | @ai-sdk/xai |
-| Ollama         | [models](https://ollama.com/models) | ollama-ai-provider |
-:::
+| Model Provider | Models                                                                                             | Dependency         |
+| -------------- | -------------------------------------------------------------------------------------------------- | ------------------ |
+| OpenAI         | [link](https://sdk.vercel.ai/providers/ai-sdk-providers/openai#model-capabilities)                 | @ai-sdk/openai     |
+| Google         | [models](https://sdk.vercel.ai/providers/ai-sdk-providers/google-generative-ai#model-capabilities) | @ai-sdk/google     |
+| Anthropic      | [models](https://sdk.vercel.ai/providers/ai-sdk-providers/anthropic#model-capabilities)            | @ai-sdk/anthropic  |
+| DeepSeek       | [models](https://sdk.vercel.ai/providers/ai-sdk-providers/deepseek#model-capabilities)             | @ai-sdk/deepseek   |
+| xAI            | [models](https://sdk.vercel.ai/providers/ai-sdk-providers/xai#model-capabilities)                  | @ai-sdk/xai        |
+| Ollama         | [models](https://ollama.com/models)                                                                | ollama-ai-provider |
 
-## Add a Chat Component to your App
+## OpenAssistant Tools
 
-### Installation
+OpenAssistant provides a set of tools that helps you build your AI application.
+
+- [DuckDB tools](https://openassistant-doc.vercel.app/docs/tutorial-extras/duckdb-plugin)
+- [ECharts tools](https://openassistant-doc.vercel.app/docs/tutorial-extras/echarts-plugin)
+- [Kepler.gl tools](https://openassistant-doc.vercel.app/docs/tutorial-extras/keplergl-plugin)
+- [Data Analysis tools](https://openassistant-doc.vercel.app/docs/tutorial-extras/geoda-plugin)
+
+For a quick example:
+
+**localQuery** in @openassistant/duckdb
+
+This tool helps to query any data that has been loaded in your application using user's prompt.
+
+- the data in your application will be loaded into a local duckdb instance temporarily
+- LLM will generate SQL query based on user's prompt against the data
+- the SQL query result will be executed in the local duckdb instance
+- the query result will be displayed in a React table component
+
+Let's say you have a dataset in your application, you can use the `localQuery` tool to query the data using user's prompt.
+
+In your application, the data could be loaded from a csv/json/parquet/xml file. For this example, we will use the `SAMPLE_DATASETS` in `dataset.ts` to simulate the data.
+
+```ts
+export const SAMPLE_DATASETS = {
+  myVenues: [
+    {
+      index: 0,
+      location: 'New York',
+      latitude: 40.7128,
+      longitude: -74.006,
+      revenue: 12500000,
+      population: 8400000,
+    },
+    ...
+  ],
+};
+```
+
+- Import the `localQuery` tool from `@openassistent/duckdb` and use it in your application.
+- Provide the `getValues` function in the `context` to get the values from your data.
+
+```ts
+import { localQuery } from '@openassistent/duckdb';
+
+const localQueryTool = {
+  ...localQuery,
+  context: {
+    ...localQuery.context,
+    getValues: (datasetName: string, variableName: string) => {
+      return SAMPLE_DATASETS[datasetName][variableName];
+    },
+  },
+};
+```
+
+- Use the tool in your AI assistant chat component
+
+```tsx
+// load your data
+// pass the metadata of the data to the assistant
+
+// get the singleton assistant instance
+const assistant = await createAssistant({
+  name: 'assistant',
+  modelProvider: 'openai',
+  model: 'gpt-4o',
+  apiKey: 'your-api-key',
+  version: '0.0.1',
+  instructions: `You are a helpful assistant. You can use the following datasets to answer the user's question: 
+  datasetName: myVenues,
+  variables: index, location, latitude, longitude, revenue, population
+  `,
+  functions: { localQuery: localQueryTool },
+});
+
+// now you can send prompts to the assistant
+await assistant.processTextMessage({
+  textMessage: 'which location has the highest revenue?',
+  streamMessageCallback: ({ isCompleted, message }) => {
+    console.log(isCompleted, message);
+  },
+});
+```
+
+🚀 Try it out!
+
+<img width="300" src="https://github.com/user-attachments/assets/4115b474-13af-48ba-b69e-b39cc325f1b1"/>
+
+See the source code of the example 🔗 [here](https://github.com/geodacenter/openassistant/tree/main/examples/duckdb_esbuild).
+
+### Add a React Chat Component to your App
+
+If you don't want to build your own chat interface, OpenAssistant provides a pre-built chat component that you can use in your React application.
+
+#### Installation
 
 ```bash
 npm install @openassistant/ui @openassistant/core
 ```
 
-### Usage
+#### Usage
 
 ```tsx
 import { AiAssistant } from '@openassistant/ui';
@@ -98,32 +193,100 @@ function App() {
       version="v1"
       welcomeMessage="Hello! How can I help you today?"
       instructions="You are a helpful assistant."
-      functions={[]}
-      theme='dark'
+      functions={{}}
+      theme="dark"
+      useMarkdown={true}
+      showTools={true}
+      onMessageUpdated=({messages}) => {
+        console.log(messages);
+      }}
     />
   );
 }
 ```
 
-See the source code of the example 🔗 [here](https://github.com/openassistant/openassistant/tree/main/examples/simple_react).
+Note: you don't need to use `createAssistant()` to create the assistant instance, you can use the `AiAssistant` component directly.
 
-<img src="https://github.com/user-attachments/assets/394a9bb6-6022-477d-a98d-f85db043ce71" alt="Screen Capture" width={400} />
+<img src="https://openassistant-doc.vercel.app/assets/images/getstart-dark-499fd880728b7978a32aa9e8742a0f38.png" width="300" />
 
-:::tip
+See the source code of the example 🔗 [here](https://github.com/geodacenter/openassistant/tree/main/examples/simple_react).
 
 If you are using TailwindCSS, you need to add the following configurations to your `tailwind.config.js` file:
 
 ```tsx
+import { nextui } from '@nextui-org/react';
+...
+
 module.exports = {
   content: [
-    ...
-    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/@openassistant/ui/dist/**/*.{js,ts,jsx,tsx}"
+    ...,
+    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
+    './node_modules/@openassistant/ui/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {},
   },
+  darkMode: 'class',
   plugins: [nextui()],
 };
 ```
-:::
+
+## 🌟 Features
+
+- 🤖 **One interface for multiple AI providers**
+  - DeepSeek (Chat and Reasoner)
+  - OpenAI (GPT models)
+  - Google Gemini
+  - Ollama (local AI models)
+  - XAI Grok
+  - Anthropic Claude
+  - AWS Bedrock\*
+  - Azure OpenAI\*
+
+\* via server API only, see [how-to documentation here](https://openassistant-doc.vercel.app/blog/server-support)
+
+- 🌟 **Easy-to-use Tools to extend your AI assistant**
+
+  - DuckDB: in-browser query data using duckdb via prompt
+  - ECharts: visualize data using echarts via prompt
+  - KeplerGl: create maps using keplergl via prompt
+  - GeoDa: apply spatial data analysis using geoda wasm via prompt
+
+- 🎯 **Built-in React chat component**
+  - Pre-built chat interface
+  - Pre-built LLM configuration interface
+  - Theme support
+  - Take screenshot to ask [[Demo]](https://geoda.ai/img/highlight-screenshot.mp4)
+  - Talk to ask [[Demo]](https://geoda.ai/img/highlight-ai-talk.mp4)
+  - Function calling support [[Demo]](https://geoda.ai/img/highlight-prompt.mp4)
+
+See the [tutorial](https://openassistant-doc.vercel.app/docs/tutorial-basics/screencapture) for more details.
+
+- 📦 **Easy integration**
+  - CLI tool for adding components
+  - TypeScript support
+  - Tailwind CSS integration
+
+## 🎯 Examples
+
+Check out our example projects:
+
+- [Basic Example](examples/cli_example/README.md)
+- [Custom Function Example](examples/zod_function_tools/README.md)
+- [Multiple Step Tools](examples/multisteps_tools/README.md)
+- [Message Persistence Example](examples/message_persistence/README.md)
+- [Simple React Example](examples/simple_react/README.md)
+- [React with TailwindCSS Example](examples/react_tailwind/README.md)
+- [Tool Example: DuckDB](examples/duckdb_esbuild/README.md)
+- [Tool Example: KeplerGl](examples/keplergl_plugin/README.md)
+- [Tool Example: DeckGl](examples/deckgl_assistant/README.md)
+
+## 📄 License
+
+MIT © [Xun Li](mailto:lixun910@gmail.com)
+
+## 📚 FAQ
+
+### 🔒 Is my data secure?
+
+Yes, the data you used in your application stays within the browser, and will **never** be sent to the LLM. Using function tools, we can engineer the AI assistant to use only the meta data for function calling, e.g. the name of the dataset, the name of the layer, the name of the variables, etc. Here is a process diagram to show how the AI assistant works:

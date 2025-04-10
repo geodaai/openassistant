@@ -109,15 +109,7 @@ export type MessagePayload =
   | ReactNode;
 
 /**
- * Type of Message model
- *
- * @param message The message to be sent
- * @param sentTime The time the message was sent
- * @param sender The sender of the message
- * @param direction The direction of the message
- * @param position The position of the message
- * @param type The type of the message
- * @param payload The payload of the message, can be string, object, image or custom
+ * Type of Message model used in the chat component
  */
 export type MessageModel = {
   /**
@@ -125,12 +117,33 @@ export type MessageModel = {
    * @deprecated Use messageContent.text instead
    */
   message?: string;
+  /**
+   * The time the message was sent
+   */
   sentTime?: string;
-  sender?: string;
+  /**
+   * The sender of the message
+   */
+  sender?: 'user' | 'assistant' | 'error';
+  /**
+   * The direction of the message
+   */
   direction: MessageDirection;
+  /**
+   * The position of the message
+   */
   position: 'single' | 'first' | 'normal' | 'last' | 0 | 1 | 2 | 3;
+  /**
+   * The type of the message
+   */
   type?: MessageType;
+  /**
+   * The payload of the message
+   */
   payload?: MessagePayload;
+  /**
+   * The content of the message
+   */
   messageContent?: StreamMessage;
 };
 
@@ -310,10 +323,28 @@ export type StreamMessagePart = TextPart | ToolPart;
  * @param parts The parts of the message. This is the text that happens after the tool calls.
  */
 export type StreamMessage = {
+  /**
+   * The reasoning of the assistant
+   * @deprecated Use parts instead
+   */
   reasoning?: string;
+  /**
+   * The tool call messages
+   * @deprecated Use parts instead
+   */
   toolCallMessages?: ToolCallMessage[];
+  /**
+   * The analysis of the message
+   * @deprecated Use parts instead
+   */
   analysis?: string;
+  /**
+   * The text of the message. Normally, it is used for storing user's prompting text.
+   */
   text?: string;
+  /**
+   * The parts of the message. It is used for storing the returning result from LLM.
+   */
   parts?: StreamMessagePart[];
 };
 

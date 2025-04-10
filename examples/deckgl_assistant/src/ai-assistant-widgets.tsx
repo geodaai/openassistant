@@ -221,7 +221,7 @@ export class AiAssistantWidget implements Widget<AiAssistantWidgetProps> {
                         <ConfigPanel
                           initialConfig={{
                             isReady: true,
-                            provider: this.modelProvider,
+                            provider: this.modelProvider as 'openai' | 'deepseek' | 'google' | 'ollama',
                             model: this.model,
                             apiKey: this.apiKey,
                             temperature: this.temperature,

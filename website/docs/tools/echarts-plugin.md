@@ -144,26 +144,6 @@ async function getXYValuesFromMyDatasets(
 }
 ```
 
-## Using with TailwindCSS
-
-If your project uses TailwindCSS, update your configuration:
-
-```javascript
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    './src/**/*.{js,ts,jsx,tsx}',
-    '../../node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
-    '../../node_modules/@openassistant/echarts/dist/**/*.{js,ts,jsx,tsx}',
-  ],
-  theme: {
-    extend: {},
-  },
-  darkMode: 'class',
-  plugins: [nextui()],
-};
-```
-
 ## Usage Examples
 
 Once set up, you can create visualizations through natural language prompts:

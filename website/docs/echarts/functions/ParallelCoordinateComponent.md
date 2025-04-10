@@ -2,7 +2,7 @@
 
 > **ParallelCoordinateComponent**(`props`): `null` \| `Element`
 
-Defined in: [pcp/component/pcp-component.tsx:13](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/echarts/src/pcp/component/pcp-component.tsx#L13)
+Defined in: [packages/echarts/src/pcp/component/pcp-component.tsx:16](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/echarts/src/pcp/component/pcp-component.tsx#L16)
 
 Props for the ParallelCoordinateComponent, extending ParallelCoordinateOutputData
 which contains the data and configuration for the parallel coordinate plot

@@ -1,8 +1,8 @@
 # Function: tool()
 
-> **tool**\<`PARAMETERS`\>(`tool`): [`ExtendedTool`](../type-aliases/ExtendedTool.md)\<`PARAMETERS`\>
+> **tool**\<`PARAMETERS`, `RETURN_TYPE`, `ADDITIONAL_DATA`, `CONTEXT`\>(`tool`): [`ExtendedTool`](../type-aliases/ExtendedTool.md)\<`PARAMETERS`, `RETURN_TYPE`, `ADDITIONAL_DATA`, `CONTEXT`\>
 
-Defined in: [packages/core/src/utils/create-assistant.ts:129](https://github.com/GeoDaCenter/openassistant/blob/a1bcfdf89aac2d64b3bda9cf92b96ead076def28/packages/core/src/utils/create-assistant.ts#L129)
+Defined in: [packages/core/src/utils/create-assistant.ts:140](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/core/src/utils/create-assistant.ts#L140)
 
 Extends the vercel AI tool (see https://sdk.vercel.ai/docs/reference/ai-sdk-core/tool) with additional properties:
 
@@ -39,16 +39,22 @@ Extends the vercel AI tool (see https://sdk.vercel.ai/docs/reference/ai-sdk-core
 
 • **PARAMETERS** *extends* `Parameters` = `never`
 
+• **RETURN_TYPE** = `never`
+
+• **ADDITIONAL_DATA** = `never`
+
+• **CONTEXT** = `never`
+
 ## Parameters
 
 ### tool
 
-[`ExtendedTool`](../type-aliases/ExtendedTool.md)\<`PARAMETERS`\>
+[`ExtendedTool`](../type-aliases/ExtendedTool.md)\<`PARAMETERS`, `RETURN_TYPE`, `ADDITIONAL_DATA`, `CONTEXT`\>
 
 The vercel AI tool to extend
 
 ## Returns
 
-[`ExtendedTool`](../type-aliases/ExtendedTool.md)\<`PARAMETERS`\>
+[`ExtendedTool`](../type-aliases/ExtendedTool.md)\<`PARAMETERS`, `RETURN_TYPE`, `ADDITIONAL_DATA`, `CONTEXT`\>
 
 The extended tool
