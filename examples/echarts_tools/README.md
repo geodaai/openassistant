@@ -1,12 +1,19 @@
 # ECharts Tools Example
 
-This example demonstrates how to use the ECharts boxplot tool in a React application.
+This example demonstrates how to use various ECharts visualization tools in a React application with an AI assistant interface.
 
 ## Features
 
-- Create boxplots using natural language prompts
+- Create multiple types of visualizations using natural language prompts:
+  - Boxplots
+  - Bubble Charts
+  - Histograms
+  - Parallel Coordinate Plots (PCP)
+  - Scatterplots
 - Interactive visualization of data
-- Sample dataset with revenue and population data
+- AI Assistant interface for natural language queries
+- Sample dataset with venue information
+- Light/dark theme support
 
 ## Getting Started
 
@@ -30,13 +37,26 @@ yarn start
 
 4. Open your browser and navigate to `http://localhost:3000`
 
+## Building for Production
+
+To create a production build:
+
+```bash
+yarn build
+```
+
+The built files will be in the `dist` directory. You can serve these files using any static file server.
+
 ## Usage
 
 You can interact with the assistant using natural language prompts. For example:
 
-- "Create a boxplot of the revenue for each location"
-- "Show me the distribution of population across locations"
-- "Compare the revenue and population distributions"
+- "Create a boxplot of the population for each location"
+- "Show me a bubble chart using latitude and longitude, with revenue as bubble size"
+- "Create a histogram of the population"
+- "Show me a parallel coordinate plot of population and revenue"
+- "Create a scatterplot of population vs revenue"
+- "Summarize the dataset"
 
 ## Sample Dataset
 
@@ -45,11 +65,14 @@ The example includes a sample dataset with the following structure:
 ```typescript
 const SAMPLE_DATASET = {
   myVenues: [
-    { revenue: 1000, population: 100, location: 'A' },
-    { revenue: 2000, population: 200, location: 'B' },
-    { revenue: 3000, population: 300, location: 'C' },
-    { revenue: 4000, population: 400, location: 'D' },
-    { revenue: 5000, population: 500, location: 'E' },
+    { 
+      location: string,
+      latitude: number,
+      longitude: number,
+      revenue: number,
+      population: number
+    },
+    // ... more venues
   ],
 };
 ```
@@ -62,6 +85,7 @@ You can customize the example by:
 2. Adding more variables to the dataset
 3. Changing the assistant's instructions
 4. Customizing the UI theme
+5. Adding new visualization tools
 
 ## License
 

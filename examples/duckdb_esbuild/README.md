@@ -19,7 +19,7 @@ yarn install
 
 2. Set up your OpenAI API key:
 ```bash
-export OPENAI_TOKEN=your_api_key_here
+export OPENAI_API_KEY=your_api_key_here
 ```
 
 3. Start the development server:
