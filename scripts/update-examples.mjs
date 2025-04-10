@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, readdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -12,26 +12,41 @@ const packageJson = JSON.parse(
 
 // update version in examples/lisa/package.json
 function updateExamplesPackageJson(projectName) {
-  // replace dependencies of "@geoda/lisa", "@geoda/core", or "@geoda/regression" with the new version
+  // replace dependencies of "@openassistant/core", "@openassistant/ui", or "@openassistant/common" with the new version
   const examplesDir = join(__dirname, `../../examples/${projectName}`);
   const examplesPackageJson = JSON.parse(readFileSync(join(examplesDir, 'package.json'), 'utf-8'));
   // check if dependencies exist
-  if (examplesPackageJson.dependencies['@geoda/lisa']) {
-    examplesPackageJson.dependencies['@geoda/lisa'] = `${packageJson.version}`;
+  if (examplesPackageJson.dependencies['@openassistant/core']) {
+    examplesPackageJson.dependencies['@openassistant/core'] = `${packageJson.version}`;
   }
-  if (examplesPackageJson.dependencies['@geoda/core']) {
-    examplesPackageJson.dependencies['@geoda/core'] = `${packageJson.version}`;
+  if (examplesPackageJson.dependencies['@openassistant/ui']) {
+    examplesPackageJson.dependencies['@openassistant/ui'] = `${packageJson.version}`;
   }
-  if (examplesPackageJson.dependencies['@geoda/regression']) {
-    examplesPackageJson.dependencies['@geoda/regression'] = `${packageJson.version}`;
+  if (examplesPackageJson.dependencies['@openassistant/common']) {
+    examplesPackageJson.dependencies['@openassistant/common'] = `${packageJson.version}`;
+  }
+  if (examplesPackageJson.dependencies['@openassistant/duckdb']) {
+    examplesPackageJson.dependencies['@openassistant/duckdb'] = `${packageJson.version}`;
+  }
+  if (examplesPackageJson.dependencies['@openassistant/echarts']) {
+    examplesPackageJson.dependencies['@openassistant/echarts'] = `${packageJson.version}`;
+  }
+  if (examplesPackageJson.dependencies['@openassistant/geoda']) {
+    examplesPackageJson.dependencies['@openassistant/geoda'] = `${packageJson.version}`;
+  }
+  if (examplesPackageJson.dependencies['@openassistant/keplergl']) {
+    examplesPackageJson.dependencies['@openassistant/keplergl'] = `${packageJson.version}`;
   }
   writeFileSync(join(examplesDir, 'package.json'), JSON.stringify(examplesPackageJson, null, 2));
 }
 
-updateExamplesPackageJson('lisa');
-updateExamplesPackageJson('mapping');
-updateExamplesPackageJson('node');
-updateExamplesPackageJson('parcel');
-updateExamplesPackageJson('regression');
+// get the names of directories in examples
+const examplesDirs = readdirSync(join(__dirname, '../../examples'));
+
+// update version in all examples
+examplesDirs.forEach(exampleDir => {
+  console.log(`Updating ${exampleDir}`);
+  updateExamplesPackageJson(exampleDir);
+});
 
 console.log(`Updated examples to version ${packageJson.version}`);

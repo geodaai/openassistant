@@ -27,7 +27,8 @@ export function ScatterplotCallbackComponent(
   props: CustomFunctionCall
 ): JSX.Element | null {
   const data = props.output.data as ScatterplotOutputData | undefined;
-  const id = generateId();
+  const id = data?.id || generateId();
+
   const onDragStart = useDraggable({
     id,
     type: 'scatterplot',

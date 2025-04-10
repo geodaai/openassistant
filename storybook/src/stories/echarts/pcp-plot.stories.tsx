@@ -42,13 +42,6 @@ const data = {
 
 const pcp = processParallelCoordinateData(data);
 
-const pcpOption = createParallelCoordinateOption({
-  pcp,
-  rawData: data,
-  theme: 'light',
-  isExpanded: true,
-});
-
 const outputData = {
   id: 'boxplot',
   datasetName: 'sample',
@@ -103,3 +96,5 @@ export const Dark: Story = {
     </ResizableThemeWrapper>
   ),
 };
+
+export const Light: Story = Default;

@@ -159,7 +159,7 @@ export function ToolCallComponent({
           <Accordion
             variant="light"
             isCompact={true}
-            className="p-0 text-tiny"
+            className="pt-6 text-tiny"
             itemClasses={{
               title: 'text-tiny',
               content: 'text-tiny',

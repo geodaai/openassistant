@@ -106,7 +106,6 @@ export function BubbleChart(props: BubbleChartOutputData): JSX.Element | null {
             // merge rawIndices to brushed
             brushed.push(...rawIndices);
           }
-          console.log('brushed', brushed);
           // check if brushed.length is 0 after 100ms, since brushSelected may return empty array for some reason?!
           setTimeout(() => {
             if (eChart && brushed.length === 0) {
@@ -127,7 +126,7 @@ export function BubbleChart(props: BubbleChartOutputData): JSX.Element | null {
 
   return useMemo(
     () => (
-      <div className="h-full w-full flex flex-col rounded-lg bg-default-100 p-6 text-gray-900 shadow-secondary-1 dark:bg-gray-950 dark:text-gray-100">
+      <div className="h-full w-full flex flex-col rounded-lg pt-6 text-gray-900 shadow-secondary-1  dark:text-gray-100">
         <div className="flex-col items-start p-2">
           <p className="text-tiny font-bold uppercase">
             {`x: ${data.variableX.name}, y: ${data.variableY.name}, size: ${data.variableSize.name}`}

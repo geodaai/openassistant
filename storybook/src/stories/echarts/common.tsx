@@ -1,4 +1,3 @@
-import { ResizablePlotContainer } from '@openassistant/common';
 import { ThemeProvider } from 'next-themes';
 
 export function ResizableThemeWrapper({
@@ -15,9 +14,7 @@ export function ResizableThemeWrapper({
       defaultTheme="light"
       enableSystem={false}
     >
-      <div className="common-wrapper w-[400px] h-[600px]">
-        <ResizablePlotContainer>{children}</ResizablePlotContainer>
-      </div>
+      <div className="common-wrapper w-full h-full">{children}</div>
     </ThemeProvider>
   );
 }

@@ -8,7 +8,7 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "@openassistant/core": "0.2.7",
+    "@openassistant/core": "workspace:*",
     "dotenv": "^16.4.5",
     "readline-sync": "^1.4.10"
   }

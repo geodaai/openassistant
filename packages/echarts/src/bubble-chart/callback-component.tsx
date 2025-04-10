@@ -36,9 +36,10 @@ export function BubbleChartCallbackMessage(
   }
 
   return (
+    
     <ExpandableContainer
-      defaultWidth={600}
-      defaultHeight={800}
+      defaultWidth={undefined}
+      defaultHeight={380}
       draggable={data.isDraggable || false}
       onDragStart={onDragStart}
     >

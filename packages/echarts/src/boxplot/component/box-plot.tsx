@@ -141,7 +141,7 @@ export const Boxplot = (props: BoxplotOutputData) => {
 
   return useMemo(
     () => (
-      <div className="h-full w-full flex flex-col rounded-lg p-6 text-gray-900 dark:text-gray-100">
+      <div className="h-full w-full flex flex-col rounded-lg pt-6 text-gray-900 dark:text-gray-100">
         <div className="flex-col items-start p-2">
           <p className="text-tiny font-bold uppercase">{variables.join(',')}</p>
           <small className="text-default-500">{datasetName}</small>

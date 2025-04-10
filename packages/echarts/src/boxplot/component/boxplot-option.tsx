@@ -158,7 +158,7 @@ export function getBoxPlotChartOption({
       {
         left: '3%',
         right: '5%',
-        top: isExpanded ? '5%' : '20%',
+        top: isExpanded ? '20%' : '20%',
         bottom: '0%',
         containLabel: true,
         height: isExpanded ? '90%' : 'auto',

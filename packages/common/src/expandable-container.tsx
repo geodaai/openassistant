@@ -30,8 +30,9 @@ export function ExpandableContainer({
   const { moveProps } = useDraggable({ targetRef, isDisabled: !isExpanded });
 
   const onExpandComponent = () => {
-    onExpanded?.(!isExpanded);
-    setIsExpanded(!isExpanded);
+    const newExpandedState = !isExpanded;
+    setIsExpanded(newExpandedState);
+    onExpanded?.(newExpandedState);
   };
 
   return (
@@ -52,7 +53,7 @@ export function ExpandableContainer({
         ) : (
           <EChartsSkeleton />
         )}
-        <div className="group absolute top-0 right-0 mt-2 mr-2 cursor-pointer flex flex-row">
+        <div className="group absolute top-0 right-0 mt-4 mr-[-24px] cursor-pointer flex flex-row">
           {draggable && (
             <Button
               isIconOnly
@@ -70,8 +71,7 @@ export function ExpandableContainer({
             isOpen={isExpanded}
             placement="right"
             ref={targetRef}
-            backdrop="opaque"
-            shouldFlip={true}
+            backdrop="transparent"
           >
             <PopoverTrigger>
               <Button

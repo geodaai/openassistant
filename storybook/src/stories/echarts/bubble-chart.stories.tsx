@@ -3,7 +3,7 @@ import {
   BubbleChartComponent,
   BubbleChartCallbackMessage,
 } from '@openassistant/echarts';
-import { ResizableThemeWrapper } from './common';
+import { ResizableThemeWrapper, SimpleThemeWrapper } from './common';
 
 const meta: Meta<typeof BubbleChartComponent> = {
   title: 'Charts/Bubble Chart',
@@ -37,11 +37,21 @@ const data = {
   },
   variableSize: {
     name: 'Population',
-    values: [5000000, 10000000, 15000000, 20000000, 25000000, 30000000, 35000000],
+    values: [
+      5000000, 10000000, 15000000, 20000000, 25000000, 30000000, 35000000,
+    ],
   },
   variableColor: {
     name: 'Region',
-    values: ['Asia', 'Europe', 'Americas', 'Africa', 'Oceania', 'Asia', 'Europe'],
+    values: [
+      'Asia',
+      'Europe',
+      'Americas',
+      'Africa',
+      'Oceania',
+      'Asia',
+      'Europe',
+    ],
   },
 };
 
@@ -55,7 +65,7 @@ const outputData = {
 
 export const Default: Story = {
   render: () => (
-    <ResizableThemeWrapper forcedTheme="light">
+    <SimpleThemeWrapper forcedTheme="light" width="400px" height="300px">
       <BubbleChartCallbackMessage
         functionName="bubbleChart"
         functionArgs={{}}
@@ -66,7 +76,7 @@ export const Default: Story = {
           data: outputData,
         }}
       />
-    </ResizableThemeWrapper>
+    </SimpleThemeWrapper>
   ),
   parameters: {
     docs: {
@@ -80,7 +90,7 @@ export const Default: Story = {
 
 export const Dark: Story = {
   render: () => (
-    <ResizableThemeWrapper forcedTheme="dark">
+    <SimpleThemeWrapper forcedTheme="dark" width="400px" height="300px">
       <BubbleChartCallbackMessage
         functionName="bubbleChart"
         functionArgs={{}}
@@ -94,6 +104,8 @@ export const Dark: Story = {
           },
         }}
       />
-    </ResizableThemeWrapper>
+    </SimpleThemeWrapper>
   ),
 };
+
+export const Light: Story = Default;

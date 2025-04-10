@@ -93,3 +93,5 @@ export const Dark: Story = {
     </ResizableThemeWrapper>
   ),
 };
+
+export const Light: Story = Default;

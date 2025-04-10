@@ -4,8 +4,7 @@ import {
   ScatterplotCallbackComponent,
   computeRegression,
 } from '@openassistant/echarts';
-import { ResizableThemeWrapper } from './common';
-import { ThemeProvider } from 'next-themes';
+import { ResizableThemeWrapper, SimpleThemeWrapper } from './common';
 
 const meta: Meta<typeof ScatterplotComponent> = {
   title: 'Charts/Scatter Plot',
@@ -59,13 +58,13 @@ const regressionResults = computeRegression({
 
 export const Default: Story = {
   render: () => (
-    <ResizableThemeWrapper forcedTheme="light">
+    <SimpleThemeWrapper forcedTheme="light">
       <ScatterplotComponent
         {...output}
         theme="light"
         regressionResults={regressionResults}
       />
-    </ResizableThemeWrapper>
+    </SimpleThemeWrapper>
   ),
   parameters: {
     docs: {
@@ -79,24 +78,19 @@ export const Default: Story = {
 
 export const Dark: Story = {
   render: () => (
-    <ResizableThemeWrapper forcedTheme="dark">
+    <SimpleThemeWrapper forcedTheme="dark">
       <ScatterplotComponent
         {...output}
         theme="dark"
         regressionResults={regressionResults}
       />
-    </ResizableThemeWrapper>
+    </SimpleThemeWrapper>
   ),
 };
 
 export const ScatterInChat: Story = {
   render: () => (
-    <ThemeProvider
-      attribute="class"
-      forcedTheme={'light'}
-      defaultTheme="light"
-      enableSystem={false}
-    >
+    <ResizableThemeWrapper forcedTheme="light">
       <div className="common-wrapper w-[400px] h-[600px]">
         <ScatterplotCallbackComponent
           functionName="scatterplot"
@@ -117,6 +111,6 @@ export const ScatterInChat: Story = {
           }}
         />
       </div>
-    </ThemeProvider>
+    </ResizableThemeWrapper>
   ),
 };

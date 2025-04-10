@@ -4,7 +4,7 @@ import {
   BoxplotCallbackMessage,
   createBoxplot,
 } from '@openassistant/echarts';
-import { ResizableThemeWrapper } from './common';
+import { SimpleThemeWrapper } from './common';
 
 const meta: Meta<typeof BoxplotComponent> = {
   title: 'Charts/Boxplot',
@@ -55,7 +55,7 @@ const outputData = {
   id: 'boxplot',
   datasetName: 'sample',
   variables: ['rate'],
-  boxplotData:boxplot,
+  boxplotData: boxplot,
   data,
   boundIQR: 1.5,
   theme: 'light',
@@ -80,7 +80,7 @@ const multipleOutputData = {
 
 export const Default: Story = {
   render: () => (
-    <ResizableThemeWrapper forcedTheme="light">
+    <SimpleThemeWrapper forcedTheme="light" width="400px" height="300px">
       <BoxplotCallbackMessage
         functionName="boxplot"
         functionArgs={{}}
@@ -91,7 +91,7 @@ export const Default: Story = {
           data: outputData,
         }}
       />
-    </ResizableThemeWrapper>
+    </SimpleThemeWrapper>
   ),
   parameters: {
     docs: {
@@ -105,7 +105,7 @@ export const Default: Story = {
 
 export const Dark: Story = {
   render: () => (
-    <ResizableThemeWrapper forcedTheme="dark">
+    <SimpleThemeWrapper forcedTheme="dark" width="400px" height="300px">
       <BoxplotCallbackMessage
         functionName="boxplot"
         functionArgs={{}}
@@ -119,13 +119,13 @@ export const Dark: Story = {
           },
         }}
       />
-    </ResizableThemeWrapper>
+    </SimpleThemeWrapper>
   ),
 };
 
 export const MultipleBoxplots: Story = {
   render: () => (
-    <ResizableThemeWrapper forcedTheme="light">
+    <SimpleThemeWrapper forcedTheme="light" width="400px" height="300px">
       <BoxplotCallbackMessage
         functionName="boxplot"
         functionArgs={{}}
@@ -136,6 +136,6 @@ export const MultipleBoxplots: Story = {
           data: multipleOutputData,
         }}
       />
-    </ResizableThemeWrapper>
+    </SimpleThemeWrapper>
   ),
 };

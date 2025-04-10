@@ -1,6 +1,5 @@
 import { ScatterplotOutputData } from '../callback-function';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import AutoSizer from 'react-virtualized-auto-sizer';
 import {
   Button,
   Table,
@@ -110,7 +109,7 @@ export function ScatterplotComponent({
   ];
 
   return (
-    <div className="relative h-full w-full flex flex-col rounded-lg p-6 text-gray-900 shadow-secondary-1 dark:bg-gray-950 dark:text-gray-100">
+    <div className="relative h-full w-full flex flex-col rounded-lg pt-6 text-gray-900 shadow-secondary-1  dark:text-gray-100">
       <div className="flex-col items-start p-2">
         <p className="text-tiny font-bold uppercase">Scatterplot</p>
         <small className="truncate text-default-500">
