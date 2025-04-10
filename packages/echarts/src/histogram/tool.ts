@@ -140,7 +140,7 @@ async function executeHistogram(
         success: false,
         error: `Failed to create histogram. ${error}`,
         instruction:
-          'Pause the execution and ask the user to try with different prompt and context.',
+          'Try to fix the error and create a histogram. If the error persists, pause the execution and ask the user to try with different prompt and context.',
       },
     };
   }

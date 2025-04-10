@@ -24,7 +24,7 @@ type ParallelCoordinateOutputResult =
 /**
  * Type guard for PcpFunctionArgs
  */
-function isParallelCoordinateFunctionArgs(
+export function isParallelCoordinateFunctionArgs(
   data: unknown
 ): data is ParallelCoordinateFunctionArgs {
   return typeof data === 'object' && data !== null && 'variableNames' in data;

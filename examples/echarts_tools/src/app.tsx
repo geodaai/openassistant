@@ -8,6 +8,8 @@ import {
   BubbleChartTool,
   histogram,
   HistogramTool,
+  pcp,
+  PCPTool,
 } from '@openassistant/echarts';
 import { AiAssistant } from '@openassistant/ui';
 import { tool } from '@openassistant/core';
@@ -85,6 +87,14 @@ const histogramTool: HistogramTool = {
   },
 };
 
+const pcpTool: PCPTool = {
+  ...pcp,
+  context: {
+    ...pcp.context,
+    getValues: getValues,
+  },
+};
+
 const thinkTool = tool({
   description: 'Think about the question and provide a plan',
   parameters: z.object({
@@ -111,6 +121,7 @@ Welcome to the ECharts Tools Example! You can ask me to create boxplots of the s
 2. create a bubble chart using latitude and longitude of myVenues, use revenue as the bubble size
 3. summarize the dataset myVenues
 4. create a histogram of the population of myVenues
+5. create a parallel coordinate plot of the population and revenue of myVenues
 `;
 
 const instructions = `
@@ -152,6 +163,7 @@ export default function App() {
               think: thinkTool,
               bubbleChart: bubbleChartTool,
               histogram: histogramTool,
+              pcp: pcpTool,
             }}
             welcomeMessage={welcomeMessage}
             theme={theme}

@@ -9,7 +9,6 @@ import { ECHARTS_DARK_THEME } from '../../echarts-theme';
 import { ParallelCoordinateDataProps } from './utils';
 import { createParallelCoordinateOption } from './pcp-option';
 import { handleBrushSelection } from '../../echarts-updater';
-import AutoSizer from 'react-virtualized-auto-sizer';
 
 // Register the required components
 echarts.use([CanvasRenderer, ParallelChart]);
@@ -42,15 +41,15 @@ export type ParallelCoordinateOutputData = {
 
 /**
  * A React component that renders a Parallel Coordinate Plot using ECharts
- * 
+ *
  * This component visualizes multivariate data using parallel coordinates, where each vertical
  * axis represents a variable and each line represents an observation. It supports interactive
  * brushing and linking with other components through the useBrushLink hook.
- * 
+ *
  * @component
  * @param {ParallelCoordinateOutputData} props - Component props
  * @returns {JSX.Element} Rendered parallel coordinate plot
- * 
+ *
  * @example
  * ```tsx
  * <ParallelCoordinatePlot
@@ -138,35 +137,24 @@ export function ParallelCoordinatePlot(props: ParallelCoordinateOutputData) {
 
   return useMemo(
     () => (
-      <AutoSizer>
-        {({ height, width }) => (
-          <div style={{ height, width }}>
-            <div
-              style={{ height: '100%' }}
-              className="h-full w-full flex flex-col rounded-lg bg-default-100 p-6 text-gray-900 shadow-secondary-1 dark:bg-gray-950 dark:text-gray-100"
-            >
-              <div className="flex-col items-start p-2">
-                <p className="text-tiny font-bold uppercase">
-                  {variables.join(',')}
-                </p>
-                <small className="text-default-500">{datasetName}</small>
-              </div>
-              <div style={{ height: '100%' }} className="py-2 flex-grow">
-                <ReactEChartsCore
-                  echarts={echarts}
-                  option={option}
-                  notMerge={true}
-                  lazyUpdate={true}
-                  theme={theme || 'dark'}
-                  onEvents={bindEvents}
-                  style={{ height: '100%', width: '100%' }}
-                  ref={eChartsRef}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-      </AutoSizer>
+      <div className="h-full w-full flex flex-col rounded-lg bg-default-100 p-6 text-gray-900 shadow-secondary-1 dark:bg-gray-950 dark:text-gray-100">
+        <div className="flex-col items-start p-2">
+          <p className="text-tiny font-bold uppercase">{variables.join(',')}</p>
+          <small className="text-default-500">{datasetName}</small>
+        </div>
+        <div style={{ height: '100%' }} className="py-2 flex-grow">
+          <ReactEChartsCore
+            echarts={echarts}
+            option={option}
+            notMerge={true}
+            lazyUpdate={true}
+            theme={theme || 'dark'}
+            onEvents={bindEvents}
+            style={{ height: '100%', width: '100%' }}
+            ref={eChartsRef}
+          />
+        </div>
+      </div>
     ),
     [variables, datasetName, option, theme, bindEvents]
   );

@@ -177,7 +177,7 @@ async function executeBoxplot(
         success: false,
         error: error instanceof Error ? error.message : String(error),
         instruction:
-          'Pause the execution and ask the user to try with different prompt and context.',
+          'Try to fix the error and create a boxplot. If the error persists, pause the execution and ask the user to try with different prompt and context.',
       },
     };
   }

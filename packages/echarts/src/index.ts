@@ -27,6 +27,7 @@ export * from './boxplot/component/boxplot-option';
 export * from './boxplot/component/utils';
 
 export * from './pcp/definition';
+export * from './pcp/tool';
 export * from './pcp/callback-function';
 export * from './pcp/callback-component';
 export * from './pcp/component/pcp-component';
