@@ -34,6 +34,7 @@ export class GoogleAIAssistant extends VercelAiClient {
 
   private static async loadModule(): Promise<Module> {
     try {
+      // @ts-expect-error the package will be installed by the user and loaded dynamically
       return await import('@ai-sdk/google');
     } catch (error) {
       throw new Error(`Failed to load @ai-sdk/google: ${error}`);

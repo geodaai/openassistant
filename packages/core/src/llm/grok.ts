@@ -30,6 +30,7 @@ export class XaiAssistant extends VercelAiClient {
 
   private static async loadModule(): Promise<Module> {
     try {
+      // @ts-expect-error the package will be installed by the user and loaded dynamically
       return await import('@ai-sdk/xai');
     } catch (error) {
       throw new Error(`Failed to load @ai-sdk/xai: ${error}`);
@@ -56,9 +57,9 @@ export class XaiAssistant extends VercelAiClient {
     }
 
     const options = {
-        apiKey: XaiAssistant.apiKey,
-        baseURL: XaiAssistant.baseURL,
-      };
+      apiKey: XaiAssistant.apiKey,
+      baseURL: XaiAssistant.baseURL,
+    };
 
     this.providerInstance = module.createXai(options);
 

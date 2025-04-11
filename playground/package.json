@@ -21,12 +21,12 @@
     "@iconify/react": "^5.1.0",
     "@lexical/react": "^0.23.1",
     "@nextui-org/theme": "^2.4.4",
-    "@openassistant/common": "latest",
-    "@openassistant/core": "latest",
-    "@openassistant/duckdb": "latest",
-    "@openassistant/echarts": "latest",
-    "@openassistant/keplergl": "latest",
-    "@openassistant/ui": "latest",
+    "@openassistant/common": "workspace:*",
+    "@openassistant/core": "workspace:*",
+    "@openassistant/duckdb": "workspace:*",
+    "@openassistant/echarts": "workspace:*",
+    "@openassistant/keplergl": "workspace:*",
+    "@openassistant/ui": "workspace:*",
     "apache-arrow": "13.0.0",
     "github-markdown-css": "^5.8.1",
     "next": "^14.2.21",
@@ -61,9 +61,5 @@
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.3",
     "utf-8-validate": "^6.0.5"
-  },
-  "resolutions": {
-    "react": "18.3.1",
-    "react-dom": "18.3.1"
   }
 }

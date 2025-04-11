@@ -22,55 +22,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ai-sdk/deepseek@npm:^0.1.8":
-  version: 0.1.17
-  resolution: "@ai-sdk/deepseek@npm:0.1.17"
-  dependencies:
-    "@ai-sdk/openai-compatible": "npm:0.1.17"
-    "@ai-sdk/provider": "npm:1.0.12"
-    "@ai-sdk/provider-utils": "npm:2.1.15"
-  peerDependencies:
-    zod: ^3.0.0
-  checksum: 06fd0f9a2e2616c67efa27fe372b022a0e2ced9ce000860edf217ad5385a6de1162b6d49119993be52378ba32c6ff6b9e2ef30fcefd40a9e976bf95a97afae12
-  languageName: node
-  linkType: hard
-
-"@ai-sdk/google@npm:^1.1.8":
-  version: 1.2.8
-  resolution: "@ai-sdk/google@npm:1.2.8"
-  dependencies:
-    "@ai-sdk/provider": "npm:1.1.0"
-    "@ai-sdk/provider-utils": "npm:2.2.4"
-  peerDependencies:
-    zod: ^3.0.0
-  checksum: 7fb54e1f8b8a096f5a8ceceb5a9b0ae7fa8c3f657ad5473cfeee4f2272b226034f3268b153d410562f50fecf473179f280452a38259d3b7c218733cd14837d7e
-  languageName: node
-  linkType: hard
-
-"@ai-sdk/openai-compatible@npm:0.1.17":
-  version: 0.1.17
-  resolution: "@ai-sdk/openai-compatible@npm:0.1.17"
-  dependencies:
-    "@ai-sdk/provider": "npm:1.0.12"
-    "@ai-sdk/provider-utils": "npm:2.1.15"
-  peerDependencies:
-    zod: ^3.0.0
-  checksum: 35b3b5faba12f84b8055d84b827340a3791bd7d35a3e39488fbc0d2ec7cc1e6a2732aa8c5f0747b903d3a4495893165879e62160e1a5b640445bd5994c4b7b7b
-  languageName: node
-  linkType: hard
-
-"@ai-sdk/openai-compatible@npm:0.2.6":
-  version: 0.2.6
-  resolution: "@ai-sdk/openai-compatible@npm:0.2.6"
-  dependencies:
-    "@ai-sdk/provider": "npm:1.1.0"
-    "@ai-sdk/provider-utils": "npm:2.2.4"
-  peerDependencies:
-    zod: ^3.0.0
-  checksum: 4b880dc4d3c6442f64cc91956c479b61723767e4d2eeb8caa8eae4486ca820c78bf6b94595833b79a05fd667ef46f0ebcce3bd3e83d143489c47d185010b14c1
-  languageName: node
-  linkType: hard
-
 "@ai-sdk/openai@npm:^1.1.5":
   version: 1.3.7
   resolution: "@ai-sdk/openai@npm:1.3.7"
@@ -80,23 +31,6 @@ __metadata:
   peerDependencies:
     zod: ^3.0.0
   checksum: c391daae3d1bd6257e05d2e7b9cafea8b6a111ba645f5fb566cd2ddc56b77f8d0d370bd9e8bc6e8223c76a8f050312376a82a1f58bc4e00d1af1a468466b8e7d
-  languageName: node
-  linkType: hard
-
-"@ai-sdk/provider-utils@npm:2.1.15":
-  version: 2.1.15
-  resolution: "@ai-sdk/provider-utils@npm:2.1.15"
-  dependencies:
-    "@ai-sdk/provider": "npm:1.0.12"
-    eventsource-parser: "npm:^3.0.0"
-    nanoid: "npm:^3.3.8"
-    secure-json-parse: "npm:^2.7.0"
-  peerDependencies:
-    zod: ^3.0.0
-  peerDependenciesMeta:
-    zod:
-      optional: true
-  checksum: d8252d25a44f3ed15ee443204ed47cec026d9ef74759a5e3838785736d255f978ceceff4213dd4e86226037cea4702bcf081145214ffdd4ac46b41b8eaa4c9f7
   languageName: node
   linkType: hard
 
@@ -110,15 +44,6 @@ __metadata:
   peerDependencies:
     zod: ^3.23.8
   checksum: bf0b924316e0575afbfbb5200ed13cf7414090df6910e2674128ac8c8e15861a9d8d4cbb3df16d5760f1806b6ea0ed540771e44e3e0fbc604ef0f62d60ca5eef
-  languageName: node
-  linkType: hard
-
-"@ai-sdk/provider@npm:1.0.12":
-  version: 1.0.12
-  resolution: "@ai-sdk/provider@npm:1.0.12"
-  dependencies:
-    json-schema: "npm:^0.4.0"
-  checksum: c26b11c8c0e7315afc813fd12a5c3cbe7cc09e288827c6d1ae2739e509790e850361a68c608e224e93227c2393d08769e408466bf3162e3e59f7fbcb53143d40
   languageName: node
   linkType: hard
 
@@ -159,19 +84,6 @@ __metadata:
   peerDependencies:
     zod: ^3.23.8
   checksum: ebda36f210e0fd36249aefb44669d06bac655cf6b40facd45bfb06e37d8a368a9591ed476d88e8340ff9e2fff6bae230e4d731fc9f37586a039f301669c9433d
-  languageName: node
-  linkType: hard
-
-"@ai-sdk/xai@npm:^1.1.8":
-  version: 1.2.7
-  resolution: "@ai-sdk/xai@npm:1.2.7"
-  dependencies:
-    "@ai-sdk/openai-compatible": "npm:0.2.6"
-    "@ai-sdk/provider": "npm:1.1.0"
-    "@ai-sdk/provider-utils": "npm:2.2.4"
-  peerDependencies:
-    zod: ^3.0.0
-  checksum: 3b6fec13516a4a69396fec84f69f70ac8e7f57e7b40e389f89ac6d8281231fb02230bdedeb4166d9003940f02d87871dbca09fc7f8b500ba0538f971950b1a24
   languageName: node
   linkType: hard
 
@@ -7327,21 +7239,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openassistant/common@npm:0.2.0, @openassistant/common@npm:latest":
-  version: 0.2.0
-  resolution: "@openassistant/common@npm:0.2.0"
-  dependencies:
-    "@iconify/react": "npm:^5.1.0"
-    "@nextui-org/react": "npm:^2.6.10"
-    framer-motion: "npm:^11.15.0"
-    re-resizable: "npm:^6.10.3"
-  peerDependencies:
-    react: ">=18.2"
-    react-dom: ">=18.2"
-  checksum: 51dd161e2ad0727934c218622944cb9aa63882d5fd332978a985cd1d4176b0d533111b5e8b4673eb3e3566313434ade27a21ce7e9d2e9f2fb4e335162acd744d
-  languageName: node
-  linkType: hard
-
 "@openassistant/common@workspace:*, @openassistant/common@workspace:packages/common":
   version: 0.0.0-use.local
   resolution: "@openassistant/common@workspace:packages/common"
@@ -7356,63 +7253,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@openassistant/core@npm:0.2.0":
-  version: 0.2.0
-  resolution: "@openassistant/core@npm:0.2.0"
-  dependencies:
-    "@ai-sdk/deepseek": "npm:^0.1.8"
-    "@ai-sdk/google": "npm:^1.1.8"
-    "@ai-sdk/openai": "npm:^1.1.5"
-    "@ai-sdk/react": "npm:^1.1.7"
-    "@ai-sdk/ui-utils": "npm:^1.1.8"
-    "@ai-sdk/xai": "npm:^1.1.8"
-    "@langchain/core": "npm:^0.3.38"
-    ai: "npm:^4.1.12"
-    ollama-ai-provider: "npm:^1.2.0"
-    openai: "npm:^4.82.0"
-    openai-zod-functions: "npm:^0.1.2"
-    zod: "npm:^3.24.1"
-    zod-to-json-schema: "npm:^3.24.1"
-  peerDependencies:
-    react: ">=18.2"
-  checksum: 2f0eec4ba1a86143dfdfcf936fda3cae99326e779b6e7dd3d1753244fa5272a2eb54b23aff1b59193a36ae97d271daa7678f6d1c32e1313d84d9acd1aea3fd05
-  languageName: node
-  linkType: hard
-
-"@openassistant/core@npm:latest":
-  version: 0.2.7
-  resolution: "@openassistant/core@npm:0.2.7"
-  dependencies:
-    "@ai-sdk/openai": "npm:^1.1.5"
-    "@ai-sdk/react": "npm:^1.1.7"
-    "@ai-sdk/ui-utils": "npm:^1.1.8"
-    "@langchain/core": "npm:^0.3.38"
-    ai: "npm:^4.1.12"
-    openai-zod-functions: "npm:^0.1.2"
-    zod: "npm:^3.24.1"
-    zod-to-json-schema: "npm:^3.24.1"
-  peerDependencies:
-    "@ai-sdk/anthropic": ^1.1.14
-    "@ai-sdk/deepseek": ^0.1.8
-    "@ai-sdk/google": ^1.1.8
-    "@ai-sdk/xai": ^1.1.8
-    ollama-ai-provider: ^1.2.0
-    react: ">=18.2"
-  peerDependenciesMeta:
-    "@ai-sdk/anthropic":
-      optional: true
-    "@ai-sdk/deepseek":
-      optional: true
-    "@ai-sdk/google":
-      optional: true
-    "@ai-sdk/xai":
-      optional: true
-    ollama-ai-provider:
-      optional: true
-  checksum: 25aa9e8dee8ce44859f0cac0aefc708363a34d7fbe6e02881f44dd4e539227ac84f76aaf0cc1477556309c88727d43c6c4fdb5f8eca898d5cc4cb4db1540f004
-  languageName: node
-  linkType: hard
-
 "@openassistant/core@workspace:*, @openassistant/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@openassistant/core@workspace:packages/core"
@@ -7422,6 +7262,7 @@ __metadata:
     "@ai-sdk/ui-utils": "npm:^1.1.8"
     "@langchain/core": "npm:^0.3.38"
     ai: "npm:^4.1.12"
+    openai: "npm:^4.93.0"
     openai-zod-functions: "npm:^0.1.2"
     zod: "npm:^3.24.1"
     zod-to-json-schema: "npm:^3.24.1"
@@ -7445,23 +7286,6 @@ __metadata:
       optional: true
   languageName: unknown
   linkType: soft
-
-"@openassistant/duckdb@npm:latest":
-  version: 0.2.0
-  resolution: "@openassistant/duckdb@npm:0.2.0"
-  dependencies:
-    "@duckdb/duckdb-wasm": "npm:^1.29.0"
-    "@nextui-org/react": "npm:^2.6.8"
-    "@openassistant/core": "npm:0.2.0"
-    apache-arrow: "npm:^13.0.0"
-    framer-motion: "npm:^11.15.0"
-    tailwindcss: "npm:^3.4.17"
-  peerDependencies:
-    react: ">=18.2"
-    react-dom: ">=18.2"
-  checksum: 81a3c43f62d5edffb672fe8731bf435a6b7a9d1acbf64682bf8cd841bec0edb13dee9444d38e0ed01bfbd9c6a38d20fd73afc932af1f7b4564ab331b796a24d7
-  languageName: node
-  linkType: hard
 
 "@openassistant/duckdb@workspace:*, @openassistant/duckdb@workspace:packages/duckdb":
   version: 0.0.0-use.local
@@ -7478,30 +7302,6 @@ __metadata:
     react-dom: ">=18.2"
   languageName: unknown
   linkType: soft
-
-"@openassistant/echarts@npm:latest":
-  version: 0.2.0
-  resolution: "@openassistant/echarts@npm:0.2.0"
-  dependencies:
-    "@iconify/react": "npm:^5.1.0"
-    "@nextui-org/react": "npm:^2.6.10"
-    "@nextui-org/theme": "npm:^2.4.4"
-    "@openassistant/core": "npm:0.2.0"
-    echarts: "npm:^5.5.1"
-    echarts-for-react: "npm:^3.0.2"
-    framer-motion: "npm:^11.15.0"
-    jstat: "npm:^1.9.6"
-    next-themes: "npm:^0.4.4"
-    re-resizable: "npm:^6.10.3"
-    react-virtualized-auto-sizer: "npm:^1.0.24"
-    simple-statistics: "npm:^7.8.7"
-    tailwindcss: "npm:^3.4.17"
-  peerDependencies:
-    react: ">=18.2"
-    react-dom: ">=18.2"
-  checksum: 9df2c37aea15040b48a6956be8c8d154e6ffccac2d25ba96dd067111477c458021ce95bcc92d8575f13371aad34620f14e12d6ee5d1e676804167261c85f8bb3
-  languageName: node
-  linkType: hard
 
 "@openassistant/echarts@workspace:*, @openassistant/echarts@workspace:packages/echarts":
   version: 0.0.0-use.local
@@ -7546,35 +7346,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@openassistant/keplergl@npm:latest":
-  version: 0.2.0
-  resolution: "@openassistant/keplergl@npm:0.2.0"
-  dependencies:
-    "@kepler.gl/actions": "npm:3.0.0"
-    "@kepler.gl/components": "npm:3.0.0"
-    "@kepler.gl/constants": "npm:3.0.0"
-    "@kepler.gl/layers": "npm:3.0.0"
-    "@kepler.gl/localization": "npm:3.0.0"
-    "@kepler.gl/reducers": "npm:3.0.0"
-    "@kepler.gl/styles": "npm:3.0.0"
-    "@kepler.gl/utils": "npm:3.0.0"
-    "@loaders.gl/core": "npm:4.3.3"
-    "@loaders.gl/schema": "npm:4.3.3"
-    "@openassistant/common": "npm:0.2.0"
-    "@openassistant/core": "npm:0.2.0"
-    react-intl: "npm:^6.3.0"
-    react-palm: "npm:^3.3.8"
-    react-redux: "npm:^9.2.0"
-    react-virtualized-auto-sizer: "npm:^1.0.25"
-    redux: "npm:^4.2.1"
-  peerDependencies:
-    react: ">=18"
-    react-dom: ">=18"
-  checksum: 39c0a9116cf01f614016525e5724c16d83e17bdb8ac0a05de8ef8888a15a78e628b4cd74b34e91a50d1b9a1930859d21e0ea52938947dca1e6f77888788964fe
-  languageName: node
-  linkType: hard
-
-"@openassistant/keplergl@workspace:packages/keplergl":
+"@openassistant/keplergl@workspace:*, @openassistant/keplergl@workspace:packages/keplergl":
   version: 0.0.0-use.local
   resolution: "@openassistant/keplergl@workspace:packages/keplergl"
   dependencies:
@@ -7604,27 +7376,6 @@ __metadata:
     react-dom: ">=18"
   languageName: unknown
   linkType: soft
-
-"@openassistant/ui@npm:latest":
-  version: 0.2.0
-  resolution: "@openassistant/ui@npm:0.2.0"
-  dependencies:
-    "@iconify/react": "npm:^5.1.0"
-    "@nextui-org/react": "npm:^2.6.10"
-    "@openassistant/core": "npm:0.2.0"
-    framer-motion: "npm:^11.15.0"
-    html2canvas: "npm:^1.4.1"
-    next-themes: "npm:^0.4.4"
-    react-audio-voice-recorder: "npm:^2.2.0"
-    react-markdown: "npm:^10.0.0"
-    remark-gfm: "npm:^4.0.1"
-    tailwindcss: "npm:^3.4.17"
-  peerDependencies:
-    react: ">=18.2"
-    react-dom: ">=18.2"
-  checksum: c304c869d9f4eccac23403dacf7b9325570424706b1fe9175d52e83fb299bae703b5eebacae89b44adbabda1b48b6af06b827167e9e76a66b4c3b876cf0f402d
-  languageName: node
-  linkType: hard
 
 "@openassistant/ui@workspace:*, @openassistant/ui@workspace:packages/ui":
   version: 0.0.0-use.local
@@ -17848,13 +17599,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eventsource-parser@npm:^3.0.0":
-  version: 3.0.1
-  resolution: "eventsource-parser@npm:3.0.1"
-  checksum: 2730c54c3cb47d55d2967f2ece843f9fc95d8a11c2fef6fece8d17d9080193cbe3cd9ac7b04a325977f63cbf8c1664fdd0512dec1aec601666a5c5bd8564b61f
-  languageName: node
-  linkType: hard
-
 "execa@npm:^5.0.0":
   version: 5.1.1
   resolution: "execa@npm:5.1.1"
@@ -22284,10 +22028,10 @@ __metadata:
     "@kepler.gl/styles": "npm:3.0.0"
     "@kepler.gl/utils": "npm:3.0.0"
     "@nextui-org/react": "npm:^2.6.10"
-    "@openassistant/common": "npm:latest"
-    "@openassistant/core": "npm:latest"
-    "@openassistant/keplergl": "npm:latest"
-    "@openassistant/ui": "npm:latest"
+    "@openassistant/common": "workspace:*"
+    "@openassistant/core": "workspace:*"
+    "@openassistant/keplergl": "workspace:*"
+    "@openassistant/ui": "workspace:*"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
     assert: "npm:^2.1.0"
@@ -25055,9 +24799,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openai@npm:^4.82.0":
-  version: 4.92.0
-  resolution: "openai@npm:4.92.0"
+"openai@npm:^4.93.0":
+  version: 4.93.0
+  resolution: "openai@npm:4.93.0"
   dependencies:
     "@types/node": "npm:^18.11.18"
     "@types/node-fetch": "npm:^2.6.4"
@@ -25076,7 +24820,7 @@ __metadata:
       optional: true
   bin:
     openai: bin/cli
-  checksum: 1ae390c722ac47664a02060385ff6b7a7e9f92bf5d0a2a2185d19c20edaead3508d1c3ac15439b80230d20e793ff04e16912ff33fea495e88a0cb1c20d6f0860
+  checksum: 3135d282ae31294eb78d177a92547497b963d4ee4eb5de75c5ecfa3e0203437d67ff8da7fb9b337ecff1fd19f75f0477e551ed943097fd23b07cbc9d07d77171
   languageName: node
   linkType: hard
 
@@ -25728,12 +25472,12 @@ __metadata:
     "@lexical/react": "npm:^0.23.1"
     "@next/eslint-plugin-next": "npm:^15.1.5"
     "@nextui-org/theme": "npm:^2.4.4"
-    "@openassistant/common": "npm:latest"
-    "@openassistant/core": "npm:latest"
-    "@openassistant/duckdb": "npm:latest"
-    "@openassistant/echarts": "npm:latest"
-    "@openassistant/keplergl": "npm:latest"
-    "@openassistant/ui": "npm:latest"
+    "@openassistant/common": "workspace:*"
+    "@openassistant/core": "workspace:*"
+    "@openassistant/duckdb": "workspace:*"
+    "@openassistant/echarts": "workspace:*"
+    "@openassistant/keplergl": "workspace:*"
+    "@openassistant/ui": "workspace:*"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
     "@types/react-grid-layout": "npm:^1"
