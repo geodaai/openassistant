@@ -1,6 +1,6 @@
 # Interface: LocalQuerySuccessResult
 
-Defined in: [packages/duckdb/src/types.ts:60](https://github.com/GeoDaCenter/openassistant/blob/7dec66552ed2da789768e26aca21ecb2918b5d3b/packages/duckdb/src/types.ts#L60)
+Defined in: [packages/duckdb/src/types.ts:60](https://github.com/GeoDaCenter/openassistant/blob/95db62ddd98ea06cccc7750f9f0e37556d8bf20e/packages/duckdb/src/types.ts#L60)
 
 Result data structure from a successful localQuery execution
 
@@ -10,7 +10,7 @@ Result data structure from a successful localQuery execution
 
 > **data**: `object`
 
-Defined in: [packages/duckdb/src/types.ts:62](https://github.com/GeoDaCenter/openassistant/blob/7dec66552ed2da789768e26aca21ecb2918b5d3b/packages/duckdb/src/types.ts#L62)
+Defined in: [packages/duckdb/src/types.ts:62](https://github.com/GeoDaCenter/openassistant/blob/95db62ddd98ea06cccc7750f9f0e37556d8bf20e/packages/duckdb/src/types.ts#L62)
 
 #### Index Signature
 
@@ -26,4 +26,4 @@ Defined in: [packages/duckdb/src/types.ts:62](https://github.com/GeoDaCenter/ope
 
 > **success**: `true`
 
-Defined in: [packages/duckdb/src/types.ts:61](https://github.com/GeoDaCenter/openassistant/blob/7dec66552ed2da789768e26aca21ecb2918b5d3b/packages/duckdb/src/types.ts#L61)
+Defined in: [packages/duckdb/src/types.ts:61](https://github.com/GeoDaCenter/openassistant/blob/95db62ddd98ea06cccc7750f9f0e37556d8bf20e/packages/duckdb/src/types.ts#L61)

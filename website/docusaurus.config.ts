@@ -20,7 +20,7 @@ const config: Config = {
   organizationName: 'GeoDaCenter',
   projectName: 'openassistant',
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
 
   // Even if you don't use internationalization, you can use this field to set

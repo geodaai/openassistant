@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Map Plugin using Kepler.gl
+# keplerGL Tools
 
 import keplerPlugin from '../../images/keplerPlugin-1.png';
 
@@ -52,7 +52,6 @@ For @openassistant/keplergl, you need to install the `kepler.gl` package in your
 ```bash
 yarn add @kepler.gl/actions @kepler.gl/components @kepler.gl/constants @kepler.gl/layers @kepler.gl/reducers @kepler.gl/styles @kepler.gl/utils @kepler.gl/processors @kepler.gl/localization
 ```
-
 
 ```js title="App.tsx"
 import { AiAssistant } from '@openassistant/ui';
@@ -113,7 +112,7 @@ assistantProps.instructions =
 To get up to date with your data context, e.g. when dataset been added or removed, you can use the `useAssistant` hook to add the context to the assistant props.
 
 ```js
-import {useAssistant} from '@openassistant/core';
+import { useAssistant } from '@openassistant/core';
 
 const { initializeAssistant, addAdditionalContext } =
   useAssistant(assistantProps);

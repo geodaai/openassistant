@@ -2,7 +2,7 @@
 sidebar_position: 4
 ---
 
-# SQL Plugin using DuckDB
+# duckDB Tools
 
 import duckdbPlugin from '../../images/duckdbPlugin-2-400.png';
 
@@ -21,6 +21,7 @@ const myDatasets = {
 ```
 
 You can query this data by simply asking the AI assistant questions like:
+
 ```text
 Which cities make the most money per person?
 ```
@@ -47,8 +48,10 @@ const assistantProps = {
   modelProvider: 'openai',
   model: 'gpt-4',
   apiKey: 'your-api-key',
-  welcomeMessage: 'Hi! I can help you analyze your data. What would you like to know?',
-  instructions: "You are a data analyst who helps users query and analyze data. When users ask questions, translate them into SQL queries and explain the results in simple terms.",
+  welcomeMessage:
+    'Hi! I can help you analyze your data. What would you like to know?',
+  instructions:
+    'You are a data analyst who helps users query and analyze data. When users ask questions, translate them into SQL queries and explain the results in simple terms.',
   functions: [],
 };
 ```
@@ -75,7 +78,7 @@ const dataContext = [
 ];
 
 // Add the context to the assistant's instructions
-assistantProps.instructions = 
+assistantProps.instructions =
   assistantProps.instructions + '\n' + JSON.stringify(dataContext);
 ```
 
@@ -94,7 +97,7 @@ const myFunctions = [
       }
       return myDatasets[datasetName];
     },
-  })
+  }),
 ];
 ```
 
@@ -117,16 +120,8 @@ Once set up, users can ask various questions about their data:
 - Complex analysis: "Which cities have above-average revenue but below-average population?"
 
 The assistant will:
+
 1. Understand the natural language question
 2. Convert it to an appropriate SQL query
 3. Execute the query using DuckDB
 4. Present the results in a user-friendly format
-
-## Advanced Features
-
-Coming soon:
-- Custom SQL function definitions
-- Data visualization integration
-- Advanced query optimization
-- Aggregation and grouping operations
-- Time-series analysis

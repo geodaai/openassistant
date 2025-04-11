@@ -35,6 +35,7 @@ export class OllamaAssistant extends VercelAiClient {
 
   private static async loadModule(): Promise<Module> {
     try {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       return await import('ollama-ai-provider');
     } catch (error) {
       throw new Error(`Failed to load ollama-ai-provider: ${error}`);
