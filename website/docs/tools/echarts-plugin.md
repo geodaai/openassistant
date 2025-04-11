@@ -2,17 +2,16 @@
 sidebar_position: 2
 ---
 
-# Plot Plugin using ECharts
+# eCharts Tools
 
 import histogramPlugin from '../../images/histogram-1-400.png';
 
-The ECharts plugin for OpenAssistant provides powerful visualization capabilities using [Apache ECharts](https://echarts.apache.org/). This tutorial will guide you through setting up and using the plugin in your application.
+The eCharts tools for OpenAssistant provides powerful visualization capabilities using [Apache ECharts](https://echarts.apache.org/). 
 
 <img src={histogramPlugin} width="400" alt="Histogram Plugin" />
 
-## Features
+## Available Tools
 
-The plugin currently supports two main visualization types:
 
 1. **Histogram Plots** - Visualize data distribution with features like:
    - Customizable number of bins
@@ -28,45 +27,21 @@ The plugin currently supports two main visualization types:
    - Statistical information display
    - Brush selection tools
 
-## Installation
+3. **Parallel Coordinates** 
 
-Install the package using npm or yarn:
+4. **Box Plots**
+
+5. **Bubble Charts**
+
+## Installation
 
 ```bash
 npm install @openassistant/echarts
 ```
 
-or
+## Usage 
 
-```bash
-yarn add @openassistant/echarts
-```
-
-## Setup Guide
-
-### 1. Basic Setup
-
-First, ensure you have OpenAssistant set up in your application:
-
-```tsx
-import { AiAssistant } from '@openassistant/ui';
-// only for React app without tailwindcss
-import '@openassistant/ui/dist/index.css';
-
-const assistantProps = {
-  name: 'My AI Assistant',
-  description: 'This is my AI assistant',
-  version: '1.0.0',
-  modelProvider: 'openai',
-  model: 'gpt-4',
-  apiKey: 'your-api-key',
-  instructions: `You are a data visualization assistant. You can help users create histograms and scatter plots from their datasets.`,
-};
-```
-
-### 2. Share Dataset Metadata
-
-The assistant needs to understand your data structure. Share metadata about your datasets:
+The assistant needs to understand your data structure. So you can share metadata about your datasets in the assisant instructions:
 
 ```javascript
 const myDataContext = [
@@ -79,9 +54,26 @@ const myDataContext = [
   },
 ];
 
-// Add metadata to the assistant
-const { addAdditionalContext } = useAssistant(assistantProps);
-addAdditionalContext({ context: JSON.stringify(myDataContext) });
+const instructions: `You are a data visualization assistant. You can help users create histograms and scatter plots from their datasets.
+You can use the following meta data for function callings:
+
+${JSON.stringify(myDataContext)}
+`;
+```
+
+Then, you need to set up the OpenAssistant in your application:
+
+```tsx
+import { AiAssistant } from '@openassistant/ui';
+
+const assistantProps = {
+  name: 'My AI Assistant',
+  description: 'This is my AI assistant',
+  version: '1.0.0',
+  modelProvider: 'openai',
+  model: 'gpt-4',
+  apiKey: 'your-api-key',
+};
 ```
 
 ### 3. Register Visualization Functions

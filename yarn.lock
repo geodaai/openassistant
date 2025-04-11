@@ -2183,14 +2183,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@deck.gl/widgets@npm:^9.1.1":
-  version: 9.1.8
-  resolution: "@deck.gl/widgets@npm:9.1.8"
+"@deck.gl/widgets@npm:9.1.1":
+  version: 9.1.1
+  resolution: "@deck.gl/widgets@npm:9.1.1"
   dependencies:
     preact: "npm:^10.17.0"
   peerDependencies:
     "@deck.gl/core": ^9.1.0
-  checksum: 6a4eaa330bf57d9102a2cbd87105a7acc62d9d029a0f4072b4ae36575b26d893eb60a32c27308aeef29d3ce5f6bf1b3517c99852228d4fa281be7be1879b0fc7
+  checksum: e6b4858f241dd169845ee2ea63782d910723c4c19eb30686ce0afa9469cfd94e9f55d7bceac7b5e5d1067067db74cfa1b0d4af0d857d97ab0e15e9e48f834581
   languageName: node
   linkType: hard
 
@@ -7379,7 +7379,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openassistant/core@npm:0.2.7, @openassistant/core@npm:latest":
+"@openassistant/core@npm:latest":
   version: 0.2.7
   resolution: "@openassistant/core@npm:0.2.7"
   dependencies:
@@ -7605,7 +7605,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@openassistant/ui@npm:0.2.0, @openassistant/ui@npm:latest":
+"@openassistant/ui@npm:latest":
   version: 0.2.0
   resolution: "@openassistant/ui@npm:0.2.0"
   dependencies:
@@ -15999,15 +15999,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "deckgl-assistant-example@workspace:examples/deckgl_assistant"
   dependencies:
-    "@deck.gl/core": "npm:^9.1.1"
-    "@deck.gl/layers": "npm:^9.1.1"
-    "@deck.gl/react": "npm:^9.1.1"
-    "@deck.gl/widgets": "npm:^9.1.1"
+    "@deck.gl/core": "npm:9.1.1"
+    "@deck.gl/layers": "npm:9.1.1"
+    "@deck.gl/react": "npm:9.1.1"
+    "@deck.gl/widgets": "npm:9.1.1"
     "@nextui-org/react": "npm:^2.6.10"
-    "@openassistant/core": "npm:latest"
-    "@openassistant/duckdb": "npm:latest"
-    "@openassistant/echarts": "npm:latest"
-    "@openassistant/ui": "npm:latest"
+    "@openassistant/core": "workspace:*"
+    "@openassistant/duckdb": "workspace:*"
+    "@openassistant/echarts": "workspace:*"
+    "@openassistant/ui": "workspace:*"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
     autoprefixer: "npm:^10.4.20"
@@ -24310,8 +24310,7 @@ __metadata:
   resolution: "multistep-tools-example@workspace:examples/multisteps_tools"
   dependencies:
     "@nextui-org/react": "npm:^2.6.10"
-    "@openassistant/core": "npm:latest"
-    "@openassistant/ui": "npm:latest"
+    "@openassistant/ui": "workspace:*"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
     autoprefixer: "npm:^10.4.20"
@@ -27730,8 +27729,7 @@ __metadata:
   resolution: "react-tailwind-example@workspace:examples/react_tailwind"
   dependencies:
     "@nextui-org/react": "npm:^2.6.10"
-    "@openassistant/core": "npm:latest"
-    "@openassistant/ui": "npm:latest"
+    "@openassistant/ui": "workspace:*"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
     autoprefixer: "npm:^10.4.20"
@@ -29151,8 +29149,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "simple-react-app@workspace:examples/simple_react"
   dependencies:
-    "@openassistant/core": "npm:0.2.7"
-    "@openassistant/ui": "npm:0.2.0"
+    "@openassistant/core": "workspace:*"
+    "@openassistant/ui": "workspace:*"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
     react: "npm:18.3.1"
@@ -32982,8 +32980,7 @@ __metadata:
   resolution: "zod-function-tools-example@workspace:examples/zod_function_tools"
   dependencies:
     "@nextui-org/react": "npm:^2.6.10"
-    "@openassistant/core": "npm:latest"
-    "@openassistant/ui": "npm:latest"
+    "@openassistant/ui": "workspace:*"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
     autoprefixer: "npm:^10.4.20"

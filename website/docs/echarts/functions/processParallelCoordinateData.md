@@ -2,7 +2,7 @@
 
 > **processParallelCoordinateData**(`rawData`): [`ParallelCoordinateDataProps`](../type-aliases/ParallelCoordinateDataProps.md)
 
-Defined in: [packages/echarts/src/pcp/component/utils.ts:43](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/echarts/src/pcp/component/utils.ts#L43)
+Defined in: [packages/echarts/src/pcp/component/utils.ts:43](https://github.com/GeoDaCenter/openassistant/blob/7dec66552ed2da789768e26aca21ecb2918b5d3b/packages/echarts/src/pcp/component/utils.ts#L43)
 
 Processes multiple variables to generate PCP data and raw data
 

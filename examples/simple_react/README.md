@@ -20,7 +20,7 @@ public/
 To use OpenAssistant in your React project, you need to install the following packages:
 
 ```bash
-yarn add @openassistant/ui @openassistant/core
+yarn add @openassistant/ui
 ```
 
 ### 2. Add chat component to your app:
@@ -85,9 +85,9 @@ OLLAMA_ORIGINS=* ollama serve
 yarn start
 ```
 
-### 5. Theme support
+### 5. Theme 
 
-The UI component is using [next-themes](https://github.com/pacocoursey/next-themes) to support theme switching.
+You can use the `theme` prop to switch the theme of the assistant.
 
 ```jsx
 import { Assistant } from '@openassistant/ui';
@@ -106,7 +106,8 @@ function App() {
         baseUrl="http://127.0.0.1:11434"
         welcomeMessage="Hello, how can I help you today?"
         instructions="You are a helpful assistant."
-        functions={[]}
+        functions={{}}
+        theme="dark"
       />
     </div>
   );

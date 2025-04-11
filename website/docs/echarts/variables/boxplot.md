@@ -2,7 +2,7 @@
 
 > `const` **boxplot**: `ExtendedTool`\<`ZodObject`\<\{ `boundIQR`: `ZodOptional`\<`ZodNumber`\>; `datasetName`: `ZodString`; `variableNames`: `ZodArray`\<`ZodString`\>; \}, `UnknownKeysParam`, `ZodTypeAny`, \{ `boundIQR`: `number`; `datasetName`: `string`; `variableNames`: `string`[]; \}, \{ `boundIQR`: `number`; `datasetName`: `string`; `variableNames`: `string`[]; \}\>, \{ `error`: `string`; `instruction`: `string`; `result`: \{ `boundIQR`: `number`; `boxplotData`: [`BoxplotDataProps`](../type-aliases/BoxplotDataProps.md); `datasetName`: `string`; `id`: `string`; \}; `success`: `boolean`; \}, `undefined` \| \{ `boundIQR`: `number`; `boxplotData`: [`BoxplotDataProps`](../type-aliases/BoxplotDataProps.md); `data`: `Record`\<`string`, `number`[]\>; `datasetName`: `string`; `id`: `string`; `isDraggable`: `boolean`; `isExpanded`: `boolean`; `theme`: `string`; `variables`: `string`[]; \}, [`BoxplotFunctionContext`](../type-aliases/BoxplotFunctionContext.md)\>
 
-Defined in: [packages/echarts/src/boxplot/tool.ts:42](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/echarts/src/boxplot/tool.ts#L42)
+Defined in: [packages/echarts/src/boxplot/tool.ts:42](https://github.com/GeoDaCenter/openassistant/blob/7dec66552ed2da789768e26aca21ecb2918b5d3b/packages/echarts/src/boxplot/tool.ts#L42)
 
 The boxplot tool is used to create a boxplot chart.
 

@@ -3,13 +3,27 @@
 [Documentation](https://openassistant-doc.vercel.app) |
 [Playground](https://openassistant-playground.vercel.app)
 
-OpenAssistant is a javascript library for building AI assistant with powerful **tools** and interactive React chat component.
+OpenAssistant is a javascript library for building AI assistant with powerful tools and an interactive React chat component.
 
 Check out the following examples using OpenAssistant in action:
 
 - [kepler.gl AI Assistant (kepler.gl)](https://location.foursquare.com/resources/blog/products/foursquare-brings-enterprise-grade-spatial-analytics-to-your-browser-with-kepler-gl-3-1/)
 - [GeoDa.AI AI Assistant (geoda.ai)](https://geoda.ai)
 - [SqlRooms (sqlrooms.org)](https://sqlrooms-ai.netlify.app/)
+
+## Why OpenAssistant?
+
+OpenAssistant is built based on [Vercel AI SDK](https://sdk.vercel.ai/docs) and provides:
+
+- a uniform interface for different AI providers
+- a set of powerful LLM tools (data analysis, visualization, mapping, etc.)
+- an interactive React chat component (optional)
+
+for building your own AI assistant, along with a design allows you to easily create your own tools by :
+
+- providing your own context (e.g. data, callbacks etc.) for the tool execution
+- providing your own UI component for rendering the tool result
+- passing the result from the tool execution to the tool UI component
 
 ## Getting Started
 
@@ -21,7 +35,7 @@ Install the core packages:
 npm install @openassistant/core
 ```
 
-### Basic Usage
+### Usage
 
 Then, you can use the OpenAssistant in your application. For example:
 
@@ -36,7 +50,8 @@ const assistant = await createAssistant({
   apiKey: 'your-api-key',
   version: '0.0.1',
   instructions: 'You are a helpful assistant',
-  functions: tools,
+  // functions: {{}},
+  // abortController: null
 });
 
 // now you can send prompts to the assistant
@@ -49,6 +64,8 @@ await assistant.processTextMessage({
 ```
 
 See the source code of the example 🔗 [here](https://github.com/GeoDaCenter/openassistant/tree/main/examples/cli_example).
+
+:::tip
 
 If you want to use Google Gemini as the model provider, you can do the following:
 
@@ -71,15 +88,16 @@ OpenAssistant also supports the following model providers:
 | xAI            | [models](https://sdk.vercel.ai/providers/ai-sdk-providers/xai#model-capabilities)                  | @ai-sdk/xai        |
 | Ollama         | [models](https://ollama.com/models)                                                                | ollama-ai-provider |
 
+:::
 
 ### Add a React Chat Component to your App
 
-If you don't want to build your own chat interface, OpenAssistant provides a pre-built chat component that you can use in your React application.
+You can build your own chat interface along with the assistant instance created by `createAssistant()`. OpenAssistant also provides a pre-built chat component that you can use in your React application.
 
 #### Installation
 
 ```bash
-npm install @openassistant/ui @openassistant/core
+npm install @openassistant/ui
 ```
 
 #### Usage
@@ -110,11 +128,11 @@ function App() {
 }
 ```
 
-Note: you don't need to use `createAssistant()` to create the assistant instance, you can use the `AiAssistant` component directly.
-
-<img src="https://openassistant-doc.vercel.app/assets/images/getstart-dark.png" width="300" />
+<img src="https://openassistant-doc.vercel.app/img/getstart-dark.png" width="300" />
 
 See the source code of the example 🔗 [here](https://github.com/geodacenter/openassistant/tree/main/examples/simple_react).
+
+:::tip
 
 If you are using TailwindCSS, you need to add the following configurations to your `tailwind.config.js` file:
 
@@ -136,7 +154,9 @@ module.exports = {
 };
 ```
 
-## OpenAssistant Tools
+:::
+
+## Use Tools
 
 OpenAssistant provides a set of tools that helps you build your AI application.
 
@@ -155,8 +175,6 @@ This tool helps to query any data that has been loaded in your application using
 - LLM will generate SQL query based on user's prompt against the data
 - the SQL query result will be executed in the local duckdb instance
 - the query result will be displayed in a React table component
-
-Let's say you have a dataset in your application, you can use the `localQuery` tool to query the data using user's prompt.
 
 In your application, the data could be loaded from a csv/json/parquet/xml file. For this example, we will use the `SAMPLE_DATASETS` in `dataset.ts` to simulate the data.
 
@@ -178,11 +196,19 @@ export const SAMPLE_DATASETS = {
 
 - Import the `localQuery` tool from `@openassistent/duckdb` and use it in your application.
 - Provide the `getValues` function in the `context` to get the values from your data.
+- Use the tool in your AI assistant chat component
 
 ```ts
 import { localQuery, LocalQueryTool } from '@openassistent/duckdb';
 
-// type safety for the localQuery tool
+// load your data
+// pass the metadata of the data to the assistant instructions
+const instructions = `You are a helpful assistant. You can use the following datasets to answer the user's question:
+  datasetName: myVenues,
+  variables: index, location, latitude, longitude, revenue, population
+  `;
+
+// use LocalQueryTool to type safety
 const localQueryTool: LocalQueryTool = {
   ...localQuery,
   context: {
@@ -192,35 +218,17 @@ const localQueryTool: LocalQueryTool = {
     },
   },
 };
-```
 
-- Use the tool in your AI assistant chat component
-
-```tsx
-// load your data
-// pass the metadata of the data to the assistant
-
-// get the singleton assistant instance
-const assistant = await createAssistant({
-  name: 'assistant',
-  modelProvider: 'openai',
-  model: 'gpt-4o',
-  apiKey: 'your-api-key',
-  version: '0.0.1',
-  instructions: `You are a helpful assistant. You can use the following datasets to answer the user's question: 
-  datasetName: myVenues,
-  variables: index, location, latitude, longitude, revenue, population
-  `,
-  functions: { localQuery: localQueryTool },
-});
-
-// now you can send prompts to the assistant
-await assistant.processTextMessage({
-  textMessage: 'which location has the highest revenue?',
-  streamMessageCallback: ({ isCompleted, message }) => {
-    console.log(isCompleted, message);
-  },
-});
+// use the tool in the chat component
+<AiAssistant
+  modelProvider="openai"
+  model="gpt-4o"
+  apiKey="your-api-key"
+  version="0.0.1"
+  welcomeMessage="Hello! How can I help you today?"
+  instructions={instructions}
+  functions={{ localQuery: localQueryTool }}
+/>
 ```
 
 🚀 Try it out!
@@ -228,7 +236,6 @@ await assistant.processTextMessage({
 <img width="400" src="https://github.com/user-attachments/assets/4115b474-13af-48ba-b69e-b39cc325f1b1"/>
 
 See the source code of the example 🔗 [here](https://github.com/geodacenter/openassistant/tree/main/examples/duckdb_esbuild).
-
 
 ## 🌟 Features
 
@@ -276,6 +283,7 @@ Check out our example projects:
 - [Message Persistence Example](examples/message_persistence/README.md)
 - [Simple React Example](examples/simple_react/README.md)
 - [React with TailwindCSS Example](examples/react_tailwind/README.md)
+- [Tool Example: ECharts](examples/echarts_plugin/README.md)
 - [Tool Example: DuckDB](examples/duckdb_esbuild/README.md)
 - [Tool Example: KeplerGl](examples/keplergl_plugin/README.md)
 - [Tool Example: DeckGl](examples/deckgl_assistant/README.md)
@@ -283,9 +291,3 @@ Check out our example projects:
 ## 📄 License
 
 MIT © [Xun Li](mailto:lixun910@gmail.com)
-
-## 📚 FAQ
-
-### 🔒 Is my data secure?
-
-Yes, the data you used in your application stays within the browser, and will **never** be sent to the LLM. Using function tools, we can engineer the AI assistant to use only the meta data for function calling, e.g. the name of the dataset, the name of the layer, the name of the variables, etc. Here is a process diagram to show how the AI assistant works:

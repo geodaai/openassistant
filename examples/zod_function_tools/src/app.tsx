@@ -28,8 +28,11 @@ export function App() {
         const getStation = options.context?.getStation;
         const station = getStation ? await getStation(cityName) : null;
         return {
-          llmResult: `The weather in ${cityName} is sunny from weather station ${station}.`,
-          output: {
+          llmResult: {
+            success: true,
+            result: `The weather in ${cityName} is sunny from weather station ${station}.`,
+          },
+          additionalData: {
             weather: 'sunny',
             station,
           },
@@ -50,18 +53,21 @@ export function App() {
   };
 
   return (
-    <div className="w-[400px] h-[800px] m-4">
-      <AiAssistant
-        name="My Assistant"
-        apiKey={process.env.OPENAI_TOKEN || ''}
-        version="v1"
-        modelProvider="openai"
-        model="gpt-4o"
-        welcomeMessage="Hello, how can I help you today?"
-        instructions="You are a helpful assistant."
-        functions={functions}
-        useMarkdown={true}
-      />
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h1 className="text-2xl font-bold">Zod Function Tools Example</h1>
+      <div className="w-[800px] h-[800px] m-4 rounded-lg shadow-lg p-6">
+        <AiAssistant
+          name="My Assistant"
+          apiKey={process.env.OPENAI_API_KEY || ''}
+          version="v1"
+          modelProvider="openai"
+          model="gpt-4o"
+          welcomeMessage="Hello, how can I help you today?"
+          instructions="You are a helpful assistant."
+          functions={functions}
+          useMarkdown={true}
+        />
+      </div>
     </div>
   );
 }

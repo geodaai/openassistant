@@ -19,7 +19,7 @@ import { ToolSet } from 'ai';
  * @param modelProvider - The AI model provider service (e.g. 'openai', 'anthropic').
  * @param model - The specific model identifier to use.
  * @param apiKey - Authentication key for the model provider's API.
- * @param version - API version to use.
+ * @param version - Optional API version to use.
  * @param baseUrl - Optional base URL for API requests.
  * @param description - Optional description of the assistant's purpose.
  * @param temperature - Controls randomness in responses (0-1).
@@ -37,7 +37,7 @@ export type UseAssistantProps = {
   modelProvider: string;
   model: string;
   apiKey: string;
-  version: string;
+  version?: string;
   baseUrl?: string;
   description?: string;
   temperature?: number;

@@ -29,8 +29,7 @@ export function App() {
   const functions = {
     temperature: tool({
       description: 'Get the temperature in a city from a weather station',
-      parameters: z
-        .object({ cityName: z.string(), reason: z.string() }),
+      parameters: z.object({ cityName: z.string(), reason: z.string() }),
       execute: async ({ cityName, reason }, options) => {
         const getStation = options.context?.getStation;
         const station = getStation ? await getStation(cityName) : null;
@@ -74,18 +73,21 @@ export function App() {
   };
 
   return (
-    <div className="w-[400px] h-[800px] m-4">
-      <AiAssistant
-        name="My Assistant"
-        apiKey={process.env.OPENAI_TOKEN || ''}
-        version="v1"
-        modelProvider="openai"
-        model="gpt-4o"
-        welcomeMessage="Hello, how can I help you today?"
-        instructions="You are a helpful assistant. Explain the steps you are taking to solve the user's problem."
-        functions={functions}
-        useMarkdown={true}
-      />
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h1 className="text-2xl font-bold">Multistep Tools Example</h1>
+      <div className="w-[800px] h-[800px] m-4 rounded-lg shadow-lg p-6">
+        <AiAssistant
+          name="My Assistant"
+          apiKey={process.env.OPENAI_API_KEY || ''}
+          version="v1"
+          modelProvider="openai"
+          model="gpt-4o"
+          welcomeMessage="Hello, how can I help you today?"
+          instructions="You are a helpful assistant. Explain the steps you are taking to solve the user's problem."
+          functions={functions}
+          useMarkdown={true}
+        />
+      </div>
     </div>
   );
 }

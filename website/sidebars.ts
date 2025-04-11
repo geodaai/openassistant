@@ -26,6 +26,15 @@ const sidebars: SidebarsConfig = {
       items: [
         {
           type: 'category',
+          label: 'Use Chat Component',
+          items: [
+            'chatui/add-config-ui',
+            'chatui/screencapture',
+            'chatui/voice-to-text',
+          ],
+        },
+        {
+          type: 'category',
           label: 'Use Tools',
           items: [
             'tools/get-started',
@@ -33,15 +42,6 @@ const sidebars: SidebarsConfig = {
             'tools/duckdb-plugin',
             'tools/geoda-plugin',
             'tools/keplergl-plugin',
-          ],
-        },
-        {
-          type: 'category',
-          label: 'Add React Chat Component',
-          items: [
-            'chatui/add-config-ui',
-            'chatui/screencapture',
-            'chatui/voice-to-text',
           ],
         },
       ],

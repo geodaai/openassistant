@@ -102,7 +102,7 @@ export async function sendTextMessageHandler({
       {
         message: 'Error occured while processing the request. ' + error,
         direction: 'incoming',
-        sender: 'Error',
+        sender: 'error',
         position: 'normal',
       },
     ];
@@ -197,7 +197,7 @@ export async function sendImageMessageHandler({
         message:
           'Error occured while processing the request. Details: ' + error,
         direction: 'incoming',
-        sender: 'Error',
+        sender: 'error',
         position: 'normal',
       },
     ];

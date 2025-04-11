@@ -1,95 +1,68 @@
-import esbuild from 'esbuild';
+import * as esbuild from 'esbuild';
+import { tailwindPlugin } from 'esbuild-plugin-tailwindcss';
 import open from 'open';
-import fs from 'fs';
-import tailwindPlugin from 'esbuild-plugin-tailwindcss';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const isStart = process.argv.includes('--start');
-const port = 3003;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const isDev = process.argv.includes('--start');
+const port = 3006;
 
 const config = {
   entryPoints: ['src/main.tsx'],
   bundle: true,
-  outdir: 'build',
-  minify: !isStart,
-  sourcemap: isStart,
-  metafile: true,
-  target: ['chrome58', 'firefox57', 'safari11'],
+  outfile: 'dist/main.js',
+  platform: 'browser',
+  minify: !isDev,
+  sourcemap: isDev,
   loader: {
-    '.js': 'jsx',
-    '.ts': 'tsx',
+    '.svg': 'file',
     '.png': 'file',
     '.jpg': 'file',
-    '.svg': 'file',
+    '.jpeg': 'file',
+    '.gif': 'file',
+    '.ico': 'file',
+    '.webp': 'file',
     '.css': 'css',
   },
   define: {
-    'process.env.NODE_ENV': isStart ? '"development"' : '"production"',
-    'process.env.OPENAI_TOKEN': JSON.stringify(
-      process.env.OPENAI_API_KEY || ''
-    ),
+    'process.env.OPENAI_API_KEY': JSON.stringify(process.env.OPENAI_API_KEY),
   },
-  jsx: 'automatic',
   plugins: [
     tailwindPlugin({
-      config: './tailwind.config.js',
+      tailwindConfig: path.join(__dirname, 'tailwind.config.js'),
     }),
   ],
-  alias: {
-    '@openassistant/core': '../../packages/core/src',
-    '@openassistant/common': '../../packages/common/src',
-    '@openassistant/ui': '../../packages/ui/src',
-    react: '../../node_modules/react',
-    'react-dom': '../../node_modules/react-dom',
-  },
 };
 
-const openURL = (url) => {
-  open(url).catch(() => {
-    console.log(`Unable to open browser. Please visit ${url} manually.`);
+if (isDev) {
+  const ctx = await esbuild.context({
+    ...config,
+    minify: false,
+    sourcemap: true,
+    banner: {
+      js: `new EventSource('/esbuild').addEventListener('change', () => location.reload());`,
+    },
   });
-};
-
-if (isStart) {
-  // Development server with hot reload
-  esbuild
-    .context({
-      ...config,
-      minify: false,
-      sourcemap: true,
-      banner: {
-        js: `new EventSource('/esbuild').addEventListener('change', () => location.reload());`,
-      },
-    })
-    .then(async (ctx) => {
-      await ctx.watch();
-      await ctx.serve({
-        servedir: 'build',
-        port,
-        fallback: 'build/index.html',
-        onRequest: ({ remoteAddress, method, path, status, timeInMS }) => {
-          console.info(
-            remoteAddress,
-            status,
-            `"${method} ${path}" [${timeInMS}ms]`
-          );
-        },
-      });
+  await ctx.watch();
+  await ctx.serve({
+    servedir: '.',
+    port,
+    fallback: 'index.html',
+    onRequest: ({ remoteAddress, method, path, status, timeInMS }) => {
       console.info(
-        `Development server running at http://localhost:${port}, press Ctrl+C to stop`
+        remoteAddress,
+        status,
+        `"${method} ${path}" [${timeInMS}ms]`
       );
-      openURL(`http://localhost:${port}`);
-    })
-    .catch((e) => {
-      console.error(e);
-      process.exit(1);
-    });
+    },
+  });
+  console.info(
+    `Development server running at http://localhost:${port}, press Ctrl+C to stop`
+  );
+  await open(`http://localhost:${port}`);
 } else {
-  // Production build
-  esbuild
-    .build(config)
-    .then((result) => {
-      fs.writeFileSync('meta.json', JSON.stringify(result.metafile));
-      console.log('Build complete! ✨');
-    })
-    .catch(() => process.exit(1));
+  await esbuild.build(config);
 }

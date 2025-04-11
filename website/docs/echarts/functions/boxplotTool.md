@@ -2,7 +2,7 @@
 
 > **boxplotTool**(`props`): `RegisterFunctionCallingProps`
 
-Defined in: [packages/echarts/src/boxplot/definition.ts:156](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/echarts/src/boxplot/definition.ts#L156)
+Defined in: [packages/echarts/src/boxplot/definition.ts:156](https://github.com/GeoDaCenter/openassistant/blob/7dec66552ed2da789768e26aca21ecb2918b5d3b/packages/echarts/src/boxplot/definition.ts#L156)
 
 This function creates a boxplot tool, which can be used to create a box plot using natural language prompts, e.g. *"Create a box plot of the variable 'age'"*.
 

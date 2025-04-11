@@ -207,13 +207,18 @@ export class AiAssistantWidget implements Widget<AiAssistantWidgetProps> {
             this.showConfigPanel
               ? [
                   {
+                    id: 'welcome-message',
+                    content: this.welcomeMessage,
+                    role: 'assistant',
                     message: this.welcomeMessage,
                     direction: 'incoming',
-                    position: 'single',
+                    position: 'single'
                   },
                   {
-                    message:
-                      'Please select your prefered LLM model and use your API key to start the chat.',
+                    id: 'config-panel',
+                    content: '',
+                    role: 'assistant',
+                    message: 'Please select your prefered LLM model and use your API key to start the chat.',
                     direction: 'incoming',
                     position: 'single',
                     payload: (
@@ -221,7 +226,11 @@ export class AiAssistantWidget implements Widget<AiAssistantWidgetProps> {
                         <ConfigPanel
                           initialConfig={{
                             isReady: true,
-                            provider: this.modelProvider as 'openai' | 'deepseek' | 'google' | 'ollama',
+                            provider: this.modelProvider as
+                              | 'openai'
+                              | 'deepseek'
+                              | 'google'
+                              | 'ollama',
                             model: this.model,
                             apiKey: this.apiKey,
                             temperature: this.temperature,

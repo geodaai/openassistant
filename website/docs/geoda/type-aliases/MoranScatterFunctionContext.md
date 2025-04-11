@@ -2,7 +2,7 @@
 
 > **MoranScatterFunctionContext**: `object`
 
-Defined in: [packages/geoda/src/moran-scatterplot/definition.ts:38](https://github.com/GeoDaCenter/openassistant/blob/522ecb744b2b3ea1ecebec02c21c19736abe51ae/packages/geoda/src/moran-scatterplot/definition.ts#L38)
+Defined in: [packages/geoda/src/moran-scatterplot/definition.ts:38](https://github.com/GeoDaCenter/openassistant/blob/7dec66552ed2da789768e26aca21ecb2918b5d3b/packages/geoda/src/moran-scatterplot/definition.ts#L38)
 
 The context of the scatterplot function. The context will be used by the function calling to create the scatterplot.
 

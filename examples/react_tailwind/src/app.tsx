@@ -3,17 +3,14 @@ import { AiAssistant } from '@openassistant/ui';
 
 export function App() {
   return (
-    <div className="w-[400px] h-[800px] m-4">
+    <div className="w-[800px] h-[800px] m-4 rounded-lg shadow-lg p-6">
       <AiAssistant
         name="My Assistant"
-        apiKey=""
-        version="v1"
-        modelProvider="ollama"
-        model="llama3.1"
-        baseUrl="http://127.0.0.1:11434"
+        apiKey={process.env.OPENAI_API_KEY || ''}
+        modelProvider="openai"
+        model="gpt-4"
         welcomeMessage="Hello, how can I help you today?"
         instructions="You are a helpful assistant."
-        functions={[]}
       />
     </div>
   );
