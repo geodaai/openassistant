@@ -237,6 +237,11 @@ export class VercelAi extends AbstractAssistant {
           toolName: key,
           component: func.component,
         });
+      } else if (func.callbackMessage) {
+        components.push({
+          toolName: key,
+          component: func.callbackMessage,
+        });
       }
     });
 

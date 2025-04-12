@@ -5,7 +5,7 @@ import {
   CustomFunctionContext,
 } from '@openassistant/core';
 import { CreateMapCallbackFunction } from './callback-function';
-import { CreateMapCallbackComponent } from './callback-component';
+import { KeplerGlToolComponent } from './component/keplergl-component';
 
 export type GetDatasetForCreateMapFunctionArgs = {
   datasetName: string;
@@ -65,7 +65,8 @@ export function createMapFunctionDefinition(
     required: ['datasetName'],
     callbackFunction: CreateMapCallbackFunction,
     callbackFunctionContext: context,
-    callbackMessage: CreateMapCallbackComponent,
+    // @ts-expect-error - deprecated
+    callbackMessage: KeplerGlToolComponent,
   };
 }
 

@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const isDev = process.argv.includes('--start');
-
+const port = 3001;
 const config = {
   entryPoints: ['src/main.tsx'],
   bundle: true,
@@ -48,7 +48,7 @@ if (isDev) {
   await ctx.watch();
   await ctx.serve({
     servedir: '.',
-    port: 3000,
+    port,
     fallback: 'index.html',
     onRequest: ({ remoteAddress, method, path, status, timeInMS }) => {
       console.info(
@@ -59,9 +59,9 @@ if (isDev) {
     },
   });
   console.info(
-    `Development server running at http://localhost:3000, press Ctrl+C to stop`
+    `Development server running at http://localhost:${port}, press Ctrl+C to stop`
   );
-  await open('http://localhost:3000');
+  await open(`http://localhost:${port}`);
 } else {
   await esbuild.build(config);
 }

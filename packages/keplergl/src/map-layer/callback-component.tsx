@@ -7,6 +7,7 @@ import { ExpandableContainer, generateId } from '@openassistant/common';
 import { DragEvent } from 'react';
 
 export type CreateMapOutputData = {
+  id?: string;
   datasetName: string;
   datasetForKepler: FileCacheItem[];
   theme?: string;

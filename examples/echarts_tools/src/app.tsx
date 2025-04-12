@@ -18,113 +18,116 @@ import { tool } from '@openassistant/core';
 import { z } from 'zod';
 import { SAMPLE_DATASETS } from './dataset';
 
-const getValues = async (datasetName: string, variableName: string) => {
-  return (SAMPLE_DATASETS[datasetName] as any[]).map(
-    (item) => item[variableName]
-  );
-};
+export default function App() {
+  const getValues = async (datasetName: string, variableName: string) => {
+    return (SAMPLE_DATASETS[datasetName] as any[]).map(
+      (item) => item[variableName]
+    );
+  };
 
-// Extends from BoxplotComponentContainer with custom props
-const BoxplotComponentContainerWithCustomProps = (props: BoxplotOutputData) => {
-  const [rawData, setRawData] = useState<Record<string, number[]>>({});
+  // Extends from BoxplotComponentContainer with custom props
+  const BoxplotComponentContainerWithCustomProps = (
+    props: BoxplotOutputData
+  ) => {
+    const [rawData, setRawData] = useState<Record<string, number[]>>({});
 
-  useEffect(() => {
-    // get raw data from the props.datasetName and props.variables
-    const fetchData = async () => {
-      const promises = props.variables.map(async (variable) => {
-        const values = await getValues(props.datasetName, variable);
-        return { [variable]: values };
-      });
-      const resolvedDataArray = await Promise.all(promises);
-      const formattedData = resolvedDataArray.reduce(
-        (acc, curr) => ({ ...acc, ...curr }),
-        {}
-      );
-      setRawData(formattedData);
-    };
+    useEffect(() => {
+      // get raw data from the props.datasetName and props.variables
+      const fetchData = async () => {
+        const promises = props.variables.map(async (variable) => {
+          const values = await getValues(props.datasetName, variable);
+          return { [variable]: values };
+        });
+        const resolvedDataArray = await Promise.all(promises);
+        const formattedData = resolvedDataArray.reduce(
+          (acc, curr) => ({ ...acc, ...curr }),
+          {}
+        );
+        setRawData(formattedData);
+      };
 
-    fetchData();
-  }, [props.datasetName, props.variables]);
+      fetchData();
+    }, [props.datasetName, props.variables]);
 
-  return <BoxplotComponentContainer {...props} data={rawData} />;
-};
+    return <BoxplotComponentContainer {...props} data={rawData} />;
+  };
 
-const theme = 'light';
+  const theme = 'light';
 
-// Create the boxplot tool with the getValues implementation
-const boxplotTool: BoxplotTool = {
-  ...boxplot,
-  context: {
-    ...boxplot.context,
-    getValues: getValues,
-    config: {
-      ...boxplot.context?.config,
-      theme,
-    },
-  },
-};
-
-// Create the bubble chart tool with the getValues implementation
-const bubbleChartTool: BubbleChartTool = {
-  ...bubbleChart,
-  context: {
-    ...bubbleChart.context,
-    getValues: getValues,
-    config: {
-      ...bubbleChart.context?.config,
-      theme,
-    },
-  },
-};
-
-const histogramTool: HistogramTool = {
-  ...histogram,
-  context: {
-    ...histogram.context,
-    getValues: getValues,
-    config: {
-      ...histogram.context?.config,
-      theme,
-    },
-  },
-};
-
-const pcpTool: PCPTool = {
-  ...pcp,
-  context: {
-    ...pcp.context,
-    getValues: getValues,
-  },
-};
-
-const scatterplotTool: ScatterplotTool = {
-  ...scatterplot,
-  context: {
-    ...scatterplot.context,
-    getValues: getValues,
-  },
-};
-
-const thinkTool = tool({
-  description: 'Think about the question and provide a plan',
-  parameters: z.object({
-    question: z.string().describe('The question to think about'),
-  }),
-  execute: async ({ question }) => {
-    return {
-      llmResult: {
-        success: true,
-        result: {
-          question,
-          instruction:
-            'Please think about the question and provide a plan. Then, execute the plan for using the tools. Before executing the plan, please summarize the plan for using the tools.',
-        },
+  // Create the boxplot tool with the getValues implementation
+  const boxplotTool: BoxplotTool = {
+    ...boxplot,
+    context: {
+      ...boxplot.context,
+      getValues: getValues,
+      config: {
+        ...boxplot.context?.config,
+        theme,
       },
-    };
-  },
-});
+    },
+  };
 
-const welcomeMessage = `
+  // Create the bubble chart tool with the getValues implementation
+  const bubbleChartTool: BubbleChartTool = {
+    ...bubbleChart,
+    context: {
+      ...bubbleChart.context,
+      getValues: getValues,
+      config: {
+        ...bubbleChart.context?.config,
+        theme,
+      },
+    },
+  };
+
+  const histogramTool: HistogramTool = {
+    ...histogram,
+    context: {
+      ...histogram.context,
+      getValues: getValues,
+      config: {
+        ...histogram.context?.config,
+        theme,
+      },
+    },
+  };
+
+  const pcpTool: PCPTool = {
+    ...pcp,
+    context: {
+      ...pcp.context,
+      getValues: getValues,
+    },
+  };
+
+  const scatterplotTool: ScatterplotTool = {
+    ...scatterplot,
+    context: {
+      ...scatterplot.context,
+      getValues: getValues,
+    },
+  };
+
+  const thinkTool = tool({
+    description: 'Think about the question and provide a plan',
+    parameters: z.object({
+      question: z.string().describe('The question to think about'),
+    }),
+    execute: async ({ question }) => {
+      return {
+        llmResult: {
+          success: true,
+          result: {
+            question,
+            instruction:
+              'Please think about the question and provide a plan. Then, execute the plan for using the tools. Before executing the plan, please summarize the plan for using the tools.',
+          },
+        },
+      };
+    },
+  });
+
+  const welcomeMessage = `
 Welcome to the ECharts Tools Example! You can ask me to create boxplots of the sample dataset. Try to use the boxplot tool to create the boxplot. For example,
 
 1. check the distribution of population of myVenues using box plot
@@ -135,7 +138,7 @@ Welcome to the ECharts Tools Example! You can ask me to create boxplots of the s
 6. create a scatterplot of the population and revenue of myVenues
 `;
 
-const instructions = `
+  const instructions = `
 You are a helpful assistant that can create boxplots using ECharts.
 
 Please note:
@@ -156,7 +159,6 @@ variables:
 - population
 `;
 
-export default function App() {
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
