@@ -3,7 +3,7 @@ import {
   CustomFunctionContext,
 } from '@openassistant/core';
 import { ScatterplotCallbackFunction } from './callback-function';
-import { ScatterplotCallbackComponent } from './callback-component';
+import { ScatterplotComponentContainer } from './component/scatter-plot-component';
 
 /**
  * The callback function can be used to retrieve the values of two variables from the dataset.
@@ -92,6 +92,7 @@ export function scatterplotFunctionDefinition(
     required: ['datasetName', 'xVariableName', 'yVariableName'],
     callbackFunction: ScatterplotCallbackFunction,
     callbackFunctionContext: context,
-    callbackMessage: ScatterplotCallbackComponent,
+    // @ts-expect-error - deprecated
+    callbackMessage: ScatterplotComponentContainer,
   };
 }

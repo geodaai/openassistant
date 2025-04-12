@@ -35,6 +35,10 @@ function isBoxplotFunctionArgs(data: unknown): data is BoxplotFunctionArgs {
   );
 }
 
+/**
+ * @internal
+ * @deprecated Use {@link boxplotCallbackFunction} instead
+ */
 export async function boxplotCallbackFunction({
   functionName,
   functionArgs,

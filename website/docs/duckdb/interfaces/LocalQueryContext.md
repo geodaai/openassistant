@@ -1,6 +1,6 @@
 # Interface: LocalQueryContext
 
-Defined in: [packages/duckdb/src/types.ts:22](https://github.com/GeoDaCenter/openassistant/blob/95db62ddd98ea06cccc7750f9f0e37556d8bf20e/packages/duckdb/src/types.ts#L22)
+Defined in: [packages/duckdb/src/types.ts:22](https://github.com/GeoDaCenter/openassistant/blob/0c688d870b87d67f5ae44bc9413af48292a3320a/packages/duckdb/src/types.ts#L22)
 
 Context object for the localQuery tool
 
@@ -10,7 +10,7 @@ Context object for the localQuery tool
 
 > `optional` **config**: `object`
 
-Defined in: [packages/duckdb/src/types.ts:46](https://github.com/GeoDaCenter/openassistant/blob/95db62ddd98ea06cccc7750f9f0e37556d8bf20e/packages/duckdb/src/types.ts#L46)
+Defined in: [packages/duckdb/src/types.ts:46](https://github.com/GeoDaCenter/openassistant/blob/0c688d870b87d67f5ae44bc9413af48292a3320a/packages/duckdb/src/types.ts#L46)
 
 Configuration options
 
@@ -28,7 +28,7 @@ Configuration options
 
 > `optional` **duckDB**: `null` \| `AsyncDuckDB`
 
-Defined in: [packages/duckdb/src/types.ts:54](https://github.com/GeoDaCenter/openassistant/blob/95db62ddd98ea06cccc7750f9f0e37556d8bf20e/packages/duckdb/src/types.ts#L54)
+Defined in: [packages/duckdb/src/types.ts:54](https://github.com/GeoDaCenter/openassistant/blob/0c688d870b87d67f5ae44bc9413af48292a3320a/packages/duckdb/src/types.ts#L54)
 
 Optional DuckDB instance for querying
 
@@ -38,7 +38,7 @@ Optional DuckDB instance for querying
 
 > **getValues**: (`datasetName`, `variableName`) => `unknown`[]
 
-Defined in: [packages/duckdb/src/types.ts:29](https://github.com/GeoDaCenter/openassistant/blob/95db62ddd98ea06cccc7750f9f0e37556d8bf20e/packages/duckdb/src/types.ts#L29)
+Defined in: [packages/duckdb/src/types.ts:29](https://github.com/GeoDaCenter/openassistant/blob/0c688d870b87d67f5ae44bc9413af48292a3320a/packages/duckdb/src/types.ts#L29)
 
 Function to get values from a dataset
 
@@ -68,7 +68,7 @@ An array of values for the specified variable
 
 > `optional` **onSelected**: (`datasetName`, `columnName`, `selectedValues`) => `void`
 
-Defined in: [packages/duckdb/src/types.ts:37](https://github.com/GeoDaCenter/openassistant/blob/95db62ddd98ea06cccc7750f9f0e37556d8bf20e/packages/duckdb/src/types.ts#L37)
+Defined in: [packages/duckdb/src/types.ts:37](https://github.com/GeoDaCenter/openassistant/blob/0c688d870b87d67f5ae44bc9413af48292a3320a/packages/duckdb/src/types.ts#L37)
 
 Function called when values are selected in the query result
 

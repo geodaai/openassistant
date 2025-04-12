@@ -4,7 +4,7 @@ import {
 } from '@openassistant/core';
 import { GetValues } from '../histogram/definition';
 import { BubbleChartCallbackFunction } from './callback-function';
-import { BubbleChartCallbackMessage } from './callback-component';
+import { BubbleChartComponentContainer } from './component/bubble-chart-component';
 
 /**
  * Configuration context for the bubble chart visualization
@@ -104,6 +104,7 @@ export function bubbleChartFunctionDefinition(
     required: ['datasetName', 'variableX', 'variableY', 'variableSize'],
     callbackFunction: BubbleChartCallbackFunction,
     callbackFunctionContext: context,
-    callbackMessage: BubbleChartCallbackMessage,
+    // @ts-expect-error - deprecated
+    callbackMessage: BubbleChartComponentContainer,
   };
 }

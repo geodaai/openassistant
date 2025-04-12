@@ -240,7 +240,7 @@ export class VercelAi extends AbstractAssistant {
       } else if (func.callbackMessage) {
         components.push({
           toolName: key,
-          component: func.callbackMessage,
+          component: func.callbackMessage as unknown as ReactNode,
         });
       }
     });
@@ -371,7 +371,7 @@ export class VercelAi extends AbstractAssistant {
       this.messages[this.messages.length - 1]?.toolInvocations
     );
 
-    let customMessage: ReactNode | null = null;
+    const customMessage: ReactNode | null = null;
     const lastMessage = this.messages[this.messages.length - 1];
 
     // call the chat api with new message
@@ -411,19 +411,20 @@ export class VercelAi extends AbstractAssistant {
             toolCall,
             customFunctions: VercelAi.customFunctions,
           });
-        if (output.customMessageCallback) {
-          try {
-            customMessage = output.customMessageCallback({
-              functionName: output.name,
-              functionArgs: output.args || {},
-              output: output,
-            });
-          } catch (error) {
-            console.error(
-              `Error creating custom message for tool call ${toolCall.toolCallId}: ${error}`
-            );
-          }
-        }
+        // TODO: fix with new component design
+        // if (output.customMessageCallback) {
+        //   try {
+        //     customMessage = output.customMessageCallback({
+        //       functionName: output.name,
+        //       functionArgs: output.args || {},
+        //       output: output,
+        //     });
+        //   } catch (error) {
+        //     console.error(
+        //       `Error creating custom message for tool call ${toolCall.toolCallId}: ${error}`
+        //     );
+        //   }
+        // }
         return JSON.stringify(output.result);
       },
       onUpdate: ({ message }) => {

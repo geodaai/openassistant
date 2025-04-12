@@ -5,6 +5,10 @@ import { ParallelCoordinateOutputData } from './component/pcp';
 import { ParallelCoordinateComponent } from './component/pcp-component';
 import { useDraggable } from '../hooks/useDraggable';
 
+/**
+ * @internal
+ * @deprecated Use {@link ParallelCoordinateComponentContainer} instead
+ */
 export function ParallelCoordinateCallbackMessage(
   props: CustomFunctionCall
 ): ReactNode | null {

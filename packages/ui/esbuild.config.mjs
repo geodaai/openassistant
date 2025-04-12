@@ -4,8 +4,13 @@ import {
   createWatchMode,
   buildFormat,
 } from '../../esbuild.config.mjs';
-import tailwindPlugin from 'esbuild-plugin-tailwindcss';
+import { tailwindPlugin } from 'esbuild-plugin-tailwindcss';
 import { dtsPlugin } from 'esbuild-plugin-d.ts';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const baseConfig = createBaseConfig({
   entryPoints: ['src/index.ts'],
@@ -36,7 +41,7 @@ const fullBundleConfig = {
   },
   plugins: [
     tailwindPlugin({
-      config: './tailwind.config.js',
+      tailwindConfig: path.join(__dirname, 'tailwind.config.js'),
     }),
     dtsPlugin(),
   ],
@@ -67,7 +72,7 @@ const serverConfig = {
   },
   plugins: [
     tailwindPlugin({
-      config: './tailwind.config.js',
+      tailwindConfig: path.join(__dirname, 'tailwind.config.js'),
     }),
     dtsPlugin(),
   ],

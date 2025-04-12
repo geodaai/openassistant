@@ -2,9 +2,9 @@ import {
   CustomFunctionContext,
   RegisterFunctionCallingProps,
 } from '@openassistant/core';
-import { ParallelCoordinateCallbackMessage } from './callback-component';
 import { parallelCoordinateCallbackFunction } from './callback-function';
 import { GetValues } from '../histogram/definition';
+import { ParallelCoordinateComponentContainer } from './component/pcp-component';
 
 /**
  * Configuration context for the parallel coordinate visualization
@@ -63,7 +63,7 @@ type ParallelCoordinateFunctionContextValues =
  * :::
  *
  * @param context - The context object used by the parallel coordinate function. See ParallelCoordinateFunctionContext for more details.
- * 
+ *
  * :::note
  * You are responsible to provide the context object, which are `getValues` and `config` as shown in the example above, to the parallel coordinate function.
  * :::
@@ -93,6 +93,7 @@ export function parallelCoordinateFunctionDefinition(
     required: ['datasetName', 'variableNames'],
     callbackFunction: parallelCoordinateCallbackFunction,
     callbackFunctionContext: context,
-    callbackMessage: ParallelCoordinateCallbackMessage,
+    // @ts-expect-error - deprecated
+    callbackMessage: ParallelCoordinateComponentContainer,
   };
 }

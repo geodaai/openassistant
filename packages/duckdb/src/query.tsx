@@ -9,10 +9,7 @@ import {
 } from '@openassistant/core';
 
 import * as duckdb from '@duckdb/duckdb-wasm';
-import {
-  queryDuckDBCallbackMessage,
-  QueryDuckDBOutputData,
-} from './queryTable';
+import { QueryDuckDBComponent, QueryDuckDBOutputData } from './queryTable';
 
 const JSDELIVR_BUNDLES = duckdb.getJsDelivrBundles();
 
@@ -154,7 +151,8 @@ export function queryDuckDBFunctionDefinition(
     required: ['datasetName', 'sql', 'dbTableName', 'variableNames'],
     callbackFunction: queryDuckDBCallbackFunction,
     callbackFunctionContext: context,
-    callbackMessage: queryDuckDBCallbackMessage,
+    // @ts-expect-error - deprecated
+    callbackMessage: QueryDuckDBComponent,
   };
 }
 

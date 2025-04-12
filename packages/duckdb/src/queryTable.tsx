@@ -35,6 +35,10 @@ export type QueryDuckDBOutputData = {
   isDraggable?: boolean;
 };
 
+/**
+ * @internal
+ * @deprecated Use {@link QueryDuckDBComponent} instead
+ */
 export function queryDuckDBCallbackMessage(
   props: CustomFunctionCall
 ): JSX.Element | null {

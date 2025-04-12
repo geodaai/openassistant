@@ -9,12 +9,6 @@ sidebar_position: 1
 
 OpenAssistant is a javascript library for building AI assistant with powerful tools and an interactive React chat component.
 
-Check out the following examples using OpenAssistant in action:
-
-- [kepler.gl AI Assistant (kepler.gl)](https://location.foursquare.com/resources/blog/products/foursquare-brings-enterprise-grade-spatial-analytics-to-your-browser-with-kepler-gl-3-1/)
-- [GeoDa.AI AI Assistant (geoda.ai)](https://geoda.ai)
-- [SqlRooms (sqlrooms.org)](https://sqlrooms-ai.netlify.app/)
-
 ## Why OpenAssistant?
 
 OpenAssistant is built based on [Vercel AI SDK](https://sdk.vercel.ai/docs) and provides:
@@ -27,7 +21,14 @@ for building your own AI assistant, along with a design allows you to easily cre
 
 - providing your own context (e.g. data, callbacks etc.) for the tool execution
 - providing your own UI component for rendering the tool result
-- passing the result from the tool execution to the tool UI component
+- passing the result from the tool execution to the tool UI component or next tool execution.
+
+Check out the following examples using OpenAssistant in action:
+
+- [kepler.gl AI Assistant (kepler.gl)](https://location.foursquare.com/resources/blog/products/foursquare-brings-enterprise-grade-spatial-analytics-to-your-browser-with-kepler-gl-3-1/)
+- [GeoDa.AI AI Assistant (geoda.ai)](https://geoda.ai)
+- [SqlRooms (sqlrooms.org)](https://sqlrooms-ai.netlify.app/)
+
 
 ## Getting Started
 
@@ -158,6 +159,7 @@ module.exports = {
 };
 ```
 
+See the source code of the example 🔗 [here](https://github.com/geodacenter/openassistant/tree/main/examples/react_tailwind).
 :::
 
 ## Use Tools
@@ -212,7 +214,7 @@ const instructions = `You are a helpful assistant. You can use the following dat
   variables: index, location, latitude, longitude, revenue, population
   `;
 
-// use LocalQueryTool to type safety
+// use `LocalQueryTool` for type safety
 const localQueryTool: LocalQueryTool = {
   ...localQuery,
   context: {

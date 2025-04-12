@@ -38,7 +38,24 @@ import { arrowSchemaToFields } from './callback-function';
  * - isDraggable: Whether the map is draggable
  * - theme: The theme of the map
  */
-export const keplergl = tool({
+export const keplergl = tool<
+  // parameters of the tool
+  z.ZodObject<{
+    datasetName: z.ZodString;
+    geometryColumn: z.ZodOptional<z.ZodString>;
+    latitudeColumn: z.ZodOptional<z.ZodString>;
+    longitudeColumn: z.ZodOptional<z.ZodString>;
+    mapType: z.ZodOptional<
+      z.ZodEnum<['point', 'line', 'arc', 'polygon', 'heatmap', 'hexbin', 'h3']>
+    >;
+  }>,
+  // return type of the tool
+  ExecuteCreateMapResult['llmResult'],
+  // additional data of the tool
+  ExecuteCreateMapResult['additionalData'],
+  // type of the context
+  KeplerglToolContext
+>({
   description: 'create a map',
   parameters: z.object({
     datasetName: z.string().describe('The name of the dataset for mapping.'),
@@ -71,12 +88,23 @@ export const keplergl = tool({
   component: KeplerGlToolComponent,
 });
 
+/**
+ * The type of the keplergl tool, which contains the following properties:
+ *
+ * - description: The description of the tool.
+ * - parameters: The parameters of the tool.
+ * - execute: The function that will be called when the tool is executed.
+ * - context: The context of the tool.
+ * - component: The component that will be used to render the tool.
+ */
+export type KeplerglTool = typeof keplergl;
+
 export type KeplerglToolContext = {
-  getDataset: (args: { datasetName: string }) => Promise<any>;
+  getDataset: (args: { datasetName: string }) => Promise<unknown>;
   config: { isDraggable?: boolean; theme?: string };
 };
 
-export type KeplerglToolResult = {
+export type ExecuteCreateMapResult = {
   llmResult: {
     success: boolean;
     datasetName?: string;
@@ -123,7 +151,10 @@ export function isKeplerglToolArgs(args: unknown): args is KeplerglToolArgs {
   return typeof args === 'object' && args !== null && 'datasetName' in args;
 }
 
-async function executeCreateMap(args, options): Promise<KeplerglToolResult> {
+async function executeCreateMap(
+  args,
+  options
+): Promise<ExecuteCreateMapResult> {
   try {
     if (!isKeplerglToolContext(options.context)) {
       throw new Error('Invalid createMap function context.');

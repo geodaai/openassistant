@@ -1,8 +1,10 @@
-# Function: queryDuckDBCallbackMessage()
+# Function: ~~queryDuckDBCallbackMessage()~~
 
 > **queryDuckDBCallbackMessage**(`props`): `null` \| `Element`
 
-Defined in: [packages/duckdb/src/queryTable.tsx:38](https://github.com/GeoDaCenter/openassistant/blob/95db62ddd98ea06cccc7750f9f0e37556d8bf20e/packages/duckdb/src/queryTable.tsx#L38)
+Defined in: [packages/duckdb/src/queryTable.tsx:42](https://github.com/GeoDaCenter/openassistant/blob/0c688d870b87d67f5ae44bc9413af48292a3320a/packages/duckdb/src/queryTable.tsx#L42)
+
+**`Internal`**
 
 ## Parameters
 
@@ -13,3 +15,7 @@ Defined in: [packages/duckdb/src/queryTable.tsx:38](https://github.com/GeoDaCent
 ## Returns
 
 `null` \| `Element`
+
+## Deprecated
+
+Use [QueryDuckDBComponent](QueryDuckDBComponent.md) instead

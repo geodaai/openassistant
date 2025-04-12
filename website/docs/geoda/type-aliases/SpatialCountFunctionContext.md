@@ -2,7 +2,7 @@
 
 > **SpatialCountFunctionContext**: `object`
 
-Defined in: [packages/geoda/src/spatial-count/definition.ts:14](https://github.com/GeoDaCenter/openassistant/blob/95db62ddd98ea06cccc7750f9f0e37556d8bf20e/packages/geoda/src/spatial-count/definition.ts#L14)
+Defined in: [packages/geoda/src/spatial-count/definition.ts:14](https://github.com/GeoDaCenter/openassistant/blob/0c688d870b87d67f5ae44bc9413af48292a3320a/packages/geoda/src/spatial-count/definition.ts#L14)
 
 The context for the spatial count function
 

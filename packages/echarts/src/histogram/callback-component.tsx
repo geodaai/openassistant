@@ -5,6 +5,10 @@ import { ExpandableContainer, generateId } from '@openassistant/common';
 import { HistogramComponent } from './component/histogram-plot';
 import { useDraggable } from '../hooks/useDraggable';
 
+/**
+ * @internal
+ * @deprecated Use {@link HistogramComponentContainer} instead
+ */
 export function HistogramCallbackMessage(
   props: CustomFunctionCall
 ): JSX.Element | null {

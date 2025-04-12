@@ -2,8 +2,8 @@ import {
   CustomFunctionContext,
   RegisterFunctionCallingProps,
 } from '@openassistant/core';
-import { HistogramCallbackMessage } from './callback-component';
 import { histogramCallbackFunction } from './callback-function';
+import { HistogramComponentContainer } from './component/histogram-component';
 
 /**
  * Function signature for retrieving variable values from a dataset.
@@ -85,6 +85,7 @@ export function histogramFunctionDefinition(
     required: ['datasetName', 'variableName'],
     callbackFunction: histogramCallbackFunction,
     callbackFunctionContext: context,
-    callbackMessage: HistogramCallbackMessage,
+    // @ts-expect-error - deprecated
+    callbackMessage: HistogramComponentContainer,
   };
 }

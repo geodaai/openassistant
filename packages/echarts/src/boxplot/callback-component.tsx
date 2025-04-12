@@ -5,6 +5,10 @@ import { BoxplotComponent } from './component/box-plot-component';
 import { BoxplotOutputData } from './component/box-plot';
 import { useDraggable } from '../hooks/useDraggable';
 
+/**
+ * @internal
+ * @deprecated Use {@link BoxplotComponentContainer} instead
+ */
 export function BoxplotCallbackMessage(
   props: CustomFunctionCall
 ): ReactNode | null {

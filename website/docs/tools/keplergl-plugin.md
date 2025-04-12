@@ -1,188 +1,135 @@
 ---
 sidebar_position: 1
+sidebar_label: Introduction
 ---
 
-# keplerGL Tools
+# KeplerGL Tools
 
-import keplerPlugin from '../../images/keplerPlugin-1.png';
+This package provides a tool to create a map from your dataset using @openassistant/keplergl.
 
-Kepler.gl is a powerful tool for creating beautiful maps. With this plugin, your AI assistant can help you and your customers to create a map from your own data by just prompting the AI assistant.
+<img src="https://openassistant-doc.vercel.app/img/keplerPlugin-1.png" width="400" alt="KeplerGL Tool" />
 
-For example, suppose you have a dataset that contains the location, revenue and customer population. Within your application, you may have a function to call a data API to get this data:
+## Installation
 
-```ts
-const getRevenueData = async () => {
-  const response = await fetch('https://your-data-api.com/revenue');
-  return response.json();
-};
+```bash
+yarn add @openassistant/keplergl
 ```
 
-The json data could look like this:
+Note: please see the [common issues](#common-issues) below for some common issues and solutions.
+
+## Usage
+
+Suppose you have a dataset which could be fetched from your data API. The json data could look like this:
 
 ```json
-const myDatasets = {
+const SAMPLE_DATASETS = {
   myVenues: [
-    { "location": "New York", latitude: 40.7128, longitude: -74.0060, revenue: 100000, population: 8000000 },
-    { "location": "Los Angeles", latitude: 34.0522, longitude: -118.2437, revenue: 150000, population: 4000000 },
-    { "location": "Chicago", latitude: 41.8781, longitude: -87.6298, revenue: 120000, population: 2700000 }
+    { "location": "New York", "latitude": 40.7128, "longitude": -74.0060, "revenue": 12500000, "population": 8400000 },
+    { "location": "Los Angeles", "latitude": 34.0522, "longitude": -118.2437, "revenue": 9800000, "population": 3900000 },
+    { "location": "Chicago", "latitude": 41.8781, "longitude": -87.6298, "revenue": 7200000, "population": 2700000 },
+    { "location": "Houston", "latitude": 29.7604, "longitude": -95.3698, "revenue": 6800000, "population": 2300000 },
+    { "location": "Phoenix", "latitude": 33.4484, "longitude": -112.0740, "revenue": 5400000, "population": 1600000 },
+    { "location": "Philadelphia", "latitude": 39.9526, "longitude": -75.1652, "revenue": 5900000, "population": 1580000 },
+    { "location": "San Antonio", "latitude": 29.4241, "longitude": -98.4936, "revenue": 4800000, "population": 1540000 },
+    { "location": "San Diego", "latitude": 32.7157, "longitude": -117.1611, "revenue": 5200000, "population": 1420000 }
   ]
 };
 ```
 
-You can use the AI assistant to create a map from this data by just asking the AI assistant:
+You can share the meta data of your dataset in the `instructions` prop of the `AiAssistant` component, so the LLM can understand which datasets are available to use when creating a map.
 
-```text
-Can you create a map using the data myVenues?
+:::note
+The meta data is good enough for the AI Assistant. Don't put the entire dataset in the context, and there is no need to share your dataset with the AI Assistant or the LLM models. This also helps to keep your dataset private.
+:::
+
+```js
+const instructions = `You can help users to create a map from a dataset.
+Please always confirm the function calling and its arguments with the user.
+
+Here is the dataset are available for function calling:
+DatasetName: myVenues
+Fields: location, longitude, latitude, revenue, population`;
 ```
 
-<img src={keplerPlugin} width="400" alt="KeplerGL Plugin" />
+### Add the keplergl tool in your application
 
-## Let's see how to wire this up in your application
+```tsx
+import { keplergl, KeplerglTool } from '@openassistant/keplergl';
 
-### Step 1: Setup the OpenAssistant in your application
-
-Install the OpenAssistant package in your application.
-
-```bash
-yarn add @openassistant/core @openassistant/keplergl @openassistant/ui
+// use KeplerglTool for type safety
+const keplerglTool: KeplerglTool = {
+  ...keplergl,
+  context: {
+    ...keplergl.context,
+    getDataset: async ({ datasetName }) => SAMPLE_DATASETS[datasetName],
+    config: {
+      isDraggable: false,
+    },
+  },
+};
 ```
 
-For @openassistant/keplergl, you need to install the `kepler.gl` package in your application.
+### Add OpenAssistant Chat component in your application
 
-```bash
-yarn add @kepler.gl/actions @kepler.gl/components @kepler.gl/constants @kepler.gl/layers @kepler.gl/reducers @kepler.gl/styles @kepler.gl/utils @kepler.gl/processors @kepler.gl/localization
-```
-
-```js title="App.tsx"
+```tsx
 import { AiAssistant } from '@openassistant/ui';
 // only for React app without tailwindcss
-import '@openassistant/ui/dist/index.css';
+// import '@openassistant/keplergl/dist/index.css';
 
-const assistantProps = {
-  name: 'My AI Assistant',
-  description: 'This is my AI assistant',
-  version: '1.0.0',
-  modelProvider: 'openai',
-  model: 'gpt-4',
-  apiKey: 'your-api-key',
-  welcomeMessage: 'Hi, I am your AI assistant',
-  instructions:
-    "You are a data and map analyst. You can help users to create a map from a dataset. If a function calling can be used to answer the user's question, please always confirm the function calling and its arguments with the user.",
-  functions: [],
-};
+<AiAssistant
+  name="Kepler.gl Tool"
+  modelProvider="openai"
+  model="gpt-4o"
+  apiKey={process.env.OPENAI_API_KEY || ''}
+  welcomeMessage="Welcome to the Kepler.gl Tool Example! You can ask me to create a map from a dataset."
+  instructions={instructions}
+  functions={{ keplergl: keplerglTool }}
+  useMarkdown={true}
+/>;
 ```
 
-:::tip
+See the [example](https://github.com/geodacenter/openassistant/tree/main/examples/keplergl_plugin) for more details.
 
-The `instructions` is the most important part of the assistant. It will be used to guide the AI assistant to work within the context of your application e.g. what questions can be answered by the AI assistant.
+## Common Issues
 
-:::
+### Polyfills
 
-### Step 2: Share the meta data of your dataset with the AI assistant
-
-Share the meta data of your dataset, so the assistant can understand which datasets are available to use when creating a map.
-
-:::tip
-
-The meta data is good enough for the AI Assistant. Don't put the entire dataset in the context, and there is no need to share your dataset with the AI Assistant or the LLM models. The LLM models will only need the meta data of your dataset to create a map.
-
-:::
+If you are using esbuild, you can use esbuild-plugin-polyfill-node to add the polyfills in your esbuild.config.mjs file.
 
 ```js
-const dataContext = useMemo(() => {
-  // Note: you can call your data API to get the meta data of your dataset
-  return [
-    {
-      description: 'Please use the following meta data for function callings.',
-      metaData: [
-        {
-          datasetName: 'myVenues',
-          fields: ['name', 'longitude', 'latitude', 'revenue', 'population'],
-        },
-      ],
-    },
-  ];
-}, []);
+import { polyfillNode } from 'esbuild-plugin-polyfill-node';
 
-// you can simply append the context to the `instructions` of the assistant props
-assistantProps.instructions =
-  assistantProps.instructions + '\n' + JSON.stringify(dataContext);
+plugins: [polyfillNode()],
 ```
 
-To get up to date with your data context, e.g. when dataset been added or removed, you can use the `useAssistant` hook to add the context to the assistant props.
+If you are using Docusaurus, you can use [docusaurus-node-polyfills](https://github.com/JayaKrishnaNamburu/docusaurus-node-polyfills) to add the polyfills.
+
+### Styled Components
+
+There are multiple versions of `styled-components` in the kepler.gl package, you need to tell your bundler to use the same version to avoid conflicts.
+
+You can use the `resolutions` field in your package.json to force the same version.
+
+```json
+"resolutions": {
+  "styled-components": "6.1.8"
+}
+```
+
+If you are using esbuild, you can add the following configuration of `alias` to your esbuild.config.mjs file to avoid conflicts.
 
 ```js
-import { useAssistant } from '@openassistant/core';
-
-const { initializeAssistant, addAdditionalContext } =
-  useAssistant(assistantProps);
-
-// initialize assistant with context
-const initializeAssistantWithContext = async () => {
-  await initializeAssistant();
-  addAdditionalContext({ context: JSON.stringify(dataContext) });
-};
-
-useEffect(() => {
-  // Note: when your dataContext is updated, this will trigger the assistant to update the context
-  initializeAssistantWithContext();
-}, [dataContext, addAdditionalContext]);
+alias: {
+  'styled-components': path.resolve(__dirname, 'node_modules/styled-components'),
+}
 ```
 
-### Step 3: Import the predefined mapping function calling
-
-Import the predefined mapping callback function from the keplergl plugin and add it to the assistant.
+If you are using webpack, you can add the following configuration of alias to your webpack.config.js file to avoid conflicts.
 
 ```js
-import { createMapFunctionDefinition, GetDatasetForCreateMapFunctionArgs } from '@openassistant/keplergl';
-
-const myFunctions = [
-  createMapFunctionDefinition({
-    getDataset: ({datasetName}: GetDatasetForCreateMapFunctionArgs) => {
-      // check if the dataset exists
-      if (!myDatasets[datasetName]) {
-        throw new Error('The dataset does not exist.');
-      }
-      return myDatasets[datasetName];
-    },
-  })
-];
+resolve: {
+  alias: {
+    'styled-components': path.resolve(__dirname, 'node_modules/styled-components'),
+  },
+},
 ```
-
-### Step 4: Replace the functions inthe assistant props and render the AI Assistant component
-
-```js
-// update the functions in the assistant props
-const assistantProps = {
-  name: 'My AI Assistant',
-  description: 'This is my AI assistant',
-  version: '1.0.0',
-  modelProvider: 'openai',
-  model: 'gpt-4',
-  apiKey: 'your-api-key',
-  welcomeMessage: 'Hi, I am your AI assistant',
-  instructions:
-    "You are a data and map analyst. You can help users to create a map from a dataset. If a function calling can be used to answer the user's question, please always confirm the function calling and its arguments with the user.",
-  functions: myFunctions,
-};
-
-return <AiAssistant {...assistantProps} />;
-```
-
-Now you can start the conversation with the AI assistant and ask it to create a map from your dataset.
-
-```text
-Can you create a map using the data myVenues?
-```
-
-If you prompt with the wrong dataset name, the AI assistant will return an error message.
-
-```text
-Can you create a map using the data myPeronalTrip?
-```
-
-If your dataset doesn't contain any geometry data, the AI assistant will response with an error message.
-
-## Advanced: more configurations of the mapping function
-
-Coming soon.

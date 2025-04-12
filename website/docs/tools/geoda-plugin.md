@@ -2,6 +2,6 @@
 sidebar_position: 4
 ---
 
-# Spatial Analysis Plugin with GeoDa
+# data analysis Tools 
 
 Coming soon...

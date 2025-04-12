@@ -18,10 +18,8 @@ function isScatterplotOutputData(data: unknown): data is ScatterplotOutputData {
 }
 
 /**
- * ScatterplotCallbackComponent is a component that displays a scatterplot.
- * It is used to display the output of the scatterplot callback function.
- * @param props - The props for the component. See {@link CustomFunctionCall} for more information.
- * @returns The scatterplot component.
+ * @internal
+ * @deprecated Use {@link ScatterplotComponentContainer} instead
  */
 export function ScatterplotCallbackComponent(
   props: CustomFunctionCall

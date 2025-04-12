@@ -1,61 +1,33 @@
+import React from 'react';
 import { AiAssistant } from '@openassistant/ui';
-import {
-  createMapFunctionDefinition,
-  GetDatasetForCreateMapFunctionArgs,
-} from '@openassistant/keplergl';
-
-const SAMPLE_DATA = {
-  myVenues: [
-    {
-      name: 'venue 1',
-      longitude: -73.99389648,
-      latitude: 40.75011063,
-      revenue: 1000000,
-      population: 1000000,
-    },
-    {
-      name: 'venue 2',
-      longitude: -73.97642517,
-      latitude: 40.73981094,
-      revenue: 2000000,
-      population: 2000000,
-    },
-    {
-      name: 'venue 3',
-      longitude: -73.96870422,
-      latitude: 40.75424576,
-      revenue: 3000000,
-      population: 3000000,
-    },
-    {
-      name: 'venue 4',
-      longitude: -73.95987634,
-      latitude: 40.76012845,
-      revenue: 4000000,
-      population: 4000000,
-    },
-    {
-      name: 'venue 5',
-      longitude: -73.9654321,
-      latitude: 40.75789321,
-      revenue: 5000000,
-      population: 5000000,
-    },
-  ],
-};
+import { keplergl, KeplerglTool } from '@openassistant/keplergl';
+import '@openassistant/ui/dist/index.css';
+import { SAMPLE_DATASETS } from './dataset';
 
 export function App() {
-  const functions = [
-    createMapFunctionDefinition({
-      getDataset: ({ datasetName }: GetDatasetForCreateMapFunctionArgs) => {
-        // check if the dataset exists
-        if (!SAMPLE_DATA[datasetName]) {
-          throw new Error('The dataset does not exist.');
-        }
-        return SAMPLE_DATA[datasetName];
+  // const functions = [
+  //   createMapFunctionDefinition({
+  //     getDataset: async ({
+  //       datasetName,
+  //     }: GetDatasetForCreateMapFunctionArgs) => {
+  //       // check if the dataset exists
+  //       if (!SAMPLE_DATASETS[datasetName]) {
+  //         throw new Error('The dataset does not exist.');
+  //       }
+  //       return SAMPLE_DATASETS[datasetName];
+  //     },
+  //   }),
+  // ];
+  const keplerglTool: KeplerglTool = {
+    ...keplergl,
+    context: {
+      ...keplergl.context,
+      getDataset: async ({ datasetName }) => SAMPLE_DATASETS[datasetName],
+      config: {
+        isDraggable: false,
       },
-    }),
-  ];
+    },
+  };
 
   const instructions = `You are a data and map analyst. You can help users to create a map from a dataset.
 If a function calling can be used to answer the user's question, please always confirm the function calling and its arguments with the user.
@@ -84,7 +56,7 @@ Fields: name, longitude, latitude, revenue, population`;
             apiKey={process.env.OPENAI_API_KEY || ''}
             welcomeMessage={welcomeMessage}
             instructions={instructions}
-            functions={functions}
+            functions={{ keplergl: keplerglTool }}
             useMarkdown={true}
           />
         </div>

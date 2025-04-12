@@ -22,5 +22,5 @@
 
 ## Functions
 
-- [queryDuckDBCallbackMessage](functions/queryDuckDBCallbackMessage.md)
+- [~~queryDuckDBCallbackMessage~~](functions/queryDuckDBCallbackMessage.md)
 - [QueryDuckDBComponent](functions/QueryDuckDBComponent.md)

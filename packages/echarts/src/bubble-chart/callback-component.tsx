@@ -20,6 +20,10 @@ function isBubbleChartOutputData(
   );
 }
 
+/**
+ * @internal
+ * @deprecated Use {@link BubbleChartComponentContainer} instead
+ */
 export function BubbleChartCallbackMessage(
   props: CustomFunctionCall
 ): JSX.Element | null {

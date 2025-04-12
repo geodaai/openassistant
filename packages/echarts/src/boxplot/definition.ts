@@ -4,6 +4,7 @@ import {
 } from '@openassistant/core';
 import { BoxplotCallbackMessage } from './callback-component';
 import { boxplotCallbackFunction } from './callback-function';
+import { BoxplotComponentContainer } from './component/box-plot-component';
 
 /**
  * Function to retrieve numerical values from a dataset for a specific variable.
@@ -170,6 +171,7 @@ export function boxplotTool({
     ...(tool || BoxplotFunction),
     callbackFunction: boxplotCallbackFunction,
     callbackFunctionContext: context,
-    callbackMessage: boxplotComponent || BoxplotCallbackMessage,
+    // @ts-expect-error - deprecated
+    callbackMessage: boxplotComponent || BoxplotComponentContainer,
   };
 }

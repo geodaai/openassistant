@@ -42,6 +42,7 @@ const config: Config = {
   plugins: [
     './plugins/readme-to-intro',
     './plugins/ui-readme-to-docs',
+    './plugins/keplergl-readme-to-docs',
     [
       'docusaurus-plugin-typedoc',
       {
