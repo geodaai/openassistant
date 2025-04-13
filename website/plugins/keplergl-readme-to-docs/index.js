@@ -21,7 +21,7 @@ async function keplerglReadmeToDocsPlugin(context) {
         // Add Docusaurus frontmatter
         const docusaurusContent = `---
 sidebar_position: 1
-sidebar_label: Introduction
+sidebar_label: Kepler.gl Tools
 ---
 
 ${readmeContent}`;

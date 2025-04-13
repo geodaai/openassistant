@@ -191,7 +191,7 @@ export async function CreateMapCallbackFunction({
     }
 
     if (!datasetForKepler || datasetForKepler.length === 0) {
-      throw new Error('Dataset not not processed correctly.');
+      throw new Error('Dataset not processed correctly.');
     }
 
     // get fields from the dataset

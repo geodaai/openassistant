@@ -2,7 +2,7 @@
 
 > **dataClassifyFunctionDefinition**(`context`): `RegisterFunctionCallingProps`
 
-Defined in: [packages/geoda/src/data-classify.ts:77](https://github.com/GeoDaCenter/openassistant/blob/0c688d870b87d67f5ae44bc9413af48292a3320a/packages/geoda/src/data-classify.ts#L77)
+Defined in: [packages/geoda/src/data-classify.ts:77](https://github.com/GeoDaCenter/openassistant/blob/ae6e39c15b60e7a98a21d90a5bbeff5dc44c1295/packages/geoda/src/data-classify.ts#L77)
 
 The definition of the data classify function. The function tool can be used to classify the data into k bins or classes.
 The classification method can be one of the following types: quantile, natural breaks, equal interval, percentile, box, standard deviation, unique values.

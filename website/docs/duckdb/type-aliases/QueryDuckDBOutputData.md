@@ -2,7 +2,7 @@
 
 > **QueryDuckDBOutputData**: `object`
 
-Defined in: [packages/duckdb/src/queryTable.tsx:23](https://github.com/GeoDaCenter/openassistant/blob/0c688d870b87d67f5ae44bc9413af48292a3320a/packages/duckdb/src/queryTable.tsx#L23)
+Defined in: [packages/duckdb/src/queryTable.tsx:23](https://github.com/GeoDaCenter/openassistant/blob/ae6e39c15b60e7a98a21d90a5bbeff5dc44c1295/packages/duckdb/src/queryTable.tsx#L23)
 
 ## Type declaration
 

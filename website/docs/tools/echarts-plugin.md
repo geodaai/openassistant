@@ -1,37 +1,37 @@
 ---
 sidebar_position: 2
+sidebar_label: eCharts Tools
 ---
 
-# eCharts Tools
+# @openassistant/echarts
 
-import histogramPlugin from '../../images/histogram-1-400.png';
+The eCharts tools for OpenAssistant provides powerful visualization capabilities using [Apache ECharts](https://echarts.apache.org/).
 
-The eCharts tools for OpenAssistant provides powerful visualization capabilities using [Apache ECharts](https://echarts.apache.org/). 
+<img src="https://openassistant-doc.vercel.app/img/histogram-1-400.png" width="400" alt="Histogram Plugin" />
 
-<img src={histogramPlugin} width="400" alt="Histogram Plugin" />
+The eCharts tools allow you to create the following plots using LLM in your AI Assistant:
 
-## Available Tools
+- **Histogram Plots** - Visualize data distribution with features like:
 
+  - Customizable number of bins
+  - Interactive bar selection
+  - Light/dark theme support
+  - Automatic bin calculation
+  - Tooltip with bin information
 
-1. **Histogram Plots** - Visualize data distribution with features like:
-   - Customizable number of bins
-   - Interactive bar selection
-   - Light/dark theme support
-   - Automatic bin calculation
-   - Tooltip with bin information
+- **Scatter Plots** - Visualize relationships between variables with features like:
 
-2. **Scatter Plots** - Visualize relationships between variables with features like:
-   - Interactive point selection
-   - Regression line support
-   - LOESS smoothing option
-   - Statistical information display
-   - Brush selection tools
+  - Interactive point selection
+  - Regression line support
+  - LOESS smoothing option
+  - Statistical information display
+  - Brush selection tools
 
-3. **Parallel Coordinates** 
+- **Parallel Coordinates**
 
-4. **Box Plots**
+- **Box Plots**
 
-5. **Bubble Charts**
+- **Bubble Charts**
 
 ## Installation
 
@@ -39,117 +39,101 @@ The eCharts tools for OpenAssistant provides powerful visualization capabilities
 npm install @openassistant/echarts
 ```
 
-## Usage 
+## Usage
 
-The assistant needs to understand your data structure. So you can share metadata about your datasets in the assisant instructions:
+Suppose you have a dataset which could be fetched from your data API. The json data could look like this:
 
-```javascript
-const myDataContext = [
-  {
-    description: 'Please use the following meta data for function callings.',
-    metaData: [{
-      datasetName: 'myVenues',
-      fields: ['location', 'latitude', 'longitude', 'revenue', 'population'],
-    }]
-  },
-];
-
-const instructions: `You are a data visualization assistant. You can help users create histograms and scatter plots from their datasets.
-You can use the following meta data for function callings:
-
-${JSON.stringify(myDataContext)}
-`;
+```json
+const SAMPLE_DATASETS = {
+  myVenues: [
+    { "location": "New York", "latitude": 40.7128, "longitude": -74.0060, "revenue": 12500000, "population": 8400000 },
+    ...
+  ]
+};
 ```
 
-Then, you need to set up the OpenAssistant in your application:
+You can share the meta data of your dataset in the `instructions` prop of the `AiAssistant` component, so the LLM can understand which datasets are available to use when creating a map.
+
+:::note
+The meta data is good enough for the AI Assistant. Don't put the entire dataset in the context, and there is no need to share your dataset with the AI Assistant or the LLM models. This also helps to keep your dataset private.
+:::
+
+```js
+const instructions = `You can help users to create a map from a dataset.
+Please always confirm the function calling and its arguments with the user.
+
+Here is the dataset are available for function calling:
+DatasetName: myVenues
+Fields: location, longitude, latitude, revenue, population`;
+```
+
+Then, you can add the eCharts tools in your application:
 
 ```tsx
-import { AiAssistant } from '@openassistant/ui';
-
-const assistantProps = {
-  name: 'My AI Assistant',
-  description: 'This is my AI assistant',
-  version: '1.0.0',
-  modelProvider: 'openai',
-  model: 'gpt-4',
-  apiKey: 'your-api-key',
-};
-```
-
-### 3. Register Visualization Functions
-
-Import and register the visualization functions:
-
-```typescript
 import {
-  histogramFunctionDefinition,
-  scatterplotFunctionDefinition,
+  histogram,
+  HistogramTool,
+  scatterplot,
+  ScatterplotTool,
 } from '@openassistant/echarts';
 
-const myFunctions = [
-  histogramFunctionDefinition({
-    getValues: (datasetName: string, variableName: string) => {
-      return getValuesFromMyDatasets(datasetName, variableName);
+// use HistogramTool for type safety
+const histogramTool: HistogramTool = {
+  ...histogram,
+  context: {
+    getValues: (datasetName, variableName) => {
+      return SAMPLE_DATASETS[datasetName][variableName];
     },
-  }),
-  scatterplotFunctionDefinition({
-    getValues: async (
-      datasetName: string,
-      xVariableName: string,
-      yVariableName: string
-    ) => {
-      return getXYValuesFromMyDatasets(datasetName, xVariableName, yVariableName);
-    },
-  }),
-];
-
-// Add functions to assistant props
-const assistantProps = {
-  // ... other props ...
-  functions: myFunctions,
+  },
 };
+
+const scatterplotTool: ScatterplotTool = {
+  ...scatterplot,
+  context: {
+    getValues: (datasetName, variableName) => {
+      return SAMPLE_DATASETS[datasetName][variableName];
+    },
+  },
+};
+
+// use the tool in the chat component
+<AiAssistant
+  modelProvider="openai"
+  model="gpt-4o"
+  apiKey={process.env.OPENAI_API_KEY || ''}
+  welcomeMessage="Hello! How can I help you today?"
+  instructions={instructions}
+  functions={{ histogram: histogramTool }}
+/>;
 ```
 
-### 4. Implement Data Retrieval
-
-Create functions to fetch your data:
-
-```typescript
-async function getValuesFromMyDatasets(datasetName: string, variableName: string): Promise<number[]> {
-  const dataset = myDatasets[datasetName];
-  return dataset.map((item) => item[variableName]);
-}
-
-async function getXYValuesFromMyDatasets(
-  datasetName: string,
-  xVar: string,
-  yVar: string
-): Promise<{
-  x: number[];
-  y: number[];
-}> {
-  const dataset = myDatasets[datasetName];
-  return {
-    x: dataset.map((item) => item[xVar]),
-    y: dataset.map((item) => item[yVar]),
-  };
-}
-```
-
-## Usage Examples
-
-Once set up, you can create visualizations through natural language prompts:
+Once set up, you can create histograms through natural language prompts:
 
 - For histograms: "Create a histogram of the 'revenue' variable"
 - For scatter plots: "Show me a scatter plot of revenue vs population"
 
 The assistant will automatically understand your request and use the appropriate visualization function.
 
-## Coming Soon
+See the [example](https://github.com/geodacenter/openassistant/tree/main/examples/echarts_plugin) for more details.
 
-We're actively working on expanding our visualization capabilities with new chart types:
-- 📊 Box plots
-- 📈 Dynamic line charts
-- 📊 Interactive bar charts
-- 🥧 Parallel coordinates
-- And more!
+## With TailwindCSS
+
+If you are using TailwindCSS, make sure to include the package's CSS in your project:
+
+```typescript
+import { nextui } from '@nextui-org/react';
+
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    './src/**/*.{js,ts,jsx,tsx}',
+    '../../node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
+    '../../node_modules/@openassistant/echarts/dist/**/*.{js,ts,jsx,tsx}',
+  ],
+  theme: {
+    extend: {},
+  },
+  darkMode: 'class',
+  plugins: [nextui()],
+};
+```
