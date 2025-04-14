@@ -89,14 +89,16 @@ export type ExtendedTool<
     | CustomFunctionContext<unknown>
     | CustomFunctionContextCallback<unknown>,
 > = Tool<PARAMETERS> & {
-  /** test */
+  /**
+   * The function that will be called when the tool is executed
+   */
   execute: ExecuteFunction<PARAMETERS, RETURN_TYPE, ADDITIONAL_DATA, CONTEXT>;
   /**
    * The context that will be passed to the function
    */
   context?: CONTEXT;
   /**
-   * The component that will be rendered when the tool is executed
+   * The component that will be rendered with the results of execute() when the tool is executed
    * @type {React.ReactNode}
    */
   component?: React.ElementType;
@@ -104,36 +106,36 @@ export type ExtendedTool<
 
 /**
  * Extends the vercel AI tool (see https://sdk.vercel.ai/docs/reference/ai-sdk-core/tool) with additional properties:
- * 
+ *
  * - **execute**: updated execute function that returns `{llmResult, output}`, where `llmResult` will be sent back to the LLM and `output` (optional) will be used for next tool call or tool component rendering
- * - **context**: get additional context for the tool execution, e.g. data that needs to be fetched from the server 
+ * - **context**: get additional context for the tool execution, e.g. data that needs to be fetched from the server
  * - **component**: tool component (e.g. chart or map) can be rendered as additional information of LLM response
- * 
- * ### Example: 
- * 
+ *
+ * ### Example:
+ *
  * ```ts
  * {
-    weather: tool({
-      description: 'Get the weather in a location',
-      parameters: z.object({
-        location: z.string().describe('The location to get the weather for'),
-      }),
-      execute: async ({ location }) => {
-        // get the weather from the weather API
-        // the result should contains llmResult and output
-        // `llmResult` will be sent back to the LLM
-        // `output` (optional) will be used for next tool call or tool component rendering
-        return {
-          llmResult: 'Weather in ' + location,
-          output: {
-            temperature: 72 + Math.floor(Math.random() * 21) - 10,
-          },
-        };
-      },
-    }),
-  },
+ *   weather: tool({
+ *     description: 'Get the weather in a location',
+ *     parameters: z.object({
+ *       location: z.string().describe('The location to get the weather for'),
+ *     }),
+ *     execute: async ({ location }) => {
+ *       // get the weather from the weather API
+ *       // the result should contains llmResult and output
+ *       // `llmResult` will be sent back to the LLM
+ *       // `output` (optional) will be used for next tool call or tool component rendering
+ *       return {
+ *         llmResult: 'Weather in ' + location,
+ *         output: {
+ *           temperature: 72 + Math.floor(Math.random() * 21) - 10,
+ *         },
+ *       };
+ *     },
+ *   }),
+ * }
  * ```
- * 
+ *
  * @param tool - The vercel AI tool to extend
  * @returns The extended tool
  */
@@ -187,7 +189,7 @@ export function isVercelFunctionTool(
  *   model: 'gpt-4',
  *   apiKey: 'your-api-key',
  *   instructions: 'You are a helpful assistant',
- *   functions: [
+ *   tools: [
  *     tool({
  *       description: 'Get the weather in a location',
  *       parameters: z.object({ location: z.string() }),
@@ -247,10 +249,17 @@ export async function createAssistant(props: UseAssistantProps) {
   }
 
   // register custom functions using Vercel Tool format
-  if (props.functions) {
-    Object.keys(props.functions).forEach((functionName) => {
-      if (isVercelFunctionTool(props.functions![functionName])) {
-        const func = props.functions![functionName];
+  const tools = {
+    ...props.tools,
+    ...(props.functions && typeof props.functions === 'object'
+      ? props.functions
+      : {}),
+  };
+
+  if (tools) {
+    Object.keys(tools).forEach((functionName) => {
+      if (isVercelFunctionTool(tools![functionName])) {
+        const func = tools![functionName];
         // get the description from the tool
         let description = '';
         if (func.type === 'function' || func.type === undefined) {
@@ -266,6 +275,20 @@ export async function createAssistant(props: UseAssistantProps) {
         AssistantModel.registerFunctionCalling({
           name: jsonSchemaFunctionDef.name,
           description: jsonSchemaFunctionDef.description || '',
+          // properties: Object.fromEntries(
+          //   Object.entries(
+          //     jsonSchemaFunctionDef.parameters.properties || {}
+          //   ).map(([key, value]) => [
+          //     key,
+          //     {
+          //       type: (value as any).type || 'string',
+          //       description: (value as any).description || '',
+          //       ...((value as any).items
+          //         ? { items: { type: (value as any).items.type || 'string' } }
+          //         : {}),
+          //     },
+          //   ])
+          // ),
           // @ts-expect-error - TODO: fix this
           properties: jsonSchemaFunctionDef.parameters.properties || {},
           required: jsonSchemaFunctionDef.parameters.required || [],

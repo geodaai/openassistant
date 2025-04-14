@@ -44,7 +44,7 @@ export function App() {
         model="gpt-4"
         welcomeMessage="Hello! I'm your DuckDB expert. I can help you query and analyze the venue data. Try asking questions like 'Show me the revenue per capita for each location' or 'Which city has the highest revenue?'"
         instructions={instructions}
-        functions={{ localQuery: localQueryTool }}
+        tools={{ localQuery: localQueryTool }}
         useMarkdown={true}
       />
     </div>
