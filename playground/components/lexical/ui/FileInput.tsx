@@ -6,7 +6,6 @@
  *
  */
 
-import { ReactNode } from 'react';
 import './Input.css';
 
 import * as React from 'react';
@@ -23,7 +22,7 @@ export default function FileInput({
   label,
   onChange,
   'data-test-id': dataTestId,
-}: Props): ReactNode {
+}: Props) {
   return (
     <div className="Input__wrapper">
       <label className="Input__label">{label}</label>

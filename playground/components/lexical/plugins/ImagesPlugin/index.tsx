@@ -137,7 +137,7 @@ export function InsertImageDialog({
 }: {
   activeEditor: LexicalEditor;
   onClose: () => void;
-}): ReactNode {
+}): JSX.Element {
   const [mode, setMode] = useState<null | 'url' | 'file'>(null);
   const hasModifier = useRef(false);
 
@@ -185,7 +185,7 @@ export default function ImagesPlugin({
   captionsEnabled,
 }: {
   captionsEnabled?: boolean;
-}): ReactNode | null {
+}): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
 
   useEffect(() => {
@@ -246,10 +246,10 @@ function $onDragStart(event: DragEvent): boolean {
   if (!dataTransfer) {
     return false;
   }
-  
+
   const img = document.createElement('img');
   img.src = TRANSPARENT_IMAGE;
-  
+
   dataTransfer.setData('text/plain', '_');
   dataTransfer.setDragImage(img, 0, 0);
   dataTransfer.setData(

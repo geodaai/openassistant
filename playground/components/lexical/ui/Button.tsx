@@ -6,10 +6,10 @@
  *
  */
 
+import { ReactNode } from 'react';
 import './Button.css';
 
 import * as React from 'react';
-import { ReactNode } from 'react';
 
 function joinClasses(...args: Array<string | boolean | null | undefined>) {
   return args.filter(Boolean).join(' ');
@@ -31,7 +31,7 @@ export default function Button({
   onClick: () => void;
   small?: boolean;
   title?: string;
-}): ReactNode {
+}) {
   return (
     <button
       disabled={disabled}

@@ -17,6 +17,11 @@
     "clean": "rm -rf .next && yarn cache clean"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^1.2.9",
+    "@ai-sdk/deepseek": "^0.2.9",
+    "@ai-sdk/google": "^1.2.10",
+    "@ai-sdk/provider": "^1.1.2",
+    "@ai-sdk/xai": "^1.2.11",
     "@duckdb/duckdb-wasm": "^1.29.0",
     "@iconify/react": "^5.1.0",
     "@lexical/react": "^0.23.1",

@@ -9,7 +9,7 @@
 import './Input.css';
 
 import * as React from 'react';
-import { HTMLInputTypeAttribute, ReactNode } from 'react';
+import { HTMLInputTypeAttribute } from 'react';
 
 type Props = Readonly<{
   'data-test-id'?: string;
@@ -27,7 +27,7 @@ export default function TextInput({
   placeholder = '',
   'data-test-id': dataTestId,
   type = 'text',
-}: Props): ReactNode {
+}: Props) {
   return (
     <div className="Input__wrapper">
       <label className="Input__label">{label}</label>

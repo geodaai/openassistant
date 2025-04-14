@@ -29,7 +29,7 @@ import {
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
 import * as React from 'react';
-import { ReactNode, Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 
 import brokenImage from './image-broken.svg';
 import { $isImageNode } from './ImageNode';
@@ -73,7 +73,7 @@ function LazyImage({
   src: string;
   width: 'inherit' | number;
   onError: () => void;
-}): ReactNode {
+}) {
   useSuspenseImage(src);
   return (
     <img
@@ -92,7 +92,7 @@ function LazyImage({
   );
 }
 
-function BrokenImage(): ReactNode {
+function BrokenImage() {
   return (
     <img
       src={brokenImage}
@@ -120,7 +120,7 @@ export default function ImageComponent({
   nodeKey: NodeKey;
   src: string;
   width: 'inherit' | number;
-}): ReactNode {
+}) {
   const imageRef = useRef<null | HTMLImageElement>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [isSelected, setSelected, clearSelection] =

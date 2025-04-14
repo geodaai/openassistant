@@ -212,7 +212,7 @@ Please select your prefered LLM model and use your API key to start the chat.
   return (
     <AiAssistant
       {...assistantProps}
-      historyMessages={initialMessages}
+      initialMessages={initialMessages}
       isMessageDraggable={true}
       enableVoice={true}
       enableScreenCapture={true}

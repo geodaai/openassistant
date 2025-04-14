@@ -90,7 +90,7 @@ export default function Modal({
   closeOnClickOutside?: boolean;
   onClose: () => void;
   title: string;
-}): ReactNode {
+}) {
   return createPortal(
     <PortalImpl
       onClose={onClose}
