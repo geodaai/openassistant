@@ -40,8 +40,7 @@ export class AnthropicAssistant extends VercelAiClient {
 
   private static async loadModule(): Promise<Module> {
     try {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error dynamic import
+      // @ts-ignore dynamic import will be installed by the user
       return await import('@ai-sdk/anthropic');
     } catch (error) {
       throw new Error(`Failed to load @ai-sdk/anthropic: ${error}`);
