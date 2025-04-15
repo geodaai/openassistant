@@ -2,13 +2,9 @@
 
 > **GetValues**: (`datasetName`, `variableName`) => `Promise`\<`number`[]\>
 
-Defined in: [packages/geoda/src/moran-scatterplot/definition.ts:25](https://github.com/GeoDaCenter/openassistant/blob/29609671cd3dde9838cd883f922b4386c5dff272/packages/geoda/src/moran-scatterplot/definition.ts#L25)
+Defined in: [packages/geoda/src/types.ts:9](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/geoda/src/types.ts#L9)
 
-Function signature for retrieving variable values from a dataset.
-
-:::note
-Users should implement this function to retrieve the values of a variable from their own dataset e.g. database.
-:::
+The function of getting the values of a variable from the dataset.
 
 ## Parameters
 
@@ -16,16 +12,16 @@ Users should implement this function to retrieve the values of a variable from t
 
 `string`
 
-Name of the target dataset
+The name of the dataset.
 
 ### variableName
 
 `string`
 
-Name of the variable to retrieve
+The name of the variable.
 
 ## Returns
 
 `Promise`\<`number`[]\>
 
-Promise containing an array of numeric values
+The values of the variable.

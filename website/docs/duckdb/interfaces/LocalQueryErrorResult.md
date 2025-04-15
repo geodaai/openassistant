@@ -1,6 +1,6 @@
 # Interface: LocalQueryErrorResult
 
-Defined in: [packages/duckdb/src/types.ts:71](https://github.com/GeoDaCenter/openassistant/blob/29609671cd3dde9838cd883f922b4386c5dff272/packages/duckdb/src/types.ts#L71)
+Defined in: [packages/duckdb/src/types.ts:71](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/duckdb/src/types.ts#L71)
 
 Result data structure from a failed localQuery execution
 
@@ -10,7 +10,7 @@ Result data structure from a failed localQuery execution
 
 > **error**: `string`
 
-Defined in: [packages/duckdb/src/types.ts:73](https://github.com/GeoDaCenter/openassistant/blob/29609671cd3dde9838cd883f922b4386c5dff272/packages/duckdb/src/types.ts#L73)
+Defined in: [packages/duckdb/src/types.ts:73](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/duckdb/src/types.ts#L73)
 
 ***
 
@@ -18,7 +18,7 @@ Defined in: [packages/duckdb/src/types.ts:73](https://github.com/GeoDaCenter/ope
 
 > `optional` **instruction**: `string`
 
-Defined in: [packages/duckdb/src/types.ts:74](https://github.com/GeoDaCenter/openassistant/blob/29609671cd3dde9838cd883f922b4386c5dff272/packages/duckdb/src/types.ts#L74)
+Defined in: [packages/duckdb/src/types.ts:74](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/duckdb/src/types.ts#L74)
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: [packages/duckdb/src/types.ts:74](https://github.com/GeoDaCenter/ope
 
 > **success**: `false`
 
-Defined in: [packages/duckdb/src/types.ts:72](https://github.com/GeoDaCenter/openassistant/blob/29609671cd3dde9838cd883f922b4386c5dff272/packages/duckdb/src/types.ts#L72)
+Defined in: [packages/duckdb/src/types.ts:72](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/duckdb/src/types.ts#L72)

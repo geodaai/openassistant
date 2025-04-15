@@ -21,7 +21,8 @@ export default function App() {
   };
 
   const thinkTool = tool({
-    description: 'Think about the question and provide a plan',
+    description:
+      'Please ALWAYS use this tool to make a plan before calling any other tools to solve the problem.',
     parameters: z.object({
       question: z.string().describe('The question to think about'),
     }),
@@ -31,8 +32,12 @@ export default function App() {
           success: true,
           result: {
             question,
-            instruction:
-              'Please think about the question and provide a plan. Then, execute the plan for using the tools. Before executing the plan, please summarize the plan for using the tools.',
+            instruction: `
+- Before executing the plan, please summarize the plan for using the tools.
+- If the tools are missing parameters, please ask the user to provide the parameters.
+- When executing the plan, please try to fix the error if there is any.
+- After executing the plan, please summarize the result and provide the result in a markdown format.
+`,
           },
         },
       };
@@ -52,13 +57,6 @@ For example,
   const instructions = `
 You are a helpful assistant. Please try to use the provided tools to solve the problem.
 
-Please note:
-
-- Please ALWAYS use the think tool to think about the question and provide a plan before calling any tools to solve the question.
-- Before using any tools, please make a summary of the plan in a markdown format.
-- When executing the plan, please try to fix the error if there is any.
-- After executing the plan, please summarize the result and provide the result in a markdown format.
-
 Please use the following datasets:
 
 datasetName: myVenues
@@ -71,7 +69,7 @@ variables:
 `;
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
+    <div className="min-h-screen p-4">
       <div className="mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">GeoDa Tools Example</h1>
         <div className="rounded-lg shadow-lg p-6 h-[800px]">

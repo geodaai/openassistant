@@ -2,37 +2,37 @@
 
 > **tool**\<`PARAMETERS`, `RETURN_TYPE`, `ADDITIONAL_DATA`, `CONTEXT`\>(`tool`): [`ExtendedTool`](../type-aliases/ExtendedTool.md)\<`PARAMETERS`, `RETURN_TYPE`, `ADDITIONAL_DATA`, `CONTEXT`\>
 
-Defined in: [packages/core/src/utils/create-assistant.ts:140](https://github.com/GeoDaCenter/openassistant/blob/ae6e39c15b60e7a98a21d90a5bbeff5dc44c1295/packages/core/src/utils/create-assistant.ts#L140)
+Defined in: [packages/core/src/utils/create-assistant.ts:145](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/core/src/utils/create-assistant.ts#L145)
 
 Extends the vercel AI tool (see https://sdk.vercel.ai/docs/reference/ai-sdk-core/tool) with additional properties:
 
 - **execute**: updated execute function that returns `{llmResult, output}`, where `llmResult` will be sent back to the LLM and `output` (optional) will be used for next tool call or tool component rendering
-- **context**: get additional context for the tool execution, e.g. data that needs to be fetched from the server 
+- **context**: get additional context for the tool execution, e.g. data that needs to be fetched from the server
 - **component**: tool component (e.g. chart or map) can be rendered as additional information of LLM response
 
-### Example: 
+### Example:
 
 ```ts
 {
-   weather: tool({
-     description: 'Get the weather in a location',
-     parameters: z.object({
-       location: z.string().describe('The location to get the weather for'),
-     }),
-     execute: async ({ location }) => {
-       // get the weather from the weather API
-       // the result should contains llmResult and output
-       // `llmResult` will be sent back to the LLM
-       // `output` (optional) will be used for next tool call or tool component rendering
-       return {
-         llmResult: 'Weather in ' + location,
-         output: {
-           temperature: 72 + Math.floor(Math.random() * 21) - 10,
-         },
-       };
-     },
-   }),
- },
+  weather: tool({
+    description: 'Get the weather in a location',
+    parameters: z.object({
+      location: z.string().describe('The location to get the weather for'),
+    }),
+    execute: async ({ location }) => {
+      // get the weather from the weather API
+      // the result should contains llmResult and output
+      // `llmResult` will be sent back to the LLM
+      // `output` (optional) will be used for next tool call or tool component rendering
+      return {
+        llmResult: 'Weather in ' + location,
+        output: {
+          temperature: 72 + Math.floor(Math.random() * 21) - 10,
+        },
+      };
+    },
+  }),
+}
 ```
 
 ## Type Parameters

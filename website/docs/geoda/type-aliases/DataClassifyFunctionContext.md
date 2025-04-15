@@ -2,7 +2,7 @@
 
 > **DataClassifyFunctionContext**: `object`
 
-Defined in: [packages/geoda/src/data-classify.ts:32](https://github.com/GeoDaCenter/openassistant/blob/29609671cd3dde9838cd883f922b4386c5dff272/packages/geoda/src/data-classify.ts#L32)
+Defined in: [packages/geoda/src/data-classify/tool.ts:73](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/geoda/src/data-classify/tool.ts#L73)
 
 The context of the data classify function.
 
@@ -10,7 +10,7 @@ The context of the data classify function.
 
 ### getValues
 
-> **getValues**: `GetValues`
+> **getValues**: [`GetValues`](GetValues.md)
 
 ## Param
 

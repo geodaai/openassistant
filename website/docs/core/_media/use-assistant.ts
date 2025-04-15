@@ -12,45 +12,70 @@ import { Message, StepResult, ToolChoice } from 'ai';
 import { ToolSet } from 'ai';
 /**
  * Props for configuring the AI Assistant and useAssistant hook.
- *
- * @param chatEndpoint - The server endpoint for handling chat requests (e.g. '/api/chat'). Required for server-side support.
- * @param voiceEndpoint - The server endpoint for handling voice/audio requests.
- * @param name - The display name of the assistant.
- * @param modelProvider - The AI model provider service (e.g. 'openai', 'anthropic').
- * @param model - The specific model identifier to use.
- * @param apiKey - Authentication key for the model provider's API.
- * @param version - Optional API version to use.
- * @param baseUrl - Optional base URL for API requests.
- * @param description - Optional description of the assistant's purpose.
- * @param temperature - Controls randomness in responses (0-1).
- * @param topP - Controls diversity of responses via nucleus sampling (0-1).
- * @param instructions - System instructions/prompt for the assistant.
- * @param functions - Custom functions/tools the assistant can use, either as an array or record object.
- * @param toolChoice - Controls how the assistant selects tools to use.
- * @param maxSteps - Maximum number of steps/iterations in a conversation.
- * @param abortController - Optional AbortController to cancel requests.
  */
 export type UseAssistantProps = {
+  /** The server endpoint for handling chat requests (e.g. '/api/chat'). Required for server-side support. */
   chatEndpoint?: string;
+  /** The server endpoint for handling voice/audio requests. */
   voiceEndpoint?: string;
+  /** The display name of the assistant. */
   name: string;
+  /**
+   * The AI model provider:
+   *
+   * - openai
+   * - anthropic
+   * - google
+   * - deepseek
+   * - xai
+   * - ollama
+   *
+   */
   modelProvider: string;
+  /** The specific model identifier to use:
+   *
+   * - openai [models](https://sdk.vercel.ai/providers/ai-sdk-providers/openai#model-capabilities)
+   * - anthropic [models](https://sdk.vercel.ai/providers/ai-sdk-providers/anthropic#model-capabilities)
+   * - google [models](https://sdk.vercel.ai/providers/ai-sdk-providers/google#model-capabilities)
+   * - deepseek [models](https://sdk.vercel.ai/providers/ai-sdk-providers/deepseek#model-capabilities)
+   * - xai [models](https://sdk.vercel.ai/providers/ai-sdk-providers/xai#model-capabilities)
+   * - ollama [models](https://ollama.com/models)
+   */
   model: string;
+  /** The authentication key/token for the model provider's API. For example, [how to get the OpenAI API key](https://platform.openai.com/api-keys). */
   apiKey: string;
+  /** Optional API version to use. */
   version?: string;
+  /** Optional base URL for API requests. */
   baseUrl?: string;
+  /** Optional description of the assistant's purpose. */
   description?: string;
+  /** Controls randomness in responses (0-1). */
   temperature?: number;
+  /** Controls diversity of responses via nucleus sampling (0-1). */
   topP?: number;
+  /** System instructions/prompt for the assistant. */
   instructions: string;
+  /** The history of messages exchanged with the assistant. */
   historyMessages?: Message[];
+  /**
+   * @deprecated Use tools instead.
+   * Custom functions/tools the assistant can use, either as an array or record object.
+   */
   functions?:
     | Array<RegisterFunctionCallingProps>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     | Record<string, ExtendedTool<any>>;
+  /** Custom tools the assistant can use. E.g. `{ localQuery: localQueryTool }` */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  tools?: Record<string, ExtendedTool<any>>;
+  /** Controls how the assistant selects tools to use. */
   toolChoice?: ToolChoice<ToolSet>;
+  /** Maximum number of steps/iterations in a conversation. */
   maxSteps?: number;
+  /** Whether to stream tool calls. */
   toolCallStreaming?: boolean;
+  /** Optional AbortController to cancel requests. */
   abortController?: AbortController;
 };
 
@@ -88,9 +113,6 @@ let assistant: VercelAi | null = null;
 /**
  * A custom hook for managing an AI assistant.
  * This hook provides functionality to initialize, send messages to, and control an AI assistant.
- *
- * @param {UseAssistantProps} props - Configuration options for the assistant.
- * @returns {Object} An object containing methods to interact with the assistant and its current status.
  */
 export function useAssistant(props: UseAssistantProps) {
   /**

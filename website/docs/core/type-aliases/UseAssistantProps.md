@@ -2,7 +2,7 @@
 
 > **UseAssistantProps**: `object`
 
-Defined in: [packages/core/src/hooks/use-assistant.ts:33](https://github.com/GeoDaCenter/openassistant/blob/ae6e39c15b60e7a98a21d90a5bbeff5dc44c1295/packages/core/src/hooks/use-assistant.ts#L33)
+Defined in: [packages/core/src/hooks/use-assistant.ts:16](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/core/src/hooks/use-assistant.ts#L16)
 
 Props for configuring the AI Assistant and useAssistant hook.
 
@@ -12,134 +12,129 @@ Props for configuring the AI Assistant and useAssistant hook.
 
 > `optional` **abortController**: `AbortController`
 
+Optional AbortController to cancel requests.
+
 ### apiKey
 
 > **apiKey**: `string`
+
+The authentication key/token for the model provider's API. For example, [how to get the OpenAI API key](https://platform.openai.com/api-keys).
 
 ### baseUrl?
 
 > `optional` **baseUrl**: `string`
 
+Optional base URL for API requests.
+
 ### chatEndpoint?
 
 > `optional` **chatEndpoint**: `string`
+
+The server endpoint for handling chat requests (e.g. '/api/chat'). Required for server-side support.
 
 ### description?
 
 > `optional` **description**: `string`
 
-### functions?
+Optional description of the assistant's purpose.
+
+### ~~functions?~~
 
 > `optional` **functions**: [`RegisterFunctionCallingProps`](RegisterFunctionCallingProps.md)[] \| `Record`\<`string`, [`ExtendedTool`](ExtendedTool.md)\<`any`\>\>
+
+#### Deprecated
+
+Use tools instead.
+Custom functions/tools the assistant can use, either as an array or record object.
 
 ### historyMessages?
 
 > `optional` **historyMessages**: `Message`[]
 
+The history of messages exchanged with the assistant.
+
 ### instructions
 
 > **instructions**: `string`
+
+System instructions/prompt for the assistant.
 
 ### maxSteps?
 
 > `optional` **maxSteps**: `number`
 
+Maximum number of steps/iterations in a conversation.
+
 ### model
 
 > **model**: `string`
+
+The specific model identifier to use:
+
+- openai [models](https://sdk.vercel.ai/providers/ai-sdk-providers/openai#model-capabilities)
+- anthropic [models](https://sdk.vercel.ai/providers/ai-sdk-providers/anthropic#model-capabilities)
+- google [models](https://sdk.vercel.ai/providers/ai-sdk-providers/google#model-capabilities)
+- deepseek [models](https://sdk.vercel.ai/providers/ai-sdk-providers/deepseek#model-capabilities)
+- xai [models](https://sdk.vercel.ai/providers/ai-sdk-providers/xai#model-capabilities)
+- ollama [models](https://ollama.com/models)
 
 ### modelProvider
 
 > **modelProvider**: `string`
 
+The AI model provider:
+
+- openai
+- anthropic
+- google
+- deepseek
+- xai
+- ollama
+
 ### name
 
 > **name**: `string`
+
+The display name of the assistant.
 
 ### temperature?
 
 > `optional` **temperature**: `number`
 
+Controls randomness in responses (0-1).
+
 ### toolCallStreaming?
 
 > `optional` **toolCallStreaming**: `boolean`
+
+Whether to stream tool calls.
 
 ### toolChoice?
 
 > `optional` **toolChoice**: `ToolChoice`\<`ToolSet`\>
 
+Controls how the assistant selects tools to use.
+
+### tools?
+
+> `optional` **tools**: `Record`\<`string`, [`ExtendedTool`](ExtendedTool.md)\<`any`\>\>
+
+Custom tools the assistant can use. E.g. `{ localQuery: localQueryTool }`
+
 ### topP?
 
 > `optional` **topP**: `number`
+
+Controls diversity of responses via nucleus sampling (0-1).
 
 ### version?
 
 > `optional` **version**: `string`
 
+Optional API version to use.
+
 ### voiceEndpoint?
 
 > `optional` **voiceEndpoint**: `string`
 
-## Param
-
-The server endpoint for handling chat requests (e.g. '/api/chat'). Required for server-side support.
-
-## Param
-
 The server endpoint for handling voice/audio requests.
-
-## Param
-
-The display name of the assistant.
-
-## Param
-
-The AI model provider service (e.g. 'openai', 'anthropic').
-
-## Param
-
-The specific model identifier to use.
-
-## Param
-
-Authentication key for the model provider's API.
-
-## Param
-
-Optional API version to use.
-
-## Param
-
-Optional base URL for API requests.
-
-## Param
-
-Optional description of the assistant's purpose.
-
-## Param
-
-Controls randomness in responses (0-1).
-
-## Param
-
-Controls diversity of responses via nucleus sampling (0-1).
-
-## Param
-
-System instructions/prompt for the assistant.
-
-## Param
-
-Custom functions/tools the assistant can use, either as an array or record object.
-
-## Param
-
-Controls how the assistant selects tools to use.
-
-## Param
-
-Maximum number of steps/iterations in a conversation.
-
-## Param
-
-Optional AbortController to cancel requests.

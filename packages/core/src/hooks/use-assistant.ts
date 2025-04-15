@@ -66,7 +66,7 @@ export type UseAssistantProps = {
     | Array<RegisterFunctionCallingProps>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     | Record<string, ExtendedTool<any>>;
-  /** Custom tools the assistant can use. E.g. { localQuery: localQueryTool } */
+  /** Custom tools the assistant can use. E.g. `{ localQuery: localQueryTool }` */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tools?: Record<string, ExtendedTool<any>>;
   /** Controls how the assistant selects tools to use. */
@@ -113,9 +113,6 @@ let assistant: VercelAi | null = null;
 /**
  * A custom hook for managing an AI assistant.
  * This hook provides functionality to initialize, send messages to, and control an AI assistant.
- *
- * @param {UseAssistantProps} props - Configuration options for the assistant.
- * @returns {Object} An object containing methods to interact with the assistant and its current status.
  */
 export function useAssistant(props: UseAssistantProps) {
   /**

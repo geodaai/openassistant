@@ -2,7 +2,7 @@
 
 > **createAssistant**(`props`): `Promise`\<[`VercelAi`](../classes/VercelAi.md)\>
 
-Defined in: [packages/core/src/utils/create-assistant.ts:209](https://github.com/GeoDaCenter/openassistant/blob/ae6e39c15b60e7a98a21d90a5bbeff5dc44c1295/packages/core/src/utils/create-assistant.ts#L209)
+Defined in: [packages/core/src/utils/create-assistant.ts:214](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/core/src/utils/create-assistant.ts#L214)
 
 Creates an AI assistant instance with the specified configuration
 
@@ -28,7 +28,7 @@ const assistant = await createAssistant({
   model: 'gpt-4',
   apiKey: 'your-api-key',
   instructions: 'You are a helpful assistant',
-  functions: [
+  tools: [
     tool({
       description: 'Get the weather in a location',
       parameters: z.object({ location: z.string() }),

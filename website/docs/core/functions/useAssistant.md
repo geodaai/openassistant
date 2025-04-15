@@ -2,7 +2,7 @@
 
 > **useAssistant**(`props`): `object`
 
-Defined in: [packages/core/src/hooks/use-assistant.ts:95](https://github.com/GeoDaCenter/openassistant/blob/ae6e39c15b60e7a98a21d90a5bbeff5dc44c1295/packages/core/src/hooks/use-assistant.ts#L95)
+Defined in: [packages/core/src/hooks/use-assistant.ts:117](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/core/src/hooks/use-assistant.ts#L117)
 
 A custom hook for managing an AI assistant.
 This hook provides functionality to initialize, send messages to, and control an AI assistant.
@@ -13,13 +13,9 @@ This hook provides functionality to initialize, send messages to, and control an
 
 [`UseAssistantProps`](../type-aliases/UseAssistantProps.md)
 
-Configuration options for the assistant.
-
 ## Returns
 
 `object`
-
-An object containing methods to interact with the assistant and its current status.
 
 ### addAdditionalContext()
 

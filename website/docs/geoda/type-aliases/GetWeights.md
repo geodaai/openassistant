@@ -1,23 +1,45 @@
 # Type Alias: GetWeights()
 
-> **GetWeights**: (`weightsId`) => `object`
+> **GetWeights**: (`datasetName`, `type`, `options`) => `Promise`\<\{ `weights`: `number`[][]; `weightsMeta`: `WeightsMeta`; \}\>
 
-Defined in: [packages/geoda/src/moran-scatterplot/definition.ts:9](https://github.com/GeoDaCenter/openassistant/blob/29609671cd3dde9838cd883f922b4386c5dff272/packages/geoda/src/moran-scatterplot/definition.ts#L9)
+Defined in: [packages/geoda/src/weights/tool.ts:80](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/geoda/src/weights/tool.ts#L80)
 
 ## Parameters
 
-### weightsId
+### datasetName
 
 `string`
 
+### type
+
+`"knn"` | `"queen"` | `"rook"` | `"distance"` | `"kernel"`
+
+### options
+
+#### distanceThreshold?
+
+`number`
+
+#### includeLowerOrder?
+
+`boolean`
+
+#### isMile?
+
+`boolean`
+
+#### k?
+
+`number`
+
+#### orderOfContiguity?
+
+`number`
+
+#### precisionThreshold?
+
+`number`
+
 ## Returns
 
-`object`
-
-### weights
-
-> **weights**: `number`[][]
-
-### weightsMeta
-
-> **weightsMeta**: `WeightsMeta`
+`Promise`\<\{ `weights`: `number`[][]; `weightsMeta`: `WeightsMeta`; \}\>

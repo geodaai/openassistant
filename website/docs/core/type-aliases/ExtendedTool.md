@@ -2,7 +2,7 @@
 
 > **ExtendedTool**\<`PARAMETERS`, `RETURN_TYPE`, `ADDITIONAL_DATA`, `CONTEXT`\>: `Tool`\<`PARAMETERS`\> & `object`
 
-Defined in: [packages/core/src/utils/create-assistant.ts:84](https://github.com/GeoDaCenter/openassistant/blob/ae6e39c15b60e7a98a21d90a5bbeff5dc44c1295/packages/core/src/utils/create-assistant.ts#L84)
+Defined in: [packages/core/src/utils/create-assistant.ts:87](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/core/src/utils/create-assistant.ts#L87)
 
 A tool contains the description and the schema of the input that the tool expects.
 This enables the language model to generate the input.
@@ -19,7 +19,7 @@ The tool can also contain:
 
 > `optional` **component**: `React.ElementType`
 
-The component that will be rendered when the tool is executed
+The component that will be rendered with the results of execute() when the tool is executed
 
 ### context?
 
@@ -31,7 +31,7 @@ The context that will be passed to the function
 
 > **execute**: `ExecuteFunction`\<`PARAMETERS`, `RETURN_TYPE`, `ADDITIONAL_DATA`, `CONTEXT`\>
 
-test
+The function that will be called when the tool is executed
 
 ## Type Parameters
 

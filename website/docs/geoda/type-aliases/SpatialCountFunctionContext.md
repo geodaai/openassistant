@@ -2,7 +2,7 @@
 
 > **SpatialCountFunctionContext**: `object`
 
-Defined in: [packages/geoda/src/spatial-count/definition.ts:14](https://github.com/GeoDaCenter/openassistant/blob/29609671cd3dde9838cd883f922b4386c5dff272/packages/geoda/src/spatial-count/definition.ts#L14)
+Defined in: [packages/geoda/src/spatial-count/tool.ts:70](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/geoda/src/spatial-count/tool.ts#L70)
 
 The context for the spatial count function
 
@@ -22,23 +22,9 @@ The context for the spatial count function
 
 [`SpatialJoinGeometries`](SpatialJoinGeometries.md)
 
-### getValues()
+### getValues
 
-> **getValues**: (`datasetName`, `variableName`) => `number`[]
-
-#### Parameters
-
-##### datasetName
-
-`string`
-
-##### variableName
-
-`string`
-
-#### Returns
-
-`number`[]
+> **getValues**: [`GetValues`](GetValues.md)
 
 ### saveAsDataset()?
 

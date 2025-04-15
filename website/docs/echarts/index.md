@@ -6,21 +6,9 @@ The eCharts tools for OpenAssistant provides powerful visualization capabilities
 
 The eCharts tools allow you to create the following plots using LLM in your AI Assistant:
 
-- **Histogram Plots** - Visualize data distribution with features like:
+- **Histogram Plots**
 
-  - Customizable number of bins
-  - Interactive bar selection
-  - Light/dark theme support
-  - Automatic bin calculation
-  - Tooltip with bin information
-
-- **Scatter Plots** - Visualize relationships between variables with features like:
-
-  - Interactive point selection
-  - Regression line support
-  - LOESS smoothing option
-  - Statistical information display
-  - Brush selection tools
+- **Scatter Plots**
 
 - **Parallel Coordinates**
 
@@ -34,7 +22,7 @@ The eCharts tools allow you to create the following plots using LLM in your AI A
 npm install @openassistant/echarts
 ```
 
-## Usage
+## Quick Start
 
 Suppose you have a dataset which could be fetched from your data API. The json data could look like this:
 
@@ -122,8 +110,8 @@ import { nextui } from '@nextui-org/react';
 module.exports = {
   content: [
     './src/**/*.{js,ts,jsx,tsx}',
-    '../../node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
-    '../../node_modules/@openassistant/echarts/dist/**/*.{js,ts,jsx,tsx}',
+    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
+    './node_modules/@openassistant/echarts/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {},

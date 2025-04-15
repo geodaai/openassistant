@@ -89,4 +89,8 @@ You can customize the example by:
 
 ## License
 
-ISC 
+ISC License
+
+## Author
+
+Xun Li <lixun910@gmail.com>

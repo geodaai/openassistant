@@ -1,5 +1,7 @@
 # Type Alias: SpatialJoinGeometries
 
-> **SpatialJoinGeometries**: `Feature`[] \| `BinaryFeatureCollection`[] \| `PointLayerData`[] \| `ArcLayerData`[] \| `HexagonIdLayerData`[]
+> **SpatialJoinGeometries**: `SpatialGeometry`
 
-Defined in: node\_modules/geoda-wasm/dist/src/geometry/spatial-join.d.ts:19
+Defined in: node\_modules/@geoda/core/dist/src/geometry/spatial-join.d.ts:46
+
+The type of the geometries used in the GeoDaLib

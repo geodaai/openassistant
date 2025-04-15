@@ -1,14 +1,10 @@
-# Function: moranScatterFunctionDefinition()
+# Function: ~~moranScatterFunctionDefinition()~~
 
 > **moranScatterFunctionDefinition**(`context`): `RegisterFunctionCallingProps`
 
-Defined in: [packages/geoda/src/moran-scatterplot/definition.ts:65](https://github.com/GeoDaCenter/openassistant/blob/29609671cd3dde9838cd883f922b4386c5dff272/packages/geoda/src/moran-scatterplot/definition.ts#L65)
+Defined in: [packages/geoda/src/moran-scatterplot/definition.ts:28](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/geoda/src/moran-scatterplot/definition.ts#L28)
 
-Define the scatterplot function for tool calling. This function can assist user to create a scatterplot using the values of two variables in the dataset.
-The values of x and y should be retrieved using the getValues() callback function.
-
-User can select the points in the scatterplot, and the selections can be synced back to the original dataset using the onSelected() callback.
-See OnSelectedCallback for more details.
+**`Internal`**
 
 ## Parameters
 
@@ -16,10 +12,13 @@ See OnSelectedCallback for more details.
 
 `CustomFunctionContext`\<[`MoranScatterFunctionContextValues`](../type-aliases/MoranScatterFunctionContextValues.md)\>
 
-The context of the function. See ScatterplotFunctionContext for more details.
-
 ## Returns
 
 `RegisterFunctionCallingProps`
 
-The function definition.
+## Deprecated
+
+Use [moranScatterPlot](../variables/moranScatterPlot.md) tool instead.
+
+Define the scatterplot function for tool calling. This function can assist user to create a scatterplot using the values of two variables in the dataset.
+The values of x and y should be retrieved using the getValues() callback function.

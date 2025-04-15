@@ -1,8 +1,10 @@
-# Function: moranScatterCallbackFunction()
+# Function: ~~moranScatterCallbackFunction()~~
 
 > **moranScatterCallbackFunction**(`__namedParameters`): `Promise`\<`CustomFunctionOutputProps`\<`MoranScatterOutputResult`, [`MoranScatterOutputData`](../type-aliases/MoranScatterOutputData.md)\>\>
 
-Defined in: [packages/geoda/src/moran-scatterplot/callback-function.ts:56](https://github.com/GeoDaCenter/openassistant/blob/29609671cd3dde9838cd883f922b4386c5dff272/packages/geoda/src/moran-scatterplot/callback-function.ts#L56)
+Defined in: [packages/geoda/src/moran-scatterplot/callback-function.ts:35](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/geoda/src/moran-scatterplot/callback-function.ts#L35)
+
+**`Internal`**
 
 ## Parameters
 
@@ -13,3 +15,7 @@ Defined in: [packages/geoda/src/moran-scatterplot/callback-function.ts:56](https
 ## Returns
 
 `Promise`\<`CustomFunctionOutputProps`\<`MoranScatterOutputResult`, [`MoranScatterOutputData`](../type-aliases/MoranScatterOutputData.md)\>\>
+
+## Deprecated
+
+Use [moranScatterPlot](../variables/moranScatterPlot.md) tool instead

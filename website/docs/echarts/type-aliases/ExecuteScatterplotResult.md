@@ -2,7 +2,7 @@
 
 > **ExecuteScatterplotResult**: `object`
 
-Defined in: [packages/echarts/src/scatterplot/tool.ts:57](https://github.com/GeoDaCenter/openassistant/blob/ae6e39c15b60e7a98a21d90a5bbeff5dc44c1295/packages/echarts/src/scatterplot/tool.ts#L57)
+Defined in: [packages/echarts/src/scatterplot/tool.ts:57](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/echarts/src/scatterplot/tool.ts#L57)
 
 The result of the scatterplot tool.
 

@@ -1,8 +1,10 @@
-# Function: MoranScatterCallbackComponent()
+# Function: ~~MoranScatterCallbackComponent()~~
 
 > **MoranScatterCallbackComponent**(`props`): `null` \| `Element`
 
-Defined in: [packages/geoda/src/moran-scatterplot/callback-component.tsx:7](https://github.com/GeoDaCenter/openassistant/blob/29609671cd3dde9838cd883f922b4386c5dff272/packages/geoda/src/moran-scatterplot/callback-component.tsx#L7)
+Defined in: [packages/geoda/src/moran-scatterplot/callback-component.tsx:14](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/geoda/src/moran-scatterplot/callback-component.tsx#L14)
+
+**`Internal`**
 
 ## Parameters
 
@@ -13,3 +15,7 @@ Defined in: [packages/geoda/src/moran-scatterplot/callback-component.tsx:7](http
 ## Returns
 
 `null` \| `Element`
+
+## Deprecated
+
+Use MoranScatterPlotToolComponent instead
