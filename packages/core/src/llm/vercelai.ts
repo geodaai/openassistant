@@ -199,7 +199,7 @@ export class VercelAi extends AbstractAssistant {
   }: RegisterFunctionCallingProps) {
     // register custom function, if already registed then rewrite it
     VercelAi.customFunctions[name] = {
-      func: callbackFunction || (() => Promise.resolve({ name, result: {} })),
+      func: callbackFunction,
       context: callbackFunctionContext,
       callbackMessage,
       component,
@@ -248,9 +248,9 @@ export class VercelAi extends AbstractAssistant {
     return components;
   }
 
-  public override async addAdditionalContext({ context }: { context: string }) {
-    VercelAi.additionalContext += context;
-  }
+  // public override async addAdditionalContext({ context }: { context: string }) {
+  //   VercelAi.additionalContext += context;
+  // }
 
   public setAbortController(abortController: AbortController) {
     this.abortController = abortController;

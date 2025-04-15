@@ -28,12 +28,15 @@ const baseConfig = createBaseConfig({
   external: [
     'react',
     'react-dom',
+    '@loaders.gl/core',
+    '@loaders.gl/schema',
+    '@nextui-org/react',
     '@openassistant/core',
     '@openassistant/common',
     '@openassistant/echarts',
-    '@nextui-org/react',
     'framer-motion',
     'tailwindcss',
+    'geoda-wasm',
   ],
 });
 

@@ -448,59 +448,6 @@ export abstract class VercelAiClient extends VercelAi {
           customMessage,
           message: this.streamMessage,
         });
-        // CHANGE: disable tool call streaming for now
-        // } else if (chunk.type === 'tool-call-streaming-start') {
-        //   const toolCallId = chunk.toolCallId;
-        //   const newToolCallMessage: ToolCallMessage = {
-        //     toolCallId,
-        //     toolName: chunk.toolName,
-        //     args: { },
-        //     text: '',
-        //     isCompleted: false,
-        //   };
-        //   // deprecated: use parts instead
-        //   this.streamMessage.toolCallMessages?.push(newToolCallMessage);
-        //   // create a part
-        //   this.streamMessage.parts?.push({
-        //     type: 'tool',
-        //     toolCallMessage: newToolCallMessage,
-        //   });
-        // } else if (chunk.type === 'tool-call-delta') {
-        //   const toolCallId = chunk.toolCallId;
-        //   // find the toolCallMessage using the toolCallId
-        //   const toolCallMessage = this.streamMessage.toolCallMessages?.find(
-        //     (message) => message.toolCallId === toolCallId
-        //   );
-        //   if (toolCallMessage) {
-        //     toolCallMessage.text += chunk.argsTextDelta;
-        //     streamMessageCallback({
-        //       deltaMessage: '',
-        //       customMessage,
-        //       message: this.streamMessage,
-        //     });
-        //   }
-        // } else if (chunk.type === 'tool-call') {
-        //   const toolCallId = chunk.toolCallId;
-        //   // deprecated: find the toolCallMessage using the toolCallId
-        //   let toolCallMessage = this.streamMessage.toolCallMessages?.find(
-        //     (message) => message.toolCallId === toolCallId
-        //   );
-        //   if (!toolCallMessage) {
-        //     // create a new toolCallMessage
-        //     toolCallMessage = {
-        //       toolCallId,
-        //       toolName: chunk.toolName,
-        //       args: chunk.args,
-        //       isCompleted: false,
-        //     };
-        //     this.streamMessage.toolCallMessages?.push(toolCallMessage);
-        //   }
-        //   toolCallMessage.args = chunk.args;
-        //   streamMessageCallback({
-        //     deltaMessage: '',
-        //     customMessage,
-        //     message: this.streamMessage,
-        //   });
       } else if (chunk.type === 'reasoning') {
         this.streamMessage.reasoning += chunk.textDelta;
         streamMessageCallback({

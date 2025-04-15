@@ -68,6 +68,9 @@ type ExecuteFunction<
               | CustomFunctionContext<unknown>
               | CustomFunctionContextCallback<unknown>;
       }
+    | {
+        previousExecutionOutput?: unknown;
+      }
     | ToolExecutionOptions
 ) => PromiseLike<ExecuteFunctionResult<RETURN_TYPE, ADDITIONAL_DATA>>;
 
@@ -328,13 +331,17 @@ function createCallbackFunction<PARAMETERS extends Parameters>(
   execute: ExecuteFunction<PARAMETERS>
 ) {
   const callbackFunction = async (props: CallbackFunctionProps) => {
-    const { functionArgs, functionContext, functionName } = props;
+    const { functionArgs, functionContext, functionName, previousOutput } =
+      props;
     const args = functionArgs as inferParameters<PARAMETERS>;
     const context = functionContext;
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result = await execute?.(args, { context: context as any });
+      const result = await execute?.(args, {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        context: context as any,
+        previousExecutionOutput: previousOutput,
+      });
 
       // check result type: {llmResult, outputData}
       if (!isExecuteFunctionResult(result)) {

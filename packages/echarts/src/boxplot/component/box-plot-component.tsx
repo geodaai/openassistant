@@ -9,8 +9,7 @@ import {
 } from '@nextui-org/react';
 import { Boxplot, BoxplotOutputData } from './box-plot';
 import { BoxplotDataProps } from './utils';
-import { ExpandableContainer } from '@openassistant/common';
-import { useDraggable } from '../../hooks/useDraggable';
+import { ExpandableContainer, useDraggable } from '@openassistant/common';
 
 export function BoxplotToolComponent(
   props: BoxplotOutputData

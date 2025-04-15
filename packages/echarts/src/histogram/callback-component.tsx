@@ -1,9 +1,12 @@
 import { CustomFunctionCall } from '@openassistant/core';
 
 import { HistogramOutputData } from './component/histogram-plot';
-import { ExpandableContainer, generateId } from '@openassistant/common';
+import {
+  ExpandableContainer,
+  generateId,
+  useDraggable,
+} from '@openassistant/common';
 import { HistogramComponent } from './component/histogram-plot';
-import { useDraggable } from '../hooks/useDraggable';
 
 /**
  * @internal

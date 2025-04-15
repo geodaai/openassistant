@@ -14,7 +14,7 @@
     "skipLibCheck": true
   },
   "references": [{ "path": "../core" }, { "path": "../geoda" }],
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../common/src/hooks/useDraggable.ts"],
   "exclude": [
     "node_modules",
     "../../node_modules",

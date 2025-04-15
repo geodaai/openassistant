@@ -1,7 +1,11 @@
 import { useState } from 'react';
-import { ExpandableContainer, generateId } from '@openassistant/common';
+import {
+  ExpandableContainer,
+  generateId,
+  useDraggable,
+} from '@openassistant/common';
 import { BubbleChartOutputData, BubbleChart } from './bubble-chart';
-import { useDraggable } from '../../hooks/useDraggable';
+
 /**
  * A React component that renders an interactive bubble chart visualization.
  *

@@ -1,10 +1,13 @@
 import { CustomFunctionCall } from '@openassistant/core';
 
 import { BubbleChartOutputResult } from './callback-function';
-import { ExpandableContainer, generateId } from '@openassistant/common';
+import {
+  ExpandableContainer,
+  generateId,
+  useDraggable,
+} from '@openassistant/common';
 import { BubbleChartOutputData } from './component/bubble-chart';
 import { BubbleChartComponent } from './component/bubble-chart-component';
-import { useDraggable } from '../hooks/useDraggable';
 
 function isBubbleChartOutputData(
   outputData: unknown
@@ -40,7 +43,6 @@ export function BubbleChartCallbackMessage(
   }
 
   return (
-    
     <ExpandableContainer
       defaultWidth={undefined}
       defaultHeight={380}

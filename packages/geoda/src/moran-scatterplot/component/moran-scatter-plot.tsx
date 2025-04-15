@@ -40,6 +40,7 @@ export type MoranScatterOutputData = {
   regression: SimpleLinearRegressionResult;
   theme?: string;
   isDraggable?: boolean;
+  isExpanded?: boolean;
 };
 
 export function isMoranScatterOutputData(data: unknown): data is MoranScatterOutputData {

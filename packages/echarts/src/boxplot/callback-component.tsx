@@ -1,9 +1,12 @@
 import { ReactNode, useState } from 'react';
 import { CustomFunctionCall } from '@openassistant/core';
-import { ExpandableContainer, generateId } from '@openassistant/common';
+import {
+  ExpandableContainer,
+  generateId,
+  useDraggable,
+} from '@openassistant/common';
 import { BoxplotComponent } from './component/box-plot-component';
 import { BoxplotOutputData } from './component/box-plot';
-import { useDraggable } from '../hooks/useDraggable';
 
 /**
  * @internal

@@ -1,7 +1,10 @@
 import { ParallelCoordinateOutputData, ParallelCoordinatePlot } from './pcp';
-import { ExpandableContainer, generateId } from '@openassistant/common';
+import {
+  ExpandableContainer,
+  generateId,
+  useDraggable,
+} from '@openassistant/common';
 import { useState } from 'react';
-import { useDraggable } from '../../hooks/useDraggable';
 
 /**
  * Props for the ParallelCoordinateComponent, extending ParallelCoordinateOutputData

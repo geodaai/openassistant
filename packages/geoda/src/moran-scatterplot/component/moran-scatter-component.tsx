@@ -1,15 +1,12 @@
+import { ExpandableContainer, generateId } from '@openassistant/common';
 import {
-  ExpandableContainer,
-  generateId,
-  useDraggable,
-} from '@openassistant/common';
-
+  MoranScatterComponent,
+  MoranScatterOutputData,
+} from './moran-scatter-plot';
 import { useState } from 'react';
-import { HistogramOutputData, HistogramComponent } from './histogram-plot';
+import { useDraggable } from '@openassistant/common';
 
-export function HistogramComponentContainer(
-  props: HistogramOutputData
-): JSX.Element | null {
+export function MoranScatterPlotToolComponent(props: MoranScatterOutputData) {
   const [isExpanded, setIsExpanded] = useState(props.isExpanded);
 
   const onDragStart = useDraggable({
@@ -25,12 +22,12 @@ export function HistogramComponentContainer(
   return (
     <ExpandableContainer
       defaultWidth={isExpanded ? 600 : undefined}
-      defaultHeight={isExpanded ? 600 : 380}
+      defaultHeight={isExpanded ? 800 : 400}
       draggable={props.isDraggable || false}
       onDragStart={onDragStart}
       onExpanded={onExpanded}
     >
-      <HistogramComponent {...props} />
+      <MoranScatterComponent {...props} />
     </ExpandableContainer>
   );
 }

@@ -1,8 +1,11 @@
 import { CustomFunctionCall } from '@openassistant/core';
 import { ScatterplotComponent } from './component/scatter-plot-component';
 import { ScatterplotOutputData } from './callback-function';
-import { ExpandableContainer, generateId } from '@openassistant/common';
-import { useDraggable } from '../hooks/useDraggable';
+import {
+  ExpandableContainer,
+  generateId,
+  useDraggable,
+} from '@openassistant/common';
 
 // type guard
 function isScatterplotOutputData(data: unknown): data is ScatterplotOutputData {

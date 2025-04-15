@@ -17,8 +17,12 @@ import {
   computeRegression,
   ComputeRegressionResult,
 } from './scatter-regression';
-import { ExpandableContainer, generateId } from '@openassistant/common';
-import { useDraggable } from '../../hooks/useDraggable';
+import {
+  ExpandableContainer,
+  generateId,
+  useDraggable,
+} from '@openassistant/common';
+
 export function ScatterplotComponent({
   id,
   datasetName,

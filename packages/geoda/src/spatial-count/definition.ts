@@ -2,26 +2,18 @@ import {
   RegisterFunctionCallingProps,
   CustomFunctionContext,
 } from '@openassistant/core';
-import { SpatialJoinGeometries } from 'geoda-wasm';
 import { SpatialCountCallbackFunction } from './callback-function';
 import { SpatialCountCallbackComponent } from './callback-component';
-
-/**
- * The context for the spatial count function
- * @param getGeometries - the function to get the geometries from the dataset: (datasetName: string) => SpatialJoinGeometries
- * @returns the geometries from the dataset
- */
-export type SpatialCountFunctionContext = {
-  getGeometries: (datasetName: string) => SpatialJoinGeometries;
-  getValues: (datasetName: string, variableName: string) => number[];
-  saveAsDataset?: (datasetName: string, data: Record<string, number[]>) => void;
-};
+import { SpatialCountFunctionContext } from './tool';
 
 type ValueOf<T> = T[keyof T];
 export type SpatialCountFunctionContextValues =
   ValueOf<SpatialCountFunctionContext>;
 
 /**
+ * @internal
+ * @deprecated Use {@link spatialJoin} tool instead
+ * 
  * The definition of the spatial count function
  * @param context - the context for the spatial count function. See {@link SpatialCountFunctionContext}
  * @returns the definition of the spatial count function

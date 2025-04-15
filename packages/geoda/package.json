@@ -19,6 +19,9 @@
     "package.json"
   ],
   "dependencies": {
+    "@geoda/core": "^0.0.3",
+    "@geoda/lisa": "^0.0.3",
+    "@geoda/regression": "^0.0.3",
     "@loaders.gl/core": "^4.3.3",
     "@loaders.gl/schema": "^4.3.3",
     "@nextui-org/react": "^2.6.8",
@@ -26,7 +29,6 @@
     "@openassistant/core": "workspace:*",
     "@openassistant/echarts": "workspace:*",
     "framer-motion": "^11.15.0",
-    "geoda-wasm": "^0.0.5",
     "tailwindcss": "^3.4.17"
   },
   "peerDependencies": {

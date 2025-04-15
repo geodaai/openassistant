@@ -1,9 +1,16 @@
-import { ExpandableContainer, generateId } from "@openassistant/common";
-import { CustomFunctionCall } from "@openassistant/core";
+import { ExpandableContainer, generateId } from '@openassistant/common';
+import { CustomFunctionCall } from '@openassistant/core';
 import { DragEvent } from 'react';
-import { isMoranScatterOutputData, MoranScatterOutputData } from "./component/moran-scatter-plot";
-import { MoranScatterComponent } from "./component/moran-scatter-plot";
+import {
+  isMoranScatterOutputData,
+  MoranScatterOutputData,
+} from './component/moran-scatter-plot';
+import { MoranScatterComponent } from './component/moran-scatter-plot';
 
+/**
+ * @internal
+ * @deprecated Use {@link MoranScatterPlotToolComponent} instead
+ */
 export function MoranScatterCallbackComponent(
   props: CustomFunctionCall
 ): JSX.Element | null {

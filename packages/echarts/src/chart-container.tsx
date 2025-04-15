@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ExpandableContainer } from '@openassistant/common';
-import { useDraggable } from './hooks/useDraggable';
+import { useDraggable } from '@openassistant/common/src/hooks/useDraggable';
 
 export type DraggableDroppableContainerProps = {
   initialIsExpanded: boolean;

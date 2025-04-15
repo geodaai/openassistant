@@ -2805,6 +2805,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@geoda/core@npm:^0.0.3":
+  version: 0.0.3
+  resolution: "@geoda/core@npm:0.0.3"
+  dependencies:
+    "@loaders.gl/schema": "npm:^4.1.0-alpha.4"
+    geojson: "npm:^0.5.0"
+  checksum: d54b6f4760bb18155015f580e667da9b0904aafafb94bc94b42920ae19c682a4d29f20815b5dbbaf12f9e85fdee80dc6be605b92b2579486bb7e2a1f1e17450c
+  languageName: node
+  linkType: hard
+
+"@geoda/lisa@npm:^0.0.3":
+  version: 0.0.3
+  resolution: "@geoda/lisa@npm:0.0.3"
+  dependencies:
+    "@loaders.gl/schema": "npm:^4.1.0-alpha.4"
+    geojson: "npm:^0.5.0"
+  checksum: e53c89aa89766f92bf48ebdba18500414b0635b1e3c65636d7f2a13892c3bdba16584da77b1d65f472fdd40618d1bf43229bc219069f00b8e0142f2e2a249b3f
+  languageName: node
+  linkType: hard
+
+"@geoda/regression@npm:^0.0.3":
+  version: 0.0.3
+  resolution: "@geoda/regression@npm:0.0.3"
+  checksum: 7055b01fc94904bf807afdad868983260982c1b2a828fe447682e2f6a4821b0eece98c00e05d01bb22b3df2fff3c5d05af38e45fbb4892b981bd31a80e5ce38f
+  languageName: node
+  linkType: hard
+
 "@humanfs/core@npm:^0.19.1":
   version: 0.19.1
   resolution: "@humanfs/core@npm:0.19.1"
@@ -7380,6 +7407,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@openassistant/geoda@workspace:packages/geoda"
   dependencies:
+    "@geoda/core": "npm:^0.0.3"
+    "@geoda/lisa": "npm:^0.0.3"
+    "@geoda/regression": "npm:^0.0.3"
     "@loaders.gl/core": "npm:^4.3.3"
     "@loaders.gl/schema": "npm:^4.3.3"
     "@nextui-org/react": "npm:^2.6.8"
@@ -7387,7 +7417,6 @@ __metadata:
     "@openassistant/core": "workspace:*"
     "@openassistant/echarts": "workspace:*"
     framer-motion: "npm:^11.15.0"
-    geoda-wasm: "npm:^0.0.5"
     tailwindcss: "npm:^3.4.17"
   peerDependencies:
     react: ">=18.2"
@@ -18511,16 +18540,6 @@ __metadata:
   version: 1.0.0-beta.2
   resolution: "gensync@npm:1.0.0-beta.2"
   checksum: 17d8333460204fbf1f9160d067e1e77f908a5447febb49424b8ab043026049835c9ef3974445c57dbd39161f4d2b04356d7de12b2eecaa27a7a7ea7d871cbedd
-  languageName: node
-  linkType: hard
-
-"geoda-wasm@npm:^0.0.5":
-  version: 0.0.5
-  resolution: "geoda-wasm@npm:0.0.5"
-  dependencies:
-    "@loaders.gl/schema": "npm:^4.1.0-alpha.4"
-    geojson: "npm:^0.5.0"
-  checksum: 72385ef9136486da4c02d42f796009cf59d17df3761b8e0730139222ff6171fd8889d1e52880f7315f5002a56fcc3389df517db2ac7a2e0768bd0ab87517141d
   languageName: node
   linkType: hard
 

@@ -2,9 +2,7 @@ import {
   CallbackFunctionProps,
   CustomFunctionOutputProps,
 } from '@openassistant/core';
-import { SpatialCountFunctionContext } from './definition';
-import { initGeoDa, spatialJoin } from 'geoda-wasm';
-import { applyJoin } from './utils/apply-join';
+import { runSpatialJoin, SpatialCountFunctionContext } from './tool';
 
 type SpatialCountFunctionArgs = {
   firstDatasetName: string;
@@ -88,45 +86,14 @@ export async function SpatialCountCallbackFunction({
   } = functionArgs;
   const { getGeometries, getValues, saveAsDataset } = functionContext;
 
-  const firstGeometries = getGeometries(firstDatasetName);
-  const secondGeometries = getGeometries(secondDatasetName);
-
-  // initialize GeoDaWasm
-  await initGeoDa();
-
-  const result = await spatialJoin({
-    leftGeometries: secondGeometries,
-    rightGeometries: firstGeometries,
+  const result = await runSpatialJoin({
+    firstDatasetName,
+    secondDatasetName,
+    joinVariableNames,
+    joinOperators,
+    getGeometries,
+    getValues,
   });
-
-  // get basic statistics of the result
-  const basicStatistics = getBasicStatistics(result);
-
-  const joinValues: Record<string, number[]> = {
-    Count: result.map((row) => row.length),
-  };
-
-  // get the values of the left dataset if joinVariableNames is provided
-  if (joinVariableNames && joinOperators) {
-    joinVariableNames.forEach((variableName, index) => {
-      try {
-        const operator = joinOperators[index];
-        const values = getValues(firstDatasetName, variableName);
-        // apply join to values in each row
-        const joinedValues = result.map((row) =>
-          applyJoin(
-            operator,
-            row.map((index) => values[index])
-          )
-        );
-        joinValues[variableName] = joinedValues;
-      } catch (error) {
-        console.error(
-          `Error applying join operator to variable ${variableName}: ${error}`
-        );
-      }
-    });
-  }
 
   return {
     type: 'success',
@@ -135,35 +102,22 @@ export async function SpatialCountCallbackFunction({
       success: true,
       leftDatasetName: firstDatasetName,
       rightDatasetName: secondDatasetName,
-      details: `Spatial count function executed successfully. ${JSON.stringify(basicStatistics)}`,
+      details: result.llmResult.result?.details ?? '',
     },
     data: {
-      joinResult: result,
-      joinValues,
+      joinResult: result.additionalData?.joinResult ?? [],
+      joinValues: result.additionalData?.joinValues ?? {},
       ...(saveAsDataset
         ? {
             actionButtonLabel: 'Save as dataset',
             actionButtonOnClick: () => {
-              saveAsDataset(secondDatasetName, joinValues);
+              saveAsDataset(
+                secondDatasetName,
+                result.additionalData?.joinValues ?? {}
+              );
             },
           }
         : {}),
     },
-  };
-}
-
-/**
- * Get basic statistics of the result
- * @param result - the result of the spatial join
- * @returns - the basic statistics of the result
- */
-function getBasicStatistics(result: number[][]) {
-  const totalCount = result.length;
-  return {
-    totalCount,
-    minCount: Math.min(...result.map((row) => row.length)),
-    maxCount: Math.max(...result.map((row) => row.length)),
-    averageCount:
-      result.reduce((sum, row) => sum + row.length, 0) / result.length,
   };
 }

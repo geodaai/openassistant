@@ -1,9 +1,12 @@
 import { ReactNode } from 'react';
 import { CustomFunctionCall } from '@openassistant/core';
-import { ExpandableContainer, generateId } from '@openassistant/common';
+import {
+  ExpandableContainer,
+  generateId,
+  useDraggable,
+} from '@openassistant/common';
 import { ParallelCoordinateOutputData } from './component/pcp';
 import { ParallelCoordinateComponent } from './component/pcp-component';
-import { useDraggable } from '../hooks/useDraggable';
 
 /**
  * @internal

@@ -9,13 +9,21 @@ import {
   Pagination,
   Button,
 } from '@nextui-org/react';
+import {
+  ExpandableContainer,
+  useDraggable,
+  generateId,
+} from '@openassistant/common';
 import '../../index.css';
 
 export type SpatialCountComponentProps = {
+  id?: string;
   joinResult: number[][];
   joinValues?: Record<string, number[]>;
   actionButtonLabel?: string;
   actionButtonOnClick?: () => void;
+  isExpanded?: boolean;
+  isDraggable?: boolean;
 };
 
 export function SpatialCountComponent({
@@ -99,5 +107,31 @@ export function SpatialCountComponent({
         </div>
       )}
     </div>
+  );
+}
+
+export function SpatialJoinToolComponent(props: SpatialCountComponentProps) {
+  const [isExpanded, setIsExpanded] = useState(props.isExpanded);
+
+  const onDragStart = useDraggable({
+    id: props.id || generateId(),
+    type: 'spatial-join',
+    data: props,
+  });
+
+  const onExpanded = (flag: boolean) => {
+    setIsExpanded(flag);
+  };
+
+  return (
+    <ExpandableContainer
+      defaultWidth={isExpanded ? 600 : undefined}
+      defaultHeight={isExpanded ? 800 : 400}
+      draggable={props.isDraggable || false}
+      onDragStart={onDragStart}
+      onExpanded={onExpanded}
+    >
+      <SpatialCountComponent {...props} />
+    </ExpandableContainer>
   );
 }
