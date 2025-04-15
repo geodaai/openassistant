@@ -4,8 +4,10 @@ import {
   spatialJoin as spatialJoinFunc,
 } from '@geoda/core';
 import { z } from 'zod';
-import { applyJoin } from './utils/apply-join';
-import { SpatialJoinToolComponent } from './utils/spatial-count-component';
+import { applyJoin } from './apply-join';
+import { SpatialJoinToolComponent } from './component/spatial-count-component';
+import { GetValues } from '../types';
+
 export const spatialJoin = tool<
   // parameters of the tool
   z.ZodObject<{
@@ -67,7 +69,7 @@ export type SpatialJoinTool = typeof spatialJoin;
  */
 export type SpatialCountFunctionContext = {
   getGeometries: (datasetName: string) => SpatialJoinGeometries;
-  getValues: (datasetName: string, variableName: string) => number[];
+  getValues: GetValues;
   saveAsDataset?: (datasetName: string, data: Record<string, number[]>) => void;
 };
 
@@ -171,7 +173,7 @@ export async function runSpatialJoin({
   joinVariableNames?: string[];
   joinOperators?: string[];
   getGeometries: (datasetName: string) => SpatialJoinGeometries;
-  getValues: (datasetName: string, variableName: string) => number[];
+  getValues: GetValues;
 }) {
   try {
     // Get geometries from both datasets
@@ -192,10 +194,10 @@ export async function runSpatialJoin({
 
     // get the values of the left dataset if joinVariableNames is provided
     if (joinVariableNames && joinOperators) {
-      joinVariableNames.forEach((variableName, index) => {
+      joinVariableNames.forEach(async (variableName, index) => {
         try {
           const operator = joinOperators[index];
-          const values = getValues(firstDatasetName, variableName);
+          const values = await getValues(firstDatasetName, variableName);
           // apply join to values in each row
           const joinedValues = result.map((row) =>
             applyJoin(

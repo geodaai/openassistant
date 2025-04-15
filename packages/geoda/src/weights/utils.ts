@@ -4,11 +4,11 @@ import {
   createDistanceWeights,
   CreateWeightsProps,
   createContiguityWeights,
-  WeightsProps,
   checkWeightsIdExist,
   createKNNWeights,
 } from './weights-utils';
 import { GetGeometries } from './tool';
+import { WeightsProps } from '../types';
 
 export async function runSpatialWeights({
   existingWeights,

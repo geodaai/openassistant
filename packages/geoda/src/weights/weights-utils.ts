@@ -7,15 +7,7 @@ import {
   getDistanceNeighborsFromBinaryGeometries,
 } from '@geoda/core';
 import { BinaryFeatureCollection } from '@loaders.gl/schema';
-
-export type WeightsProps = {
-  datasetId: string;
-  weightsMeta: WeightsMeta;
-  weights: number[][];
-  weightsValues?: number[][];
-  // isNew is used to determine if the weights are newly added by chatbot, so a number badge can be shown on the weights icon
-  isNew?: boolean;
-};
+import { WeightsProps } from '../types';
 
 export type CreateWeightsOutputProps = {
   weights: number[][];

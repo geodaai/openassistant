@@ -1,6 +1,6 @@
 import { CustomFunctionCall } from '@openassistant/core';
 import { SpatialCountOutputData } from './callback-function';
-import { SpatialCountComponent } from './utils/spatial-count-component';
+import { SpatialCountComponent } from './component/spatial-count-component';
 
 // type guard
 function isSpatialCountOutputData(

@@ -9,6 +9,7 @@ import {
   quantileBreaks,
   standardDeviationBreaks,
 } from '@geoda/core';
+import { GetValues } from '../types';
 
 export const dataClassify = tool<
   // parameters of the tool
@@ -64,14 +65,6 @@ export const dataClassify = tool<
     },
   },
 });
-
-/**
- * The function of getting the values of a variable from the dataset.
- * @param datasetName - The name of the dataset.
- * @param variableName - The name of the variable.
- * @returns The values of the variable.
- */
-export type GetValues = (datasetName: string, variableName: string) => number[];
 
 /**
  * The context of the data classify function.
@@ -222,7 +215,7 @@ export async function runDataClassify({
   getValues: GetValues;
 }) {
   try {
-    const values = getValues(datasetName, variableName);
+    const values = await getValues(datasetName, variableName);
 
     let breaks;
 

@@ -7,7 +7,7 @@ import {
   SimpleLinearRegressionResult,
 } from '@openassistant/echarts';
 
-import { GetValues } from '../data-classify/tool';
+import { GetValues } from '../types';
 import { SpatialWeights } from './callback-function';
 import { MoranScatterPlotToolComponent } from './component/moran-scatter-component';
 import { GetExistingWeights } from '../weights/tool';

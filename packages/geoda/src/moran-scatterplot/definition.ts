@@ -7,6 +7,9 @@ import { MoranScatterCallbackComponent } from './callback-component';
 import { MoranScatterPlotFunctionContext } from './tool';
 
 /**
+ * @internal
+ * @deprecated Use {@link MoranScatterPlotFunctionContext} instead.
+ * 
  * The definition of the values of the Moran scatterplot function context.
  * It is a union of the values of {@link MoranScatterFunctionContext}: getValues
  *

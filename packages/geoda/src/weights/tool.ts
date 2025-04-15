@@ -1,9 +1,9 @@
 import { tool } from '@openassistant/core';
 import { z } from 'zod';
 import { BinaryGeometryType, WeightsMeta } from '@geoda/core';
-import { runSpatialWeights } from './utils';
-import { WeightsProps } from './weights-utils';
 import { BinaryFeatureCollection } from '@loaders.gl/schema';
+import { runSpatialWeights } from './utils';
+import { WeightsProps } from '../types';
 
 export const spatialWeights = tool<
   z.ZodObject<{
