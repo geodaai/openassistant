@@ -7403,7 +7403,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@openassistant/geoda@workspace:packages/geoda":
+"@openassistant/geoda@workspace:*, @openassistant/geoda@workspace:packages/geoda":
   version: 0.0.0-use.local
   resolution: "@openassistant/geoda@workspace:packages/geoda"
   dependencies:
@@ -11497,7 +11497,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^18.0.11, @types/react-dom@npm:^18.3.1":
+"@types/react-dom@npm:^18.0.11, @types/react-dom@npm:^18.2.0, @types/react-dom@npm:^18.3.1":
   version: 18.3.6
   resolution: "@types/react-dom@npm:18.3.6"
   peerDependencies:
@@ -11594,7 +11594,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:16 || 17 || 18, @types/react@npm:^18.0.28, @types/react@npm:^18.3.1":
+"@types/react@npm:16 || 17 || 18, @types/react@npm:^18.0.28, @types/react@npm:^18.2.0, @types/react@npm:^18.3.1":
   version: 18.3.20
   resolution: "@types/react@npm:18.3.20"
   dependencies:
@@ -18542,6 +18542,25 @@ __metadata:
   checksum: 17d8333460204fbf1f9160d067e1e77f908a5447febb49424b8ab043026049835c9ef3974445c57dbd39161f4d2b04356d7de12b2eecaa27a7a7ea7d871cbedd
   languageName: node
   linkType: hard
+
+"geoda_tools@workspace:examples/geoda_tools":
+  version: 0.0.0-use.local
+  resolution: "geoda_tools@workspace:examples/geoda_tools"
+  dependencies:
+    "@openassistant/geoda": "workspace:*"
+    "@openassistant/ui": "workspace:*"
+    "@types/react": "npm:^18.2.0"
+    "@types/react-dom": "npm:^18.2.0"
+    autoprefixer: "npm:^10.4.20"
+    esbuild: "npm:^0.24.2"
+    esbuild-plugin-polyfill-node: "npm:^0.3.0"
+    esbuild-plugin-tailwindcss: "npm:^1.2.1"
+    postcss: "npm:^8.4.49"
+    react: "npm:^18.2.0"
+    react-dom: "npm:^18.2.0"
+    tailwind: "npm:^4.0.0"
+  languageName: unknown
+  linkType: soft
 
 "geojson-types@npm:^2.0.1":
   version: 2.0.1

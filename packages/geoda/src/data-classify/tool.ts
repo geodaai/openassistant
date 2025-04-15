@@ -129,6 +129,7 @@ export type ExecuteDataClassifyResult = {
       breaks: number[];
     };
     error?: string;
+    instruction?: string;
   };
   additionalData?: {
     datasetName: string;
@@ -178,25 +179,37 @@ async function executeDataClassify(
   args,
   options
 ): Promise<ExecuteDataClassifyResult> {
-  if (isDataClassifyArgs(args)) {
-    throw new Error('Invalid arguments for dataClassify tool');
+  try {
+    if (!isDataClassifyArgs(args)) {
+      throw new Error('Invalid arguments for dataClassify tool');
+    }
+
+    if (!options.context || !isDataClassifyContext(options.context)) {
+      throw new Error('Invalid context for dataClassify tool');
+    }
+
+    const { datasetName, variableName, method, k, hinge } = args;
+    const { getValues } = options.context;
+
+    return runDataClassify({
+      datasetName,
+      variableName,
+      method,
+      k,
+      hinge,
+      getValues,
+    });
+  } catch (error) {
+    console.error('Error executing dataClassify tool:', error);
+    return {
+      llmResult: {
+        success: false,
+        error: error instanceof Error ? error.message : String(error),
+        instruction:
+          'Please explain the error and give a plan to fix the error. Then try again with a different query.',
+      },
+    };
   }
-
-  if (options.context && !isDataClassifyContext(options.context)) {
-    throw new Error('Invalid context for dataClassify tool');
-  }
-
-  const { datasetName, variableName, method, k, hinge } = args;
-  const { getValues } = options.context;
-
-  return runDataClassify({
-    datasetName,
-    variableName,
-    method,
-    k,
-    hinge,
-    getValues,
-  });
 }
 
 export async function runDataClassify({

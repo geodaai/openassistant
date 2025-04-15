@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react';
-import { useIntl } from 'react-intl';
 import {
   Table,
   TableHeader,
@@ -14,7 +13,6 @@ import {
   ExpandableContainer,
   useDraggable,
   generateId,
-  formatNumberOrString,
 } from '@openassistant/common';
 import '../../index.css';
 
@@ -28,26 +26,24 @@ export type SpatialWeightsMetaTableProps = {
 export function SpatialWeightsMetaTable({
   weightsMeta,
 }: SpatialWeightsMetaTableProps) {
-  const intl = useIntl();
-
   // weightsMeta: mapping its key to descriptive label
   const WeightsMetaLabels = useMemo(
     () => ({
-      id: 'weights.meta.id',
-      name: 'weights.meta.name',
-      type: 'weights.meta.type',
-      symmetry: 'weights.meta.symmetry',
-      numberOfObservations: 'weights.meta.numberOfObservations',
-      k: 'weights.meta.k',
-      order: 'weights.meta.order',
-      incLowerOrder: 'weights.meta.incLowerOrder',
-      threshold: 'weights.meta.threshold',
-      distanceMetric: 'weights.meta.distanceMetric',
-      minNeighbors: 'weights.meta.minNeighbors',
-      maxNeighbors: 'weights.meta.maxNeighbors',
-      meanNeighbors: 'weights.meta.meanNeighbors',
-      medianNeighbors: 'weights.meta.medianNeighbors',
-      pctNoneZero: 'weights.meta.pctNoneZero',
+      id: 'ID',
+      name: 'Name',
+      type: 'Type',
+      symmetry: 'Symmetry',
+      numberOfObservations: 'Number of Observations',
+      k: 'K',
+      order: 'Order',
+      incLowerOrder: 'Include Lower Order',
+      threshold: 'Threshold',
+      distanceMetric: 'Distance Metric',
+      minNeighbors: 'Min Neighbors',
+      maxNeighbors: 'Max Neighbors',
+      meanNeighbors: 'Mean Neighbors',
+      medianNeighbors: 'Median Neighbors',
+      pctNoneZero: 'Percentage Non-Zero',
     }),
     []
   );
@@ -57,17 +53,17 @@ export function SpatialWeightsMetaTable({
       .filter((key) => key in weightsMeta)
       .map((key, i) => {
         const value = weightsMeta[key];
-        const valueString = formatNumberOrString(value, intl.locale);
+        const valueString = typeof value === 'number' 
+          ? value.toLocaleString() 
+          : String(value);
         return {
           key: `${i}`,
-          property: intl.formatMessage({
-            id: WeightsMetaLabels[key as keyof typeof WeightsMetaLabels],
-          }),
+          property: WeightsMetaLabels[key as keyof typeof WeightsMetaLabels],
           value: valueString,
         };
       });
     return rows;
-  }, [weightsMeta, WeightsMetaLabels, intl]);
+  }, [weightsMeta, WeightsMetaLabels]);
 
   return (
     <div className="flex flex-col gap-4 max-w-full">
@@ -93,10 +89,7 @@ export function SpatialWeightsMetaTable({
           </TableColumn>
         </TableHeader>
         <TableBody
-          emptyContent={intl.formatMessage({
-            id: 'table.noRows',
-            defaultMessage: 'No rows to display.',
-          })}
+          emptyContent="No rows to display."
           items={rows}
         >
           {(item) => (

@@ -15,51 +15,50 @@ import {
 
 /**
  * Type of AiAssistantProps.
- *
- * @param theme - The theme of the assistant.
- * @param welcomeMessage - The welcome message of the assistant.
- * @param historyMessages - The history messages of the assistant.
- * @param ideas - The ideas of the assistant.
- * @param userAvatar - The avatar of the user.
- * @param assistantAvatar - The avatar of the assistant.
- * @param isMessageDraggable - The flag to indicate if the message is draggable.
- * @param enableVoice - The flag to indicate if the voice is enabled.
- * @param enableScreenCapture - The flag to indicate if the screen capture is enabled.
- * @param screenCapturedBase64 - The screen captured base64.
- * @param screenCapturedPrompt - The screen captured prompt.
- * @param onScreenshotClick - The callback function to handle the screenshot click.
- * @param onRemoveScreenshot - The callback function to handle the screenshot remove.
- * @param onFeedback - The callback function to handle the feedback.
- * @param onMessagesUpdated - The callback function to handle the messages updated.
- * @param onRestartChat - The callback function to handle the restart chat.
- * @param fontSize - The font size of the assistant.
- * @param botMessageClassName - The class name of the bot message.
- * @param userMessageClassName - The class name of the user message.
- * @param githubIssueLink - The link to the github issue.
- * @param useMarkdown - The flag to indicate if the markdown is enabled.
  */
 export type AiAssistantProps = UseAssistantProps & {
   theme?: 'dark' | 'light';
+  /** The welcome message of the assistant. */
   welcomeMessage: string;
+  /** The ideas of the assistant, which will be shown above the prompt input box. */
   ideas?: { title: string; description: string }[];
+  /** Set the avatar of the user. */
   userAvatar?: ReactNode | string;
+  /** Set the avatar of the assistant. */
   assistantAvatar?: ReactNode | string;
+  /** Set the flag to indicate if the message is draggable. */
   isMessageDraggable?: boolean;
+  /** Set the flag to indicate if the voice is enabled. */
   enableVoice?: boolean;
+  /** Set the flag to indicate if the screen capture is enabled. */
   enableScreenCapture?: boolean;
+  /** The screen captured base64. */
   screenCapturedBase64?: string;
+  /** The screen captured prompt. */
   screenCapturedPrompt?: string;
+  /** The callback function to handle the screenshot click. */
   onScreenshotClick?: () => void;
+  /** The callback function to handle the screenshot remove. */
   onRemoveScreenshot?: () => void;
+  /** The callback function to handle the feedback. */
   onFeedback?: (question: string) => void;
+  /** The callback function to handle the messages updated. */
   onMessagesUpdated?: (messages: MessageModel[]) => void;
+  /** The callback function to handle the restart chat. */
   onRestartChat?: () => void;
+  /** The font size of the assistant. */
   fontSize?: string;
+  /** The class name of the bot message. */
   botMessageClassName?: string;
+  /** The class name of the user message. */
   userMessageClassName?: string;
+  /** The link to the github issue. */
   githubIssueLink?: string;
+  /** The flag to indicate if the markdown is enabled. */
   useMarkdown?: boolean;
+  /** The flag to indicate if the tools are shown. */
   showTools?: boolean;
+  /** The initial messages of the assistant. */
   initialMessages?: MessageModel[];
 };
 
@@ -167,6 +166,7 @@ export function AiAssistant(props: AiAssistantProps) {
     apiKey: props.apiKey,
     instructions: props.instructions,
     functions: props.functions,
+    tools: props.tools,
     name: props.name,
     description: props.description,
     version: props.version,

@@ -56,7 +56,7 @@ Fields: name, longitude, latitude, revenue, population`;
             apiKey={process.env.OPENAI_API_KEY || ''}
             welcomeMessage={welcomeMessage}
             instructions={instructions}
-            functions={{ keplergl: keplerglTool }}
+            tools={{ keplergl: keplerglTool }}
             useMarkdown={true}
           />
         </div>

@@ -151,7 +151,7 @@ async function executeLocalQuery(
       llmResult: {
         success: false,
         error: error instanceof Error ? error.message : String(error),
-        instruction: 'Please try again with a different query.',
+        instruction: 'Please explain the error and give a plan to fix the error. Then try again with a different query.',
       },
     };
   }

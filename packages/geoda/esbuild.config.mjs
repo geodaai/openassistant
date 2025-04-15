@@ -34,9 +34,13 @@ const baseConfig = createBaseConfig({
     '@openassistant/core',
     '@openassistant/common',
     '@openassistant/echarts',
+    '@geoda/core',
+    '@geoda/lisa',
+    '@geoda/regression',
+    'echarts-for-react',
+    'echarts',
     'framer-motion',
     'tailwindcss',
-    'geoda-wasm',
   ],
 });
 

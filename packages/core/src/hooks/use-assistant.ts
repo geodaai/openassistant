@@ -64,9 +64,11 @@ export type UseAssistantProps = {
    */
   functions?:
     | Array<RegisterFunctionCallingProps>
-    | Record<string, ExtendedTool>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    | Record<string, ExtendedTool<any>>;
   /** Custom tools the assistant can use. E.g. { localQuery: localQueryTool } */
-  tools?: Record<string, ExtendedTool>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  tools?: Record<string, ExtendedTool<any>>;
   /** Controls how the assistant selects tools to use. */
   toolChoice?: ToolChoice<ToolSet>;
   /** Maximum number of steps/iterations in a conversation. */
