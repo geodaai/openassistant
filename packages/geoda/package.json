@@ -19,9 +19,9 @@
     "package.json"
   ],
   "dependencies": {
-    "@geoda/core": "^0.0.3",
-    "@geoda/lisa": "^0.0.3",
-    "@geoda/regression": "^0.0.3",
+    "@geoda/core": "^0.0.4",
+    "@geoda/lisa": "^0.0.4",
+    "@geoda/regression": "^0.0.4",
     "@loaders.gl/core": "^4.3.3",
     "@loaders.gl/schema": "^4.3.3",
     "@nextui-org/react": "^2.6.8",

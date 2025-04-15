@@ -1,4 +1,4 @@
-import { WeightsMeta } from 'geoda-wasm';
+import { WeightsMeta } from '@geoda/core';
 import { useMemo, useRef, useState } from 'react';
 import ReactEChartsCore from 'echarts-for-react';
 import AutoSizer from 'react-virtualized-auto-sizer';
@@ -26,7 +26,7 @@ echarts.use([
   CanvasRenderer,
   BrushComponent,
   ToolboxComponent,
-  LineChart
+  LineChart,
 ]);
 
 export type MoranScatterOutputData = {
@@ -43,7 +43,9 @@ export type MoranScatterOutputData = {
   isExpanded?: boolean;
 };
 
-export function isMoranScatterOutputData(data: unknown): data is MoranScatterOutputData {
+export function isMoranScatterOutputData(
+  data: unknown
+): data is MoranScatterOutputData {
   return (
     typeof data === 'object' &&
     data !== null &&
@@ -136,7 +138,7 @@ export function MoranScatterComponent(props: MoranScatterOutputData) {
     }),
     [brush, props.datasetName]
   );
-  
+
   return (
     <AutoSizer>
       {({ height, width }) => (

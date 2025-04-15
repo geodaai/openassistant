@@ -3,7 +3,8 @@ import {
   CustomFunctionOutputProps,
   ErrorCallbackResult,
 } from '@openassistant/core';
-import { initGeoDa, spatialLag, WeightsMeta } from 'geoda-wasm';
+import { WeightsMeta } from '@geoda/core';
+import { spatialLag } from '@geoda/lisa';
 import { simpleLinearRegression } from '@openassistant/echarts';
 import { MoranScatterOutputData } from './component/moran-scatter-plot';
 import {
@@ -114,7 +115,6 @@ export async function moranScatterCallbackFunction({
 
   try {
     // compute moran's I
-    await initGeoDa();
     const lagValues = await spatialLag(values, weights);
     const regression = simpleLinearRegression(values, lagValues);
     const slope = regression.slope;

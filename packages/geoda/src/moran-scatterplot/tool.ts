@@ -75,6 +75,10 @@ export type ExecuteMoranScatterPlotResult = {
 export type MoranScatterPlotFunctionContext = {
   /** Get the values of variable from the dataset. */
   getValues: GetValues;
+  getWeights?: (weightsId: string) => {
+    weights: number[][];
+    weightsMeta: WeightsMeta;
+  };
   /** Get the weights of the dataset. */
   getExistingWeights?: GetExistingWeights;
   /** The configuration of the scatterplot. */
