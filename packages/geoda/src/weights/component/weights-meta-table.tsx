@@ -53,9 +53,8 @@ export function SpatialWeightsMetaTable({
       .filter((key) => key in weightsMeta)
       .map((key, i) => {
         const value = weightsMeta[key];
-        const valueString = typeof value === 'number' 
-          ? value.toLocaleString() 
-          : String(value);
+        const valueString =
+          typeof value === 'number' ? value.toLocaleString() : String(value);
         return {
           key: `${i}`,
           property: WeightsMetaLabels[key as keyof typeof WeightsMetaLabels],
@@ -66,13 +65,14 @@ export function SpatialWeightsMetaTable({
   }, [weightsMeta, WeightsMetaLabels]);
 
   return (
-    <div className="flex flex-col gap-4 max-w-full">
+    <div className="flex flex-col p-6 max-w-full">
       <Table
         aria-label="Weights Property Table"
         color="success"
         selectionMode="single"
         classNames={{
-          wrapper: 'max-h-[440px] max-w-full overflow-x-auto rounded-none',
+          wrapper:
+            'max-h-[380px] max-w-full overflow-x-auto overflow-y-auto rounded-none',
           base: 'overflow-scroll p-0 m-0 text-tiny',
           table: 'p-0 m-0 text-tiny',
           th: 'text-tiny',
@@ -88,10 +88,7 @@ export function SpatialWeightsMetaTable({
             Value
           </TableColumn>
         </TableHeader>
-        <TableBody
-          emptyContent="No rows to display."
-          items={rows}
-        >
+        <TableBody emptyContent="No rows to display." items={rows}>
           {(item) => (
             <TableRow key={item.key}>
               {(columnKey) => (

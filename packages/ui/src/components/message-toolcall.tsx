@@ -224,7 +224,7 @@ export function ToolCallComponent({
           </Accordion>
         </CardBody>
       </Card>
-      {Component && (
+      {Component && isCompleted && (
         <ToolCallErrorBoundary>
           {typeof Component === 'function' ? (
             <Component {...(additionalData as Record<string, unknown>)} />

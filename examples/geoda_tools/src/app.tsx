@@ -4,9 +4,15 @@ import {
   DataClassifyTool,
   spatialWeights,
   SpatialWeightsTool,
+  GetGeometries,
+  SpatialWeightsToolComponent,
+  globalMoran,
+  GlobalMoranTool,
+  MoranScatterPlotToolComponent,
 } from '@openassistant/geoda';
 import { SAMPLE_DATASETS } from './dataset';
 import { think } from '@openassistant/core';
+import { PointLayerData } from '@geoda/core';
 
 export default function App() {
   const getValues = async (datasetName: string, variableName: string) => {
@@ -15,15 +21,16 @@ export default function App() {
     );
   };
 
-  const getGeometries = async (datasetName: string) => {
+  const getGeometries: GetGeometries = async (datasetName: string) => {
     // get points in [longitude, latitude] array format from dataset
-    const points: [number, number][] = SAMPLE_DATASETS[datasetName].map(
-      (item) => [item.longitude, item.latitude]
+    const points: PointLayerData[] = SAMPLE_DATASETS[datasetName].map(
+      (item, index) => ({
+        position: [item.longitude, item.latitude],
+        index,
+        neighbors: [],
+      })
     );
-    return {
-      type: 'points' as const,
-      points,
-    };
+    return points;
   };
 
   // Configure the dataClassify tool
@@ -41,21 +48,33 @@ export default function App() {
       ...spatialWeights.context,
       getGeometries,
     },
+    component: SpatialWeightsToolComponent,
+  };
+
+  const globalMoranTool: GlobalMoranTool = {
+    ...globalMoran,
+    context: {
+      ...globalMoran.context,
+      getValues,
+    },
+    component: MoranScatterPlotToolComponent,
   };
 
   const tools = {
     think,
     dataClassify: classifyTool,
     spatialWeights: weightsTool,
+    globalMoran: globalMoranTool,
   };
   const welcomeMessage = `
 Welcome to the GeoDa Tools Example!
 
 For example,
 
-1. classify the population data into 5 classes using equal interval classification
-2. classify the population data into 5 classes using natural breaks classification
-3. classify the population data into 5 classes using quantile classification
+1. classify the population data into 5 classes using natural breaks classification
+2. create a queen contiguity weights
+3. create a moran scatter plot of the population data
+4. Can you help me analyze the spatial autocorrelation of population data
 `;
 
   const instructions = `
@@ -85,6 +104,7 @@ variables:
             tools={tools}
             welcomeMessage={welcomeMessage}
             instructions={instructions}
+            theme="dark"
           />
         </div>
       </div>

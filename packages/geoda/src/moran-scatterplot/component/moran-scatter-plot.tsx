@@ -140,38 +140,27 @@ export function MoranScatterComponent(props: MoranScatterOutputData) {
   );
 
   return (
-    <AutoSizer>
-      {({ height, width }) => (
-        <div style={{ height, width }}>
-          <div
-            style={{ height: '100%' }}
-            className="h-full w-full flex flex-col rounded-lg bg-default-100 pt-6 text-gray-900 shadow-secondary-1 dark:bg-gray-950 dark:text-gray-100"
-          >
-            <div className="flex-col items-start p-2">
-              <p className="text-tiny font-bold uppercase">
-                {props.variableName}
-              </p>
-              <small className="truncate text-default-500">
-                {props.variableName}
-              </small>
-            </div>
-            <div style={{ height: '100%' }} className="py-2 flex-grow">
-              <ReactEChartsCore
-                option={option}
-                notMerge={true}
-                lazyUpdate={true}
-                style={{ height: '100%', width: '100%' }}
-                ref={eChartsRef}
-                theme={props.theme || 'dark'}
-                onEvents={bindEvents}
-                onChartReady={() => {
-                  setRendered(true);
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-    </AutoSizer>
+    <div className="h-full w-full flex flex-col rounded-lg  text-gray-900 shadow-secondary-1 dark:bg-gray-950 dark:text-gray-100">
+      <div className="flex-col items-start p-2">
+        <p className="text-tiny font-bold uppercase">{props.variableName}</p>
+        <small className="truncate text-default-500">
+          {props.variableName}
+        </small>
+      </div>
+      <div style={{ height: '100%' }} className="py-2 flex-grow">
+        <ReactEChartsCore
+          option={option}
+          notMerge={true}
+          lazyUpdate={true}
+          style={{ height: '100%', width: '100%' }}
+          ref={eChartsRef}
+          theme={props.theme || 'dark'}
+          onEvents={bindEvents}
+          onChartReady={() => {
+            setRendered(true);
+          }}
+        />
+      </div>
+    </div>
   );
 }

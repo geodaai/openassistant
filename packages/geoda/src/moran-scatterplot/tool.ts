@@ -10,13 +10,14 @@ import {
 import { GetValues } from '../types';
 import { SpatialWeights } from './callback-function';
 import { MoranScatterPlotToolComponent } from './component/moran-scatter-component';
-import { GetExistingWeights } from '../weights/tool';
-export const moranScatterPlot = tool<
+import { getCachedWeightsById } from '../weights/tool';
+
+export const globalMoran = tool<
   // parameters of the tool
   z.ZodObject<{
     datasetName: z.ZodString;
     variableName: z.ZodString;
-    weightsId: z.ZodString;
+    weightsId: z.ZodOptional<z.ZodString>;
   }>,
   // return type of the tool
   ExecuteMoranScatterPlotResult['llmResult'],
@@ -31,15 +32,16 @@ export const moranScatterPlot = tool<
     variableName: z.string(),
     weightsId: z
       .string()
+      .optional()
       .describe(
-        'The id of a spatial weights. It can be created using function tool "createWeights". If id not provided, please try to create a weights first.'
+        'The id of a spatial weights. It can be created using function tool "spatialWeights". If not provided, please try to create a weights first.'
       ),
   }),
   execute: executeMoranScatterPlot,
   component: MoranScatterPlotToolComponent,
 });
 
-export type MoranScatterPlotTool = typeof moranScatterPlot;
+export type GlobalMoranTool = typeof globalMoran;
 
 export type ExecuteMoranScatterPlotResult = {
   llmResult: {
@@ -75,12 +77,6 @@ export type ExecuteMoranScatterPlotResult = {
 export type MoranScatterPlotFunctionContext = {
   /** Get the values of variable from the dataset. */
   getValues: GetValues;
-  getWeights?: (weightsId: string) => {
-    weights: number[][];
-    weightsMeta: WeightsMeta;
-  };
-  /** Get the weights of the dataset. */
-  getExistingWeights?: GetExistingWeights;
   /** The configuration of the scatterplot. */
   config?: {
     isDraggable?: boolean;
@@ -92,7 +88,7 @@ export type MoranScatterPlotFunctionContext = {
 type MoranScatterPlotArgs = {
   datasetName: string;
   variableName: string;
-  weightsId: string;
+  weightsId?: string;
 };
 
 export function isMoranScatterPlotArgs(
@@ -102,8 +98,7 @@ export function isMoranScatterPlotArgs(
     typeof args === 'object' &&
     args !== null &&
     'datasetName' in args &&
-    'variableName' in args &&
-    'weightsId' in args
+    'variableName' in args
   );
 }
 
@@ -141,8 +136,12 @@ async function executeMoranScatterPlot(
     }
 
     const { datasetName, variableName, weightsId } = args;
-    const { getValues, getExistingWeights, config } = options.context;
+    const { getValues, config } = options.context;
 
+    // get the values of the variable
+    const values = await getValues(datasetName, variableName);
+
+    // get the weights
     let weights: number[][] | null = null;
     let weightsMeta: WeightsMeta | null = null;
 
@@ -157,20 +156,16 @@ async function executeMoranScatterPlot(
         }
       });
     }
-    const values = getValues(datasetName, variableName);
 
-    if (!weights) {
-      const existingWeights = getExistingWeights(datasetName);
-      const weightsResult = existingWeights.find(
-        (weight) => weight.weightsMeta.id === weightsId
-      );
-      if (weightsResult) {
-        weights = weightsResult.weights;
-        weightsMeta = weightsResult.weightsMeta;
+    if (!weights && weightsId) {
+      const existingWeights = getCachedWeightsById(weightsId);
+      if (existingWeights) {
+        weights = existingWeights.weights;
+        weightsMeta = existingWeights.weightsMeta;
       }
     }
 
-    if (!weights || !weightsMeta) {
+    if (!weights || !weightsMeta || !weightsId) {
       throw new Error(
         'Weights can not be found or created. Can not create Moran scatterplot without weights.'
       );

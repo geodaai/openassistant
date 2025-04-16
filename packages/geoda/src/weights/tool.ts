@@ -1,31 +1,36 @@
 import { tool } from '@openassistant/core';
 import { z } from 'zod';
-import { Feature } from 'geojson';
-import { BinaryGeometryType, WeightsMeta } from '@geoda/core';
-import { BinaryFeatureCollection } from '@loaders.gl/schema';
-import { runSpatialWeights } from './utils';
+import {
+  createWeights,
+  SpatialGeometry,
+  WeightsMeta,
+  CreateWeightsProps,
+} from '@geoda/core';
 import { WeightsProps } from '../types';
+
+// global variable to store the created weights
+export const globalWeightsData: Record<string, WeightsProps> = {};
 
 export const spatialWeights = tool<
   z.ZodObject<{
     datasetName: z.ZodString;
-    type: z.ZodEnum<['knn', 'queen', 'rook', 'distance', 'kernel']>;
+    type: z.ZodEnum<['knn', 'queen', 'rook', 'threshold']>;
     k: z.ZodOptional<z.ZodNumber>;
     orderOfContiguity: z.ZodOptional<z.ZodNumber>;
     includeLowerOrder: z.ZodOptional<z.ZodBoolean>;
     precisionThreshold: z.ZodOptional<z.ZodNumber>;
     distanceThreshold: z.ZodOptional<z.ZodNumber>;
     isMile: z.ZodOptional<z.ZodBoolean>;
+    useCentroids: z.ZodOptional<z.ZodBoolean>;
   }>,
   ExecuteSpatialWeightsResult['llmResult'],
   ExecuteSpatialWeightsResult['additionalData'],
   SpatialWeightsFunctionContext
 >({
-  description:
-    'Create a spatial weights, which could be k nearest neighbor (knn) weights, queen contiguity weights, rook contiguity weights, distance based weights or kernel weights.',
+  description: 'Create a spatial weights.',
   parameters: z.object({
     datasetName: z.string(),
-    type: z.enum(['knn', 'queen', 'rook', 'distance', 'kernel']),
+    type: z.enum(['knn', 'queen', 'rook', 'threshold']),
     k: z
       .number()
       .optional()
@@ -36,28 +41,24 @@ export const spatialWeights = tool<
       .number()
       .optional()
       .describe(
-        'Only for queen or rook weights. It represnts the precision threshold that allow for an exact match of coordinates, so we can use it to determine which polygons are neighbors that sharing the proximate coordinates or edges. The default value is 0.'
+        'For queen/rook weights: precision threshold for matching coordinates to determine neighboring polygons. Default: 0.'
       ),
     distanceThreshold: z
       .number()
       .optional()
       .describe(
-        'Only for distance based weights. It represents the distance threshold used to search nearby neighbors for each geometry. The unit should be either kilometer (KM) or mile.'
+        'Only for distance based weights. It represents the distance threshold used to search nearby neighbors.'
       ),
-    isMile: z
+    useCentroids: z
       .boolean()
       .optional()
       .describe(
-        'Only for distance based weights. It represents whether the distance threshold is in mile or not. The default value is False.'
+        'Whether to use centroids for neighbor calculations. The default value is False.'
       ),
+    isMile: z.boolean().optional().describe('Only for distance based weights.'),
   }),
   execute: executeSpatialWeights,
   context: {
-    getExistingWeights: () => {
-      throw new Error(
-        'getExistingWeights() of SpatialWeightsTool is not implemented'
-      );
-    },
     getGeometries: () => {
       throw new Error(
         'getGeometries() of SpatialWeightsTool is not implemented'
@@ -67,25 +68,21 @@ export const spatialWeights = tool<
 });
 
 export type SpatialWeightsTool = typeof spatialWeights;
-export type GetExistingWeights = (datasetName: string) => WeightsProps[];
 
-export type GetGeometries = (datasetName: string) =>
-  | Promise<{ type: 'points'; points: [number, number][] }>
-  | Promise<{
-      type: 'binary';
-      binaryGeometryType: BinaryGeometryType;
-      binaryGeometries: BinaryFeatureCollection[];
-    }>
-  | Promise<{ type: 'geojson'; geojsonFeatures: Feature[] }>;
+/**
+ * Get the geometries of the dataset.
+ * @param datasetName - The name of the dataset.
+ * @returns The geometries of the dataset. See {@link SpatialGeometry} for more details.
+ */
+export type GetGeometries = (datasetName: string) => Promise<SpatialGeometry>;
 
 export type SpatialWeightsFunctionContext = {
-  getExistingWeights?: GetExistingWeights;
   getGeometries: GetGeometries;
 };
 
 export type GetWeights = (
   datasetName: string,
-  type: 'knn' | 'queen' | 'rook' | 'distance' | 'kernel',
+  type: 'knn' | 'queen' | 'rook' | 'threshold',
   options: {
     k?: number;
     orderOfContiguity?: number;
@@ -93,6 +90,7 @@ export type GetWeights = (
     precisionThreshold?: number;
     distanceThreshold?: number;
     isMile?: boolean;
+    useCentroids?: boolean;
   }
 ) => Promise<{
   weights: number[][];
@@ -104,6 +102,7 @@ export type ExecuteSpatialWeightsResult = {
     success: boolean;
     result?: {
       datasetName: string;
+      weightsId: string;
       weightsMeta: WeightsMeta;
       details?: string;
     };
@@ -118,13 +117,14 @@ export type ExecuteSpatialWeightsResult = {
 
 type SpatialWeightsArgs = {
   datasetName: string;
-  type: 'knn' | 'queen' | 'rook' | 'distance' | 'kernel';
+  type: 'knn' | 'queen' | 'rook' | 'threshold';
   k?: number;
   orderOfContiguity?: number;
   includeLowerOrder?: boolean;
   precisionThreshold?: number;
   distanceThreshold?: number;
   isMile?: boolean;
+  useCentroids?: boolean;
 };
 
 function isSpatialWeightsArgs(args: unknown): args is SpatialWeightsArgs {
@@ -135,7 +135,7 @@ function isSpatialWeightsArgs(args: unknown): args is SpatialWeightsArgs {
     typeof args.datasetName === 'string' &&
     'type' in args &&
     typeof args.type === 'string' &&
-    ['knn', 'queen', 'rook', 'distance', 'kernel'].includes(args.type)
+    ['knn', 'queen', 'rook', 'threshold'].includes(args.type)
   );
 }
 
@@ -145,8 +145,8 @@ function isSpatialWeightsContext(
   return (
     typeof context === 'object' &&
     context !== null &&
-    'getExistingWeights' in context &&
-    typeof context.getExistingWeights === 'function'
+    'getGeometries' in context &&
+    typeof context.getGeometries === 'function'
   );
 }
 
@@ -171,19 +171,126 @@ async function executeSpatialWeights(
     precisionThreshold,
     distanceThreshold,
     isMile,
+    useCentroids,
   } = args;
-  const { getExistingWeights, getGeometries } = options.context;
+  const { getGeometries } = options.context;
+  const geometries = await getGeometries(datasetName);
 
-  return runSpatialWeights({
-    existingWeights: getExistingWeights(datasetName),
-    datasetName,
-    type,
+  if (!geometries) {
+    throw new Error(
+      `Error: geometries are empty. Please implement the getGeometries() context function.`
+    );
+  }
+
+  const weightsProps: CreateWeightsProps = {
+    weightsType: type,
     k,
-    orderOfContiguity,
-    includeLowerOrder,
-    precisionThreshold,
+    isQueen: type === 'queen',
     distanceThreshold,
     isMile,
-    getGeometries,
-  });
+    useCentroids,
+    precisionThreshold,
+    orderOfContiguity,
+    includeLowerOrder,
+    geometries,
+  };
+
+  const id = getWeightsId(datasetName, weightsProps);
+
+  let w: { weightsMeta: WeightsMeta; weights: number[][] } | null = null;
+
+  // check if the weights already exist in the global variable
+  const existingWeightData = globalWeightsData[id];
+  if (existingWeightData) {
+    w = {
+      weightsMeta: existingWeightData.weightsMeta,
+      weights: existingWeightData.weights,
+    };
+  } else {
+    // create the weights if it does not exist
+    const result = await createWeights(weightsProps);
+    w = {
+      weightsMeta: result.weightsMeta,
+      weights: result.weights,
+    };
+  }
+  // set the id to the weights meta
+  w.weightsMeta.id = id;
+
+  // save the weights to the global variable
+  globalWeightsData[id] = {
+    datasetId: datasetName,
+    ...w,
+  };
+
+  return {
+    llmResult: {
+      success: true,
+      result: {
+        datasetName,
+        weightsId: id,
+        weightsMeta: w.weightsMeta,
+        details: `Weights created successfully.`,
+      },
+    },
+    additionalData: {
+      datasetName,
+      weights: w.weights,
+      weightsMeta: w.weightsMeta,
+    },
+  };
+}
+
+export function getWeightsId(
+  datasetId: string,
+  weightsProps: CreateWeightsProps
+): string {
+  const parts = [
+    'w', // prefix
+    datasetId,
+    weightsProps.weightsType,
+  ];
+
+  if (
+    weightsProps.weightsType === 'queen' ||
+    weightsProps.weightsType === 'rook'
+  ) {
+    parts.push(
+      String(weightsProps.orderOfContiguity || 1),
+      weightsProps.includeLowerOrder ? 'lower' : '',
+      String(weightsProps.precisionThreshold || 0)
+    );
+  } else if (weightsProps.weightsType === 'knn') {
+    parts.push(String(weightsProps.k));
+  } else if (weightsProps.weightsType === 'threshold') {
+    const distanceThresholdString = weightsProps.distanceThreshold
+      ? weightsProps.distanceThreshold.toFixed(1)
+      : '0';
+    parts.push(distanceThresholdString, weightsProps.isMile ? 'mile' : 'km');
+  }
+
+  return parts.filter(Boolean).join('-');
+}
+
+export function getCachedWeights(
+  datasetId: string,
+  createWeightsProps: CreateWeightsProps
+) {
+  const id = getWeightsId(datasetId, createWeightsProps);
+  const existingWeightData = globalWeightsData[id];
+  if (existingWeightData) {
+    return {
+      weightsMeta: existingWeightData.weightsMeta,
+      weights: existingWeightData.weights,
+    };
+  }
+  return null;
+}
+
+export function getCachedWeightsById(weightsId: string) {
+  const existingWeightData = globalWeightsData[weightsId];
+  if (existingWeightData) {
+    return existingWeightData;
+  }
+  return null;
 }

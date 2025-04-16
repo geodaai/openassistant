@@ -12,6 +12,7 @@ import {
   isWeightsOutputData,
   MoranScatterPlotFunctionContext,
 } from './tool';
+import { getCachedWeightsById } from 'src/weights/tool';
 
 type MoranScatterOutputResult =
   | ErrorCallbackResult
@@ -77,14 +78,16 @@ export async function moranScatterCallbackFunction({
     }
   });
 
-  const { getValues, getWeights, config } =
+  const { getValues, config } =
     functionContext as MoranScatterPlotFunctionContext;
 
-  if (!weights && getWeights) {
-    // try to call getWeights to find from existing weights
-    const weightsResult = getWeights(weightsId);
-    weights = weightsResult.weights;
-    weightsMeta = weightsResult.weightsMeta;
+  if (!weights) {
+    // try to get weights from globalWeightsData
+    const weightsResult = getCachedWeightsById(weightsId);
+    if (weightsResult) {
+      weights = weightsResult.weights;
+      weightsMeta = weightsResult.weightsMeta;
+    }
   }
 
   if (!weights || !weightsMeta) {

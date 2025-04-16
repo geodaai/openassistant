@@ -2805,30 +2805,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@geoda/core@npm:^0.0.4":
-  version: 0.0.4
-  resolution: "@geoda/core@npm:0.0.4"
+"@geoda/core@npm:^0.0.5":
+  version: 0.0.5
+  resolution: "@geoda/core@npm:0.0.5"
   dependencies:
     "@loaders.gl/schema": "npm:^4.1.0-alpha.4"
     geojson: "npm:^0.5.0"
-  checksum: 3da57f4beec9500ef3b5119510a1ddaa046b566464a747e41c0a6a376b3948a37c36d81f3c754a81db6ff98d249a4ad99ce84b22c8b63acb221b77f510ddc91b
+  checksum: 92476270626e51621aa36637d525be4e9f68005482d8bbd3aab6dc0124816fca5327a3ee0a7c1e8a6d7658ad4eb7244f2d8a34e4973f49ae4e1e5c0ab0481e81
   languageName: node
   linkType: hard
 
-"@geoda/lisa@npm:^0.0.4":
-  version: 0.0.4
-  resolution: "@geoda/lisa@npm:0.0.4"
+"@geoda/lisa@npm:^0.0.5":
+  version: 0.0.5
+  resolution: "@geoda/lisa@npm:0.0.5"
   dependencies:
     "@loaders.gl/schema": "npm:^4.1.0-alpha.4"
     geojson: "npm:^0.5.0"
-  checksum: 964747035d9441975c95a6c1f610147d58a95a968d5250238c595a78176d1ce51c9611d0ef4e0afe68810d9009fb90e76512f2d6918fd831c6bc7e6e842442eb
+  checksum: 9ce57aa3846d633c0011e7be16905bf6ea07738f894102f830f9e0e8e6ee3427c0909c2df020ca7905e257e18e59374f146cb2de892d270069047f9583a3bb63
   languageName: node
   linkType: hard
 
-"@geoda/regression@npm:^0.0.4":
-  version: 0.0.4
-  resolution: "@geoda/regression@npm:0.0.4"
-  checksum: 038ad5608646cd1bf4c2bab501d88071e81173b0c9eb523669a145f1dab91b3ea00df0b28c9616540aec88f238d95e76c16baedbc7014454f31001f5ab9c101c
+"@geoda/regression@npm:^0.0.5":
+  version: 0.0.5
+  resolution: "@geoda/regression@npm:0.0.5"
+  checksum: b06eebd9b3713f3174d53b001d5341e60c7df60f6aeddfaee390c39d565c6c110f7b50d872c6ec293d26a753083f26b02fd84768868e54d2ff8570054d12b41f
   languageName: node
   linkType: hard
 
@@ -7407,9 +7407,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@openassistant/geoda@workspace:packages/geoda"
   dependencies:
-    "@geoda/core": "npm:^0.0.4"
-    "@geoda/lisa": "npm:^0.0.4"
-    "@geoda/regression": "npm:^0.0.4"
+    "@geoda/core": "npm:^0.0.5"
+    "@geoda/lisa": "npm:^0.0.5"
+    "@geoda/regression": "npm:^0.0.5"
     "@loaders.gl/core": "npm:^4.3.3"
     "@loaders.gl/schema": "npm:^4.3.3"
     "@nextui-org/react": "npm:^2.6.8"

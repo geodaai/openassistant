@@ -1,4 +1,4 @@
-import { WeightsMeta } from "@geoda/core";
+import { WeightsMeta } from '@geoda/core';
 
 /**
  * The function of getting the values of a variable from the dataset.
@@ -16,6 +16,4 @@ export type WeightsProps = {
   weightsMeta: WeightsMeta;
   weights: number[][];
   weightsValues?: number[][];
-  // isNew is used to determine if the weights are newly added by chatbot, so a number badge can be shown on the weights icon
-  isNew?: boolean;
 };

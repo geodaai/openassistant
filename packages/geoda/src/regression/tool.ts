@@ -2,7 +2,6 @@ import { tool } from '@openassistant/core';
 import { z } from 'zod';
 import { WeightsMeta } from '@geoda/core';
 import { GetValues, WeightsProps } from '../types';
-import { GetExistingWeights } from '../weights/tool';
 import { printRegressionResult, runRegression } from './utils';
 import {
   LinearRegressionResult,
@@ -62,7 +61,6 @@ export type ExecuteSpatialRegressionResult = {
 
 export type SpatialRegressionFunctionContext = {
   getValues: GetValues;
-  getExistingWeights?: GetExistingWeights;
   config?: {
     theme?: string;
   };
