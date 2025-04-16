@@ -1,14 +1,29 @@
-import React from 'react';
 import { AiAssistant } from '@openassistant/ui';
-import { dataClassify, DataClassifyTool } from '@openassistant/geoda';
+import {
+  dataClassify,
+  DataClassifyTool,
+  spatialWeights,
+  SpatialWeightsTool,
+} from '@openassistant/geoda';
 import { SAMPLE_DATASETS } from './dataset';
-import { tool } from '@openassistant/core';
-import { z } from 'zod';
+import { think } from '@openassistant/core';
+
 export default function App() {
   const getValues = async (datasetName: string, variableName: string) => {
     return (SAMPLE_DATASETS[datasetName] as any[]).map(
       (item) => item[variableName]
     );
+  };
+
+  const getGeometries = async (datasetName: string) => {
+    // get points in [longitude, latitude] array format from dataset
+    const points: [number, number][] = SAMPLE_DATASETS[datasetName].map(
+      (item) => [item.longitude, item.latitude]
+    );
+    return {
+      type: 'points' as const,
+      points,
+    };
   };
 
   // Configure the dataClassify tool
@@ -20,30 +35,19 @@ export default function App() {
     },
   };
 
-  const thinkTool = tool({
-    description:
-      'Please ALWAYS use this tool to make a plan before calling any other tools to solve the problem.',
-    parameters: z.object({
-      question: z.string().describe('The question to think about'),
-    }),
-    execute: async ({ question }) => {
-      return {
-        llmResult: {
-          success: true,
-          result: {
-            question,
-            instruction: `
-- Before executing the plan, please summarize the plan for using the tools.
-- If the tools are missing parameters, please ask the user to provide the parameters.
-- When executing the plan, please try to fix the error if there is any.
-- After executing the plan, please summarize the result and provide the result in a markdown format.
-`,
-          },
-        },
-      };
+  const weightsTool: SpatialWeightsTool = {
+    ...spatialWeights,
+    context: {
+      ...spatialWeights.context,
+      getGeometries,
     },
-  });
+  };
 
+  const tools = {
+    think,
+    dataClassify: classifyTool,
+    spatialWeights: weightsTool,
+  };
   const welcomeMessage = `
 Welcome to the GeoDa Tools Example!
 
@@ -78,7 +82,7 @@ variables:
             modelProvider="openai"
             model="gpt-4o"
             apiKey={process.env.OPENAI_API_KEY || ''}
-            tools={{ dataClassify: classifyTool, think: thinkTool }}
+            tools={tools}
             welcomeMessage={welcomeMessage}
             instructions={instructions}
           />

@@ -10,6 +10,7 @@ export * from './spatial-count/component/spatial-count-component';
 
 export * from './weights/tool';
 export * from './weights/component/weights-meta-table';
+export * from './weights/utils';
 
 export * from './moran-scatterplot/tool';
 export * from './moran-scatterplot/definition';

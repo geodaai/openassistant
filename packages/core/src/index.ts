@@ -27,3 +27,5 @@ export * from './hooks/use-assistant';
 export * from './utils/create-assistant';
 
 export * from './utils/messages';
+
+export * from './tools/think';

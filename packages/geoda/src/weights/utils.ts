@@ -1,4 +1,12 @@
-import { BinaryGeometryType, WeightsMeta } from '@geoda/core';
+import { Feature } from 'geojson';
+import {
+  BinaryGeometryType,
+  getGeometryCollectionFromBinaryGeometries,
+  getGeometryCollectionFromGeoJsonFeatures,
+  getGeometryCollectionFromPointLayerData,
+  initWASM,
+  WeightsMeta,
+} from '@geoda/core';
 import { BinaryFeatureCollection } from '@loaders.gl/schema';
 import {
   createDistanceWeights,
@@ -9,6 +17,68 @@ import {
 } from './weights-utils';
 import { GetGeometries } from './tool';
 import { WeightsProps } from '../types';
+
+export async function getGeometriesFromGeoJsonFeatures(features: Feature[]) {
+  const wasmInstance = await initWASM();
+  return await getGeometryCollectionFromGeoJsonFeatures({
+    features,
+    wasm: wasmInstance,
+  });
+}
+
+export async function getGeometriesFromPoints(points: [number, number][]) {
+  const wasmInstance = await initWASM();
+  const pointLayerData = points.map((p) => ({
+    position: [p[0], p[1]],
+    index: 0,
+    neighbors: [],
+  }));
+  return await getGeometryCollectionFromPointLayerData({
+    pointLayerData,
+    wasm: wasmInstance,
+  });
+}
+
+export async function getGeometriesFromBinaryGeometries(
+  binaryGeometryType: BinaryGeometryType,
+  binaryGeometries: BinaryFeatureCollection[]
+) {
+  const wasmInstance = await initWASM();
+  return await getGeometryCollectionFromBinaryGeometries(
+    binaryGeometryType,
+    binaryGeometries,
+    wasmInstance
+  );
+}
+
+export async function getGeometriesHelper({
+  type,
+  binaryGeometryType,
+  binaryGeometries,
+  geojsonFeatures,
+  points,
+}: {
+  type: 'geojson' | 'points' | 'binary';
+  binaryGeometryType?: BinaryGeometryType;
+  binaryGeometries?: BinaryFeatureCollection[];
+  geojsonFeatures?: Feature[];
+  points?: [number, number][];
+}) {
+  if (type === 'geojson' && geojsonFeatures) {
+    return await getGeometriesFromGeoJsonFeatures(geojsonFeatures);
+  } else if (type === 'points' && points) {
+    return await getGeometriesFromPoints(points);
+  } else if (type === 'binary' && binaryGeometryType && binaryGeometries) {
+    return await getGeometriesFromBinaryGeometries(
+      binaryGeometryType,
+      binaryGeometries
+    );
+  } else {
+    throw new Error(
+      'getGeometriesHelper() only supports geojson Features, points e.g. [number, number] array, or deck.gl binary geometries.'
+    );
+  }
+}
 
 export async function runSpatialWeights({
   existingWeights,
@@ -41,7 +111,11 @@ export async function runSpatialWeights({
       throw new Error('Invalid distance threshold for distance weights');
     }
 
-    const { binaryGeometryType, binaryGeometries } = getGeometries(datasetName);
+    const geometries  = await getGeometries(datasetName);
+
+    const { binaryGeometryType, binaryGeometries } = await getGeometriesHelper({
+      ...geometries,
+    });
 
     if (!binaryGeometries || !binaryGeometryType) {
       throw new Error(

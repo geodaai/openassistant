@@ -1,5 +1,6 @@
 import { tool } from '@openassistant/core';
 import { z } from 'zod';
+import { Feature } from 'geojson';
 import { BinaryGeometryType, WeightsMeta } from '@geoda/core';
 import { BinaryFeatureCollection } from '@loaders.gl/schema';
 import { runSpatialWeights } from './utils';
@@ -65,15 +66,20 @@ export const spatialWeights = tool<
   },
 });
 
+export type SpatialWeightsTool = typeof spatialWeights;
 export type GetExistingWeights = (datasetName: string) => WeightsProps[];
 
-export type GetGeometries = (datasetName: string) => {
-  binaryGeometryType: BinaryGeometryType;
-  binaryGeometries: BinaryFeatureCollection[];
-};
+export type GetGeometries = (datasetName: string) =>
+  | Promise<{ type: 'points'; points: [number, number][] }>
+  | Promise<{
+      type: 'binary';
+      binaryGeometryType: BinaryGeometryType;
+      binaryGeometries: BinaryFeatureCollection[];
+    }>
+  | Promise<{ type: 'geojson'; geojsonFeatures: Feature[] }>;
 
 export type SpatialWeightsFunctionContext = {
-  getExistingWeights: GetExistingWeights;
+  getExistingWeights?: GetExistingWeights;
   getGeometries: GetGeometries;
 };
 
