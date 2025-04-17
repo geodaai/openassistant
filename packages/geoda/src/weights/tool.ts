@@ -1,12 +1,7 @@
 import { tool } from '@openassistant/core';
 import { z } from 'zod';
-import {
-  createWeights,
-  SpatialGeometry,
-  WeightsMeta,
-  CreateWeightsProps,
-} from '@geoda/core';
-import { WeightsProps } from '../types';
+import { createWeights, WeightsMeta, CreateWeightsProps } from '@geoda/core';
+import { WeightsProps, GetGeometries } from '../types';
 
 // global variable to store the created weights
 export const globalWeightsData: Record<string, WeightsProps> = {};
@@ -68,13 +63,6 @@ export const spatialWeights = tool<
 });
 
 export type SpatialWeightsTool = typeof spatialWeights;
-
-/**
- * Get the geometries of the dataset.
- * @param datasetName - The name of the dataset.
- * @returns The geometries of the dataset. See {@link SpatialGeometry} for more details.
- */
-export type GetGeometries = (datasetName: string) => Promise<SpatialGeometry>;
 
 export type SpatialWeightsFunctionContext = {
   getGeometries: GetGeometries;

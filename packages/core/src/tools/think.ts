@@ -12,7 +12,7 @@ export const think = tool({
         result: {
           question,
           instruction: `
-- Before executing the plan, please summarize the plan for using the tools.
+- If you can use the provided tools to solve the problem, please make a step-by-step plan to use the tools in a markdown format.
 - If the tools are missing parameters, please ask the user to provide the parameters.
 - When executing the plan, please try to fix the error if there is any.
 - After executing the plan, please summarize the result and provide the result in a markdown format.

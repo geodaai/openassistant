@@ -7455,6 +7455,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@openassistant/mapdata@workspace:*, @openassistant/mapdata@workspace:packages/mapdata":
+  version: 0.0.0-use.local
+  resolution: "@openassistant/mapdata@workspace:packages/mapdata"
+  dependencies:
+    "@openassistant/common": "workspace:*"
+    "@openassistant/core": "workspace:*"
+  languageName: unknown
+  linkType: soft
+
 "@openassistant/ui@workspace:*, @openassistant/ui@workspace:packages/ui":
   version: 0.0.0-use.local
   resolution: "@openassistant/ui@workspace:packages/ui"
@@ -18548,6 +18557,7 @@ __metadata:
   resolution: "geoda_tools@workspace:examples/geoda_tools"
   dependencies:
     "@openassistant/geoda": "workspace:*"
+    "@openassistant/mapdata": "workspace:*"
     "@openassistant/ui": "workspace:*"
     "@types/react": "npm:^18.2.0"
     "@types/react-dom": "npm:^18.2.0"

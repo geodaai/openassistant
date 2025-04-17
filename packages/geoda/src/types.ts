@@ -1,4 +1,4 @@
-import { WeightsMeta } from '@geoda/core';
+import { WeightsMeta, SpatialGeometry } from '@geoda/core';
 
 /**
  * The function of getting the values of a variable from the dataset.
@@ -17,3 +17,10 @@ export type WeightsProps = {
   weights: number[][];
   weightsValues?: number[][];
 };
+
+/**
+ * Get the geometries of the dataset.
+ * @param datasetName - The name of the dataset.
+ * @returns The geometries of the dataset. See {@link SpatialGeometry} for more details.
+ */
+export type GetGeometries = (datasetName: string) => Promise<SpatialGeometry>;

@@ -88,6 +88,7 @@ export async function SpatialCountCallbackFunction({
 
   const result = await runSpatialJoin({
     firstDatasetName,
+    // @ts-expect-error - will be deprecated in the future
     secondDatasetName,
     joinVariableNames,
     joinOperators,

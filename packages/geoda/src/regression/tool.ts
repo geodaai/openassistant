@@ -1,14 +1,14 @@
 import { tool } from '@openassistant/core';
 import { z } from 'zod';
-import { WeightsMeta } from '@geoda/core';
-import { GetValues, WeightsProps } from '../types';
-import { printRegressionResult, runRegression } from './utils';
 import {
   LinearRegressionResult,
   SpatialErrorResult,
   SpatialLagResult,
 } from '@geoda/regression';
-import { getCachedWeightsById } from 'src/weights/tool';
+
+import { GetValues, WeightsProps } from '../types';
+import { printRegressionResult, runRegression } from './utils';
+import { getWeights } from '../utils';
 
 export const spatialRegression = tool<
   // parameters of the tool
@@ -137,33 +137,10 @@ async function executeSpatialRegression(
     );
 
     // Get weights if needed
-    let weights: number[][] | null = null;
-    let weightsMeta: WeightsMeta | null = null;
-
-    if (!weightsId) {
-      if (options.previousExecutionOutput) {
-        // Try to get weights from previous execution
-        options.previousExecutionOutput.forEach((output) => {
-          if (
-            output.data &&
-            'weights' in output.data &&
-            'weightsMeta' in output.data
-          ) {
-            weights = output.data.weights;
-            weightsMeta = output.data.weightsMeta;
-          }
-        });
-      }
-    }
-
-    if (!weights && weightsId) {
-      // Try to get weights from cache
-      const existingWeights = getCachedWeightsById(weightsId);
-      if (existingWeights) {
-        weights = existingWeights.weights;
-        weightsMeta = existingWeights.weightsMeta;
-      }
-    }
+    const { weights, weightsMeta } = getWeights(
+      weightsId,
+      options.previousExecutionOutput
+    );
 
     if (
       !weights &&

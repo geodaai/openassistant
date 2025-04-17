@@ -11,6 +11,8 @@
  */
 export function applyJoin(joinOperator: string, values: number[]) {
   switch (joinOperator) {
+    case 'count':
+      return values.length;
     case 'sum':
       return values.reduce((a, b) => a + b, 0);
     case 'mean':

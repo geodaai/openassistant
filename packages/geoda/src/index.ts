@@ -18,7 +18,14 @@ export * from './moran-scatterplot/callback-component';
 export * from './moran-scatterplot/component/moran-scatter-option';
 export * from './moran-scatterplot/component/moran-scatter-plot';
 export * from './moran-scatterplot/component/moran-scatter-component';
+
 export * from './regression/tool';
 export * from './regression/utils';
 
+export * from './lisa/tool';
+
+export * from './us_states/tool';
+export * from './us_zipcodes/tool';
+
 export * from './types';
+export * from './utils';

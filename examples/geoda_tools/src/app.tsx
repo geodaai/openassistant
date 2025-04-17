@@ -11,10 +11,17 @@ import {
   MoranScatterPlotToolComponent,
   spatialRegression,
   SpatialRegressionTool,
+  lisa,
+  LisaTool,
+  spatialJoin,
+  SpatialJoinTool,
+  getUsStateGeojson,
+  getUsZipcodeGeojson,
 } from '@openassistant/geoda';
-import { SAMPLE_DATASETS } from './dataset';
+
 import { think } from '@openassistant/core';
 import { PointLayerData } from '@geoda/core';
+import { SAMPLE_DATASETS } from './dataset';
 
 export default function App() {
   const getValues = async (datasetName: string, variableName: string) => {
@@ -70,23 +77,51 @@ export default function App() {
     },
   };
 
+  const lisaTool: LisaTool = {
+    ...lisa,
+    context: {
+      ...lisa.context,
+      getValues,
+    },
+  };
+
+  const spatialJoinTool: SpatialJoinTool = {
+    ...spatialJoin,
+    context: {
+      ...spatialJoin.context,
+      getValues,
+      getGeometries,
+    },
+  };
+
+  const getUsStateGeojsonTool = {
+    ...getUsStateGeojson,
+  };
+
   const tools = {
     think,
     dataClassify: classifyTool,
     spatialWeights: weightsTool,
     globalMoran: globalMoranTool,
     spatialRegression: regressionTool,
+    lisa: lisaTool,
+    spatialJoin: spatialJoinTool,
+    getUsStateGeojson: getUsStateGeojsonTool,
+    getUsZipcodeGeojson,
   };
+
   const welcomeMessage = `
 Hi! I'm your GeoDa assistant. Here are some example queries you can try:
 
 1. How can I classify the population data into 5 classes using natural breaks?
-2. Could you help me create a queen contiguity weights matrix?
+2. Could you help me create a queen contiguity weights?
 3. I'd like to see a Moran scatter plot of the population data - can you help with that?
 4. Can you help me analyze the spatial autocorrelation of population data?
 5. Can you run an OLS regression to analyze how population and income affect revenue?
-6. Can you check if there's spatial autocorrelation in our OLS residuals?
-7. Based on the spatial diagnostics, should we use a spatial lag or spatial error model? Please run the appropriate model.
+6. Do I need a spatial regression model?
+7. Can you help to check the spatial patterns of the revenue data?
+8. How many venues are there in California?
+9. What is the mean revenue in California?
 `;
 
   const instructions = `

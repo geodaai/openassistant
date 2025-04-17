@@ -1,20 +1,20 @@
 import { tool } from '@openassistant/core';
-import {
-  SpatialJoinGeometries,
-  spatialJoin as spatialJoinFunc,
-} from '@geoda/core';
+import { spatialJoin as spatialJoinFunc } from '@geoda/core';
 import { z } from 'zod';
 import { applyJoin } from './apply-join';
 import { SpatialJoinToolComponent } from './component/spatial-count-component';
-import { GetValues } from '../types';
+import { GetValues, GetGeometries } from '../types';
+import { getCachedGeojson } from '../utils';
 
 export const spatialJoin = tool<
   // parameters of the tool
   z.ZodObject<{
     firstDatasetName: z.ZodString;
-    secondDatasetName: z.ZodString;
+    secondDataset: z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString>]>;
     joinVariableNames: z.ZodArray<z.ZodString>;
-    joinOperators: z.ZodArray<z.ZodString>;
+    joinOperators: z.ZodArray<
+      z.ZodEnum<['sum', 'mean', 'min', 'max', 'median', 'count']>
+    >;
   }>,
   // return type of the tool
   ExecuteSpatialJoinResult['llmResult'],
@@ -23,27 +23,31 @@ export const spatialJoin = tool<
   // type of the context
   SpatialCountFunctionContext
 >({
-  description:
-    'spatial join geometries from the first dataset with geometries from the second dataset.',
+  description: `Spatial join geometries from the first dataset with geometries from the second dataset. 
+- IMPORTANT: When querying about states (e.g. California), ALWAYS use the state code in array format like ["CA"]. For zipcodes, use ["90210"].
+- For existing datasets, ONLY use the valid dataset name. DO NOT use "usStates" - it is not a valid dataset name.`,
   parameters: z.object({
-    firstDatasetName: z
-      .string()
-      .describe(
-        'The name of the first or right dataset, which will be joined.'
-      ),
-    secondDatasetName: z
-      .string()
-      .describe('The name of the second or left dataset.'),
+    firstDatasetName: z.string(),
+    secondDataset: z.union([
+      z
+        .string()
+        .describe(
+          'The name of an existing dataset to use as the second dataset. DO NOT use "usStates" - it is not a valid dataset name.'
+        ),
+      z
+        .array(z.string())
+        .describe(
+          'For state queries, ALWAYS use the state code in array format (e.g. ["CA"] for California, ["NY"] for New York). For zipcodes, use ["90210"].'
+        ),
+    ]),
     joinVariableNames: z
       .array(z.string())
       .describe(
         'The array of variable names from the first dataset to be joined.'
       ),
-    joinOperators: z
-      .array(z.string())
-      .describe(
-        'The array of operator to join each variable. The possible operators are: sum, mean, min, max, median'
-      ),
+    joinOperators: z.array(
+      z.enum(['sum', 'mean', 'min', 'max', 'median', 'count'])
+    ),
   }),
   execute: executeSpatialJoin,
   context: {
@@ -68,7 +72,7 @@ export type SpatialJoinTool = typeof spatialJoin;
  * @returns the geometries from the dataset
  */
 export type SpatialCountFunctionContext = {
-  getGeometries: (datasetName: string) => SpatialJoinGeometries;
+  getGeometries: GetGeometries;
   getValues: GetValues;
   saveAsDataset?: (datasetName: string, data: Record<string, number[]>) => void;
 };
@@ -78,7 +82,8 @@ export type ExecuteSpatialJoinResult = {
     success: boolean;
     result?: {
       firstDatasetName: string;
-      secondDatasetName: string;
+      secondDatasetName?: string;
+      secondDataset?: string[];
       joinVariableNames?: string[];
       joinOperators?: string[];
       details: string;
@@ -87,7 +92,8 @@ export type ExecuteSpatialJoinResult = {
   };
   additionalData?: {
     firstDatasetName: string;
-    secondDatasetName: string;
+    secondDatasetName?: string;
+    secondDataset?: string[];
     joinVariableNames?: string[];
     joinOperators?: string[];
     joinResult: number[][];
@@ -97,7 +103,7 @@ export type ExecuteSpatialJoinResult = {
 
 type SpatialJoinArgs = {
   firstDatasetName: string;
-  secondDatasetName: string;
+  secondDataset: string | string[];
   joinVariableNames: string[];
   joinOperators: string[];
 };
@@ -108,8 +114,6 @@ function isSpatialJoinArgs(args: unknown): args is SpatialJoinArgs {
     args !== null &&
     'firstDatasetName' in args &&
     typeof args.firstDatasetName === 'string' &&
-    'secondDatasetName' in args &&
-    typeof args.secondDatasetName === 'string' &&
     'joinVariableNames' in args &&
     Array.isArray(args.joinVariableNames) &&
     'joinOperators' in args &&
@@ -142,17 +146,14 @@ async function executeSpatialJoin(
     throw new Error('Invalid context for spatialJoin tool');
   }
 
-  const {
-    firstDatasetName,
-    secondDatasetName,
-    joinVariableNames,
-    joinOperators,
-  } = args;
+  const { firstDatasetName, secondDataset, joinVariableNames, joinOperators } =
+    args;
   const { getGeometries, getValues } = options.context;
 
   return runSpatialJoin({
     firstDatasetName,
-    secondDatasetName,
+    secondDataset,
+    previousExecutionOutput: options.previousExecutionOutput,
     joinVariableNames,
     joinOperators,
     getGeometries,
@@ -162,30 +163,59 @@ async function executeSpatialJoin(
 
 export async function runSpatialJoin({
   firstDatasetName,
-  secondDatasetName,
+  secondDataset,
+  previousExecutionOutput,
   joinVariableNames,
   joinOperators,
   getGeometries,
   getValues,
 }: {
   firstDatasetName: string;
-  secondDatasetName: string;
+  secondDataset: string | string[];
+  previousExecutionOutput?: {
+    data?: {
+      geojson?: GeoJSON.FeatureCollection;
+    };
+  };
   joinVariableNames?: string[];
   joinOperators?: string[];
-  getGeometries: (datasetName: string) => SpatialJoinGeometries;
+  getGeometries: GetGeometries;
   getValues: GetValues;
 }) {
   try {
     // Get geometries from both datasets
-    const firstGeometries = getGeometries(firstDatasetName);
-    const secondGeometries = getGeometries(secondDatasetName);
+    const firstGeometries = await getGeometries(firstDatasetName);
+    let secondGeometries;
+
+    if (typeof secondDataset === 'string') {
+      secondGeometries = await getGeometries(secondDataset);
+    } else if (Array.isArray(secondDataset)) {
+      // get the geometries (states or zipcodes) from the previous tools
+      if (previousExecutionOutput?.data?.geojson) {
+        secondGeometries = previousExecutionOutput.data.geojson.features;
+      } else {
+        secondDataset.forEach(async (item) => {
+          const features = getCachedGeojson(item);
+          if (features.length > 0) {
+            if (!secondGeometries) {
+              secondGeometries = [];
+            }
+            secondGeometries = [...secondGeometries, ...features];
+          }
+        });
+      }
+    }
+
+    if (!secondGeometries) {
+      throw new Error('Second dataset geometries not found');
+    }
 
     const result = await spatialJoinFunc({
       leftGeometries: secondGeometries,
       rightGeometries: firstGeometries,
     });
 
-    // get basic statistics of the result
+    // get basic statistics of the result for LLM
     const basicStatistics = getBasicStatistics(result);
 
     const joinValues: Record<string, number[]> = {
@@ -219,7 +249,6 @@ export async function runSpatialJoin({
         success: true,
         result: {
           firstDatasetName,
-          secondDatasetName,
           joinVariableNames,
           joinOperators,
           details: `Spatial count function executed successfully. ${JSON.stringify(basicStatistics)}`,
@@ -227,7 +256,6 @@ export async function runSpatialJoin({
       },
       additionalData: {
         firstDatasetName,
-        secondDatasetName,
         joinVariableNames,
         joinOperators,
         joinResult: result,

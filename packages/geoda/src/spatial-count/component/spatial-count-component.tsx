@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import AutoSizer from 'react-virtualized-auto-sizer';
 import {
   Table,
   TableColumn,
@@ -124,14 +125,18 @@ export function SpatialJoinToolComponent(props: SpatialCountComponentProps) {
   };
 
   return (
-    <ExpandableContainer
-      defaultWidth={isExpanded ? 600 : undefined}
-      defaultHeight={isExpanded ? 800 : 400}
-      draggable={props.isDraggable || false}
-      onDragStart={onDragStart}
-      onExpanded={onExpanded}
-    >
-      <SpatialCountComponent {...props} />
-    </ExpandableContainer>
+    <AutoSizer>
+      {({ width, height }) => (
+        <ExpandableContainer
+          defaultWidth={isExpanded ? width : undefined}
+          defaultHeight={isExpanded ? height : 400}
+          draggable={props.isDraggable || false}
+          onDragStart={onDragStart}
+          onExpanded={onExpanded}
+        >
+          <SpatialCountComponent {...props} />
+        </ExpandableContainer>
+      )}
+    </AutoSizer>
   );
 }
