@@ -8,6 +8,7 @@ import {
   SpatialErrorResult,
   SpatialLagResult,
 } from '@geoda/regression';
+import { getCachedWeightsById } from 'src/weights/tool';
 
 export const spatialRegression = tool<
   // parameters of the tool
@@ -25,7 +26,14 @@ export const spatialRegression = tool<
   // type of the context
   SpatialRegressionFunctionContext
 >({
-  description: 'Apply spatial regression analysis.',
+  description: `Apply spatial regression analysis.
+Note:
+- please only use the knowledge from Luc Anselin's GeoDa book and the GeoDa documentation to answer the question
+- you can run spatial diagnostics with OLS model if you need to determine if spatial regression model is needed
+- do NOT run global Moran's I with independent variables to determine if spatial regression model is needed
+- you can run spatial models if you need to account for spatial effects in the model
+- please provide suggestions for improving the model and the results
+  `,
   parameters: z.object({
     datasetName: z.string(),
     dependentVariable: z.string(),
@@ -71,7 +79,7 @@ type SpatialRegressionArgs = {
   dependentVariable: string;
   independentVariables: string[];
   modelType: string;
-  weightsId: string;
+  weightsId?: string;
 };
 
 export function isSpatialRegressionArgs(
@@ -83,8 +91,7 @@ export function isSpatialRegressionArgs(
     'datasetName' in args &&
     'dependentVariable' in args &&
     'independentVariables' in args &&
-    'modelType' in args &&
-    'weightsId' in args
+    'modelType' in args
   );
 }
 
@@ -119,7 +126,7 @@ async function executeSpatialRegression(
       modelType,
       weightsId,
     } = args;
-    const { getValues, getExistingWeights } = options.context;
+    const { getValues } = options.context;
 
     // Get the dependent variable values
     const yValues = await getValues(datasetName, dependentVariable);
@@ -133,7 +140,7 @@ async function executeSpatialRegression(
     let weights: number[][] | null = null;
     let weightsMeta: WeightsMeta | null = null;
 
-    if (modelType !== 'classic' || !weightsId) {
+    if (!weightsId) {
       if (options.previousExecutionOutput) {
         // Try to get weights from previous execution
         options.previousExecutionOutput.forEach((output) => {
@@ -142,23 +149,19 @@ async function executeSpatialRegression(
             'weights' in output.data &&
             'weightsMeta' in output.data
           ) {
-            if (output.data.weightsMeta.id === weightsId) {
-              weights = output.data.weights;
-              weightsMeta = output.data.weightsMeta;
-            }
+            weights = output.data.weights;
+            weightsMeta = output.data.weightsMeta;
           }
         });
       }
+    }
 
-      if (!weights && getExistingWeights) {
-        const existingWeights = getExistingWeights(datasetName);
-        const weightsResult = existingWeights.find(
-          (weight) => weight.weightsMeta.id === weightsId
-        );
-        if (weightsResult) {
-          weights = weightsResult.weights;
-          weightsMeta = weightsResult.weightsMeta;
-        }
+    if (!weights && weightsId) {
+      // Try to get weights from cache
+      const existingWeights = getCachedWeightsById(weightsId);
+      if (existingWeights) {
+        weights = existingWeights.weights;
+        weightsMeta = existingWeights.weightsMeta;
       }
     }
 

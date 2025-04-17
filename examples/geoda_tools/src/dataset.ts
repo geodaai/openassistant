@@ -7,6 +7,7 @@ export const SAMPLE_DATASETS: Record<string, any[]> = {
       longitude: -74.006,
       revenue: 12500000,
       population: 8400000,
+      income: 70000,
     },
     {
       index: 1,
@@ -15,6 +16,7 @@ export const SAMPLE_DATASETS: Record<string, any[]> = {
       longitude: -118.2437,
       revenue: 9800000,
       population: 3900000,
+      income: 65000,
     },
     {
       index: 2,
@@ -23,6 +25,7 @@ export const SAMPLE_DATASETS: Record<string, any[]> = {
       longitude: -87.6298,
       revenue: 7200000,
       population: 2700000,
+      income: 62000,
     },
     {
       index: 3,
@@ -31,6 +34,7 @@ export const SAMPLE_DATASETS: Record<string, any[]> = {
       longitude: -95.3698,
       revenue: 6800000,
       population: 2300000,
+      income: 55000,
     },
     {
       index: 4,
@@ -39,6 +43,7 @@ export const SAMPLE_DATASETS: Record<string, any[]> = {
       longitude: -112.074,
       revenue: 5400000,
       population: 1600000,
+      income: 58000,
     },
     {
       index: 5,
@@ -47,6 +52,7 @@ export const SAMPLE_DATASETS: Record<string, any[]> = {
       longitude: -75.1652,
       revenue: 5900000,
       population: 1580000,
+      income: 52000,
     },
     {
       index: 6,
@@ -55,6 +61,7 @@ export const SAMPLE_DATASETS: Record<string, any[]> = {
       longitude: -98.4936,
       revenue: 4800000,
       population: 1540000,
+      income: 48000,
     },
     {
       index: 7,
@@ -63,6 +70,7 @@ export const SAMPLE_DATASETS: Record<string, any[]> = {
       longitude: -117.1611,
       revenue: 5200000,
       population: 1420000,
+      income: 75000,
     },
   ],
 };

@@ -149,10 +149,8 @@ async function executeMoranScatterPlot(
       // check if weightsId can be retrived from previousExecutionOutput
       options.previousExecutionOutput.forEach((output) => {
         if (isWeightsOutputData(output.data)) {
-          if (output.data.weightsMeta.id === weightsId) {
-            weights = output.data.weights;
-            weightsMeta = output.data.weightsMeta;
-          }
+          weights = output.data.weights;
+          weightsMeta = output.data.weightsMeta;
         }
       });
     }

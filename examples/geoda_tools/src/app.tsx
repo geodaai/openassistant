@@ -9,6 +9,8 @@ import {
   globalMoran,
   GlobalMoranTool,
   MoranScatterPlotToolComponent,
+  spatialRegression,
+  SpatialRegressionTool,
 } from '@openassistant/geoda';
 import { SAMPLE_DATASETS } from './dataset';
 import { think } from '@openassistant/core';
@@ -60,21 +62,31 @@ export default function App() {
     component: MoranScatterPlotToolComponent,
   };
 
+  const regressionTool: SpatialRegressionTool = {
+    ...spatialRegression,
+    context: {
+      ...spatialRegression.context,
+      getValues,
+    },
+  };
+
   const tools = {
     think,
     dataClassify: classifyTool,
     spatialWeights: weightsTool,
     globalMoran: globalMoranTool,
+    spatialRegression: regressionTool,
   };
   const welcomeMessage = `
-Welcome to the GeoDa Tools Example!
+Hi! I'm your GeoDa assistant. Here are some example queries you can try:
 
-For example,
-
-1. classify the population data into 5 classes using natural breaks classification
-2. create a queen contiguity weights
-3. create a moran scatter plot of the population data
-4. Can you help me analyze the spatial autocorrelation of population data
+1. How can I classify the population data into 5 classes using natural breaks?
+2. Could you help me create a queen contiguity weights matrix?
+3. I'd like to see a Moran scatter plot of the population data - can you help with that?
+4. Can you help me analyze the spatial autocorrelation of population data?
+5. Can you run an OLS regression to analyze how population and income affect revenue?
+6. Can you check if there's spatial autocorrelation in our OLS residuals?
+7. Based on the spatial diagnostics, should we use a spatial lag or spatial error model? Please run the appropriate model.
 `;
 
   const instructions = `
@@ -89,6 +101,7 @@ variables:
 - longitude
 - revenue
 - population
+- income
 `;
 
   return (

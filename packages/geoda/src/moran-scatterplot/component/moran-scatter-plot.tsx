@@ -1,7 +1,6 @@
 import { WeightsMeta } from '@geoda/core';
 import { useMemo, useRef, useState } from 'react';
 import ReactEChartsCore from 'echarts-for-react';
-import AutoSizer from 'react-virtualized-auto-sizer';
 import {
   TooltipComponent,
   GridComponent,
