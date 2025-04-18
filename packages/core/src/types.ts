@@ -261,6 +261,7 @@ export type CustomFunctions = {
     component?: React.ComponentType;
     /** @deprecated Callback function to create custom UI elements like plots or maps */
     callbackMessage?: CustomMessageCallback;
+    priority?: number;
   };
 };
 

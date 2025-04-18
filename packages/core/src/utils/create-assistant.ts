@@ -105,6 +105,12 @@ export type ExtendedTool<
    * @type {React.ReactNode}
    */
   component?: React.ElementType;
+  /**
+   * The priority of the tool. Higher priority tools will be executed first.
+   * Default priority is 0. Tools with priority > 0 will be executed before tools with priority 0.
+   * @type {number}
+   */
+  priority?: number;
 };
 
 /**

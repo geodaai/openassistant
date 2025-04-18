@@ -19,7 +19,6 @@ import {
   getUsZipcodeGeojson,
 } from '@openassistant/geoda';
 
-import { think } from '@openassistant/core';
 import { PointLayerData } from '@geoda/core';
 import { SAMPLE_DATASETS } from './dataset';
 
@@ -99,7 +98,6 @@ export default function App() {
   };
 
   const tools = {
-    think,
     dataClassify: classifyTool,
     spatialWeights: weightsTool,
     globalMoran: globalMoranTool,
@@ -115,28 +113,31 @@ Hi! I'm your GeoDa assistant. Here are some example queries you can try:
 
 1. How can I classify the population data into 5 classes using natural breaks?
 2. Could you help me create a queen contiguity weights?
-3. I'd like to see a Moran scatter plot of the population data - can you help with that?
-4. Can you help me analyze the spatial autocorrelation of population data?
-5. Can you run an OLS regression to analyze how population and income affect revenue?
-6. Do I need a spatial regression model?
-7. Can you help to check the spatial patterns of the revenue data?
-8. How many venues are there in California?
-9. What is the mean revenue in California?
+3. Can you help me analyze the spatial autocorrelation of population data?
+4. Can you run an OLS regression to analyze how population and income affect revenue?
+5. Do I need a spatial regression model?
+6. Can you help to check the spatial patterns of the revenue data?
+7. How many venues are there in California and Texas?
+8. What are the total revenue in California and Texas?
 `;
 
   const instructions = `
-You are a helpful assistant. Please try to use the provided tools to solve the problem.
-
-Please use the following datasets:
-
-datasetName: myVenues
-variables:
-- location
-- latitude
-- longitude
-- revenue
-- population
-- income
+You are a helpful assistant.
+Note:
+- For each user prompt, you MUST make a plan to answer the user's question.
+- The plan MUST be included in your response before any tool calls are made.
+- Please try to use the provided tools to solve the problem.
+- If the tools are missing parameters, please ask the user to provide the parameters.
+- If the tools are failed, please try to fix the error and return the reason to user in a markdown format.
+- Please use the following datasets:
+  - datasetName: myVenues
+    variables:
+    - location
+    - latitude
+    - longitude
+    - revenue
+    - population
+    - income
 `;
 
   return (

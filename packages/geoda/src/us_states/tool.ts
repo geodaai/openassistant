@@ -39,8 +39,6 @@ export const getUsStateGeojson = tool<
     const geojson = await response.json();
     stateGeojsonCache.set(state, geojson);
 
-    console.log(stateGeojsonCache);
-
     return {
       llmResult: {
         success: true,

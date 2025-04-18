@@ -1,25 +1,20 @@
 import { Resizable } from 're-resizable';
-import { useState } from 'react';
 
 export function ResizablePlotContainer({
   children,
   defaultWidth,
   defaultHeight,
+  isHovered,
   handlePosition = 'bottomRight',
 }: {
   children: JSX.Element;
   defaultWidth?: number;
   defaultHeight?: number;
+  isHovered?: boolean;
   handlePosition?: 'bottomRight' | 'bottomLeft' | 'topRight' | 'topLeft';
 }) {
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
-    <div
-      className="mt-4 mb-2"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <div className="mt-4 mb-2">
       <Resizable
         defaultSize={{
           width: defaultWidth ?? '100%',

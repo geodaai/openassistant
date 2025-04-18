@@ -25,6 +25,7 @@ export function ExpandableContainer({
   onDragStart?: DragEventHandler<HTMLButtonElement>;
   onExpanded?: (isExpanded: boolean) => void;
 }) {
+  const [isHovered, setIsHovered] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const targetRef = useRef(null);
   const { moveProps } = useDraggable({ targetRef, isDisabled: !isExpanded });
@@ -39,11 +40,14 @@ export function ExpandableContainer({
     <ResizablePlotContainer
       {...(defaultWidth ? { defaultWidth } : {})}
       {...(defaultHeight ? { defaultHeight } : {})}
+      isHovered={isHovered}
     >
       <div
         className={`h-full w-full relative rounded-md${
           isExpanded ? ' border border-default-200 p-1' : ''
         }`}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
         {!isExpanded ? (
           cloneElement(children, {
@@ -53,7 +57,10 @@ export function ExpandableContainer({
         ) : (
           <EChartsSkeleton />
         )}
-        <div className="group absolute top-0 right-0 mt-4 mr-[-24px] cursor-pointer flex flex-row">
+        <div
+          className="group absolute top-0 right-0 mt-4 mr-[-24px] cursor-pointer flex flex-row"
+          style={{ top: -38, right: -24 }}
+        >
           {draggable && (
             <Button
               isIconOnly
@@ -80,15 +87,17 @@ export function ExpandableContainer({
                 variant="light"
                 onClick={onExpandComponent}
               >
-                <Icon
-                  icon={
-                    isExpanded
-                      ? 'material-symbols-light:collapse-content-rounded'
-                      : 'ci:expand'
-                  }
-                  width="12"
-                  height="12"
-                />
+                {isHovered && (
+                  <Icon
+                    icon={
+                      isExpanded
+                        ? 'material-symbols-light:collapse-content-rounded'
+                        : 'ci:expand'
+                    }
+                    width="12"
+                    height="12"
+                  />
+                )}
               </Button>
             </PopoverTrigger>
             <PopoverContent>

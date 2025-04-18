@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import AutoSizer from 'react-virtualized-auto-sizer';
 import {
   Table,
   TableColumn,
@@ -53,7 +52,7 @@ export function SpatialCountComponent({
       {error}
     </div>
   ) : (
-    <div className="flex flex-col gap-4 max-w-full">
+    <div className="flex flex-col max-w-full">
       <Table
         aria-label="Query Result Table"
         bottomContent={
@@ -72,7 +71,7 @@ export function SpatialCountComponent({
           </div>
         }
         classNames={{
-          wrapper: 'max-h-[440px] max-w-full overflow-x-auto rounded-none',
+          wrapper: 'max-h-[440px] max-w-full overflow-x-auto rounded-none gap-0',
           base: 'overflow-scroll p-0 m-0 text-tiny',
           table: 'p-0 m-0 text-tiny',
           th: 'text-tiny',
@@ -124,19 +123,17 @@ export function SpatialJoinToolComponent(props: SpatialCountComponentProps) {
     setIsExpanded(flag);
   };
 
+  const height = props.joinResult.length * 30 + 90;
+
   return (
-    <AutoSizer>
-      {({ width, height }) => (
-        <ExpandableContainer
-          defaultWidth={isExpanded ? width : undefined}
-          defaultHeight={isExpanded ? height : 400}
-          draggable={props.isDraggable || false}
-          onDragStart={onDragStart}
-          onExpanded={onExpanded}
-        >
-          <SpatialCountComponent {...props} />
-        </ExpandableContainer>
-      )}
-    </AutoSizer>
+    <ExpandableContainer
+      defaultWidth={isExpanded ? 600 : undefined}
+      defaultHeight={isExpanded ? 800 : height}
+      draggable={props.isDraggable || false}
+      onDragStart={onDragStart}
+      onExpanded={onExpanded}
+    >
+      <SpatialCountComponent {...props} />
+    </ExpandableContainer>
   );
 }

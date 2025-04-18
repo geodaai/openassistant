@@ -41,7 +41,9 @@ export const MarkdownContent = ({
       <Markdown
         remarkPlugins={[remarkGfm]}
         components={{
-          ul: ({ children }) => <ul className="-mt-6 list-disc ml-5">{children}</ul>,
+          ul: ({ children }) => (
+            <ul className="-mt-6 list-disc ml-5">{children}</ul>
+          ),
           ol: ({ children }) => (
             <ol className="list-decimal ml-8 -mt-5">{children}</ol>
           ),
@@ -146,6 +148,8 @@ export function ToolCallComponent({
   )?.component;
 
   const llmResultTable = llmResult as Record<string, unknown> | undefined;
+  const toolSuccess = Boolean(llmResultTable?.success);
+
   const tableItems = llmResultTable
     ? Object.entries(llmResultTable).map(([key, value]) => ({
         key,
@@ -224,7 +228,7 @@ export function ToolCallComponent({
           </Accordion>
         </CardBody>
       </Card>
-      {Component && isCompleted && (
+      {Component && isCompleted && toolSuccess && (
         <ToolCallErrorBoundary>
           {typeof Component === 'function' ? (
             <Component {...(additionalData as Record<string, unknown>)} />

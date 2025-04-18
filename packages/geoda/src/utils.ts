@@ -4,6 +4,7 @@ import { Feature } from 'geojson';
 import { getCachedWeightsById } from './weights/tool';
 import { getCachedUsStates } from './us_states/tool';
 import { getCachedUsZipcodes } from './us_zipcodes/tool';
+import { getCachedUsCounties } from './us_county/tool';
 
 export type PreviousExecutionOutput = {
   data?: {
@@ -56,6 +57,10 @@ export function getCachedGeojson(item: string) {
   const zipcode = getCachedUsZipcodes(item);
   if (zipcode) {
     result.push(...zipcode.features);
+  }
+  const county = getCachedUsCounties(item);
+  if (county) {
+    result.push(...county.features);
   }
   return result;
 }

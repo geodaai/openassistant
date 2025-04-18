@@ -23,16 +23,14 @@ export const spatialJoin = tool<
   // type of the context
   SpatialCountFunctionContext
 >({
-  description: `Spatial join geometries from the first dataset with geometries from the second dataset. 
-- IMPORTANT: When querying about states (e.g. California), ALWAYS use the state code in array format like ["CA"]. For zipcodes, use ["90210"].
-- For existing datasets, ONLY use the valid dataset name. DO NOT use "usStates" - it is not a valid dataset name.`,
+  description: `Spatial join geometries from the first dataset with geometries from the second dataset.`,
   parameters: z.object({
     firstDatasetName: z.string(),
     secondDataset: z.union([
       z
         .string()
         .describe(
-          'The name of an existing dataset to use as the second dataset. DO NOT use "usStates" - it is not a valid dataset name.'
+          'The name of an existing dataset to use as the second dataset.'
         ),
       z
         .array(z.string())
@@ -86,6 +84,7 @@ export type ExecuteSpatialJoinResult = {
       secondDataset?: string[];
       joinVariableNames?: string[];
       joinOperators?: string[];
+      firstTenRows?: number[][];
       details: string;
     };
     error?: string;
@@ -224,25 +223,34 @@ export async function runSpatialJoin({
 
     // get the values of the left dataset if joinVariableNames is provided
     if (joinVariableNames && joinOperators) {
-      joinVariableNames.forEach(async (variableName, index) => {
-        try {
-          const operator = joinOperators[index];
-          const values = await getValues(firstDatasetName, variableName);
-          // apply join to values in each row
-          const joinedValues = result.map((row) =>
-            applyJoin(
-              operator,
-              row.map((index) => values[index])
-            )
-          );
-          joinValues[variableName] = joinedValues;
-        } catch (error) {
-          throw new Error(
-            `Error applying join operator to variable ${variableName}: ${error}`
-          );
-        }
-      });
+      await Promise.all(
+        joinVariableNames.map(async (variableName, index) => {
+          try {
+            const operator = joinOperators[index];
+            const values = await getValues(firstDatasetName, variableName);
+            // apply join to values in each row
+            const joinedValues = result.map((row) =>
+              applyJoin(
+                operator,
+                row.map((index) => values[index])
+              )
+            );
+            joinValues[variableName] = joinedValues;
+          } catch (error) {
+            throw new Error(
+              `Error applying join operator to variable ${variableName}: ${error}`
+            );
+          }
+        })
+      );
     }
+
+    // joinValues is a record of variable names and their values
+    // return the first 10 rows of each variable, including the variable name
+    const columns = Object.keys(joinValues);
+    const firstTwoRows = columns.map((column) => ({
+      [column]: joinValues[column].slice(0, 2),
+    }));
 
     return {
       llmResult: {
@@ -251,6 +259,7 @@ export async function runSpatialJoin({
           firstDatasetName,
           joinVariableNames,
           joinOperators,
+          firstTwoRows,
           details: `Spatial count function executed successfully. ${JSON.stringify(basicStatistics)}`,
         },
       },

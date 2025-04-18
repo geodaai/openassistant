@@ -65,14 +65,14 @@ export function SpatialWeightsMetaTable({
   }, [weightsMeta, WeightsMetaLabels]);
 
   return (
-    <div className="flex flex-col p-6 max-w-full">
+    <div className="flex flex-col max-w-full">
       <Table
         aria-label="Weights Property Table"
         color="success"
         selectionMode="single"
         classNames={{
           wrapper:
-            'max-h-[380px] max-w-full overflow-x-auto overflow-y-auto rounded-none',
+            'max-h-[380px] max-w-full overflow-x-auto overflow-y-auto rounded-none gap-0',
           base: 'overflow-scroll p-0 m-0 text-tiny',
           table: 'p-0 m-0 text-tiny',
           th: 'text-tiny',

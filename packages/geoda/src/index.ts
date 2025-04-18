@@ -26,6 +26,7 @@ export * from './lisa/tool';
 
 export * from './us_states/tool';
 export * from './us_zipcodes/tool';
+export * from './us_county/tool';
 
 export * from './types';
 export * from './utils';
