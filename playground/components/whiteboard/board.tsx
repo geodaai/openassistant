@@ -8,6 +8,7 @@ import { DroppedItem } from './dropped-item';
 import {
   ScatterplotOutputData,
   HistogramOutputData,
+  BoxplotOutputData,
 } from '@openassistant/echarts';
 import { CreateMapOutputData } from '@openassistant/keplergl';
 import { QueryDuckDBOutputData } from '@openassistant/duckdb';
@@ -79,6 +80,15 @@ export default function WhiteBoard({
           id: droppedItem.id,
           type: 'histogram',
           content: droppedItem.data as HistogramOutputData,
+        },
+      ]);
+    } else if (droppedItem.type === 'boxplot') {
+      setGridItems([
+        ...gridItems,
+        {
+          id: droppedItem.id,
+          type: 'boxplot',
+          content: droppedItem.data as BoxplotOutputData,
         },
       ]);
     } else if (droppedItem.type === 'map') {

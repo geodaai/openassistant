@@ -1,6 +1,7 @@
 import {
   ScatterplotOutputData,
   HistogramOutputData,
+  BoxplotOutputData,
 } from '@openassistant/echarts';
 import { CreateMapOutputData } from '@openassistant/keplergl';
 import { QueryDuckDBOutputData } from '@openassistant/duckdb';
@@ -35,12 +36,19 @@ type DroppedMap = {
   data: CreateMapOutputData;
 };
 
+type DroppedBoxplot = {
+  id: string;
+  type: 'boxplot';
+  data: BoxplotOutputData;
+};
+
 export type DroppedItem =
   | DroppedMessage
   | DroppedTable
   | DroppedScatterPlot
   | DroppedMap
-  | DroppedHistogram;
+  | DroppedHistogram
+  | DroppedBoxplot;
 
 export function isDroppedMessage(item: DroppedItem): item is DroppedMessage {
   return item.type === 'text';

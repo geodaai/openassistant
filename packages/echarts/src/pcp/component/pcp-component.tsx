@@ -36,7 +36,7 @@ export function ParallelCoordinateComponentContainer(
 
   const onDragStart = useDraggable({
     id: props.id || generateId(),
-    type: 'bubble',
+    type: 'pcp',
     data: props,
   });
 

@@ -19,7 +19,7 @@ import {
 
 export type BoardItemProps = {
   id: string;
-  type: 'text' | 'query' | 'scatterplot' | 'histogram' | 'map';
+  type: 'text' | 'query' | 'scatterplot' | 'histogram' | 'map' | 'boxplot';
   content: unknown;
 };
 

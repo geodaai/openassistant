@@ -132,6 +132,19 @@ export function ConfigPanel(props: ConfigPanelProps) {
   const [errorMessage, setErrorMessage] = useState('');
   const [isRunning, setIsRunning] = useState(false);
 
+  const generateConfig = (
+    overrides: Partial<AiAssistantConfig> = {}
+  ): AiAssistantConfig => ({
+    provider,
+    model,
+    apiKey,
+    isReady: false,
+    temperature,
+    topP,
+    ...(baseUrl && { baseUrl }),
+    ...overrides,
+  });
+
   const onLLMModelSelect = (
     value: string | number | boolean | object | null
   ) => {
@@ -158,20 +171,31 @@ export function ConfigPanel(props: ConfigPanelProps) {
     setConnectionError(false);
     setErrorMessage('');
     setKeyError(true);
+
+    props.onConfigChange?.(generateConfig({ apiKey: inputValue }));
   };
 
   const onTemperatureChange = (value: number | number[]) => {
-    setTemperature(typeof value === 'number' ? value : value[0]);
+    const temperatureValue = typeof value === 'number' ? value : value[0];
+    setTemperature(temperatureValue);
+
+    props.onConfigChange?.(generateConfig({ temperature: temperatureValue }));
   };
 
   const onTopPChange = (value: number | number[]) => {
-    setTopP(typeof value === 'number' ? value : value[0]);
+    const topPValue = typeof value === 'number' ? value : value[0];
+    setTopP(topPValue);
+
+    props.onConfigChange?.(generateConfig({ topP: topPValue }));
   };
 
   const onBaseUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBaseUrl(e.target.value);
+    const inputValue = e.target.value;
+    setBaseUrl(inputValue);
     setConnectionError(false);
     setErrorMessage('');
+
+    props.onConfigChange?.(generateConfig({ baseUrl: inputValue }));
   };
 
   const AssistantModel = GetAssistantModelByProvider({
@@ -210,15 +234,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
       setKeyError(!success);
       setConnectionError(!success);
       setErrorMessage(errorMessage);
-      props.onConfigChange?.({
-        provider: provider,
-        model: model,
-        apiKey: apiKey,
-        isReady: success,
-        temperature: temperature,
-        topP: topP,
-        ...(baseUrl && { baseUrl: baseUrl }),
-      });
+      props.onConfigChange?.(generateConfig({ isReady: success }));
     } catch (error) {
       setConnectionError(true);
       setErrorMessage(
