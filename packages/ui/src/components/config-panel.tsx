@@ -1,4 +1,10 @@
-import { Button, Input, SelectItem, Slider } from '@nextui-org/react';
+import {
+  Button,
+  Input,
+  SelectItem,
+  SelectSection,
+  Slider,
+} from '@nextui-org/react';
 import { Select } from '@nextui-org/react';
 import { GetAssistantModelByProvider } from '@openassistant/core';
 import { ChangeEvent, useState } from 'react';
@@ -10,37 +16,37 @@ type Provider = keyof typeof MODEL_PROVIDERS;
 
 /**
  * The configuration for the AI Assistant.
- *
- * @property {boolean} isReady - Whether the AI Assistant is ready to use.
- * @property {string} provider - The AI provider.
- * @property {string} model - The AI model.
- * @property {string} apiKey - The API key for the AI provider.
- * @property {string} baseUrl - The base URL for the AI provider.
- * @property {number} temperature - The temperature for the AI model.
- * @property {number} topP - The top P for the AI model.
  */
 export type AiAssistantConfig = {
+  /** Whether the AI Assistant is ready to use. */
   isReady: boolean;
+  /** The AI provider. */
   provider: Provider;
+  /** The AI model. */
   model: string;
+  /** The API key for the AI provider. */
   apiKey: string;
+  /** The temperature for the AI model. */
   temperature: number;
+  /** The top P for the AI model. */
   topP: number;
+  /** The base URL for the AI provider. */
   baseUrl?: string;
 };
 
 /**
  * The props for the ConfigPanel component.
- *
- * @property {Record<string, string[]>} defaultProviderModels - The default models for each provider.
- * @property {AiAssistantConfig} initialConfig - The initial configuration for the AI Assistant.
- * @property {function} onConfigChange - The function to call when the configuration changes.
  */
 export type ConfigPanelProps = {
+  /** The default models for each provider. */
   defaultProviderModels?: Record<Provider, { name: string; models: string[] }>;
+  /** The initial configuration for the AI Assistant. */
   initialConfig?: AiAssistantConfig;
+  /** Whether to show the start chat button. */
   showStartChatButton?: boolean;
+  /** Whether to show the parameters. */
   showParameters?: boolean;
+  /** The color of the button. */
   color?:
     | 'default'
     | 'primary'
@@ -48,15 +54,63 @@ export type ConfigPanelProps = {
     | 'success'
     | 'warning'
     | 'danger';
+  /** The function to call when the configuration changes. */
   onConfigChange: (config: AiAssistantConfig) => void;
+  /** The connection timeout. */
   connectionTimeout?: number;
+  /** Whether to show the error message. */
+  showErrorMessage?: boolean;
+  /** Whether to show the base URL. */
+  showBaseUrl?: boolean;
+  /** Whether to show the check connection button. */
+  showCheckConnectionButton?: boolean;
 };
 
 /**
  * The AI Assistant configuration panel.
  *
- * @param props - The props for the ConfigPanel component. See {@link ConfigPanelProps} for more information.
- * @returns {JSX.Element} The rendered ConfigPanel component.
+ * This panel provides a select dropdown for the AI model from different AI providers, a text input for the API key,
+ * (optional: showBaseUrl) a text input for the base URL,
+ * (optional: showParameters) a slider for the temperature, and a slider for the top P.
+ * (optional: showCheckConnectionButton) a button to check the connection and api key to the AI provider.
+ * (optional: showErrorMessage) a message to show when the connection fails.
+ *
+ * @example
+ *  ```tsx
+ * import { ConfigPanel, MODEL_PROVIDERS } from '@openassistant/ui';
+ *
+ * <ConfigPanel
+ *  onConfigChange={handleConfigChange}
+ *  defaultProviderModels={MODEL_PROVIDERS}
+ *  initialConfig={initialConfig}
+ *  showBaseUrl={true}
+ *  showParameters={true}
+ *  showCheckConnectionButton={true}
+ * />
+ * ```
+ *
+ * The MODEL_PROVIDERS is a constant that contains the default models for each provider.
+ * You can override the default models by providing a different object to the `defaultProviderModels` prop.
+ * For example, if you only want to support the OpenAI models, you can do the following:
+ *
+ * @example
+ *  ```tsx
+ * const MY_PROVIDER_MODELS = {
+ *  openai: {
+ *    name: 'OpenAI',
+ *    models: ['gpt-4.1', 'gpt-4o'],
+ *  },
+ * };
+ *
+ *  <ConfigPanel
+ *  onConfigChange={handleConfigChange}
+ *  defaultProviderModels={MY_PROVIDER_MODELS}
+ *  initialConfig={initialConfig}
+ *  showBaseUrl={true}
+ *  showParameters={true}
+ *  showCheckConnectionButton={true}
+ * />
+ * ```
  */
 export function ConfigPanel(props: ConfigPanelProps) {
   const defaultProviderModels = props.defaultProviderModels || MODEL_PROVIDERS;
@@ -78,35 +132,32 @@ export function ConfigPanel(props: ConfigPanelProps) {
   const [errorMessage, setErrorMessage] = useState('');
   const [isRunning, setIsRunning] = useState(false);
 
-  const onAiProviderSelect = (
-    value: string | number | boolean | object | null
-  ) => {
-    if (value && typeof value === 'object' && 'currentKey' in value) {
-      const selectedProvider = value.currentKey as Provider;
-      if (selectedProvider in defaultProviderModels) {
-        setProvider(selectedProvider);
-        setModel(defaultProviderModels[selectedProvider][0]);
-        setConnectionError(false);
-        setErrorMessage('');
-      }
-    }
-  };
-
   const onLLMModelSelect = (
     value: string | number | boolean | object | null
   ) => {
     if (value && typeof value === 'object' && 'currentKey' in value) {
       const selectedModel = value.currentKey as string;
       setModel(selectedModel);
+      // find the provider for the selected model
+      const selectedProvider = Object.keys(MODEL_PROVIDERS).find((p) =>
+        MODEL_PROVIDERS[p].models.includes(selectedModel)
+      );
+      if (selectedProvider && selectedProvider !== provider) {
+        setProvider(selectedProvider as Provider);
+        setBaseUrl(undefined);
+        setConnectionError(false);
+        setErrorMessage('');
+      }
     }
   };
 
   const onApiKeyChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setApiKey(e.target.value);
+    const inputValue = e.target.value;
+    setApiKey(inputValue);
     // reset previous key error if any
     setConnectionError(false);
     setErrorMessage('');
-    setKeyError(false);
+    setKeyError(true);
   };
 
   const onTemperatureChange = (value: number | number[]) => {
@@ -127,7 +178,12 @@ export function ConfigPanel(props: ConfigPanelProps) {
     provider: provider,
   });
 
-  const onStartChat = async () => {
+  const headingClasses =
+    'flex w-full sticky top-1 z-20 py-1.5 px-2 bg-default-100 shadow-small rounded-small';
+
+  const isOllama = provider === 'ollama';
+
+  const onCheckConnection = async () => {
     setIsRunning(true);
     try {
       const timeoutPromise = new Promise((_, reject) => {
@@ -146,7 +202,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
       ])) as boolean;
 
       const errorMessage = !success
-        ? provider === 'ollama'
+        ? isOllama
           ? 'Connection failed: maybe invalid Ollama Base URL'
           : 'Connection failed: maybe invalid API Key'
         : '';
@@ -176,31 +232,25 @@ export function ConfigPanel(props: ConfigPanelProps) {
   return (
     <div className="flex flex-col gap-4 w-full">
       <Select
-        selectedKeys={[provider]}
-        label="AI Provider"
-        placeholder="Select AI provider"
-        className="max-w-full"
-        onSelectionChange={onAiProviderSelect}
-      >
-        {Object.keys(MODEL_PROVIDERS).map((provider) => (
-          <SelectItem key={provider}>
-            {MODEL_PROVIDERS[provider].name}
-          </SelectItem>
-        ))}
-      </Select>
-      <Select
-        label="LLM Model"
-        placeholder="Select LLM model"
+        label="AI Model"
+        placeholder="Select AI model"
         className="max-w-full"
         onSelectionChange={onLLMModelSelect}
-        isInvalid={!defaultProviderModels[provider]?.models.includes(model)}
-        selectedKeys={model ? [model] : []}
+        selectedKeys={[model]}
       >
-        {defaultProviderModels[provider]?.models.map((model) => (
-          <SelectItem key={model}>{model}</SelectItem>
+        {Object.keys(MODEL_PROVIDERS).map((provider) => (
+          <SelectSection
+            key={provider}
+            classNames={{ heading: headingClasses }}
+            title={MODEL_PROVIDERS[provider].name}
+          >
+            {MODEL_PROVIDERS[provider].models.map((model) => (
+              <SelectItem key={model}>{model}</SelectItem>
+            ))}
+          </SelectSection>
         ))}
       </Select>
-      {connectionError && (
+      {connectionError && props.showErrorMessage && (
         <div className="text-red-500 text-sm">{errorMessage}</div>
       )}
       <Input
@@ -216,15 +266,17 @@ export function ConfigPanel(props: ConfigPanelProps) {
           !keyError && <Icon icon="mdi:check" className="text-green-500" />
         }
       />
-      <Input
-        type="string"
-        label="Base URL"
-        defaultValue={baseUrl || AssistantModel?.getBaseURL() || ''}
-        placeholder="Enter base URL here"
-        className="max-w-full"
-        required
-        onChange={onBaseUrlChange}
-      />
+      {isOllama && props.showBaseUrl && (
+        <Input
+          type="string"
+          label="Base URL"
+          value={baseUrl || AssistantModel?.getBaseURL() || ''}
+          placeholder="Enter base URL here"
+          className="max-w-full"
+          required
+          onChange={onBaseUrlChange}
+        />
+      )}
       {props.showParameters && (
         <>
           <Slider
@@ -249,14 +301,17 @@ export function ConfigPanel(props: ConfigPanelProps) {
           />
         </>
       )}
-      <Button
-        isLoading={isRunning}
-        onPress={onStartChat}
-        className="mt-4"
-        color={props.color || 'primary'}
-      >
-        Start Chat
-      </Button>
+      {props.showCheckConnectionButton && (
+        <Button
+          isLoading={isRunning}
+          onPress={onCheckConnection}
+          className="mt-4"
+          color={props.color || 'primary'}
+          isDisabled={model.length === 0 || apiKey.length === 0}
+        >
+          Check Connection
+        </Button>
+      )}
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import React from 'react';
 import { Spinner, Link } from '@nextui-org/react';
 import {
   MessagePayload,
@@ -77,6 +78,11 @@ export function MessageContent({
           ) : (
             <div>{message.text}</div>
           ))}
+
+        {/* show React payload when it is a valid React element */}
+        {customMessage && React.isValidElement(customMessage) && (
+          <div className="flex flex-col gap-2">{customMessage}</div>
+        )}
       </div>
 
       {/* show loading spinner */}

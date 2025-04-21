@@ -41,12 +41,14 @@ The built files will be in the `dist` directory. You can serve these files using
 
 You can interact with the assistant using natural language prompts. For example:
 
-- "Create a natural breaks classification of the population data"
-- "Show me the spatial autocorrelation of crime rates"
-- "Create a spatial weights matrix using queen contiguity"
-- "Perform a spatial regression analysis of population and income"
-- "Create a cluster analysis of demographic variables"
-- "Summarize the spatial dataset"
+1. How can I classify the population data into 5 classes using natural breaks?
+2. Could you help me create a queen contiguity weights?
+3. Can you help me analyze the spatial autocorrelation of population data?
+4. Can you run an OLS regression to analyze how population and income affect revenue?
+5. Do I need a spatial regression model?
+6. Can you help to check the spatial patterns of the revenue data?
+7. How many venues are there in California and Texas?
+8. What are the total revenue in California and Texas?
 
 ## Sample Dataset
 

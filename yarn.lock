@@ -12769,26 +12769,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apache-arrow@npm:13.0.0, apache-arrow@npm:^13.0.0":
-  version: 13.0.0
-  resolution: "apache-arrow@npm:13.0.0"
-  dependencies:
-    "@types/command-line-args": "npm:5.2.0"
-    "@types/command-line-usage": "npm:5.0.2"
-    "@types/node": "npm:20.3.0"
-    "@types/pad-left": "npm:2.1.1"
-    command-line-args: "npm:5.2.1"
-    command-line-usage: "npm:7.0.1"
-    flatbuffers: "npm:23.5.26"
-    json-bignum: "npm:^0.0.3"
-    pad-left: "npm:^2.1.0"
-    tslib: "npm:^2.5.3"
-  bin:
-    arrow2csv: bin/arrow2csv.js
-  checksum: 5485842a611de3bdfc5e22ceff31a603b2a923d53b1ea0dd6c77869c10e9967aeecee7cacda532201e40650afd6c00ae3dfc4a53932fcbb284151024e45db08f
-  languageName: node
-  linkType: hard
-
 "apache-arrow@npm:>= 15.0.0":
   version: 19.0.1
   resolution: "apache-arrow@npm:19.0.1"
@@ -12805,6 +12785,26 @@ __metadata:
   bin:
     arrow2csv: bin/arrow2csv.js
   checksum: d3d58dcef8c0b27e00bbc0b46212aca829bcdfddc6982d598eb34815ffc98c349faff2e507b196a9251088459aa4ff39deb4bfe3b2af8a251154e92a6f1a6ecd
+  languageName: node
+  linkType: hard
+
+"apache-arrow@npm:^13.0.0":
+  version: 13.0.0
+  resolution: "apache-arrow@npm:13.0.0"
+  dependencies:
+    "@types/command-line-args": "npm:5.2.0"
+    "@types/command-line-usage": "npm:5.0.2"
+    "@types/node": "npm:20.3.0"
+    "@types/pad-left": "npm:2.1.1"
+    command-line-args: "npm:5.2.1"
+    command-line-usage: "npm:7.0.1"
+    flatbuffers: "npm:23.5.26"
+    json-bignum: "npm:^0.0.3"
+    pad-left: "npm:^2.1.0"
+    tslib: "npm:^2.5.3"
+  bin:
+    arrow2csv: bin/arrow2csv.js
+  checksum: 5485842a611de3bdfc5e22ceff31a603b2a923d53b1ea0dd6c77869c10e9967aeecee7cacda532201e40650afd6c00ae3dfc4a53932fcbb284151024e45db08f
   languageName: node
   linkType: hard
 
@@ -25479,7 +25479,6 @@ __metadata:
     "@ai-sdk/google": "npm:^1.2.10"
     "@ai-sdk/provider": "npm:^1.1.2"
     "@ai-sdk/xai": "npm:^1.2.11"
-    "@duckdb/duckdb-wasm": "npm:^1.29.0"
     "@iconify/react": "npm:^5.1.0"
     "@lexical/react": "npm:^0.23.1"
     "@next/eslint-plugin-next": "npm:^15.1.5"
@@ -25496,7 +25495,6 @@ __metadata:
     "@types/retry": "npm:^0"
     "@typescript-eslint/eslint-plugin": "npm:^8.21.0"
     "@typescript-eslint/parser": "npm:^8.21.0"
-    apache-arrow: "npm:13.0.0"
     autoprefixer: "npm:^10.4.20"
     bufferutil: "npm:^4.0.9"
     copy-webpack-plugin: "npm:^12.0.2"
@@ -25505,7 +25503,6 @@ __metadata:
     eslint-config-next: "npm:^15.1.5"
     github-markdown-css: "npm:^5.8.1"
     next: "npm:^14.2.21"
-    next-themes: "npm:^0.4.4"
     postcss: "npm:^8.5.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
@@ -25516,7 +25513,6 @@ __metadata:
     redux: "npm:^4.2.1"
     remark-gfm: "npm:^4.0.1"
     retry: "npm:^0.13.1"
-    styled-components: "npm:6.1.8"
     tailwindcss: "npm:^3.4.17"
     typescript: "npm:^5.7.3"
     utf-8-validate: "npm:^6.0.5"

@@ -7,10 +7,33 @@ import { XaiAssistant } from '../llm/grok';
 import { AnthropicAssistant } from '../llm/anthropic';
 
 /**
- * Returns the appropriate Assistant model based on the provider.
+ * Returns the appropriate Assistant model based on the provider. (Internal use)
+ * 
+ * @example
+ *  ```tsx
+ * import { GetAssistantModelByProvider } from '@openassistant/core';
+ *
+ * const AssistantModel = GetAssistantModelByProvider({
+ *   provider: 'openai',
+ * });
+ *
+ * // configure the assistant model
+ * AssistantModel.configure({
+ *   apiKey: 'your-api-key',
+ *   model: 'gpt-4o',
+ * });
+ *
+ * // initialize the assistant model
+ * const assistant = await AssistantModel.getInstance();
+ *
+ * // send a message to the assistant
+ * const result = await assistant.processTextMessage({
+ *   text: 'Hello, world!',
+ * });
+ * ```
  *
  * @param {Object} options - The options object
- * @param {string} [options.provider] - The name of the AI provider. If not provided, defaults to OpenAI.
+ * @param {string} [options.provider] - The name of the AI provider. The supported providers are: 'openai', 'anthropic', 'google', 'deepseek', 'xai', 'ollama'
  * @param {string} [options.chatEndpoint] - The chat endpoint that handles the chat requests, e.g. '/api/chat'. This is required for server-side support.
  * @returns {typeof VercelAi | typeof AnthropicAssistant | typeof OpenAIAssistant | typeof GoogleAIAssistant | typeof DeepSeekAssistant | typeof XaiAssistant | typeof OllamaAssistant} The assistant model class.
  */

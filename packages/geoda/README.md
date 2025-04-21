@@ -2,19 +2,43 @@
 
 The GeoDa tools for OpenAssistant provides spatial analysis capabilities using [GeoDa](https://geodacenter.github.io/documentation.html).
 
-<img src="https://openassistant-doc.vercel.app/img/geoda-tools.png" width="400" alt="Geoda Plugin" />
+<img src="https://openassistant-doc.vercel.app/img/geoda-tools.png" width="500" alt="Geoda Plugin" />
 
 ## Features
 
-| Detection                | Continuous Variables                                                                                                                                                                                    | Categorical Variables                    |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| Outliers                 | Boxplot, Percentile, Box Map, Standard Deviation                                                                                                                                                        |                                          |
-| Patterns                 | Histogram, Bubble, 3D Scatter, PCP, Quantile, Natural Breaks, Equal Intervals, Rates                                                                                                                    | Unique Values, Co-location               |
-| Correlations             | Scatter Plot, Scatter Plot Matrix, Spatial Regression                                                                                                                                                   |                                          |
-| Clusters (non-spatial)   | PCA, MDS, t-SNE, K Means, K Medians, K Medoids, Spectral, Hierarchcal Clustering                                                                                                                        |                                          |
-| Clusters (spatial)       | DBScan, HDBScan, SCHC, Skater, Redcap, AZP, Max-P                                                                                                                                                       |                                          |
-| Spatial Auto Correlation | Correlogram, Global Moran, Local Moran, Bivar. Moran, Diff. Moran, Moran EB, Local G/\*, Univ. Geary, Multi. Geary, Median Local Moran, Univ. Quantile LISA, Multi. Quantile LISA, Local Neighbor Match | Join Count: Univar., Bivar., Co-Location |
-| Trends                   | Averages Chart, Differential Local Moran                                                                                                                                                                |                                          |
+- Data classification
+  - Natural Breaks
+  - Equal Intervals
+  - Quantile
+  - Standard Deviation
+  - Percentile
+- Spatial weights
+  - Queen
+  - Rook
+  - K-Nearest Neighbors
+  - Distance Band
+- Spatial autocorrelation
+  - Global Moran's I
+  - Local Moran's I
+  - Local G / Local G\*
+  - Local Geary
+  - Quantile LISA
+- Spatial regression
+  - OLS
+  - Spatial lag
+  - Spatial error
+- Spatial Operations
+  - Spatial Join
+  - Spatial Dissolve
+  - Buffer
+  - Centroid
+  - Length
+  - Area
+  - Primeter
+- Spatial Data
+  - Get US State Data e.g. ask "how many venues are there in California and Texas?"
+  - Get US Zipcode Data
+  - Get US County Data
 
 ## Installation
 
@@ -78,9 +102,11 @@ const dataClassifyTool: DataClassifyTool = {
 
 Once set up, you can perform spatial analyses through natural language prompts:
 
-- For data classification: "Classify the 'value' variable into 5 classes"
-- For outlier detection: "Find outliers in the 'value' variable"
-- For pattern analysis: "Show me the spatial pattern of values"
+- For data classification: "How can I classify the population data into 5 classes using natural breaks?"
+- For outlier detection: "Can you help me analyze the spatial autocorrelation of population data"
+- For pattern analysis: "Can you help to check the spatial patterns of the revenue data"
+- For spatial regression: "Can you help me run a spatial regression model to analyze the relationship between population and revenue"
+- For spatial join: "What are the total revenue in California and Texas?"
 
 The assistant will automatically understand your request and use the appropriate spatial analysis function.
 

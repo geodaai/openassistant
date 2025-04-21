@@ -22,7 +22,6 @@
     "@ai-sdk/google": "^1.2.10",
     "@ai-sdk/provider": "^1.1.2",
     "@ai-sdk/xai": "^1.2.11",
-    "@duckdb/duckdb-wasm": "^1.29.0",
     "@iconify/react": "^5.1.0",
     "@lexical/react": "^0.23.1",
     "@nextui-org/theme": "^2.4.4",
@@ -32,10 +31,8 @@
     "@openassistant/echarts": "workspace:*",
     "@openassistant/keplergl": "workspace:*",
     "@openassistant/ui": "workspace:*",
-    "apache-arrow": "13.0.0",
     "github-markdown-css": "^5.8.1",
     "next": "^14.2.21",
-    "next-themes": "^0.4.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-grid-layout": "^1.5.0",
@@ -45,7 +42,6 @@
     "redux": "^4.2.1",
     "remark-gfm": "^4.0.1",
     "retry": "^0.13.1",
-    "styled-components": "6.1.8",
     "zod": "^3.24.1"
   },
   "devDependencies": {

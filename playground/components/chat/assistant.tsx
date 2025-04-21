@@ -125,9 +125,6 @@ export default function Assistant({
     provider: 'openai',
     model: 'gpt-4o',
     apiKey: process.env.OPENAI_TOKEN || '',
-    baseUrl: 'http://127.0.0.1:11434',
-    temperature: 0.8,
-    topP: 1.0,
   });
 
   const assistantProps = useMemo(
