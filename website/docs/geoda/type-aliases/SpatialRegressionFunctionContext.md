@@ -2,7 +2,7 @@
 
 > **SpatialRegressionFunctionContext**: `object`
 
-Defined in: [packages/geoda/src/regression/tool.ts:63](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/geoda/src/regression/tool.ts#L63)
+Defined in: [packages/geoda/src/regression/tool.ts:70](https://github.com/GeoDaCenter/openassistant/blob/a9f2271d1019f6c25c10dd4b3bdb64fcf16999b2/packages/geoda/src/regression/tool.ts#L70)
 
 ## Type declaration
 
@@ -13,10 +13,6 @@ Defined in: [packages/geoda/src/regression/tool.ts:63](https://github.com/GeoDaC
 #### config.theme?
 
 > `optional` **theme**: `string`
-
-### getExistingWeights?
-
-> `optional` **getExistingWeights**: [`GetExistingWeights`](GetExistingWeights.md)
 
 ### getValues
 

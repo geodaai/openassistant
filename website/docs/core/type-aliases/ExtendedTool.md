@@ -2,7 +2,7 @@
 
 > **ExtendedTool**\<`PARAMETERS`, `RETURN_TYPE`, `ADDITIONAL_DATA`, `CONTEXT`\>: `Tool`\<`PARAMETERS`\> & `object`
 
-Defined in: [packages/core/src/utils/create-assistant.ts:87](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/core/src/utils/create-assistant.ts#L87)
+Defined in: [packages/core/src/utils/create-assistant.ts:87](https://github.com/GeoDaCenter/openassistant/blob/a9f2271d1019f6c25c10dd4b3bdb64fcf16999b2/packages/core/src/utils/create-assistant.ts#L87)
 
 A tool contains the description and the schema of the input that the tool expects.
 This enables the language model to generate the input.
@@ -32,6 +32,13 @@ The context that will be passed to the function
 > **execute**: `ExecuteFunction`\<`PARAMETERS`, `RETURN_TYPE`, `ADDITIONAL_DATA`, `CONTEXT`\>
 
 The function that will be called when the tool is executed
+
+### priority?
+
+> `optional` **priority**: `number`
+
+The priority of the tool. Higher priority tools will be executed first.
+Default priority is 0. Tools with priority > 0 will be executed before tools with priority 0.
 
 ## Type Parameters
 

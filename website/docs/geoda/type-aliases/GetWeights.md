@@ -2,7 +2,7 @@
 
 > **GetWeights**: (`datasetName`, `type`, `options`) => `Promise`\<\{ `weights`: `number`[][]; `weightsMeta`: `WeightsMeta`; \}\>
 
-Defined in: [packages/geoda/src/weights/tool.ts:80](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/geoda/src/weights/tool.ts#L80)
+Defined in: [packages/geoda/src/weights/tool.ts:71](https://github.com/GeoDaCenter/openassistant/blob/a9f2271d1019f6c25c10dd4b3bdb64fcf16999b2/packages/geoda/src/weights/tool.ts#L71)
 
 ## Parameters
 
@@ -12,7 +12,7 @@ Defined in: [packages/geoda/src/weights/tool.ts:80](https://github.com/GeoDaCent
 
 ### type
 
-`"knn"` | `"queen"` | `"rook"` | `"distance"` | `"kernel"`
+`"knn"` | `"queen"` | `"rook"` | `"threshold"`
 
 ### options
 
@@ -39,6 +39,10 @@ Defined in: [packages/geoda/src/weights/tool.ts:80](https://github.com/GeoDaCent
 #### precisionThreshold?
 
 `number`
+
+#### useCentroids?
+
+`boolean`
 
 ## Returns
 

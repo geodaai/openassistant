@@ -2,7 +2,7 @@
 
 > **MoranScatterPlotFunctionContext**: `object`
 
-Defined in: [packages/geoda/src/moran-scatterplot/tool.ts:75](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/geoda/src/moran-scatterplot/tool.ts#L75)
+Defined in: [packages/geoda/src/moran-scatterplot/tool.ts:77](https://github.com/GeoDaCenter/openassistant/blob/a9f2271d1019f6c25c10dd4b3bdb64fcf16999b2/packages/geoda/src/moran-scatterplot/tool.ts#L77)
 
 The context of the scatterplot function. The context will be used by the function calling to create the scatterplot.
 
@@ -26,36 +26,8 @@ The configuration of the scatterplot.
 
 > `optional` **theme**: `string`
 
-### getExistingWeights?
-
-> `optional` **getExistingWeights**: [`GetExistingWeights`](GetExistingWeights.md)
-
-Get the weights of the dataset.
-
 ### getValues
 
 > **getValues**: [`GetValues`](GetValues.md)
 
 Get the values of variable from the dataset.
-
-### getWeights()?
-
-> `optional` **getWeights**: (`weightsId`) => `object`
-
-#### Parameters
-
-##### weightsId
-
-`string`
-
-#### Returns
-
-`object`
-
-##### weights
-
-> **weights**: `number`[][]
-
-##### weightsMeta
-
-> **weightsMeta**: `WeightsMeta`

@@ -2,7 +2,7 @@
 
 > **BubbleChartToolContext**: `object`
 
-Defined in: [packages/echarts/src/bubble-chart/tool.ts:182](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/echarts/src/bubble-chart/tool.ts#L182)
+Defined in: [packages/echarts/src/bubble-chart/tool.ts:182](https://github.com/GeoDaCenter/openassistant/blob/a9f2271d1019f6c25c10dd4b3bdb64fcf16999b2/packages/echarts/src/bubble-chart/tool.ts#L182)
 
 The context for the bubble chart tool.
 

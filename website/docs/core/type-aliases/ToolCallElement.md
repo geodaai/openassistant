@@ -2,7 +2,7 @@
 
 > **ToolCallElement**: `object`
 
-Defined in: [packages/core/src/types.ts:41](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/core/src/types.ts#L41)
+Defined in: [packages/core/src/types.ts:41](https://github.com/GeoDaCenter/openassistant/blob/a9f2271d1019f6c25c10dd4b3bdb64fcf16999b2/packages/core/src/types.ts#L41)
 
 Type of ToolCallElement. A ToolCallElement is a ReactNode element
 that can be reconstructed by using the `type` and `config`.

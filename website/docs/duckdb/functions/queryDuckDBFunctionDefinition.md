@@ -2,7 +2,7 @@
 
 > **queryDuckDBFunctionDefinition**(`context`): `RegisterFunctionCallingProps`
 
-Defined in: [packages/duckdb/src/query.tsx:118](https://github.com/GeoDaCenter/openassistant/blob/994a31d776db171047aa7cd650eb798b5317f644/packages/duckdb/src/query.tsx#L118)
+Defined in: [packages/duckdb/src/query.tsx:118](https://github.com/GeoDaCenter/openassistant/blob/a9f2271d1019f6c25c10dd4b3bdb64fcf16999b2/packages/duckdb/src/query.tsx#L118)
 
 Define the function to query the duckdb database. You can pass getValues() to the context for creating a new table in the duckdb database.
 If you pass a duckDB instance to the context, the function will use the existing duckDB instance to create a new table.

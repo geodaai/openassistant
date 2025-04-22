@@ -3,7 +3,7 @@ sidebar_position: 2
 sidebar_label: eCharts Tools
 ---
 
-# @openassistant/echarts
+# eCharts Tools 
 
 The eCharts tools for OpenAssistant provides powerful visualization capabilities using [Apache ECharts](https://echarts.apache.org/).
 
