@@ -34,7 +34,7 @@ The GeoDa tools for OpenAssistant provides spatial analysis capabilities using [
   - Centroid
   - Length
   - Area
-  - Primeter
+  - Perimeter
 - Spatial Data
   - Get US State Data e.g. ask "how many venues are there in California and Texas?"
   - Get US Zipcode Data

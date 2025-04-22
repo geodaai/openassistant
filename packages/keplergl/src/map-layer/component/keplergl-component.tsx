@@ -11,7 +11,6 @@ import { RootContext } from '@kepler.gl/components';
 import { addDataToMap } from '@kepler.gl/actions';
 import { theme as keplerTheme } from '@kepler.gl/styles';
 import { messages } from '@kepler.gl/localization';
-
 import { KeplerMiniMap } from './keplergl-mini-map';
 import { CreateMapOutputData } from '../callback-component';
 import { KeplerState, MAP_ID, store } from './keplergl-provider';
@@ -67,11 +66,22 @@ export function KeplerGlComponent(
 ) {
   const dispatch = useDispatch();
 
-  const { datasetForKepler } = props;
+  const { datasetForKepler, layerConfig } = props;
 
   const keplerMessages = messages['en'];
 
   useEffect(() => {
+    // parse layerConfig
+    const layerConfigObj = layerConfig ? JSON.parse(layerConfig) : {};
+    // using Kepler.gl API to validate the layerConfig
+    // const isValid = KeplerGlSchema.parseSavedConfig({
+    //   version: 'v1',
+    //   config: layerConfigObj,
+    // });
+    // if (!isValid) {
+    //   throw new Error('Invalid layer config');
+    // }
+
     dispatch(
       addDataToMap({
         datasets: datasetForKepler,
@@ -81,9 +91,10 @@ export function KeplerGlComponent(
           autoCreateLayers: true,
           autoCreateTooltips: true,
         },
+        config: layerConfigObj,
       })
     );
-  }, [dispatch, datasetForKepler]);
+  }, [dispatch, datasetForKepler, layerConfig]);
 
   const keplerState = useSelector(
     (state: KeplerState) => state?.keplerGl[MAP_ID]

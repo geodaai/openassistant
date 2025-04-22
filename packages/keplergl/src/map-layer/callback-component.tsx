@@ -12,6 +12,7 @@ export type CreateMapOutputData = {
   datasetForKepler: FileCacheItem[];
   theme?: string;
   isDraggable?: boolean;
+  layerConfig?: string;
 };
 
 // type guard

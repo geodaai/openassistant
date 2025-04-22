@@ -1,4 +1,5 @@
 import { tool } from '@openassistant/core';
+import { Feature } from 'geojson';
 import { z } from 'zod';
 import { KeplerGlToolComponent } from './component/keplergl-component';
 import {
@@ -75,11 +76,65 @@ export const keplergl = tool<
       .enum(['point', 'line', 'arc', 'polygon', 'heatmap', 'hexbin', 'h3'])
       .optional()
       .describe('The type of the map. The default is "point".'),
+    config: z.string().optional()
+      .describe(`The Kepler.gl layer configuration JSON object to style the map based on user prompt.
+Please follow the kepler.gl layer configuration schema.
+- NOTE: please use the mentioned variable as colorField
+config: {
+  config: {
+    visState: {
+      layers: [
+        {
+          id: string;
+          type: string;
+          config: {
+            dataId: string;
+            label: string;
+            color: string;
+            colorField: string; // IMPORTANT: This field is required
+            colorDomain: number[];
+            colorScale: 'quantile' | 'quantize' | 'custom';
+            highlightColor?: string;
+            columns: {
+              [key: string]: string;
+            };
+            isVisible: boolean;
+            sizeField: string;
+            sizeDomain: number[];
+            sizeScale: string;
+            strokeColorDomain: number[];
+            strokeColorField: string;
+            strokeColorScale: string;
+            visConfig:{
+              opacity?: number;
+              colorField: string; // IMPORTANT: This field is required
+              colorRange?: {
+                name: string;
+                type: string;
+                category: string;
+                colors: string[];
+              },
+              outline: boolean;
+              radius: number;
+              radiusRange: number[];
+              strokeColor: string;
+              strokeColorRange?: Object;
+            },
+          }
+        }
+      ]
+    }
+  }
+}
+`),
   }),
   execute: executeCreateMap,
   context: {
     getDataset: async () => {
       throw new Error('getDataset() of CreateMapTool is not implemented');
+    },
+    getGeometries: async () => {
+      throw new Error('getGeometries() of CreateMapTool is not implemented');
     },
     config: {
       isDraggable: false,
@@ -100,7 +155,8 @@ export const keplergl = tool<
 export type KeplerglTool = typeof keplergl;
 
 export type KeplerglToolContext = {
-  getDataset: (args: { datasetName: string }) => Promise<unknown>;
+  getDataset?: (args: { datasetName: string }) => Promise<unknown>;
+  getGeometries?: (args: { datasetName: string }) => Promise<Feature[]>;
   config: { isDraggable?: boolean; theme?: string };
 };
 
@@ -113,6 +169,7 @@ export type ExecuteCreateMapResult = {
     longitudeColumn?: string;
     mapType?: string;
     fields?: string;
+    layerConfig?: string;
     details?: string;
     error?: string;
     instruction?: string;
@@ -125,6 +182,7 @@ export type ExecuteCreateMapResult = {
     mapType?: string;
     datasetForKepler: FileCacheItem[];
     isDraggable: boolean;
+    layerConfig?: string;
   };
 };
 
@@ -145,6 +203,7 @@ export type KeplerglToolArgs = {
   latitudeColumn?: string;
   longitudeColumn?: string;
   mapType?: string;
+  config?: string;
 };
 
 export function isKeplerglToolArgs(args: unknown): args is KeplerglToolArgs {
@@ -168,6 +227,7 @@ async function executeCreateMap(
       latitudeColumn,
       longitudeColumn,
       mapType,
+      config: layerConfig,
     } = args;
     const { getDataset, config } = options.context;
 
@@ -221,6 +281,9 @@ async function executeCreateMap(
     // get fields from the dataset
     const fields = datasetForKepler[0].data.fields;
 
+    // update dataId with datasetName
+    datasetForKepler[0].info.id = datasetName;
+
     return {
       llmResult: {
         success: true,
@@ -239,6 +302,7 @@ async function executeCreateMap(
         longitudeColumn,
         mapType,
         datasetForKepler,
+        layerConfig,
         isDraggable: Boolean(config?.isDraggable),
       },
     };
