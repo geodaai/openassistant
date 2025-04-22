@@ -1,6 +1,6 @@
 {
   "name": "@openassistant/geoda",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "Xun Li<lixun910@gmail.com>",
   "description": "The GeoDa spatial analysis addon for OpenAssistant",
   "main": "dist/index.esm.js",

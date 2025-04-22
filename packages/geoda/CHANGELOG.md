@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/GeoDaCenter/openassistant/compare/@openassistant/geoda@0.0.5...@openassistant/geoda@0.3.0) (2025-04-22)
+
+## 0.0.6 (2025-01-21)
+
+## 0.0.5 (2025-01-09)
+
+**Note:** Version bump only for package @openassistant/geoda
+
 ## [0.1.6-alpha.0](https://github.com/GeoDaCenter/openassistant/compare/@openassistant/geoda@0.0.5...@openassistant/geoda@0.1.6-alpha.0) (2025-03-01)
 
 ## 0.0.6 (2025-01-21)
