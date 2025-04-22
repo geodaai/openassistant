@@ -29,6 +29,7 @@
     "@openassistant/core": "workspace:*",
     "@openassistant/duckdb": "workspace:*",
     "@openassistant/echarts": "workspace:*",
+    "@openassistant/geoda": "workspace:*",
     "@openassistant/keplergl": "workspace:*",
     "@openassistant/ui": "workspace:*",
     "github-markdown-css": "^5.8.1",
