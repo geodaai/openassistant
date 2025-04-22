@@ -28,7 +28,9 @@ const config = {
     }),
   ],
   define: {
-    'process.env.OPENAI_API_KEY': JSON.stringify(process.env.OPENAI_API_KEY),
+    'process.env.OPENAI_API_KEY': JSON.stringify(
+      process.env.OPENAI_API_KEY || ''
+    ),
   },
 };
 
