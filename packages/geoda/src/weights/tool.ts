@@ -176,7 +176,7 @@ async function executeSpatialWeights(
     isQueen: type === 'queen',
     distanceThreshold,
     isMile,
-    useCentroids,
+    useCentroids: false,
     precisionThreshold,
     orderOfContiguity,
     includeLowerOrder,

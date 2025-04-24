@@ -23,6 +23,9 @@ import {
   useDraggable,
 } from '@openassistant/common';
 
+/**
+ * @internal
+ */
 export function ScatterplotComponent({
   id,
   datasetName,
@@ -120,7 +123,7 @@ export function ScatterplotComponent({
           {xVariableName} vs {yVariableName} {slopeTitle}
         </small>
       </div>
-      <div className="relative h-full py-2 flex-grow dark:bg-black">
+      <div className="relative h-full py-2 flex-grow ">
         <div className="absolute left-0 top-0 h-full w-full">
           <ScatterRegressionPlot
             filteredIndex={filteredIndex}
@@ -240,6 +243,9 @@ export function ScatterplotComponent({
   );
 }
 
+/**
+ * @internal
+ */
 export function ScatterplotComponentContainer(
   props: ScatterplotOutputData
 ): JSX.Element | null {
@@ -258,7 +264,7 @@ export function ScatterplotComponentContainer(
   return (
     <ExpandableContainer
       defaultWidth={isExpanded ? 600 : undefined}
-      defaultHeight={600}
+      defaultHeight={isExpanded ? 600 : 400}
       draggable={props.isDraggable || false}
       onDragStart={onDragStart}
       onExpanded={onExpanded}

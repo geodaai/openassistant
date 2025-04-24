@@ -3,27 +3,16 @@ import {
   RegisterFunctionCallingProps,
 } from '@openassistant/core';
 import { parallelCoordinateCallbackFunction } from './callback-function';
-import { GetValues } from '../histogram/definition';
 import { ParallelCoordinateComponentContainer } from './component/pcp-component';
-
-/**
- * Configuration context for the parallel coordinate visualization
- *
- * @property {GetValues} getValues - Function to retrieve variable values from dataset
- * @property {Object} [config] - Optional configuration settings
- * @property {boolean} [config.isDraggable] - Enables drag functionality for dashboard integration
- * @property {('light'|'dark')} [config.theme] - Visual theme for the parallel coordinate
- */
-export type ParallelCoordinateFunctionContext = {
-  getValues: GetValues;
-  config?: { isDraggable?: boolean; theme?: string; isExpanded?: boolean };
-};
+import { PCPToolContext } from './tool';
 
 type ValueOf<T> = T[keyof T];
-type ParallelCoordinateFunctionContextValues =
-  ValueOf<ParallelCoordinateFunctionContext>;
+type PCPToolContextValues = ValueOf<PCPToolContext>;
 
 /**
+ * @internal
+ * @deprecated Use `pcp` tool instead.
+ *
  * ## Summary
  *
  * Defines the parallel coordinate function for LLM function calling tool.
@@ -71,7 +60,7 @@ type ParallelCoordinateFunctionContextValues =
  * @returns {RegisterFunctionCallingProps} Configuration object for function registration
  */
 export function parallelCoordinateFunctionDefinition(
-  context: CustomFunctionContext<ParallelCoordinateFunctionContextValues>
+  context: CustomFunctionContext<PCPToolContextValues>
 ): RegisterFunctionCallingProps {
   return {
     name: 'parallelCoordinate',

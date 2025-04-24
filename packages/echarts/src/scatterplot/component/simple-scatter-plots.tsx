@@ -13,7 +13,7 @@ import { useBrushLink } from '@openassistant/common';
 
 import { getSimpleScatterChartOption } from './simple-chart-option';
 import { handleBrushSelection } from '../../echarts-updater';
-
+import { OnSelected } from '../../types';
 // Register the required ECharts components
 echarts.use([
   TooltipComponent,
@@ -33,10 +33,13 @@ type SimpleScatterPlotProps = {
   variableY: string;
   yData: number[];
   theme?: string;
-  onSelected?: (datasetName: string, filteredIndex: number[]) => void;
+  onSelected?: OnSelected;
   setFilteredIndexes?: (filteredIndex: number[]) => void;
 };
 
+/**
+ * @internal
+ */
 export function SimpleScatterPlot({
   id,
   datasetName,
@@ -46,6 +49,7 @@ export function SimpleScatterPlot({
   yData,
   theme = 'dark',
   setFilteredIndexes,
+  onSelected,
 }: SimpleScatterPlotProps) {
   // ref for the echarts instance
   const eChartsRef = useRef<ReactEChartsCore>(null);
@@ -113,7 +117,7 @@ export function SimpleScatterPlot({
           }
         }, 100);
 
-        handleBrushSelection(eChart, brushed, datasetName, brush);
+        handleBrushSelection(eChart, brushed, datasetName, brush, onSelected);
         // update the filtered indexes
         if (setFilteredIndexes) {
           setFilteredIndexes(brushed);
@@ -123,7 +127,7 @@ export function SimpleScatterPlot({
         setRendered(true);
       },
     }),
-    [brush, datasetName, setFilteredIndexes]
+    [brush, datasetName, setFilteredIndexes, onSelected]
   );
 
   return (

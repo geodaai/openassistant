@@ -127,7 +127,7 @@ export function useAssistant(props: UseAssistantProps) {
   useEffect(() => {
     initializeAssistant();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.model, props.apiKey, props.chatEndpoint]);
+  }, [props.model, props.apiKey, props.chatEndpoint, props.instructions]);
 
   /**
    * Initializes the AI assistant with the provided configuration.

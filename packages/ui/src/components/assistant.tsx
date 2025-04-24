@@ -147,7 +147,9 @@ function rebuildMessages(historyMessages: MessageModel[]): Message[] {
  */
 export function AiAssistant(props: AiAssistantProps) {
   const [messages, setMessages] = useState<MessageModel[]>(
-    props.initialMessages || [createWelcomeMessage(props.welcomeMessage)]
+    props.initialMessages && props.initialMessages.length > 0
+      ? props.initialMessages
+      : [createWelcomeMessage(props.welcomeMessage)]
   );
   const [isPrompting, setIsPrompting] = useState(false);
 

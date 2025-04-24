@@ -21,9 +21,6 @@ type HistogramOutputResult =
       details: string;
     };
 
-/**
- * Type guard of HistogramFunctionArgs
- */
 function isHistogramFunctionArgs(data: unknown): data is HistogramFunctionArgs {
   return (
     typeof data === 'object' &&
@@ -33,6 +30,10 @@ function isHistogramFunctionArgs(data: unknown): data is HistogramFunctionArgs {
   );
 }
 
+/**
+ * @internal
+ * @deprecated Use {@link histogramTool} instead.
+ */
 export async function histogramCallbackFunction({
   functionName,
   functionArgs,

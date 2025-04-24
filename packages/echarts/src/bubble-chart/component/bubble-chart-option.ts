@@ -7,14 +7,14 @@ import {
 
 /**
  * Creates an ECharts option configuration for rendering a bubble chart.
- * 
+ *
  * @param props - The input data for the bubble chart
  * @param props.data - The data object containing the following variables:
  *   - variableX: The X-axis variable containing name and values
  *   - variableY: The Y-axis variable containing name and values
  *   - variableSize: The variable controlling bubble sizes, containing name and values
  *   - variableColor: Optional variable controlling bubble colors, containing name and values
- * 
+ *
  * @returns An ECharts option configuration object that defines:
  * - Scatter plot with variable-sized bubbles
  * - Customizable bubble colors
@@ -22,7 +22,7 @@ import {
  * - Brush selection tools
  * - Responsive grid layout
  * - Optimized animation settings for performance
- * 
+ *
  * @example
  * const data = {
  *   variableX: { name: 'GDP', values: [1000, 2000, 3000] },
@@ -32,14 +32,14 @@ import {
  * };
  * const option = createBubbleChartOption({ data });
  */
-export function createBubbleChartOption(props: BubbleChartOutputData) {
-  const xData = props.data.variableX.values;
-  const yData = props.data.variableY.values;
-  const sizeData = props.data.variableSize.values;
-  const colorData = props.data.variableColor?.values;
+export function createBubbleChartOption(data: BubbleChartOutputData['data']) {
+  const xData = data.variableX.values;
+  const yData = data.variableY.values;
+  const sizeData = data.variableSize.values;
+  const colorData = data.variableColor?.values;
 
-  const variableX = props.data.variableX.name;
-  const variableY = props.data.variableY.name;
+  const variableX = data.variableX.name;
+  const variableY = data.variableY.name;
 
   // standardize sizeData in the range [0, 1]
   const sizeDataMin = Math.min(...sizeData);

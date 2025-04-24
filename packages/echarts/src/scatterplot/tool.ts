@@ -3,13 +3,36 @@ import { tool } from '@openassistant/core';
 import { generateId } from '@openassistant/common';
 import { ScatterplotComponentContainer } from './component/scatter-plot-component';
 import { computeRegression } from './component/scatter-regression';
-import {
-  isScatterplotFunctionArgs,
-  isScatterplotFunctionContext,
-} from './callback-function';
+import { GetValues, OnSelected } from '../types';
 
 /**
- * The scatterplot tool.
+ * The scatterplot tool is used to create a scatterplot chart.
+ *
+ * @example
+ * ```typescript
+ * import { scatterplot } from '@openassistant/echarts';
+ *
+ * const scatterplotTool = {
+ *   ...scatterplot,
+ *   context: {
+ *     ...scatterplot.context,
+ *     getValues: (datasetName: string, variableName: string) => {
+ *       // get the values of the variable from your dataset, e.g.
+ *       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+ *     },
+ *   },
+ * }
+ * ```
+ *
+ * :::tip
+ * User: can you create a scatter plot using 'population' and 'income'?
+ * :::
+ *
+ * ### getValues()
+ *
+ * See {@link ScatterplotToolContext} for detailed usage.
+ *
+ * User implements this function to get the values of the variables from dataset.
  */
 export const scatterplot = tool<
   z.ZodObject<{
@@ -32,9 +55,7 @@ export const scatterplot = tool<
     getValues: () => {
       throw new Error('getValues() of ScatterplotTool is not implemented');
     },
-    onSelected: () => {
-      throw new Error('onSelected() of ScatterplotTool is not implemented');
-    },
+    onSelected: () => {},
     config: {
       isDraggable: false,
       isExpanded: false,
@@ -46,14 +67,46 @@ export const scatterplot = tool<
   component: ScatterplotComponentContainer,
 });
 
-/**
- * The type of the scatterplot tool.
- */
 export type ScatterplotTool = typeof scatterplot;
 
-/**
- * The result of the scatterplot tool.
- */
+type ScatterplotToolArgs = {
+  datasetName: string;
+  xVariableName: string;
+  yVariableName: string;
+  filteredIndex?: number[];
+};
+
+export function isScatterplotToolArgs(
+  data: unknown
+): data is ScatterplotToolArgs {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'datasetName' in data &&
+    'xVariableName' in data &&
+    'yVariableName' in data
+  );
+}
+
+export type ScatterplotToolContext = {
+  getValues: GetValues;
+  onSelected?: OnSelected;
+  filteredIndex?: number[];
+  config?: {
+    isDraggable?: boolean;
+    theme?: string;
+    isExpanded?: boolean;
+    showLoess?: boolean;
+    showRegressionLine?: boolean;
+  };
+};
+
+export function isScatterplotToolContext(
+  data: unknown
+): data is ScatterplotToolContext {
+  return typeof data === 'object' && data !== null && 'getValues' in data;
+}
+
 export type ExecuteScatterplotResult = {
   llmResult: {
     success: boolean;
@@ -91,25 +144,10 @@ export type ExecuteScatterplotResult = {
         rSquared: number;
       };
     };
-    onSelected?: (datasetName: string, selectedIndices: number[]) => void;
+    onSelected?: OnSelected;
     theme?: string;
     isDraggable?: boolean;
     isExpanded?: boolean;
-    showLoess?: boolean;
-    showRegressionLine?: boolean;
-  };
-};
-
-/**
- * The context for the scatterplot tool.
- */
-export type ScatterplotToolContext = {
-  getValues: (datasetName: string, variableName: string) => Promise<number[]>;
-  onSelected?: (datasetName: string, selectedIndices: number[]) => void;
-  config?: {
-    isDraggable?: boolean;
-    isExpanded?: boolean;
-    theme?: string;
     showLoess?: boolean;
     showRegressionLine?: boolean;
   };
@@ -120,14 +158,14 @@ async function executeScatterplot(
   options
 ): Promise<ExecuteScatterplotResult> {
   try {
-    if (!isScatterplotFunctionArgs(args)) {
+    if (!isScatterplotToolArgs(args)) {
       throw new Error('Invalid scatterplot function arguments.');
     }
-    if (!isScatterplotFunctionContext(options.context)) {
+    if (!isScatterplotToolContext(options.context)) {
       throw new Error('Invalid scatterplot function context.');
     }
 
-    const { getValues, config } = options.context;
+    const { getValues, config, onSelected } = options.context;
     const { datasetName, xVariableName, yVariableName } = args;
     const xData = await getValues(datasetName, xVariableName);
     const yData = await getValues(datasetName, yVariableName);
@@ -160,7 +198,7 @@ async function executeScatterplot(
         xData,
         yData,
         regressionResults,
-        onSelected: options.context.onSelected,
+        onSelected,
         theme: config?.theme || 'light',
         isDraggable: config?.isDraggable || false,
         isExpanded: config?.isExpanded || false,

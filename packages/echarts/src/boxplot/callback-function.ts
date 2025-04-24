@@ -4,7 +4,7 @@ import {
   ErrorCallbackResult,
 } from '@openassistant/core';
 import { BoxplotDataProps, createBoxplot } from './component/utils';
-import { BoxplotFunctionContext } from './definition';
+import { BoxplotFunctionContext } from './tool';
 import { BoxplotOutputData } from './component/box-plot';
 import { generateId } from '@openassistant/common';
 

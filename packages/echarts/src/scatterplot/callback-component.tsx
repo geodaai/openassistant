@@ -7,7 +7,6 @@ import {
   useDraggable,
 } from '@openassistant/common';
 
-// type guard
 function isScatterplotOutputData(data: unknown): data is ScatterplotOutputData {
   return (
     typeof data === 'object' &&

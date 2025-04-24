@@ -46,3 +46,5 @@ export * from './bubble-chart/component/bubble-chart-option';
 export * from './math/linear-regression';
 export * from './echarts-updater';
 export * from './echarts-theme';
+
+export * from './types';

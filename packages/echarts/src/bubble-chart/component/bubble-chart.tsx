@@ -14,6 +14,7 @@ import ReactEChartsCore from 'echarts-for-react/lib/core';
 import { ECHARTS_DARK_THEME } from '../../echarts-theme';
 import { handleBrushSelection } from '../../echarts-updater';
 import { createBubbleChartOption } from './bubble-chart-option';
+import { OnSelected } from '../../types';
 
 // Register the required components
 echarts.use([
@@ -50,14 +51,15 @@ export type BubbleChartOutputData = {
   theme?: string;
   isExpanded?: boolean;
   isDraggable?: boolean;
+  onSelected?: OnSelected;
 };
 
 export function BubbleChart(props: BubbleChartOutputData): JSX.Element | null {
-  const { id, datasetName, data, theme } = props;
+  const { id, datasetName, data, theme, onSelected } = props;
 
   const option = useMemo(() => {
-    return createBubbleChartOption(props);
-  }, [props]);
+    return createBubbleChartOption(data);
+  }, [data]);
 
   const eChartsRef = useRef<ReactEChartsCore>(null);
   // track if the chart has been rendered, so we can update the chart later
@@ -114,14 +116,15 @@ export function BubbleChart(props: BubbleChartOutputData): JSX.Element | null {
             }
           }, 100);
 
-          handleBrushSelection(eChart, brushed, datasetName, brush);
+          handleBrushSelection(eChart, brushed, datasetName, brush, onSelected);
+          // Dispatch action to highlight selected in other components
         }
       },
       rendered: function () {
         setRendered(true);
       },
     }),
-    [datasetName, brush]
+    [brush, datasetName, onSelected]
   );
 
   return useMemo(

@@ -17,6 +17,7 @@ import { BoxplotDataProps, CreateBoxplotProps } from './utils';
 import { getBoxPlotChartOption } from './boxplot-option';
 import { onBrushSelected } from '../../echarts-updater';
 import { useBrushLink } from '@openassistant/common';
+import { OnSelected } from '../../types';
 
 // Register the required components
 echarts.use([
@@ -60,6 +61,7 @@ export type BoxplotOutputData = {
   setIsExpanded?: (isExpanded: boolean) => void;
   height?: number;
   width?: number;
+  onSelected?: OnSelected;
 } & CreateBoxplotProps;
 
 /**
@@ -74,6 +76,7 @@ export const Boxplot = (props: BoxplotOutputData) => {
     data: rawData,
     theme,
     boxplotData,
+    onSelected,
   } = props;
   const seriesIndex = variables.map((_, i) => i);
 
@@ -129,14 +132,15 @@ export const Boxplot = (props: BoxplotOutputData) => {
           id,
           datasetId || datasetName,
           eChartsRef.current?.getEchartsInstance(),
-          brush
+          brush,
+          onSelected
         );
       },
       rendered: function () {
         setRendered(true);
       },
     }),
-    [id, datasetId, datasetName, brush]
+    [id, datasetId, datasetName, brush, onSelected]
   );
 
   return useMemo(

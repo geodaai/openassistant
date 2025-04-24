@@ -1,9 +1,10 @@
 import { tool } from '@openassistant/core';
 import { z } from 'zod';
-import { BoxplotFunctionContext, isBoxplotFunctionContext } from './definition';
-import { BoxplotDataProps, createBoxplot } from './component/utils';
 import { generateId } from '@openassistant/common';
+
+import { BoxplotDataProps, createBoxplot } from './component/utils';
 import { BoxplotComponentContainer } from './component/box-plot-component';
+import { GetValues, OnSelected } from '../types';
 
 /**
  * The boxplot tool is used to create a boxplot chart.
@@ -71,9 +72,7 @@ export const boxplot = tool<
     getValues: () => {
       throw new Error('getValues() of BoxplotTool is not implemented');
     },
-    onSelected: () => {
-      throw new Error('onSelected() of BoxplotTool is not implemented');
-    },
+    onSelected: () => {},
     config: {
       isDraggable: false,
     },
@@ -119,8 +118,29 @@ export type ExecuteBoxplotResult = {
     theme?: string;
     isDraggable?: boolean;
     isExpanded?: boolean;
+    onSelected?: OnSelected;
   };
 };
+
+/**
+ * Configuration and callback context for the boxplot function.
+ */
+export type BoxplotFunctionContext = {
+  getValues: GetValues;
+  onSelected?: OnSelected;
+  config?: { isDraggable?: boolean; theme?: string; isExpanded?: boolean };
+};
+
+/**
+ * Check if the context is a BoxplotFunctionContext.
+ */
+export function isBoxplotFunctionContext(
+  context: unknown
+): context is BoxplotFunctionContext {
+  return (
+    typeof context === 'object' && context !== null && 'getValues' in context
+  );
+}
 
 async function executeBoxplot(
   { datasetName, variableNames, boundIQR = 1.5 },
@@ -130,7 +150,7 @@ async function executeBoxplot(
     if (!isBoxplotFunctionContext(options.context)) {
       throw new Error('Invalid context');
     }
-    const { getValues, config } = options.context;
+    const { getValues, onSelected, config } = options.context;
 
     const data = {};
     await Promise.all(
@@ -168,6 +188,7 @@ async function executeBoxplot(
         theme: config?.theme || 'light',
         isDraggable: config?.isDraggable || false,
         isExpanded: config?.isExpanded || false,
+        onSelected,
       },
     };
   } catch (error) {

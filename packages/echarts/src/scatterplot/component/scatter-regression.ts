@@ -7,7 +7,7 @@ import {
 
 /**
  * The properties of the regression.
- *
+ * @internal
  * @param xData - The x data. The array of x values.
  * @param yData - The y data. The array of y values.
  * @param filteredIndex - The indices of the selected points. The array of indices of the selected points.
@@ -20,7 +20,7 @@ export type ComputeRegressionProps = {
 
 /**
  * The results of the regression.
- *
+ * @internal
  * @param regression - The regression results.
  * @param regressionSelected - The regression results for the selected points.
  * @param regressionUnselected - The regression results for the unselected points.
@@ -37,6 +37,7 @@ export type ComputeRegressionResult = {
  * Compute the regression for the scatterplot. If filteredIndex is provided, compute the regression for the selected points and the unselected points.
  * Otherwise, only the regression for all points is computed.
  *
+ * @internal
  * @param props - The properties for computing regression
  * @param props.xData - The x data
  * @param props.yData - The y data

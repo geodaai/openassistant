@@ -5,59 +5,19 @@ import {
 import { BoxplotCallbackMessage } from './callback-component';
 import { boxplotCallbackFunction } from './callback-function';
 import { BoxplotComponentContainer } from './component/box-plot-component';
-
-/**
- * Function to retrieve numerical values from a dataset for a specific variable.
- * @param datasetName - The name of the dataset to query.
- * @param variableName - The name of the variable to retrieve values for.
- * @returns A promise that resolves to an array of numerical values.
- */
-type GetValues = (
-  datasetName: string,
-  variableName: string
-) => Promise<number[]>;
-
-/**
- * The callback function can be used to sync the selections of the boxplot with the original dataset.
- * @param datasetName - The name of the dataset.
- * @param selectedIndices - The indices of the selected data points in the boxplot.
- */
-export type OnSelectedCallback = (
-  datasetName: string,
-  selectedIndices: number[]
-) => void;
-
-/**
- * Configuration and callback context for the boxplot function.
- * @param getValues - Function to retrieve values from a dataset. See {@link GetValues}.
- * @param onSelected - Optional callback to handle selection events. See {@link OnSelectedCallback}.
- * @param config - Optional configuration object for the boxplot.
- * @param config.theme - Visual theme for the boxplot ('light' or 'dark').
- * @param config.isDraggable - Whether the boxplot can be dragged to other containers.
- * @param config.isExpanded - Whether the boxplot is expanded.
- */
-export type BoxplotFunctionContext = {
-  getValues: GetValues;
-  onSelected?: OnSelectedCallback;
-  config?: { isDraggable?: boolean; theme?: string; isExpanded?: boolean };
-};
-
-/**
- * Check if the context is a BoxplotFunctionContext.
- * @param context - The context to check.
- * @returns True if the context is a BoxplotFunctionContext, false otherwise.
- */
-export function isBoxplotFunctionContext(
-  context: unknown
-): context is BoxplotFunctionContext {
-  return (
-    typeof context === 'object' && context !== null && 'getValues' in context
-  );
-}
+import { GetValues } from '../types';
+import { BoxplotFunctionContext } from './tool';
 
 type ValueOf<T> = T[keyof T];
 type BoxplotFunctionContextValues = ValueOf<BoxplotFunctionContext>;
 
+/**
+ * @internal
+ * @deprecated Use {@link boxplotTool} instead.
+ *
+ * Define the boxplot function for tool calling. This function can assist user to create a boxplot using the values of a variable in the dataset.
+ * The values should be retrieved using the getValues() callback function.
+ */
 export const BoxplotFunction = {
   name: 'boxplot',
   description: 'Create a boxplot',
@@ -84,6 +44,9 @@ export const BoxplotFunction = {
 };
 
 /**
+ * @internal
+ * @deprecated Use {@link boxplotTool} instead.
+ *
  * Define the boxplot function for tool calling. This function can assist user to create a boxplot using the values of a variable in the dataset.
  * The values should be retrieved using the getValues() callback function.
  *
@@ -109,13 +72,10 @@ export function boxplotFunctionDefinition(
 }
 
 /**
+ * @internal
+ * @deprecated Use {@link boxplotTool} instead.
+ *
  * Properties for configuring the boxplot tool.
- * @param getValues - Function to retrieve dataset values. See {@link GetValues}.
- * @param tool - Optional custom function properties to override defaults.
- * @param config - Optional visual and behavioral configuration.
- * @param config.theme - Visual theme for the boxplot ('light' or 'dark').
- * @param config.isDraggable - Whether the boxplot can be dragged to other containers.
- * @param boxplotComponent - Optional custom React component to render the boxplot.
  */
 export type BoxplotToolProps = {
   getValues: GetValues;
@@ -125,6 +85,9 @@ export type BoxplotToolProps = {
 };
 
 /**
+ * @internal
+ * @deprecated Use {@link boxplotTool} instead.
+ *
  * This function creates a boxplot tool, which can be used to create a box plot using natural language prompts, e.g. *"Create a box plot of the variable 'age'"*.
  *
  * To use this tool, you need to provide the implementation of the `getValues` function.

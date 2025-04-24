@@ -1,36 +1,23 @@
-import { CallbackFunctionProps, CustomFunctionOutputProps, ErrorCallbackResult } from "@openassistant/core";
-import { BubbleChartFunctionContext } from "./definition";
-import { BubbleChartOutputData } from "./component/bubble-chart";
+import {
+  CallbackFunctionProps,
+  CustomFunctionOutputProps,
+  ErrorCallbackResult,
+} from '@openassistant/core';
+import {
+  isBubbleChartFunctionContext,
+  isBubbleChartFunctionArgs,
+} from './tool';
+import { BubbleChartOutputData } from './component/bubble-chart';
 
-export type BubbleChartFunctionArgs = {
-  datasetName: string;
-  variableX: string;
-  variableY: string;
-  variableSize: string;
-  variableColor?: string;
-};
-
+/**
+ * @internal @deprecated Use the `bubbleChart` tool instead.
+ */
 export type BubbleChartOutputResult =
   | ErrorCallbackResult
   | {
       success: boolean;
       details: string;
     };
-
-export function isBubbleChartFunctionArgs(
-  data: unknown
-): data is BubbleChartFunctionArgs {
-  return typeof data === 'object' && data !== null && 'datasetName' in data
-    && 'variableX' in data
-    && 'variableY' in data
-    && 'variableSize' in data;
-}
-
-export function isBubbleChartFunctionContext(
-  data: unknown
-): data is BubbleChartFunctionContext {
-  return typeof data === 'object' && data !== null && 'getValues' in data;
-}
 
 /**
  * @internal @deprecated Use the `bubbleChart` tool instead.
@@ -41,8 +28,7 @@ export async function BubbleChartCallbackFunction({
   functionContext,
 }: CallbackFunctionProps): Promise<
   CustomFunctionOutputProps<BubbleChartOutputResult, BubbleChartOutputData>
-  >
-{
+> {
   if (!isBubbleChartFunctionArgs(functionArgs)) {
     return {
       type: 'error',
@@ -54,15 +40,16 @@ export async function BubbleChartCallbackFunction({
     };
   }
 
-  const { datasetName, variableX, variableY, variableSize, variableColor } = functionArgs;
-  
+  const { datasetName, variableX, variableY, variableSize, variableColor } =
+    functionArgs;
+
   if (!datasetName || !variableX || !variableY || !variableSize) {
     return {
       type: 'error',
       name: functionName,
       result: {
         success: false,
-        details: 'Missing required arguments.', 
+        details: 'Missing required arguments.',
       },
     };
   }
@@ -82,7 +69,9 @@ export async function BubbleChartCallbackFunction({
   const xData = await getValues(datasetName, variableX);
   const yData = await getValues(datasetName, variableY);
   const sizeData = await getValues(datasetName, variableSize);
-  const colorData = variableColor ? await getValues(datasetName, variableColor) : null;
+  const colorData = variableColor
+    ? await getValues(datasetName, variableColor)
+    : null;
 
   return {
     type: 'success',
@@ -97,7 +86,9 @@ export async function BubbleChartCallbackFunction({
         variableX: { name: variableX, values: xData },
         variableY: { name: variableY, values: yData },
         variableSize: { name: variableSize, values: sizeData },
-        ...(variableColor && colorData ? { variableColor: { name: variableColor, values: colorData } } : {}),
+        ...(variableColor && colorData
+          ? { variableColor: { name: variableColor, values: colorData } }
+          : {}),
       },
     },
   };

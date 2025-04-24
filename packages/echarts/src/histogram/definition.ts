@@ -4,34 +4,12 @@ import {
 } from '@openassistant/core';
 import { histogramCallbackFunction } from './callback-function';
 import { HistogramComponentContainer } from './component/histogram-component';
+import { GetValues, OnSelected } from '../types';
 
 /**
- * Function signature for retrieving variable values from a dataset.
+ * @internal
+ * @deprecated Use {@link HistogramToolContext} instead.
  *
- * :::note
- * Users should implement this function to retrieve the values of a variable from their own dataset e.g. database.
- * :::
- *
- * @param datasetName - Name of the target dataset
- * @param variableName - Name of the variable to retrieve
- * @returns Promise containing an array of numeric values
- */
-export type GetValues = (
-  datasetName: string,
-  variableName: string
-) => Promise<number[]>;
-
-/**
- * The callback function can be used to sync the selections of the histogram plot with the original dataset.
- * @param datasetName - The name of the dataset.
- * @param selectedIndices - The indices of the selected bars in the histogram plot.
- */
-type OnSelectedCallback = (
-  datasetName: string,
-  selectedIndices: number[]
-) => void;
-
-/**
  * The context of the histogram function.
  * @param getValues - Get the values of a variable from the dataset. See {@link GetValues} for more details.
  * @param onSelected - The callback function can be used to sync the selections of the histogram plot with the original dataset. See {@link OnSelectedCallback} for more details.
@@ -41,7 +19,7 @@ type OnSelectedCallback = (
  */
 export type HistogramFunctionContext = {
   getValues: GetValues;
-  onSelected?: OnSelectedCallback;
+  onSelected?: OnSelected;
   config?: { isDraggable?: boolean; theme?: string };
 };
 
@@ -49,6 +27,9 @@ type ValueOf<T> = T[keyof T];
 type HistogramFunctionContextValues = ValueOf<HistogramFunctionContext>;
 
 /**
+ * @internal
+ * @deprecated Use {@link histogramTool} instead.
+ *
  * Define the histogram function for tool calling. This function can assist user to create a histogram plot using the values of a variable in the dataset.
  * The values should be retrieved using the getValues() callback function.
  *

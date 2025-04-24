@@ -2,14 +2,34 @@ import { z } from 'zod';
 import { tool } from '@openassistant/core';
 import { generateId } from '@openassistant/common';
 import { ParallelCoordinateComponentContainer } from './component/pcp-component';
-import { isParallelCoordinateFunctionArgs } from './callback-function';
 import {
   ParallelCoordinateDataProps,
   processParallelCoordinateData,
 } from './component/utils';
+import { GetValues, OnSelected } from '../types';
 
 /**
- * The PCP tool.
+ * The PCP tool is used to create a parallel coordinates plot.
+ *
+ * @example
+ * ```typescript
+ * import { pcp } from '@openassistant/echarts';
+ *
+ * const pcpTool = {
+ *   ...pcp,
+ *   context: {
+ *     getValues: async (datasetName, variableName) => {
+ *       // return the values of the variable from the dataset
+ *       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+ *     },
+ *   },
+ * };
+ * ```
+ *
+ * ### getValues()
+ *
+ * See {@link PCPToolContext} for detailed usage.
+ *
  */
 export const pcp = tool<
   z.ZodObject<{
@@ -25,16 +45,16 @@ export const pcp = tool<
     datasetName: z.string().describe('The name of the dataset.'),
     variableNames: z
       .array(z.string())
-      .describe('The names of the variables to create a PCP for.'),
+      .describe(
+        'Make sure the user provide at least two variables to create a PCP.'
+      ),
   }),
   execute: executePCP,
   context: {
     getValues: () => {
       throw new Error('getValues() of PCPTool is not implemented');
     },
-    onSelected: () => {
-      throw new Error('onSelected() of PCPTool is not implemented');
-    },
+    onSelected: () => {},
     config: {
       isDraggable: false,
       isExpanded: false,
@@ -44,14 +64,8 @@ export const pcp = tool<
   component: ParallelCoordinateComponentContainer,
 });
 
-/**
- * The type of the PCP tool.
- */
 export type PCPTool = typeof pcp;
 
-/**
- * The result of the PCP tool.
- */
 export type ExecutePCPResult = {
   llmResult: {
     success: boolean;
@@ -74,15 +88,13 @@ export type ExecutePCPResult = {
     theme?: string;
     isDraggable?: boolean;
     isExpanded?: boolean;
+    onSelected?: OnSelected;
   };
 };
 
-/**
- * The context for the PCP tool.
- */
 export type PCPToolContext = {
-  getValues: (datasetName: string, variableName: string) => Promise<number[]>;
-  onSelected?: (datasetName: string, selectedIndices: number[]) => void;
+  getValues: GetValues;
+  onSelected?: OnSelected;
   config?: {
     isDraggable?: boolean;
     isExpanded?: boolean;
@@ -90,12 +102,21 @@ export type PCPToolContext = {
   };
 };
 
+type PCPToolArgs = {
+  variableNames: string[];
+  datasetName: string;
+};
+
+export function isPCPToolArgs(data: unknown): data is PCPToolArgs {
+  return typeof data === 'object' && data !== null && 'variableNames' in data;
+}
+
 async function executePCP(args, options): Promise<ExecutePCPResult> {
   try {
-    if (!isParallelCoordinateFunctionArgs(args)) {
+    if (!isPCPToolArgs(args)) {
       throw new Error('Invalid PCP function arguments.');
     }
-    const { getValues, config } = options.context;
+    const { getValues, onSelected, config } = options.context;
     const { datasetName, variableNames } = args;
 
     if (variableNames.length < 2) {
@@ -123,6 +144,7 @@ async function executePCP(args, options): Promise<ExecutePCPResult> {
       theme: config?.theme || 'light',
       isDraggable: config?.isDraggable || false,
       isExpanded: config?.isExpanded || false,
+      onSelected,
     };
 
     return {

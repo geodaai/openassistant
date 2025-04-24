@@ -2,7 +2,7 @@ import { tool } from '@openassistant/core';
 import { z } from 'zod';
 
 // global variable to cache the GeoJSON data of a United States county
-const countyGeojsonCache = new Map<string, GeoJSON.FeatureCollection>();
+const countyGeojsonCache = new Map<string, GeoJSON.Feature>();
 
 export const getUsCountyGeojson = tool<
   z.ZodObject<{
@@ -33,6 +33,8 @@ export const getUsCountyGeojson = tool<
     const response = await fetch(
       `https://raw.githubusercontent.com/hyperknot/country-levels-export/master/geojson/medium/fips/${stateCode}/${fips}.geojson`
     );
+
+    // the above url return Feature directly, not FeatureCollection
     const geojson = await response.json();
     countyGeojsonCache.set(fips, geojson);
 

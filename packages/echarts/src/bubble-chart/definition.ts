@@ -2,23 +2,25 @@ import {
   RegisterFunctionCallingProps,
   CustomFunctionContext,
 } from '@openassistant/core';
-import { GetValues } from '../histogram/definition';
+import { GetValues } from '../types';
 import { BubbleChartCallbackFunction } from './callback-function';
 import { BubbleChartComponentContainer } from './component/bubble-chart-component';
 
 /**
- * Configuration context for the bubble chart visualization
+ * @internal
+ * @deprecated Use `bubbleChart` tool instead.
  *
- * @property {GetValues} getValues - Function to retrieve variable values from dataset
- * @property {Object} [config] - Optional configuration settings
- * @property {boolean} [config.isDraggable] - Enables drag functionality for dashboard integration
- * @property {('light'|'dark')} [config.theme] - Visual theme for the bubble chart
+ * Configuration context for the bubble chart visualization
  */
 export type BubbleChartFunctionContext = {
   getValues: GetValues;
   config?: { isDraggable?: boolean; theme?: string };
 };
 
+/**
+ * @internal
+ * @deprecated Use `bubbleChart` tool instead.
+ */
 export type BubbleChartFunctionContextValues =
   BubbleChartFunctionContext[keyof BubbleChartFunctionContext];
 

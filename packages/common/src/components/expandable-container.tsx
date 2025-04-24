@@ -106,6 +106,7 @@ export function ExpandableContainer({
                   <ResizablePlotContainer
                     {...(defaultWidth ? { defaultWidth } : {})}
                     {...(defaultHeight ? { defaultHeight } : {})}
+                    isHovered={true}
                   >
                     <div className="h-full w-full relative mb-2">
                       {cloneElement(children, { isExpanded: true })}

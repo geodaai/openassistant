@@ -3,36 +3,12 @@ import {
   CustomFunctionOutputProps,
   ErrorCallbackResult,
 } from '@openassistant/core';
-import { ScatterplotFunctionContext } from './definition';
 import {
   computeRegression,
   ComputeRegressionResult,
 } from './component/scatter-regression';
-
-/**
- * The arguments of the scatterplot function.
- *
- * @param datasetName - The name of the dataset.
- * @param xVariableName - The name of the x variable.
- * @param yVariableName - The name of the y variable.
- * @param filteredIndex - The indices of the selected points.
- */
-type ScatterplotFunctionArgs = {
-  datasetName: string;
-  xVariableName: string;
-  yVariableName: string;
-  filteredIndex?: number[];
-};
-
-/**
- * The result of the scatterplot function.
- *
- * @param success - Whether the function call is successful.
- * @param xVariableName - The name of the x variable.
- * @param yVariableName - The name of the y variable.
- * @param numberOfRows - The number of rows in the dataset.
- * @param details - The details of the function call.
- */
+import { isScatterplotToolArgs, isScatterplotToolContext } from './tool';
+import { OnSelected } from '../types';
 type ScatterplotOutputResult =
   | ErrorCallbackResult
   | {
@@ -68,7 +44,7 @@ export type ScatterplotOutputData = {
   yData: number[];
   regressionResults: ComputeRegressionResult;
   filteredIndex?: number[];
-  onSelected?: (datasetName: string, selectedIndices: number[]) => void;
+  onSelected?: OnSelected;
   theme?: string;
   showLoess?: boolean;
   showRegressionLine?: boolean;
@@ -78,30 +54,9 @@ export type ScatterplotOutputData = {
 };
 
 /**
- * Type guard of ScatterplotFunctionArgs
- */
-export function isScatterplotFunctionArgs(
-  data: unknown
-): data is ScatterplotFunctionArgs {
-  return (
-    typeof data === 'object' &&
-    data !== null &&
-    'datasetName' in data &&
-    'xVariableName' in data &&
-    'yVariableName' in data
-  );
-}
-
-/**
- * Type guard of ScatterplotFunctionContext
- */
-export function isScatterplotFunctionContext(
-  data: unknown
-): data is ScatterplotFunctionContext {
-  return typeof data === 'object' && data !== null && 'getValues' in data;
-}
-
-/**
+ * @internal
+ * @deprecated Use {@link scatterplot} tool instead.
+ *
  * The callback function for the scatterplot. When LLM calls the scatterplot function, it will be executed.
  * The result will be returned as a reponse of the function call to the LLM.
  *
@@ -118,7 +73,7 @@ export async function ScatterplotCallbackFunction({
 }: CallbackFunctionProps): Promise<
   CustomFunctionOutputProps<ScatterplotOutputResult, ScatterplotOutputData>
 > {
-  if (!isScatterplotFunctionArgs(functionArgs)) {
+  if (!isScatterplotToolArgs(functionArgs)) {
     return {
       type: 'error',
       name: functionName,
@@ -142,7 +97,7 @@ export async function ScatterplotCallbackFunction({
     };
   }
 
-  if (!isScatterplotFunctionContext(functionContext)) {
+  if (!isScatterplotToolContext(functionContext)) {
     return {
       type: 'error',
       name: functionName,
@@ -158,7 +113,9 @@ export async function ScatterplotCallbackFunction({
   let values: { x: number[]; y: number[] };
 
   try {
-    values = await getValues(datasetName, xVariableName, yVariableName);
+    const xData = await getValues(datasetName, xVariableName);
+    const yData = await getValues(datasetName, yVariableName);
+    values = { x: xData, y: yData };
   } catch (error) {
     return {
       type: 'error',

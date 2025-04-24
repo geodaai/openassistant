@@ -60,7 +60,7 @@ export function getCachedGeojson(item: string) {
   }
   const county = getCachedUsCounties(item);
   if (county) {
-    result.push(...county.features);
+    result.push(county);
   }
   return result;
 }

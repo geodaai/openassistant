@@ -2,6 +2,8 @@ import { numericFormatter } from '@openassistant/common';
 import { LoessResult, RegressionResults } from '../../math/linear-regression';
 
 /**
+ * @internal
+ * 
  * Get the regression line used in echarts scatterplot.
  *
  * @param allRegressionResults - The regression results.
@@ -58,6 +60,7 @@ export function getRegressionLine(
 }
 
 /**
+ * @internal
  * The properties of the scatterplot chart option.
  *
  * @param xVariableName - The name of the x variable.
@@ -210,7 +213,7 @@ export function getScatterplotChartOption({
       {
         data: seriesData,
         type: 'scatter',
-        symbolSize: 0,
+        symbolSize: 3,
         symbol: seriesData.length > 1000 ? 'rect' : 'circle',
         itemStyle: {
           color: 'lightblue',

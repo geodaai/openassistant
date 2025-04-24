@@ -1,17 +1,18 @@
 import { EChartsType } from 'echarts';
 import debounce from 'lodash/debounce';
 import { OnBrushedCallback } from '@openassistant/common';
+import { OnSelected } from './types';
 
 /**
  * Debounced version of the onSelected callback to prevent too frequent updates
  * when brushing data points.
- * 
+ *
  * @param params - Object containing dataset name and filtered indices
  * @param params.datasetName - Name of the dataset being brushed
  * @param params.filteredIndex - Array of indices that are currently brushed
  * @param callback - Optional callback function to handle brush selection
  */
-const debouncedOnSelected = debounce(
+const debouncedOnBrush = debounce(
   (
     params: { datasetName: string; filteredIndex: number[] },
     callback?: OnBrushedCallback
@@ -21,20 +22,32 @@ const debouncedOnSelected = debounce(
   500
 );
 
+const debouncedOnSelected = debounce(
+  (
+    params: { datasetName: string; filteredIndex: number[] },
+    callback?: OnSelected
+  ) => {
+    callback?.(params.datasetName, params.filteredIndex);
+  },
+  500
+);
+
 /**
  * Handles brush selection events from ECharts components.
  * Manages highlighting and callback execution for brushed data points.
- * 
+ *
  * @param eChart - ECharts instance
  * @param brushed - Array of indices that are currently brushed
  * @param datasetName - Name of the dataset being brushed
+ * @param onBrushed - Optional callback function to handle brush selection
  * @param onSelected - Optional callback function to handle brush selection
  */
 export function handleBrushSelection(
   eChart: EChartsType | undefined,
   brushed: number[],
   datasetName: string,
-  onSelected?: OnBrushedCallback
+  onBrushed?: OnBrushedCallback,
+  onSelected?: OnSelected
 ) {
   // check if brushed.length is 0 after 100ms, since brushSelected may return empty array for some reason?!
   setTimeout(() => {
@@ -45,12 +58,15 @@ export function handleBrushSelection(
   }, 100);
 
   // Debounce the onSelected callback
-  debouncedOnSelected({ datasetName, filteredIndex: brushed }, onSelected);
+  debouncedOnBrush({ datasetName, filteredIndex: brushed }, onBrushed);
+  if (onSelected && brushed.length > 0) {
+    debouncedOnSelected({ datasetName, filteredIndex: brushed }, onSelected);
+  }
 }
 
 /**
  * Handles the brush selection event from ECharts and processes the selected data indices.
- * 
+ *
  * @param params - The brush selection event parameters from ECharts
  * @param params.batch - Array of batch selection data containing selected data indices
  * @param id - The identifier for the chart instance
@@ -69,7 +85,8 @@ export function onBrushSelected(
   id: string,
   datasetName: string,
   eChart?: EChartsType,
-  onSelected?: OnBrushedCallback
+  onBrushed?: OnBrushedCallback,
+  onSelected?: OnSelected
 ) {
   if (!id || !params.batch || params.batch.length === 0) {
     return;
@@ -83,5 +100,8 @@ export function onBrushSelected(
     brushed.push(...rawIndices);
   }
 
-  handleBrushSelection(eChart, brushed, datasetName, onSelected);
+  handleBrushSelection(eChart, brushed, datasetName, onBrushed);
+  if (onSelected) {
+    onSelected(datasetName, brushed);
+  }
 }

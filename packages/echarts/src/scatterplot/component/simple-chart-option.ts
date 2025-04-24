@@ -1,10 +1,16 @@
 import { numericFormatter } from '@openassistant/common';
 
+/**
+ * @internal
+ */
 export type SimpleScatPlotDataProps = {
   variableX: string;
   variableY: string;
 };
 
+/**
+ * @internal
+ */
 export function getSimpleScatterChartOption(
   xVariableName: string,
   xData: number[],
@@ -41,7 +47,7 @@ export function getSimpleScatterChartOption(
       {
         data: seriesData,
         type: 'scatter',
-        symbolSize: 6,
+        symbolSize: 3,
         symbol: seriesData.length > 1000 ? 'rect' : 'circle',
         itemStyle: {
           color: 'none',

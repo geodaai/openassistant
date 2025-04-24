@@ -6,13 +6,8 @@ import {
 import { generateId } from '@openassistant/common';
 import { ParallelCoordinateOutputData } from './component/pcp';
 import { ParallelCoordinateDataProps } from './component/utils';
-import { ParallelCoordinateFunctionContext } from './definition';
 import { processParallelCoordinateData } from './component/utils';
-
-type ParallelCoordinateFunctionArgs = {
-  variableNames: string[];
-  datasetName: string;
-};
+import { isPCPToolArgs, PCPToolContext } from './tool';
 
 type ParallelCoordinateOutputResult =
   | ErrorCallbackResult
@@ -20,15 +15,6 @@ type ParallelCoordinateOutputResult =
       success: boolean;
       pcp: ParallelCoordinateDataProps;
     };
-
-/**
- * Type guard for PcpFunctionArgs
- */
-export function isParallelCoordinateFunctionArgs(
-  data: unknown
-): data is ParallelCoordinateFunctionArgs {
-  return typeof data === 'object' && data !== null && 'variableNames' in data;
-}
 
 export async function parallelCoordinateCallbackFunction({
   functionName,
@@ -40,7 +26,7 @@ export async function parallelCoordinateCallbackFunction({
     ParallelCoordinateOutputData
   >
 > {
-  if (!isParallelCoordinateFunctionArgs(functionArgs)) {
+  if (!isPCPToolArgs(functionArgs)) {
     return {
       type: 'error',
       name: functionName,
@@ -52,8 +38,7 @@ export async function parallelCoordinateCallbackFunction({
   }
 
   const { variableNames, datasetName } = functionArgs;
-  const { getValues, config } =
-    functionContext as ParallelCoordinateFunctionContext;
+  const { getValues, config } = functionContext as PCPToolContext;
 
   if (!variableNames || !datasetName) {
     return {

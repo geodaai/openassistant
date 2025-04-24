@@ -9,6 +9,7 @@ import { ECHARTS_DARK_THEME } from '../../echarts-theme';
 import { ParallelCoordinateDataProps } from './utils';
 import { createParallelCoordinateOption } from './pcp-option';
 import { handleBrushSelection } from '../../echarts-updater';
+import { OnSelected } from '../../types';
 
 // Register the required components
 echarts.use([CanvasRenderer, ParallelChart]);
@@ -37,6 +38,7 @@ export type ParallelCoordinateOutputData = {
   isDraggable?: boolean;
   isExpanded?: boolean;
   setIsExpanded?: (isExpanded: boolean) => void;
+  onSelected?: OnSelected;
 };
 
 /**
@@ -63,7 +65,16 @@ export type ParallelCoordinateOutputData = {
  * ```
  */
 export function ParallelCoordinatePlot(props: ParallelCoordinateOutputData) {
-  const { id, datasetName, variables, pcp, rawData, theme, isExpanded } = props;
+  const {
+    id,
+    datasetName,
+    variables,
+    pcp,
+    rawData,
+    theme,
+    isExpanded,
+    onSelected,
+  } = props;
 
   const option = useMemo(() => {
     return createParallelCoordinateOption({
@@ -125,14 +136,20 @@ export function ParallelCoordinatePlot(props: ParallelCoordinateOutputData) {
             // clear the selection area on axis by just re-rendering the chart
             chartInstance.setOption(option);
           }
-          handleBrushSelection(chartInstance, brushed, datasetName, brush);
+          handleBrushSelection(
+            chartInstance,
+            brushed,
+            datasetName,
+            brush,
+            onSelected
+          );
         }
       },
       rendered: function () {
         setRendered(true);
       },
     }),
-    [datasetName, brush, option]
+    [datasetName, brush, option, onSelected]
   );
 
   return useMemo(

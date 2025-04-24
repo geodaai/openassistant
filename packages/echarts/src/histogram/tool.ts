@@ -3,9 +3,32 @@ import { tool } from '@openassistant/core';
 import { generateId } from '@openassistant/common';
 import { HistogramComponentContainer } from './component/histogram-component';
 import { createHistogramBins } from './component/utils';
+import { GetValues, OnSelected } from '../types';
 
 /**
- * The histogram tool.
+ * The histogram tool is used to create a histogram chart.
+ *
+ * @example
+ * ```typescript
+ * import { histogram } from '@openassistant/echarts';
+ *
+ * const histogramTool = {
+ *   ...histogram,
+ *   context: {
+ *     ...histogram.context,
+ *     getValues: (datasetName: string, variableName: string) => {
+ *       // get the values of the variable from your dataset, e.g.
+ *       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+ *     },
+ *   },
+ * }
+ * ```
+ *
+ * ### getValues()
+ *
+ * See {@link HistogramToolContext} for detailed usage.
+ *
+ * User implements this function to get the values of the variable from dataset.
  */
 export const histogram = tool<
   z.ZodObject<{
@@ -35,9 +58,7 @@ export const histogram = tool<
     getValues: () => {
       throw new Error('getValues() of HistogramTool is not implemented');
     },
-    onSelected: () => {
-      throw new Error('onSelected() of HistogramTool is not implemented');
-    },
+    onSelected: () => {},
     config: {
       isDraggable: false,
       isExpanded: false,
@@ -80,6 +101,7 @@ export type ExecuteHistogramResult = {
     theme?: string;
     isDraggable?: boolean;
     isExpanded?: boolean;
+    onSelected?: OnSelected;
   };
 };
 
@@ -87,8 +109,8 @@ export type ExecuteHistogramResult = {
  * The context for the histogram tool.
  */
 export type HistogramToolContext = {
-  getValues: (datasetName: string, variableName: string) => Promise<number[]>;
-  onSelected?: (datasetName: string, selectedIndices: number[]) => void;
+  getValues: GetValues;
+  onSelected?: OnSelected;
   config?: {
     isDraggable?: boolean;
     isExpanded?: boolean;
@@ -101,7 +123,7 @@ async function executeHistogram(
   options
 ): Promise<ExecuteHistogramResult> {
   try {
-    const { getValues, config } = options.context;
+    const { getValues, onSelected, config } = options.context;
 
     const values = await getValues(datasetName, variableName);
 
@@ -132,6 +154,7 @@ async function executeHistogram(
         theme: config?.theme || 'light',
         isDraggable: config?.isDraggable || false,
         isExpanded: config?.isExpanded || false,
+        onSelected,
       },
     };
   } catch (error) {

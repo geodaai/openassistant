@@ -23,7 +23,14 @@ export const spatialJoin = tool<
   // type of the context
   SpatialCountFunctionContext
 >({
-  description: `Spatial join geometries from the first dataset with geometries from the second dataset.`,
+  description: `Spatial join geometries from the first dataset with geometries from the second dataset.
+  For secondDataset, you MUST use array format when joining with:
+  - Zipcodes (e.g. ["10014", "10024"])
+  - Counties (e.g. ["06001"] for San Francisco County)
+  - States (e.g. ["CA"] for California, ["NY"] for New York)
+  
+  For other datasets, you can use either a string (dataset name) or array format.
+  `,
   parameters: z.object({
     firstDatasetName: z.string(),
     secondDataset: z.union([
@@ -35,7 +42,7 @@ export const spatialJoin = tool<
       z
         .array(z.string())
         .describe(
-          'For state queries, ALWAYS use the state code in array format (e.g. ["CA"] for California, ["NY"] for New York). For zipcodes, use ["90210"].'
+          'For state queries, ALWAYS use the state code in array format (e.g. ["CA"] for California, ["NY"] for New York). For zipcodes, use ["90210"]. For counties, use FIPS code in array format (e.g. ["06001"] for San Francisco County).'
         ),
     ]),
     joinVariableNames: z

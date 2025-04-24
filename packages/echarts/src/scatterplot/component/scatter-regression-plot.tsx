@@ -38,6 +38,9 @@ type ScatterRegressionPlotProps = {
   filteredIndexes: number[];
 };
 
+/**
+ * @internal
+ */
 export function ScatterRegressionPlot({
   filteredIndex,
   regressionResults,
