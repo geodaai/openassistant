@@ -16,7 +16,7 @@ export const geocoding = tool<
   parameters: z.object({
     address: z.string().describe('The address to geocode'),
   }),
-  execute: async (args) => {
+  execute: async (args): Promise<ExecuteGeocodingResult> => {
     try {
       const address = args.address;
       const response = await fetch(
@@ -24,7 +24,7 @@ export const geocoding = tool<
       );
       const data = await response.json();
 
-      const geojson = {
+      const geojson: GeoJSON.FeatureCollection = {
         type: 'FeatureCollection',
         features: [
           {
@@ -39,6 +39,7 @@ export const geocoding = tool<
           },
         ],
       };
+
       return {
         llmResult: {
           success: true,

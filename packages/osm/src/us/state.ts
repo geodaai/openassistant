@@ -15,7 +15,7 @@ export const getUsStateGeojson = tool<
       z.string().describe('The two-letter postal abbreviations of a state')
     ),
   }),
-  execute: async (args) => {
+  execute: async (args): Promise<ExecuteGetUsStateGeojsonResult> => {
     try {
       const states = args.states;
 
@@ -70,13 +70,13 @@ export type GetUsStateGeojsonTool = typeof getUsStateGeojson;
 export type ExecuteGetUsStateGeojsonResult = {
   llmResult: {
     success: boolean;
-    result?: {
-      state: string;
-    };
+    datasetId?: string;
+    result?: string;
     error?: string;
   };
   additionalData?: {
-    state: string;
+    states: string[];
+    datasetId: string;
     geojson: GeoJSON.FeatureCollection;
   };
 };

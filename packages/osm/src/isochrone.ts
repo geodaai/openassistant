@@ -43,9 +43,7 @@ export const isochrone = tool<
   // additional data
   ExecuteIsochroneResult['additionalData'],
   // context
-  {
-    getMapboxToken: () => string;
-  }
+  IsochroneToolContext
 >({
   description:
     'Get isochrone polygons showing reachable areas within a given time limit from a starting point using Mapbox Isochrone API',
@@ -74,7 +72,7 @@ export const isochrone = tool<
       .default(true)
       .optional(),
   }),
-  execute: async (args, options) => {
+  execute: async (args, options): Promise<ExecuteIsochroneResult> => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000);
     try {
@@ -185,6 +183,10 @@ export const isochrone = tool<
 });
 
 export type IsochroneTool = typeof isochrone;
+
+type IsochroneToolContext = {
+  getMapboxToken: () => string;
+};
 
 type ExecuteIsochroneResult = {
   llmResult: {

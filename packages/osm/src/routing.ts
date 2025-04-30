@@ -2,7 +2,7 @@ import { tool } from '@openassistant/core';
 import { z } from 'zod';
 import { generateId, cacheData } from './utils';
 
-interface MapboxStep {
+type MapboxStep = {
   distance: number;
   duration: number;
   geometry: {
@@ -17,27 +17,27 @@ interface MapboxStep {
     type: string;
     modifier?: string;
   };
-}
+};
 
-interface MapboxLeg {
+type MapboxLeg = {
   distance: number;
   duration: number;
   steps: MapboxStep[];
-}
+};
 
-interface MapboxRoute {
+type MapboxRoute = {
   distance: number;
   duration: number;
   geometry: {
     coordinates: [number, number][];
   };
   legs: MapboxLeg[];
-}
+};
 
-interface MapboxResponse {
+type MapboxResponse = {
   routes: MapboxRoute[];
   message?: string;
-}
+};
 
 export const routing = tool<
   // tool parameters
@@ -56,9 +56,7 @@ export const routing = tool<
   // additional data
   ExecuteRoutingResult['additionalData'],
   // context
-  {
-    getMapboxToken: () => string;
-  }
+  RoutingToolContext
 >({
   description:
     'Get routing directions between two coordinates using Mapbox Directions API',
@@ -75,7 +73,7 @@ export const routing = tool<
       .enum(['driving', 'walking', 'cycling'])
       .describe('The mode of the routing'),
   }),
-  execute: async (args, options) => {
+  execute: async (args, options): Promise<ExecuteRoutingResult> => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000);
     try {
@@ -213,10 +211,15 @@ export const routing = tool<
 
 export type RoutingTool = typeof routing;
 
+type RoutingToolContext = {
+  getMapboxToken: () => string;
+};
+
 type ExecuteRoutingResult = {
   llmResult: {
     success: boolean;
     result?: {
+      datasetName: string;
       distance: number;
       duration: number;
       geometry: GeoJSON.LineString;
@@ -232,24 +235,7 @@ type ExecuteRoutingResult = {
       distance: number;
       duration: number;
       geometry: GeoJSON.LineString;
-      legs: Array<{
-        distance: number;
-        duration: number;
-        steps: Array<{
-          distance: number;
-          duration: number;
-          geometry: GeoJSON.LineString;
-          name: string;
-          mode: string;
-          maneuver: {
-            location: [number, number];
-            bearing_before: number;
-            bearing_after: number;
-            type: string;
-            modifier?: string;
-          };
-        }>;
-      }>;
+      legs: Array<MapboxLeg>;
     };
     cacheId: string;
   };

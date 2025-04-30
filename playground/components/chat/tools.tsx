@@ -13,7 +13,6 @@ import {
   spatialWeights,
   SpatialWeightsTool,
   SpatialWeightsToolComponent,
-  getGeoDaCachedData,
 } from '@openassistant/geoda';
 import {
   getUsStateGeojson,
@@ -65,16 +64,11 @@ const getGeometries = async (datasetName: string) => {
     return points;
   } catch (error) {
     // try to get the geometries from cached data
-    let geojson = getGeoDaCachedData(datasetName);
-    if (geojson && geojson.features.length > 0) {
+    let geojson = getCachedData(datasetName);
+    if (geojson && 'features' in geojson && geojson.features.length > 0) {
       return geojson.features;
     } else {
-      geojson = getCachedData(datasetName);
-      if (geojson && geojson.features.length > 0) {
-        return geojson.features;
-      } else {
-        return [];
-      }
+      throw new Error('No geometries found');
     }
   }
 };

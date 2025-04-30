@@ -30,8 +30,8 @@
     "@kepler.gl/utils": "3.0.0",
     "@loaders.gl/core": "4.3.3",
     "@loaders.gl/schema": "4.3.3",
-    "@openassistant/common": "workspace:*",
-    "@openassistant/core": "workspace:*",
+    "@openassistant/common": "0.3.1",
+    "@openassistant/core": "0.3.1",
     "react-intl": "^6.3.0",
     "react-palm": "^3.3.8",
     "react-redux": "^9.2.0",
@@ -50,5 +50,6 @@
     "esbuild-plugin-polyfill-node": "^0.3.0",
     "redux-logger": "^3.0.6",
     "styled-components": "6.1.8"
-  }
+  },
+  "gitHead": "093c09f3a1d5f6ac1f22e1fb6fcccbed1ef8388d"
 }

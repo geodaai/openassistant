@@ -19,7 +19,7 @@ export const getUsCountyGeojson = tool<
         )
     ),
   }),
-  execute: async (args) => {
+  execute: async (args): Promise<ExecuteGetUsCountyGeojsonResult> => {
     try {
       const fipsCodes = args.fips;
       const features: GeoJSON.Feature[] = [];
@@ -77,13 +77,13 @@ export type GetUsCountyGeojsonTool = typeof getUsCountyGeojson;
 export type ExecuteGetUsCountyGeojsonResult = {
   llmResult: {
     success: boolean;
-    result?: {
-      fips: string;
-    };
+    datasetId?: string;
+    result?: string;
     error?: string;
   };
   additionalData?: {
-    fips: string;
+    fipsCodes: string[];
+    datasetId: string;
     geojson: GeoJSON.FeatureCollection;
   };
 };

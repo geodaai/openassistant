@@ -35,7 +35,7 @@ export const queryUSZipcodes = tool<
         .describe('Southeast coordinates [longitude, latitude]'),
     }),
   }),
-  execute: async (args) => {
+  execute: async (args): Promise<ExecuteQueryUSZipcodesResult> => {
     try {
       const { northwest, southeast } = args.mapBounds;
       const cacheKey = 'us_zipcodes_centroids';
@@ -101,6 +101,7 @@ export type QueryUSZipcodesTool = typeof queryUSZipcodes;
 export type ExecuteQueryUSZipcodesResult = {
   llmResult: {
     success: boolean;
+    zipcodes?: string[];
     result?: string;
     error?: string;
   };

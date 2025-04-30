@@ -3,6 +3,10 @@ import { tailwindPlugin } from 'esbuild-plugin-tailwindcss';
 import open from 'open';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import * as dotenv from 'dotenv';
+
+// Load environment variables from .env file
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

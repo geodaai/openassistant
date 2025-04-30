@@ -41,7 +41,7 @@
   "dependencies": {
     "@iconify/react": "^5.1.0",
     "@nextui-org/react": "^2.6.10",
-    "@openassistant/core": "workspace:*",
+    "@openassistant/core": "0.3.1",
     "framer-motion": "^11.15.0",
     "html2canvas": "^1.4.1",
     "next-themes": "^0.4.4",
@@ -54,5 +54,5 @@
     "react": ">=18.2",
     "react-dom": ">=18.2"
   },
-  "gitHead": "d79ee3046ad7f103054a1856c808684fa64e8017"
+  "gitHead": "093c09f3a1d5f6ac1f22e1fb6fcccbed1ef8388d"
 }
