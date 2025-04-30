@@ -1,6 +1,6 @@
 {
   "name": "@openassistant/osm",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "author": "Xun Li<lixun910@gmail.com>",
   "description": "The OSM tools for OpenAssistant",
   "main": "dist/index.esm.js",
@@ -20,7 +20,7 @@
     "package.json"
   ],
   "dependencies": {
-    "@openassistant/core": "0.3.1",
+    "@openassistant/core": "workspace:*",
     "zip3": "^1.0.4",
     "zod": "^3.22.4"
   },
