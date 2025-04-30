@@ -1,0 +1,27 @@
+{
+  "name": "@openassistant/osm",
+  "version": "0.0.1",
+  "author": "Xun Li<lixun910@gmail.com>",
+  "description": "The OSM tools for OpenAssistant",
+  "main": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "node esbuild.config.mjs",
+    "watch": "node esbuild.config.mjs --watch",
+    "prepublishOnly": "yarn build",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "package.json"
+  ],
+  "dependencies": {
+    "@openassistant/core": "workspace:*",
+    "zip3": "^1.0.4",
+    "zod": "^3.22.4"
+  }
+}

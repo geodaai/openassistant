@@ -71,7 +71,8 @@ export function SpatialCountComponent({
           </div>
         }
         classNames={{
-          wrapper: 'max-h-[440px] max-w-full overflow-x-auto rounded-none gap-0',
+          wrapper:
+            'max-h-[440px] max-w-full overflow-x-auto rounded-none gap-0',
           base: 'overflow-scroll p-0 m-0 text-tiny',
           table: 'p-0 m-0 text-tiny',
           th: 'text-tiny',
@@ -123,7 +124,7 @@ export function SpatialJoinToolComponent(props: SpatialCountComponentProps) {
     setIsExpanded(flag);
   };
 
-  const height = props.joinResult.length * 30 + 90;
+  const height = Math.min(props.joinResult.length, 10) * 30 + 90;
 
   return (
     <ExpandableContainer

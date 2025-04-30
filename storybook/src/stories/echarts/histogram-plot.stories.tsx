@@ -95,3 +95,52 @@ export const Dark: Story = {
 };
 
 export const Light: Story = Default;
+
+const stringOutput = {
+  type: 'function',
+  name: 'histogram',
+  result: 'success',
+  data: {
+    variableName: 'String Categories',
+    histogramData: [
+      { bin: 0, binStart: 'Category A', binEnd: 'Category A' },
+      { bin: 1, binStart: 'Category B', binEnd: 'Category B' },
+      { bin: 2, binStart: 'Category C', binEnd: 'Category C' },
+    ],
+    barDataIndexes: [
+      [1, 2, 3],
+      [4, 5],
+      [6, 7, 8, 9, 10],
+    ],
+    datasetName: 'string_sample',
+    onSelected: (datasetName: string, indexes: number[]) => {
+      console.log('Selected:', datasetName, indexes);
+    },
+  },
+};
+
+export const StringHistogram: Story = {
+  render: () => (
+    <ResizableThemeWrapper forcedTheme="light">
+      <HistogramCallbackMessage
+        functionName="histogram"
+        functionArgs={{}}
+        output={{
+          ...stringOutput,
+          data: {
+            ...stringOutput.data,
+            theme: 'light',
+          },
+        }}
+      />
+    </ResizableThemeWrapper>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'This example demonstrates a histogram with string-based categories instead of numerical ranges.',
+      },
+    },
+  },
+};

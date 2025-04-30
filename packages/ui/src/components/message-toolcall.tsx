@@ -167,7 +167,9 @@ export function ToolCallComponent({
             isCompact={true}
             className="pt-0 text-tiny"
             itemClasses={{
-              title: 'text-tiny',
+              title: `text-tiny ${
+                !toolSuccess ? 'text-orange-500' : 'text-green-500'
+              }`,
               content: 'text-tiny',
             }}
           >

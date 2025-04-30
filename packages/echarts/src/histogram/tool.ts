@@ -94,8 +94,8 @@ export type ExecuteHistogramResult = {
     variableName: string;
     histogramData: {
       bin: number;
-      binStart: number;
-      binEnd: number;
+      binStart: number | string;
+      binEnd: number | string;
     }[];
     barDataIndexes: number[][];
     theme?: string;

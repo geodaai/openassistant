@@ -1,22 +1,8 @@
 'use client';
 
-import {
-  createMapFunctionDefinition,
-  GetDatasetForCreateMapFunctionArgs,
-} from '@openassistant/keplergl';
-import { useMemo, useState, useEffect } from 'react';
-import {
-  MessageModel,
-  RegisterFunctionCallingProps,
-  useAssistant,
-} from '@openassistant/core';
+import { useState } from 'react';
+import { MessageModel } from '@openassistant/core';
 import { AiAssistant, AiAssistantConfig, ConfigPanel } from '@openassistant/ui';
-import { queryDuckDBFunctionDefinition } from '@openassistant/duckdb';
-import {
-  histogramFunctionDefinition,
-  scatterplotFunctionDefinition,
-} from '@openassistant/echarts';
-import { SAMPLE_DATASETS } from './dataset';
 import { tools } from './tools';
 
 export default function Assistant({
@@ -28,7 +14,6 @@ export default function Assistant({
   setScreenCaptured: (screenCaptured: string) => void;
   setStartScreenCapture: (startScreenCapture: boolean) => void;
 }) {
-
   const [aiConfig, setAiConfig] = useState<AiAssistantConfig>({
     isReady: false,
     provider: 'openai',

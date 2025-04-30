@@ -1,5 +1,4 @@
 import { tool } from '@openassistant/core';
-import { Feature } from 'geojson';
 import { z } from 'zod';
 import { KeplerGlToolComponent } from './component/keplergl-component';
 import {
@@ -130,12 +129,6 @@ config: {
   }),
   execute: executeCreateMap,
   context: {
-    getDataset: async () => {
-      throw new Error('getDataset() of CreateMapTool is not implemented');
-    },
-    getGeometries: async () => {
-      throw new Error('getGeometries() of CreateMapTool is not implemented');
-    },
     config: {
       isDraggable: false,
     },
@@ -156,8 +149,8 @@ export type KeplerglTool = typeof keplergl;
 
 export type KeplerglToolContext = {
   getDataset?: (args: { datasetName: string }) => Promise<unknown>;
-  getGeometries?: (args: { datasetName: string }) => Promise<Feature[]>;
-  config: { isDraggable?: boolean; theme?: string };
+  getGeometries?: (args: { datasetName: string }) => Promise<unknown>;
+  config?: { isDraggable?: boolean; theme?: string };
 };
 
 export type ExecuteCreateMapResult = {
@@ -192,7 +185,6 @@ export function isKeplerglToolContext(
   return (
     typeof context === 'object' &&
     context !== null &&
-    'getDataset' in context &&
     'config' in context
   );
 }
@@ -229,9 +221,24 @@ async function executeCreateMap(
       mapType,
       config: layerConfig,
     } = args;
-    const { getDataset, config } = options.context;
+    const { getDataset, getGeometries, config } = options.context;
 
-    const dataContent = await getDataset({ datasetName });
+    let dataContent;
+
+    if (getDataset) {
+      dataContent = await getDataset({ datasetName });
+    }
+
+    if (!dataContent && getGeometries) {
+      // get dataContent from previous tool call
+      dataContent = await getGeometries({ datasetName });
+    }
+
+    if (!dataContent) {
+      throw new Error(
+        'getDataset() or getGeometries() of CreateMapTool is not implemented'
+      );
+    }
 
     let datasetForKepler: FileCacheItem[] = [];
 

@@ -2805,30 +2805,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@geoda/core@npm:^0.0.7":
-  version: 0.0.7
-  resolution: "@geoda/core@npm:0.0.7"
+"@geoda/core@npm:^0.0.9":
+  version: 0.0.9
+  resolution: "@geoda/core@npm:0.0.9"
   dependencies:
     "@loaders.gl/schema": "npm:^4.1.0-alpha.4"
     geojson: "npm:^0.5.0"
-  checksum: e6360720ebc8e2d4a9dacbdf6e828bfcedc137545e8be9ac541a5e8974948eed89f07e142a235643cbedc41e4380e3f3ce70faee26ea32bb651010e2359a2cbb
+  checksum: 3468980a641cc11bb8754ffdd4de563c6315a13caf522a5cc615c5c536e23080757368e6bb02d3c9b88d759c11a8c684bc01932165985c871724cae677fab957
   languageName: node
   linkType: hard
 
-"@geoda/lisa@npm:^0.0.7":
-  version: 0.0.7
-  resolution: "@geoda/lisa@npm:0.0.7"
+"@geoda/lisa@npm:^0.0.9":
+  version: 0.0.9
+  resolution: "@geoda/lisa@npm:0.0.9"
   dependencies:
     "@loaders.gl/schema": "npm:^4.1.0-alpha.4"
     geojson: "npm:^0.5.0"
-  checksum: 9eecb26bea58ad6b1c202615469f92ad2fccc4f6ae672d0fc4863a4889662edf8e1cfa59886301346a20c88409fe835cee35626c19c069242eae473c416ab1ca
+  checksum: d69877e2ee84c22f532f0039e88d8ca47e1bfc24d6c393224e1613f297bceb97aecf2462046f6449358cecff3851fa0859760634c1daadc0c4afd7597a122407
   languageName: node
   linkType: hard
 
-"@geoda/regression@npm:^0.0.7":
-  version: 0.0.7
-  resolution: "@geoda/regression@npm:0.0.7"
-  checksum: 84e1976f47e58855350ee56e2dc28b3bbbc6610635021979464729820ebaa23c488c1b732bae1b215a37b3feab7b0b589cd74347de5b7b304a7a3a1596244616
+"@geoda/regression@npm:^0.0.9":
+  version: 0.0.9
+  resolution: "@geoda/regression@npm:0.0.9"
+  checksum: 57bc62f02d2f6b143fc57d65c4c3225f78f74e1868764805a72222fea97c486f921cd845260032e7a50024758562daf60911812a1d92a740071044d94a7ec45d
   languageName: node
   linkType: hard
 
@@ -4680,7 +4680,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@loaders.gl/gis@npm:4.3.3, @loaders.gl/gis@npm:^4.1.0-alpha.4":
+"@loaders.gl/gis@npm:4.3.3, @loaders.gl/gis@npm:^4.1.0-alpha.4, @loaders.gl/gis@npm:^4.3.3":
   version: 4.3.3
   resolution: "@loaders.gl/gis@npm:4.3.3"
   dependencies:
@@ -7407,10 +7407,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@openassistant/geoda@workspace:packages/geoda"
   dependencies:
-    "@geoda/core": "npm:^0.0.7"
-    "@geoda/lisa": "npm:^0.0.7"
-    "@geoda/regression": "npm:^0.0.7"
+    "@geoda/core": "npm:^0.0.9"
+    "@geoda/lisa": "npm:^0.0.9"
+    "@geoda/regression": "npm:^0.0.9"
     "@loaders.gl/core": "npm:^4.3.3"
+    "@loaders.gl/gis": "npm:^4.3.3"
     "@loaders.gl/schema": "npm:^4.3.3"
     "@nextui-org/react": "npm:^2.6.8"
     "@openassistant/common": "workspace:*"
@@ -7452,6 +7453,16 @@ __metadata:
   peerDependencies:
     react: ">=18"
     react-dom: ">=18"
+  languageName: unknown
+  linkType: soft
+
+"@openassistant/osm@workspace:*, @openassistant/osm@workspace:packages/osm":
+  version: 0.0.0-use.local
+  resolution: "@openassistant/osm@workspace:packages/osm"
+  dependencies:
+    "@openassistant/core": "workspace:*"
+    zip3: "npm:^1.0.4"
+    zod: "npm:^3.22.4"
   languageName: unknown
   linkType: soft
 
@@ -16371,6 +16382,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv@npm:^16.5.0":
+  version: 16.5.0
+  resolution: "dotenv@npm:16.5.0"
+  checksum: e68a16834f1a41cc2dfb01563bc150668ad675e6cd09191211467b5c0806b6ecd6ec438e021aa8e01cd0e72d2b70ef4302bec7cc0fe15b6955f85230b62dc8a9
+  languageName: node
+  linkType: hard
+
 "draco3d@npm:1.5.5":
   version: 1.5.5
   resolution: "draco3d@npm:1.5.5"
@@ -18548,10 +18566,13 @@ __metadata:
   resolution: "geoda_tools@workspace:examples/geoda_tools"
   dependencies:
     "@openassistant/geoda": "workspace:*"
+    "@openassistant/keplergl": "workspace:*"
+    "@openassistant/osm": "workspace:*"
     "@openassistant/ui": "workspace:*"
     "@types/react": "npm:^18.2.0"
     "@types/react-dom": "npm:^18.2.0"
     autoprefixer: "npm:^10.4.20"
+    dotenv: "npm:^16.5.0"
     esbuild: "npm:^0.24.2"
     esbuild-plugin-polyfill-node: "npm:^0.3.0"
     esbuild-plugin-tailwindcss: "npm:^1.2.1"
@@ -25489,6 +25510,7 @@ __metadata:
     "@openassistant/echarts": "workspace:*"
     "@openassistant/geoda": "workspace:*"
     "@openassistant/keplergl": "workspace:*"
+    "@openassistant/osm": "workspace:*"
     "@openassistant/ui": "workspace:*"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
@@ -32679,6 +32701,13 @@ __metadata:
   version: 2.1.2
   resolution: "yoctocolors-cjs@npm:2.1.2"
   checksum: d731e3ba776a0ee19021d909787942933a6c2eafb2bbe85541f0c59aa5c7d475ce86fcb860d5803105e32244c3dd5ba875b87c4c6bf2d6f297da416aa54e556f
+  languageName: node
+  linkType: hard
+
+"zip3@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "zip3@npm:1.0.4"
+  checksum: bf79ccbdf8f6ca75736d5ce826ae8a7429bd2610591b12d3d6bcf36c794eba4c9421316d20b7cd72042349a276632da5d1d0a472daa02d3f94e508808c9a828a
   languageName: node
   linkType: hard
 

@@ -142,7 +142,7 @@ export abstract class VercelAiClient extends VercelAi {
    */
   public override restart() {
     this.stop();
-    this.messages = [];
+    this.setMessages([]);
     // need to reset the llm so getInstance doesn't return the same instance
     this.llm = null;
     VercelAiClient.instance = null;
@@ -347,14 +347,13 @@ export abstract class VercelAiClient extends VercelAi {
     tokensUsed.totalTokens = usage?.totalTokens || 0;
 
     if (!this.isDuplicateToolInvocation(message)) {
-      this.messages?.push(message);
       if (onStepFinish) {
         await onStepFinish({ ...event, toolResults }, toolCallMessages);
       }
     }
 
-    // return customMessage;
-    return null;
+    // TODO: we don't return customMessage anymore, since it will be handled by 'component' at user side
+    return message;
   }
 
   /**
@@ -382,8 +381,11 @@ export abstract class VercelAiClient extends VercelAi {
       );
     }
 
+    // make a copy of the messages array
+    const localMessages = [...this.getMessages()];
+
     let messageContent: string = '';
-    let customMessage: ReactNode | null = null;
+    const customMessage: ReactNode | null = null;
     const tokensUsed: LanguageModelUsage = {
       promptTokens: 0,
       completionTokens: 0,
@@ -391,9 +393,9 @@ export abstract class VercelAiClient extends VercelAi {
     };
 
     const maxSteps = VercelAiClient.maxSteps || 20;
-    const messageCount = this.messages.length;
+    const messageCount = localMessages.length;
     const maxStep = extractMaxToolInvocationStep(
-      this.messages[this.messages.length - 1]?.toolInvocations
+      localMessages[localMessages.length - 1]?.toolInvocations
     );
 
     const tools = VercelAiClient.tools
@@ -412,13 +414,14 @@ export abstract class VercelAiClient extends VercelAi {
       maxSteps,
       abortSignal: this.abortController?.signal,
       onStepFinish: async (event: StepResult<ToolSet>) => {
-        customMessage = await this.handleStepFinish(
+        const newMessage = await this.handleStepFinish(
           event,
           messageContent,
           tokensUsed,
           streamMessageCallback,
           onStepFinish
         );
+        localMessages.push(newMessage);
       },
     });
 
@@ -459,6 +462,9 @@ export abstract class VercelAiClient extends VercelAi {
         throw new Error(`Error from Vercel AI API: ${chunk.error}`);
       }
     }
+
+    // update messages
+    this.setMessages(localMessages);
 
     // check after LLM response is finished
     // auto-submit when all tool calls in the last assistant message have results:

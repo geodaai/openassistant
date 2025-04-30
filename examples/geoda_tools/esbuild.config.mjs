@@ -1,6 +1,11 @@
 import esbuild from 'esbuild';
 import tailwindcss from 'esbuild-plugin-tailwindcss';
 import open from 'open';
+import { polyfillNode } from 'esbuild-plugin-polyfill-node';
+import * as dotenv from 'dotenv';
+
+// Load environment variables from .env file
+dotenv.config();
 
 const isDev = process.argv.includes('--start');
 const port = 3002;
@@ -23,12 +28,18 @@ const config = {
     '.css': 'css',
   },
   plugins: [
+    polyfillNode(),
     tailwindcss({
       config: './tailwind.config.js',
     }),
   ],
   define: {
-    'process.env.OPENAI_API_KEY': JSON.stringify(process.env.OPENAI_API_KEY),
+    'process.env.OPENAI_API_KEY': JSON.stringify(
+      process.env.OPENAI_API_KEY || ''
+    ),
+    'process.env.GRAPHHOPPER_API_KEY': JSON.stringify(
+      process.env.GRAPHHOPPER_API_KEY || ''
+    ),
   },
 };
 

@@ -3,10 +3,10 @@ export type { SpatialJoinGeometries } from '@geoda/core';
 export * from './data-classify/tool';
 export * from './data-classify/data-classify';
 
-export * from './spatial-count/tool';
-export * from './spatial-count/definition';
-export * from './spatial-count/callback-function';
-export * from './spatial-count/component/spatial-count-component';
+export * from './spatial_join/tool';
+export * from './spatial_join/definition';
+export * from './spatial_join/callback-function';
+export * from './spatial_join/component/spatial-count-component';
 
 export * from './weights/tool';
 export * from './weights/component/weights-meta-table';
@@ -24,9 +24,7 @@ export * from './regression/utils';
 
 export * from './lisa/tool';
 
-export * from './us_states/tool';
-export * from './us_zipcodes/tool';
-export * from './us_county/tool';
+export * from './spatial_ops/buffer';
 
 export * from './types';
 export * from './utils';

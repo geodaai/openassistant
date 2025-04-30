@@ -2,7 +2,7 @@
   "name": "@openassistant/geoda",
   "version": "0.3.0",
   "author": "Xun Li<lixun910@gmail.com>",
-  "description": "The GeoDa spatial analysis addon for OpenAssistant",
+  "description": "The GeoDa spatial analysis tools for OpenAssistant",
   "main": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -20,10 +20,11 @@
     "package.json"
   ],
   "dependencies": {
-    "@geoda/core": "^0.0.7",
-    "@geoda/lisa": "^0.0.7",
-    "@geoda/regression": "^0.0.7",
+    "@geoda/core": "^0.0.9",
+    "@geoda/lisa": "^0.0.9",
+    "@geoda/regression": "^0.0.9",
     "@loaders.gl/core": "^4.3.3",
+    "@loaders.gl/gis": "^4.3.3",
     "@loaders.gl/schema": "^4.3.3",
     "@nextui-org/react": "^2.6.8",
     "@openassistant/common": "workspace:*",

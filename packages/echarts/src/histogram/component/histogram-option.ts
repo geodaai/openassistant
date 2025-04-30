@@ -1,12 +1,25 @@
 import { EChartsOption } from 'echarts';
 import { numericFormatter } from '@openassistant/common';
-import { TopLevelFormatterParams, CallbackDataParams } from 'echarts/types/dist/shared';
+import {
+  TopLevelFormatterParams,
+  CallbackDataParams,
+} from 'echarts/types/dist/shared';
 
-export type HistogramDataProps = {
+export type StringHistogramDataProps = {
+  bin: number;
+  binStart: string;
+  binEnd: string;
+};
+
+export type NumericHistogramDataProps = {
   bin: number;
   binStart: number;
   binEnd: number;
 };
+
+export type HistogramDataProps =
+  | NumericHistogramDataProps
+  | StringHistogramDataProps;
 
 const defaultBarColors = [
   '#FF6B6B',
@@ -45,9 +58,10 @@ export function getHistogramChartOption(
           color: defaultBarColors[i % defaultBarColors.length],
           opacity: 1,
         },
-        name: `[${numericFormatter(d.binStart)} - ${numericFormatter(
-          d.binEnd
-        )}]`,
+        name:
+          'binStart' in d && typeof d.binStart === 'string'
+            ? d.binStart
+            : `[${numericFormatter((d as NumericHistogramDataProps).binStart)} - ${numericFormatter((d as NumericHistogramDataProps).binEnd)}]`,
         // ids that associated with the bar and been filtered
         ids: hasHighlighted ? highlightedIds : [],
       };
@@ -58,10 +72,18 @@ export function getHistogramChartOption(
   // const xTickValues = plotData.map((d: HistogramDataProps) => d.binStart.toFixed(1));
 
   // get min value from plotData
-  const minValue = histogramData[0].binStart;
-  const maxValue = histogramData[histogramData.length - 1].binEnd;
+  const isNumeric =
+    'binStart' in histogramData[0] &&
+    typeof histogramData[0].binStart === 'number';
+  const minValue = isNumeric
+    ? (histogramData[0] as NumericHistogramDataProps).binStart
+    : 0;
+  const maxValue = isNumeric
+    ? (histogramData[histogramData.length - 1] as NumericHistogramDataProps)
+        .binEnd
+    : 0;
   const numBins = histogramData.length;
-  const interval = (maxValue - minValue) / numBins;
+  const interval = isNumeric ? (maxValue - minValue) / numBins : 1;
 
   // get bar data from plotData
   const barData = histogramData.map((d: HistogramDataProps, i: number) => {
@@ -75,7 +97,10 @@ export function getHistogramChartOption(
         shadowBlur: 10,
         shadowColor: 'rgba(0,0,0,0.3)',
       },
-      name: `[${numericFormatter(d.binStart)} - ${numericFormatter(d.binEnd)}]`,
+      name:
+        'binStart' in d && typeof d.binStart === 'string'
+          ? d.binStart
+          : `[${numericFormatter((d as NumericHistogramDataProps).binStart)} - ${numericFormatter((d as NumericHistogramDataProps).binEnd)}]`,
       // ids that associated with the bar and been filtered
       ids: barDataIndexes[i],
     };
@@ -99,7 +124,7 @@ export function getHistogramChartOption(
         show: false,
         position: [0, -15],
         formatter: function (params: CallbackDataParams): string {
-          return params.value as number + '';
+          return (params.value as number) + '';
         },
       },
     },
@@ -110,17 +135,17 @@ export function getHistogramChartOption(
     xAxis: [
       {
         type: 'category',
-        // data: xTickValues,
-        // axisLabel: {
-        //   interval: 0,
-        //   hideOverlap: true
-        // },
-        // axisTick: {
-        //   alignWithLabel: false,
-        //   interval: 0
-        // },
+        data: isNumeric
+          ? undefined
+          : histogramData.map((d) => d.binStart as string),
         axisTick: { show: false },
-        axisLabel: { show: false },
+        axisLabel: {
+          show: !isNumeric,
+          interval: 0,
+          hideOverlap: true,
+          rotate: 35,
+          overflow: 'truncate',
+        },
         axisLine: { show: false },
         position: 'bottom',
         splitLine: {
@@ -169,7 +194,13 @@ export function getHistogramChartOption(
         // ids that associated with the bar
         const range = (paramsArray[1] as { data: { name: string } }).data.name;
         const count = (paramsArray[1] as { value: number }).value;
-        return `Range: ${range}<br/> # Items: ${count}`;
+
+        // If the range is a string value (not in bracket format), just show the value
+        if (!range.startsWith('[')) {
+          return `${range}<br/> Count: ${count}`;
+        }
+
+        return `Range: ${range}<br/> Count: ${count}`;
       },
     },
     brush: {

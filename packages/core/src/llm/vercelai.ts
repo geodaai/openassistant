@@ -223,6 +223,10 @@ export class VercelAi extends AbstractAssistant {
     return this.messages;
   }
 
+  public addMessage(message: Message) {
+    this.messages.push(message);
+  }
+
   public setMessages(messages: Message[]) {
     this.messages = messages;
   }
@@ -329,6 +333,8 @@ export class VercelAi extends AbstractAssistant {
       analysis: '',
       parts: [],
     };
+
+    console.log('messages', this.messages);
 
     const { customMessage } = await this.triggerRequest({
       streamMessageCallback,

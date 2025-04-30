@@ -11,6 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "@openassistant/geoda": "workspace:*",
+    "@openassistant/keplergl": "workspace:*",
+    "@openassistant/osm": "workspace:*",
     "@openassistant/ui": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
@@ -19,6 +21,7 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "autoprefixer": "^10.4.20",
+    "dotenv": "^16.5.0",
     "esbuild": "^0.24.2",
     "esbuild-plugin-polyfill-node": "^0.3.0",
     "esbuild-plugin-tailwindcss": "^1.2.1",

@@ -17,6 +17,7 @@ export const spatialWeights = tool<
     distanceThreshold: z.ZodOptional<z.ZodNumber>;
     isMile: z.ZodOptional<z.ZodBoolean>;
     useCentroids: z.ZodOptional<z.ZodBoolean>;
+    mapBounds: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
   }>,
   ExecuteSpatialWeightsResult['llmResult'],
   ExecuteSpatialWeightsResult['additionalData'],
@@ -51,6 +52,7 @@ export const spatialWeights = tool<
         'Whether to use centroids for neighbor calculations. The default value is False.'
       ),
     isMile: z.boolean().optional().describe('Only for distance based weights.'),
+    mapBounds: z.array(z.number()).optional(),
   }),
   execute: executeSpatialWeights,
   context: {
@@ -92,6 +94,7 @@ export type ExecuteSpatialWeightsResult = {
       datasetName: string;
       weightsId: string;
       weightsMeta: WeightsMeta;
+      mapBounds?: number[];
       details?: string;
     };
     error?: string;
@@ -113,6 +116,7 @@ type SpatialWeightsArgs = {
   distanceThreshold?: number;
   isMile?: boolean;
   useCentroids?: boolean;
+  mapBounds?: number[];
 };
 
 function isSpatialWeightsArgs(args: unknown): args is SpatialWeightsArgs {
@@ -160,6 +164,7 @@ async function executeSpatialWeights(
     distanceThreshold,
     isMile,
     useCentroids,
+    mapBounds,
   } = args;
   const { getGeometries } = options.context;
   const geometries = await getGeometries(datasetName);
@@ -176,14 +181,14 @@ async function executeSpatialWeights(
     isQueen: type === 'queen',
     distanceThreshold,
     isMile,
-    useCentroids: false,
+    useCentroids,
     precisionThreshold,
     orderOfContiguity,
     includeLowerOrder,
     geometries,
   };
 
-  const id = getWeightsId(datasetName, weightsProps);
+  const id = getWeightsId(datasetName, weightsProps, mapBounds);
 
   let w: { weightsMeta: WeightsMeta; weights: number[][] } | null = null;
 
@@ -218,6 +223,7 @@ async function executeSpatialWeights(
         datasetName,
         weightsId: id,
         weightsMeta: w.weightsMeta,
+        ...(mapBounds ? { mapBounds } : {}),
         details: `Weights created successfully.`,
       },
     },
@@ -231,7 +237,8 @@ async function executeSpatialWeights(
 
 export function getWeightsId(
   datasetId: string,
-  weightsProps: CreateWeightsProps
+  weightsProps: CreateWeightsProps,
+  mapBounds?: number[]
 ): string {
   const parts = [
     'w', // prefix
@@ -255,6 +262,10 @@ export function getWeightsId(
       ? weightsProps.distanceThreshold.toFixed(1)
       : '0';
     parts.push(distanceThresholdString, weightsProps.isMile ? 'mile' : 'km');
+  }
+
+  if (mapBounds) {
+    parts.push(mapBounds[0].toString());
   }
 
   return parts.filter(Boolean).join('-');

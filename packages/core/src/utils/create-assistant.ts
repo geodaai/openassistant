@@ -315,7 +315,11 @@ export async function createAssistant(props: UseAssistantProps) {
   const assistant = await AssistantModel.getInstance();
 
   // restore the history messages
-  if (props.historyMessages && assistant.getMessages().length === 0) {
+  if (
+    props.historyMessages &&
+    props.historyMessages.length > 0 &&
+    assistant.getMessages().length === 0
+  ) {
     assistant.setMessages(props.historyMessages);
   }
 

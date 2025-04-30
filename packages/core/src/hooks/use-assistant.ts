@@ -144,7 +144,7 @@ export function useAssistant(props: UseAssistantProps) {
       assistant = await createAssistant(props);
 
       // restore the history messages
-      if (props.historyMessages) {
+      if (props.historyMessages && props.historyMessages.length > 0) {
         assistant.setMessages(props.historyMessages);
       }
 

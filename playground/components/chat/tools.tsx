@@ -1,10 +1,6 @@
 import {
   dataClassify,
   DataClassifyTool,
-  GetGeometries,
-  getUsStateGeojson,
-  getUsZipcodeGeojson,
-  getUsCountyGeojson,
   globalMoran,
   GlobalMoranTool,
   lisa,
@@ -17,7 +13,18 @@ import {
   spatialWeights,
   SpatialWeightsTool,
   SpatialWeightsToolComponent,
+  getGeoDaCachedData,
 } from '@openassistant/geoda';
+import {
+  getUsStateGeojson,
+  getUsCountyGeojson,
+  getUsZipcodeGeojson,
+  queryUSZipcodes,
+  geocoding,
+  routing,
+  isochrone,
+  getCachedData,
+} from '@openassistant/osm';
 import { PointLayerData } from '@geoda/core';
 import { SAMPLE_DATASETS } from './dataset';
 import {
@@ -45,16 +52,31 @@ const getValues = async (datasetName: string, variableName: string) => {
   );
 };
 
-const getGeometries: GetGeometries = async (datasetName: string) => {
-  // get points in [longitude, latitude] array format from dataset
-  const points: PointLayerData[] = SAMPLE_DATASETS[datasetName].map(
-    (item, index) => ({
-      position: [item.longitude, item.latitude],
-      index,
-      neighbors: [],
-    })
-  );
-  return points;
+const getGeometries = async (datasetName: string) => {
+  try {
+    // get points in [longitude, latitude] array format from dataset
+    const points: PointLayerData[] = SAMPLE_DATASETS[datasetName].map(
+      (item, index) => ({
+        position: [item.longitude, item.latitude],
+        index,
+        neighbors: [],
+      })
+    );
+    return points;
+  } catch (error) {
+    // try to get the geometries from cached data
+    let geojson = getGeoDaCachedData(datasetName);
+    if (geojson && geojson.features.length > 0) {
+      return geojson.features;
+    } else {
+      geojson = getCachedData(datasetName);
+      if (geojson && geojson.features.length > 0) {
+        return geojson.features;
+      } else {
+        return [];
+      }
+    }
+  }
 };
 
 // Create the boxplot tool with the getValues implementation
@@ -218,4 +240,8 @@ export const tools = {
   getUsCountyGeojson,
   localQuery: localQueryTool,
   keplergl: keplerglTool,
+  queryUSZipcodes,
+  geocoding,
+  routing,
+  isochrone,
 };

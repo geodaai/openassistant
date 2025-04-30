@@ -78,6 +78,7 @@ export const lisa = tool<
       .number()
       .optional()
       .describe('The quantile value for quantile LISA'),
+    mapBounds: z.array(z.number()).optional(),
   }),
   execute: executeLisa,
   context: {
@@ -103,6 +104,7 @@ export type ExecuteLisaResult = {
   llmResult: {
     success: boolean;
     result?: {
+      mapBounds?: number[];
       lisaMethod: string;
       datasetId: string;
       significanceThreshold: number;
@@ -116,6 +118,7 @@ export type ExecuteLisaResult = {
       }>;
     };
     error?: string;
+    instructions?: string;
   };
   additionalData?: LocalMoranResult & {
     datasetName: string;
@@ -134,6 +137,7 @@ type LisaArgs = {
   datasetName: string;
   k?: number;
   quantile?: number;
+  mapBounds?: number[];
 };
 
 function isLisaArgs(args: unknown): args is LisaArgs {
@@ -177,6 +181,7 @@ async function executeLisa(args, options): Promise<ExecuteLisaResult> {
       datasetName,
       k,
       quantile,
+      mapBounds,
     } = args;
     const { getValues } = options.context;
 
@@ -245,7 +250,9 @@ async function executeLisa(args, options): Promise<ExecuteLisaResult> {
     return {
       llmResult: {
         success: true,
+        ...(mapBounds ? { mapBounds } : {}),
         result,
+        instructions: `Important: When performing LISA analysis, visualization is handled automatically. Do not ask about visualization - the map will be created automatically after the analysis.`,
       },
       additionalData: { ...lm, datasetName, significanceThreshold },
     };

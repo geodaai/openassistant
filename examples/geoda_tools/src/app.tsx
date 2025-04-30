@@ -15,9 +15,17 @@ import {
   LisaTool,
   spatialJoin,
   SpatialJoinTool,
+  buffer,
+} from '@openassistant/geoda';
+import {
+  geocoding,
+  routing,
   getUsStateGeojson,
   getUsZipcodeGeojson,
-} from '@openassistant/geoda';
+  getUsCountyGeojson,
+  getCachedData,
+} from '@openassistant/osm';
+import { keplergl, KeplerglTool } from '@openassistant/keplergl';
 
 import { PointLayerData } from '@geoda/core';
 import { SAMPLE_DATASETS } from './dataset';
@@ -97,6 +105,38 @@ export default function App() {
     ...getUsStateGeojson,
   };
 
+  const getMapData = async ({ datasetName }: { datasetName: string }) => {
+    let result;
+
+    const geoms = getCachedData(datasetName);
+    if (geoms) {
+      result = geoms;
+    }
+
+    const osmResult = getCachedData(datasetName);
+    if (osmResult) {
+      result = osmResult;
+    }
+
+    return result;
+  };
+
+  const createMap: KeplerglTool = {
+    ...keplergl,
+    context: {
+      ...keplergl.context,
+      getGeometries: getMapData,
+    },
+  };
+
+  const routingTool = {
+    ...routing,
+    context: {
+      ...routing.context,
+      getGraphHopperApiKey: () => process.env.GRAPHHOPPER_API_KEY || '',
+    },
+  };
+
   const tools = {
     dataClassify: classifyTool,
     spatialWeights: weightsTool,
@@ -106,6 +146,11 @@ export default function App() {
     spatialJoin: spatialJoinTool,
     getUsStateGeojson: getUsStateGeojsonTool,
     getUsZipcodeGeojson,
+    getUsCountyGeojson,
+    geocoding,
+    buffer,
+    createMap,
+    routing: routingTool,
   };
 
   const welcomeMessage = `
@@ -119,6 +164,9 @@ Hi! I'm your GeoDa assistant. Here are some example queries you can try:
 6. Can you help to check the spatial patterns of the revenue data?
 7. How many venues are there in California and Texas?
 8. What are the total revenue in California and Texas?
+9. How can I geocode the address "123 Main St, San Francisco, CA"?
+10. How can I buffer the address "123 Main St, San Francisco, CA" by 10 KM?
+11. How can I get the routing directions between "123 Main St, San Francisco, CA" and "450 10th St, San Francisco, CA 94103"?
 `;
 
   const instructions = `
