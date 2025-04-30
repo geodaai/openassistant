@@ -19,12 +19,19 @@ for building your own AI assistant, along with a design allows you to easily cre
 - providing your own UI component for rendering the tool result
 - passing the result from the tool execution to the tool UI component or next tool execution.
 
+### Why do I need LLM tools?
+
+LLMs are fundamentally statistical language models that predict the next tokens based on the context. While emergent behaviors such as learning, reasoning, and tool use enhance the model’s capabilities, LLMs do not natively perform precise or complex computations and algorithms. For example, when asked to compute the square root of a random decimal number, ChatGPT typically provides an incorrect answer unless its Python tool is explicitly called to perform the calculation. This limitation becomes even more apparent with complex tasks in engineering and scientific domains. Providing computational tools for LLMs offers a solution for overcoming this problem and helps you successfully integrate LLMs with your applications.
+
 Check out the following examples using OpenAssistant in action:
 
 - [kepler.gl AI Assistant (kepler.gl)](https://location.foursquare.com/resources/blog/products/foursquare-brings-enterprise-grade-spatial-analytics-to-your-browser-with-kepler-gl-3-1/)
 - [GeoDa.AI AI Assistant (geoda.ai)](https://geoda.ai)
 - [SqlRooms (sqlrooms.org)](https://sqlrooms-ai.netlify.app/)
 
+<img width="513" alt="Screenshot 2025-04-25 at 10 22 08 PM" src="https://github.com/user-attachments/assets/234aeaf3-0a70-486a-92f6-71eff957af49" />
+
+[An example of using osm, spatial join, and map tools with LLM]
 
 ## Getting Started
 
