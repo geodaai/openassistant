@@ -113,11 +113,6 @@ export default function App() {
       result = geoms;
     }
 
-    const osmResult = getCachedData(datasetName);
-    if (osmResult) {
-      result = osmResult;
-    }
-
     return result;
   };
 

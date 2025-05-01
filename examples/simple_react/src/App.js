@@ -12,7 +12,7 @@ function App() {
         model="gpt-3.5-turbo"
         welcomeMessage="Hello, how can I help you today?"
         instructions="You are a helpful assistant."
-        functions={[]}
+        tools={{}}
         theme='dark'
       />
     </div>

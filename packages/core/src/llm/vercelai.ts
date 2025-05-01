@@ -7,6 +7,7 @@ import {
   ProcessImageMessageProps,
   ProcessMessageProps,
   RegisterFunctionCallingProps,
+  RegisterToolProps,
   StreamMessage,
   StreamMessageCallback,
   ToolCallComponents,
@@ -188,6 +189,22 @@ export class VercelAi extends AbstractAssistant {
       VercelAi.toolCallStreaming = config.toolCallStreaming;
   }
 
+  public static override registerTool({
+    name,
+    tool,
+    func,
+    context,
+    component,
+  }: RegisterToolProps) {
+    VercelAi.tools[name] = tool;
+
+    VercelAi.customFunctions[name] = {
+      func,
+      context,
+      component,
+    };
+  }
+
   public static override registerFunctionCalling({
     name,
     description,
@@ -214,6 +231,7 @@ export class VercelAi extends AbstractAssistant {
         type: 'object',
         properties,
         required,
+        additionalProperties: false,
       },
     };
 
@@ -384,9 +402,10 @@ export class VercelAi extends AbstractAssistant {
     const messageCount = this.messages.length;
 
     const lastMessage = this.messages[this.messages.length - 1];
-    const maxStep = 'toolInvocations' in lastMessage
-      ? extractMaxToolInvocationStep(lastMessage.toolInvocations)
-      : undefined;
+    const maxStep =
+      'toolInvocations' in lastMessage
+        ? extractMaxToolInvocationStep(lastMessage.toolInvocations)
+        : undefined;
 
     const customMessage: ReactNode | null = null;
 

@@ -64,7 +64,10 @@ export class OpenAIAssistant extends VercelAiClient {
       this.providerInstance = createOpenAI(options);
 
       // create a language model from the provider instance
-      this.llm = this.providerInstance(OpenAIAssistant.model);
+      this.llm = this.providerInstance(OpenAIAssistant.model, {
+        structuredOutputs: false,
+        downloadImages: true
+      });
 
       // create a openai client instance for whisper transcription
       this.openaiClient = new OpenAI({

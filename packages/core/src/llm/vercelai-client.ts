@@ -23,7 +23,6 @@ import {
   TriggerRequestOutput,
   VercelAi,
 } from './vercelai';
-import { convertOpenAIToolsToVercelTools } from '../lib/tool-utils';
 import { tiktokenCounter } from '../utils/token-counter';
 import { proceedToolCall } from '../utils/toolcall';
 
@@ -404,9 +403,7 @@ export abstract class VercelAiClient extends VercelAi {
         ? extractMaxToolInvocationStep(lastMessage.toolInvocations)
         : undefined;
 
-    const tools = VercelAiClient.tools
-      ? convertOpenAIToolsToVercelTools(VercelAiClient.tools)
-      : VercelAiClient.tools;
+    const tools = VercelAiClient.tools;
 
     const { fullStream } = streamText({
       model: this.llm,

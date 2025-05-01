@@ -1,4 +1,3 @@
-import { toJsonSchema } from 'openai-zod-functions';
 import { Schema } from '@ai-sdk/ui-utils';
 import { z } from 'zod';
 
@@ -102,7 +101,7 @@ export type ExtendedTool<
   context?: CONTEXT;
   /**
    * The component that will be rendered with the results of execute() when the tool is executed
-   * @type {React.ReactNode}
+   * @type {React.ElementType}
    */
   component?: React.ElementType;
   /**
@@ -269,43 +268,14 @@ export async function createAssistant(props: UseAssistantProps) {
     Object.keys(tools).forEach((functionName) => {
       if (isVercelFunctionTool(tools![functionName])) {
         const func = tools![functionName];
-        // get the description from the tool
-        let description = '';
-        if (func.type === 'function' || func.type === undefined) {
-          description = func.description || '';
-        }
-        // convert the zod schema to a json schema
-        const jsonSchemaFunctionDef = toJsonSchema({
-          name: functionName,
-          description,
-          schema: func.parameters,
-        });
+        const { execute, context, component, ...rest } = func;
 
-        AssistantModel.registerFunctionCalling({
-          name: jsonSchemaFunctionDef.name,
-          description: jsonSchemaFunctionDef.description || '',
-          // properties: Object.fromEntries(
-          //   Object.entries(
-          //     jsonSchemaFunctionDef.parameters.properties || {}
-          //   ).map(([key, value]) => [
-          //     key,
-          //     {
-          //       type: (value as any).type || 'string',
-          //       description: (value as any).description || '',
-          //       ...((value as any).items
-          //         ? { items: { type: (value as any).items.type || 'string' } }
-          //         : {}),
-          //     },
-          //   ])
-          // ),
-          // @ts-expect-error - TODO: fix this
-          properties: jsonSchemaFunctionDef.parameters.properties || {},
-          required: jsonSchemaFunctionDef.parameters.required || [],
-          ...(func.execute
-            ? { callbackFunction: createCallbackFunction(func.execute) }
-            : {}),
-          ...(func.context ? { callbackFunctionContext: func.context } : {}),
-          ...(func.component ? { component: func.component } : {}),
+        AssistantModel.registerTool({
+          name: functionName,
+          tool: rest,
+          func: createCallbackFunction(execute),
+          context,
+          component: component as React.ComponentType,
         });
       }
     });

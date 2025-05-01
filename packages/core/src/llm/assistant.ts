@@ -4,6 +4,7 @@ import {
   ProcessImageMessageProps,
   ProcessMessageProps,
   RegisterFunctionCallingProps,
+  RegisterToolProps,
 } from '../types';
 
 export abstract class AbstractAssistant {
@@ -17,10 +18,7 @@ export abstract class AbstractAssistant {
   /**
    * Configure the LLM instance
    */
-  public static configure(props: {
-    model: string;
-    apiKey: string;
-  }) {
+  public static configure(props: { model: string; apiKey: string }) {
     throw new Error('Method not implemented.');
   }
 
@@ -62,7 +60,13 @@ export abstract class AbstractAssistant {
   /**
    * Process text message
    */
-  public async processTextMessage(props: ProcessMessageProps): Promise<unknown> {
+  public async processTextMessage(
+    props: ProcessMessageProps
+  ): Promise<unknown> {
+    throw new Error('Method not implemented.');
+  }
+
+  public static registerTool(props: RegisterToolProps) {
     throw new Error('Method not implemented.');
   }
 
@@ -83,14 +87,20 @@ export abstract class AbstractAssistant {
   /**
    * Add additional context to the conversation, so LLM can understand the context better
    */
-  public async addAdditionalContext(props: { context: string, callback?: () => void }) {
+  public async addAdditionalContext(props: {
+    context: string;
+    callback?: () => void;
+  }) {
     throw new Error('Method not implemented.');
   }
 
   /**
    * Test connection
    */
-  public static async testConnection(apiKey: string, model: string): Promise<boolean> {
+  public static async testConnection(
+    apiKey: string,
+    model: string
+  ): Promise<boolean> {
     throw new Error('Method not implemented.');
   }
 }

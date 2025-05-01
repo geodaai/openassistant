@@ -30,7 +30,8 @@ export const spatialJoin = tool<
   // type of the context
   SpatialCountFunctionContext
 >({
-  description: `Spatial join geometries from the first dataset with geometries from the second dataset.`,
+  description: `Spatial join geometries from the first dataset with geometries from the second dataset.
+For example, if you want to get the number of people in each county,the first dataset should contains the number of people and the second dataset should contains the counties.`,
   parameters: z.object({
     firstDatasetName: z.string(),
     secondDatasetName: z.string(),

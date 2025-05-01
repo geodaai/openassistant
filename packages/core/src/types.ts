@@ -1,4 +1,4 @@
-import { CoreMessage, Message, ToolSet } from 'ai';
+import { CoreMessage, Message, Tool, ToolSet } from 'ai';
 import { StepResult } from 'ai';
 import { ReactNode } from 'react';
 import { z } from 'zod';
@@ -454,6 +454,19 @@ export type AudioToTextProps = {
   audioBlob?: Blob;
   audioBase64?: string;
   streamMessageCallback?: StreamMessageCallback;
+};
+
+/**
+ * Type of RegisterToolProps
+ */
+export type RegisterToolProps = {
+  name: string;
+  tool: Tool;
+  func: CallbackFunction;
+  context?:
+    | CustomFunctionContext<unknown>
+    | CustomFunctionContextCallback<unknown>;
+  component?: React.ComponentType;
 };
 
 /**
