@@ -1,6 +1,6 @@
 {
   "name": "@openassistant/ui",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "Chat UI components for OpenAssistant",
   "author": "Xun Li<lixun910@gmail.com>",
   "license": "MIT",
@@ -54,5 +54,5 @@
     "react": ">=18.2",
     "react-dom": ">=18.2"
   },
-  "gitHead": "093c09f3a1d5f6ac1f22e1fb6fcccbed1ef8388d"
+  "gitHead": "232930873ca397af1dbaa234a00c5d27dba29a26"
 }

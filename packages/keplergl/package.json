@@ -1,6 +1,6 @@
 {
   "name": "@openassistant/keplergl",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "author": "Xun Li<lixun910@gmail.com>",
   "description": "The mapping addon with Kepler.gl for OpenAssistant",
   "main": "dist/index.esm.js",
@@ -51,5 +51,5 @@
     "redux-logger": "^3.0.6",
     "styled-components": "6.1.8"
   },
-  "gitHead": "093c09f3a1d5f6ac1f22e1fb6fcccbed1ef8388d"
+  "gitHead": "232930873ca397af1dbaa234a00c5d27dba29a26"
 }
