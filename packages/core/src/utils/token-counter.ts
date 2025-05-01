@@ -1,7 +1,7 @@
 import { encodingForModel } from '@langchain/core/utils/tiktoken';
+import { ToolInvocation } from 'ai';
 import { Tiktoken } from 'js-tiktoken/lite';
-import { CoreMessage, ToolInvocation } from 'ai';
-import { Message } from '@ai-sdk/ui-utils';
+import { AIMessage } from 'src/types';
 
 let cachedEncoding: Tiktoken | null = null;
 
@@ -19,7 +19,9 @@ async function strTokenCounter(messageContent: string): Promise<number> {
   );
 }
 
-export async function tiktokenCounter(messages: Array<Message | CoreMessage>): Promise<number> {
+export async function tiktokenCounter(
+  messages: Array<AIMessage>
+): Promise<number> {
   let numTokens = 0;
   for (const msg of messages) {
     numTokens += await tiktokenCounterPerMessage(msg);
@@ -28,7 +30,7 @@ export async function tiktokenCounter(messages: Array<Message | CoreMessage>): P
 }
 
 export async function tiktokenCounterPerMessage(
-  msg: Message | CoreMessage
+  msg: AIMessage
 ): Promise<number> {
   let numTokens = 3; // every reply is primed with <|start|>assistant<|message|>
   const tokensPerMessage = 3;

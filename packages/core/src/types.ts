@@ -1,4 +1,4 @@
-import { Message, ToolSet } from 'ai';
+import { CoreMessage, Message, ToolSet } from 'ai';
 import { StepResult } from 'ai';
 import { ReactNode } from 'react';
 import { z } from 'zod';
@@ -16,9 +16,7 @@ export type ToolCallComponent = {
  */
 export type ToolCallComponents = ToolCallComponent[];
 
-export type AIMessage = Message & {
-  id: string;
-};
+export type AIMessage = CoreMessage | Message;
 
 export type VercelFunctionTool = {
   description: string;

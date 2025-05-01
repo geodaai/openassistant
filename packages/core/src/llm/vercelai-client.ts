@@ -15,6 +15,7 @@ import {
   ToolChoice,
   ToolSet,
   StepResult,
+  CoreMessage,
 } from 'ai';
 import { Message, extractMaxToolInvocationStep } from '@ai-sdk/ui-utils';
 import {
@@ -203,7 +204,7 @@ export abstract class VercelAiClient extends VercelAi {
   protected isDuplicateToolInvocation(message: Message): boolean {
     if (!message.toolInvocations?.length) return false;
 
-    const lastMessage = this.messages[this.messages.length - 1];
+    const lastMessage = this.messages[this.messages.length - 1] as Message;
     if (!lastMessage?.toolInvocations?.length) return false;
 
     return (
@@ -361,6 +362,7 @@ export abstract class VercelAiClient extends VercelAi {
    * @protected
    * @param {Object} params - Request parameters
    * @param {StreamMessageCallback} params.streamMessageCallback - Callback for streaming messages
+   * @param {string} [params.imageMessage] - Image message in base64 format
    * @param {Function} [params.onStepFinish] - Optional callback for step completion
    * @returns {Promise<TriggerRequestOutput>} Request output
    * @throws {Error} If LLM is not initialized
@@ -394,9 +396,13 @@ export abstract class VercelAiClient extends VercelAi {
 
     const maxSteps = VercelAiClient.maxSteps || 20;
     const messageCount = localMessages.length;
-    const maxStep = extractMaxToolInvocationStep(
-      localMessages[localMessages.length - 1]?.toolInvocations
-    );
+
+    const lastMessage = localMessages[localMessages.length - 1];
+
+    const maxStep =
+      'toolInvocations' in lastMessage
+        ? extractMaxToolInvocationStep(lastMessage.toolInvocations)
+        : undefined;
 
     const tools = VercelAiClient.tools
       ? convertOpenAIToolsToVercelTools(VercelAiClient.tools)
@@ -404,7 +410,9 @@ export abstract class VercelAiClient extends VercelAi {
 
     const { fullStream } = streamText({
       model: this.llm,
-      messages: this.messages,
+      messages: localMessages as
+        | Array<CoreMessage>
+        | Array<Omit<Message, 'id'>>,
       tools,
       toolCallStreaming: false, // TODO: disable tool call streaming for now
       toolChoice: VercelAiClient.toolChoice,

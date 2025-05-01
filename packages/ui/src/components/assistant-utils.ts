@@ -97,13 +97,19 @@ export async function sendTextMessageHandler({
     });
   } catch (error) {
     setTypingIndicator(false);
+    const errorMessage = 'Error occured while processing the request. ' + error;
     const newMessages: MessageModel[] = [
       ...updatedMesssages,
       {
-        message: 'Error occured while processing the request. ' + error,
+        message: errorMessage,
         direction: 'incoming',
         sender: 'error',
         position: 'normal',
+        messageContent: {
+          reasoning: '',
+          toolCallMessages: [],
+          text: errorMessage,
+        },
       },
     ];
     setMessages(newMessages);
@@ -144,6 +150,11 @@ export async function sendImageMessageHandler({
       sender: 'user',
       position: 'normal',
       payload: imageBase64String,
+      messageContent: {
+        reasoning: '',
+        toolCallMessages: [],
+        text: newMessage,
+      },
     },
   ];
   // add incoming message to show typing indicator for chatbot
@@ -154,6 +165,11 @@ export async function sendImageMessageHandler({
       direction: 'incoming',
       sender: 'assistant',
       position: 'normal',
+      messageContent: {
+        reasoning: '',
+        toolCallMessages: [],
+        text: '',
+      },
     },
   ]);
 
@@ -163,7 +179,7 @@ export async function sendImageMessageHandler({
     await sendImageMessage({
       message: newMessage,
       imageBase64String,
-      streamMessageCallback: ({ deltaMessage, customMessage, isCompleted }) => {
+      streamMessageCallback: ({ deltaMessage, customMessage, isCompleted, message }) => {
         // update the last message with the response
         const newMessages: MessageModel[] = [
           ...updatedMesssages,
@@ -173,6 +189,7 @@ export async function sendImageMessageHandler({
             sender: 'assistant',
             position: 'normal',
             payload: customMessage,
+            messageContent: message,
           },
         ];
         setMessages(newMessages);
@@ -191,14 +208,19 @@ export async function sendImageMessageHandler({
     });
   } catch (error) {
     setTypingIndicator(false);
+    const errorMessage = 'Error occured while processing the request. ' + error;
     const newMessages: MessageModel[] = [
       ...updatedMesssages,
       {
-        message:
-          'Error occured while processing the request. Details: ' + error,
+        message: errorMessage,
         direction: 'incoming',
         sender: 'error',
         position: 'normal',
+        messageContent: {
+          reasoning: '',
+          toolCallMessages: [],
+          text: errorMessage,
+        },
       },
     ];
     setMessages(newMessages);
