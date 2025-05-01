@@ -18,7 +18,7 @@ export const geocoding = tool<
   }),
   execute: async (args): Promise<ExecuteGeocodingResult> => {
     try {
-      const address = args.address;
+      const { address } = args;
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?q=${address}&format=json`
       );
@@ -74,3 +74,5 @@ export type ExecuteGeocodingResult = {
     geojson: GeoJSON.FeatureCollection;
   };
 };
+
+export type GeocodingToolContext = object;

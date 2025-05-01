@@ -7,7 +7,8 @@ export const getUsStateGeojson = tool<
     states: z.ZodArray<z.ZodString>;
   }>,
   ExecuteGetUsStateGeojsonResult['llmResult'],
-  ExecuteGetUsStateGeojsonResult['additionalData']
+  ExecuteGetUsStateGeojsonResult['additionalData'],
+  never
 >({
   description: 'Get the GeoJSON data of one or more United States states',
   parameters: z.object({
@@ -17,8 +18,7 @@ export const getUsStateGeojson = tool<
   }),
   execute: async (args): Promise<ExecuteGetUsStateGeojsonResult> => {
     try {
-      const states = args.states;
-
+      const { states } = args;
       const features: GeoJSON.Feature[] = [];
 
       for (const state of states) {

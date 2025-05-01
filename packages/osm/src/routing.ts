@@ -77,9 +77,9 @@ export const routing = tool<
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000);
     try {
-      const { longitude: originLon, latitude: originLat } = args.origin;
-      const { longitude: destLon, latitude: destLat } = args.destination;
-      const mode = args.mode || 'driving';
+      const { origin, destination, mode = 'driving' } = args;
+      const { longitude: originLon, latitude: originLat } = origin;
+      const { longitude: destLon, latitude: destLat } = destination;
 
       // Generate cache key
       const cacheKey = generateId();
@@ -183,8 +183,8 @@ export const routing = tool<
           },
         },
         additionalData: {
-          origin: args.origin,
-          destination: args.destination,
+          origin: origin,
+          destination: destination,
           route,
           cacheId: cacheKey,
         },
@@ -211,7 +211,7 @@ export const routing = tool<
 
 export type RoutingTool = typeof routing;
 
-type RoutingToolContext = {
+export type RoutingToolContext = {
   getMapboxToken: () => string;
 };
 

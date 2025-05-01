@@ -76,11 +76,14 @@ export const isochrone = tool<
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000);
     try {
-      const { longitude: originLon, latitude: originLat } = args.origin;
-      const timeLimit = args.timeLimit || 10;
-      const profile = args.profile || 'driving';
-      const distanceLimit = args.distanceLimit;
-      const polygons = args.polygons !== false;
+      const {
+        origin,
+        timeLimit = 10,
+        distanceLimit,
+        profile = 'driving',
+        polygons = true,
+      } = args;
+      const { longitude: originLon, latitude: originLat } = origin;
 
       // Generate cache key
       const cacheKey = generateId();
@@ -157,7 +160,7 @@ export const isochrone = tool<
           },
         },
         additionalData: {
-          origin: args.origin,
+          origin: origin,
           isochrone: isochroneData,
           cacheId: cacheKey,
         },
@@ -184,7 +187,7 @@ export const isochrone = tool<
 
 export type IsochroneTool = typeof isochrone;
 
-type IsochroneToolContext = {
+export type IsochroneToolContext = {
   getMapboxToken: () => string;
 };
 

@@ -2,13 +2,7 @@ import { tool } from '@openassistant/core';
 import { z } from 'zod';
 import { cacheData, generateId, getCachedData } from '../utils';
 
-export const getUsCountyGeojson = tool<
-  z.ZodObject<{
-    fips: z.ZodArray<z.ZodString>;
-  }>,
-  ExecuteGetUsCountyGeojsonResult['llmResult'],
-  ExecuteGetUsCountyGeojsonResult['additionalData']
->({
+export const getUsCountyGeojson = tool({
   description: 'Get the GeoJSON data of a United States county',
   parameters: z.object({
     fips: z.array(
@@ -21,7 +15,7 @@ export const getUsCountyGeojson = tool<
   }),
   execute: async (args): Promise<ExecuteGetUsCountyGeojsonResult> => {
     try {
-      const fipsCodes = args.fips;
+      const { fipsCodes } = args;
       const features: GeoJSON.Feature[] = [];
 
       for (const fips of fipsCodes) {

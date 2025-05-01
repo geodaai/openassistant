@@ -37,7 +37,8 @@ export const queryUSZipcodes = tool<
   }),
   execute: async (args): Promise<ExecuteQueryUSZipcodesResult> => {
     try {
-      const { northwest, southeast } = args.mapBounds;
+      const { mapBounds } = args;
+      const { northwest, southeast } = mapBounds;
       const cacheKey = 'us_zipcodes_centroids';
 
       let geojson = getCachedData(cacheKey);

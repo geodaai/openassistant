@@ -22,7 +22,7 @@ export const getUsZipcodeGeojson = tool<
   }),
   execute: async (args): Promise<ExecuteGetUsZipcodeGeojsonResult> => {
     try {
-      const zipcodes = args.zipcodes;
+      const { zipcodes } = args;
       const features: GeoJSON.Feature[] = [];
 
       for (const zipcode of zipcodes) {
