@@ -1,4 +1,4 @@
-import { tool } from '@openassistant/core';
+import { ExtendedTool, tool } from '@openassistant/core';
 import { Table as ArrowTable, tableFromArrays } from 'apache-arrow';
 import { z } from 'zod';
 import { getDuckDB, QueryDuckDBFunctionContext } from './query';
@@ -75,7 +75,6 @@ export const localQuery = tool({
   component: QueryDuckDBComponent,
 });
 
-
 async function executeLocalQuery(
   { datasetName, variableNames, sql, dbTableName },
   options
@@ -151,8 +150,18 @@ async function executeLocalQuery(
       llmResult: {
         success: false,
         error: error instanceof Error ? error.message : String(error),
-        instruction: 'Please explain the error and give a plan to fix the error. Then try again with a different query.',
+        instruction:
+          'Please explain the error and give a plan to fix the error. Then try again with a different query.',
       },
     };
   }
+}
+
+// Export the tools registration function
+export async function registerTools(): Promise<
+  Record<string, typeof localQuery>
+> {
+  return {
+    localQuery,
+  };
 }

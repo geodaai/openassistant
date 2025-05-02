@@ -12,7 +12,8 @@
       "import": "./dist/index.esm.js",
       "require": "./dist/index.cjs.js"
     },
-    "./dist/index.css": "./dist/index.esm.css"
+    "./dist/index.css": "./dist/index.esm.css",
+    "./dist/index.cjs": "./dist/index.cjs.js"
   },
   "scripts": {
     "build": "node esbuild.config.mjs",

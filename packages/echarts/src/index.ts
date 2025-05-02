@@ -48,3 +48,4 @@ export * from './echarts-updater';
 export * from './echarts-theme';
 
 export * from './types';
+export * from './register-tools';
