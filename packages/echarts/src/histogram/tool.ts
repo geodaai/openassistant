@@ -3,7 +3,7 @@ import { tool } from '@openassistant/utils';
 import { generateId } from '@openassistant/common';
 import { HistogramComponentContainer } from './component/histogram-component';
 import { createHistogramBins } from './component/utils';
-import { GetValues, OnSelected } from '../types';
+import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../types';
 
 /**
  * The histogram tool is used to create a histogram chart.
@@ -38,7 +38,7 @@ export const histogram = tool<
   }>,
   ExecuteHistogramResult['llmResult'],
   ExecuteHistogramResult['additionalData'],
-  HistogramToolContext
+  EChartsToolContext
 >({
   description: 'create a histogram',
   parameters: z.object({
@@ -105,24 +105,16 @@ export type ExecuteHistogramResult = {
   };
 };
 
-/**
- * The context for the histogram tool.
- */
-export type HistogramToolContext = {
-  getValues: GetValues;
-  onSelected?: OnSelected;
-  config?: {
-    isDraggable?: boolean;
-    isExpanded?: boolean;
-    theme?: string;
-  };
-};
-
 async function executeHistogram(
   { datasetName, variableName, numberOfBins = 5 },
   options
 ): Promise<ExecuteHistogramResult> {
   try {
+    if (!isEChartsToolContext(options.context)) {
+      throw new Error(
+        'Invalid context for histogram tool. Please provide a valid context.'
+      );
+    }
     const { getValues, onSelected, config } = options.context;
 
     const values = await getValues(datasetName, variableName);

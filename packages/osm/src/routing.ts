@@ -1,6 +1,7 @@
 import { tool } from '@openassistant/utils';
 import { z } from 'zod';
 import { generateId, cacheData } from './utils';
+import { isOsmToolContext, OsmToolContext } from './register-tools';
 
 type MapboxStep = {
   distance: number;
@@ -39,10 +40,6 @@ type MapboxResponse = {
   message?: string;
 };
 
-export function isRoutingToolContext(context: unknown): context is RoutingToolContext {
-  return typeof context === 'object' && context !== null && 'getMapboxToken' in context;
-}
-
 export const routing = tool<
   // tool parameters
   z.ZodObject<{
@@ -61,7 +58,7 @@ export const routing = tool<
   // additional data
   ExecuteRoutingResult['additionalData'],
   // context
-  RoutingToolContext
+  OsmToolContext
 >({
   description:
     'Get routing directions between two coordinates using Mapbox Directions API',
@@ -89,8 +86,10 @@ export const routing = tool<
 
       // Generate cache key
       const cacheKey = generateId();
-      if (!options?.context || !isRoutingToolContext(options.context)) {
-        throw new Error('Context is required and must implement RoutingToolContext');
+      if (!options?.context || !isOsmToolContext(options.context)) {
+        throw new Error(
+          'Context is required and must implement OsmToolContext'
+        );
       }
       const mapboxAccessToken = options.context.getMapboxToken();
 

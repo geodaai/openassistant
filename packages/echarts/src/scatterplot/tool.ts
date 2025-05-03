@@ -3,7 +3,7 @@ import { tool } from '@openassistant/utils';
 import { generateId } from '@openassistant/common';
 import { ScatterplotComponentContainer } from './component/scatter-plot-component';
 import { computeRegression } from './component/scatter-regression';
-import { GetValues, OnSelected } from '../types';
+import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../types';
 
 /**
  * The scatterplot tool is used to create a scatterplot chart.
@@ -42,7 +42,7 @@ export const scatterplot = tool<
   }>,
   ExecuteScatterplotResult['llmResult'],
   ExecuteScatterplotResult['additionalData'],
-  ScatterplotToolContext
+  EChartsToolContext
 >({
   description: 'create a scatterplot',
   parameters: z.object({
@@ -86,25 +86,6 @@ export function isScatterplotToolArgs(
     'xVariableName' in data &&
     'yVariableName' in data
   );
-}
-
-export type ScatterplotToolContext = {
-  getValues: GetValues;
-  onSelected?: OnSelected;
-  filteredIndex?: number[];
-  config?: {
-    isDraggable?: boolean;
-    theme?: string;
-    isExpanded?: boolean;
-    showLoess?: boolean;
-    showRegressionLine?: boolean;
-  };
-};
-
-export function isScatterplotToolContext(
-  data: unknown
-): data is ScatterplotToolContext {
-  return typeof data === 'object' && data !== null && 'getValues' in data;
 }
 
 export type ExecuteScatterplotResult = {
@@ -161,7 +142,7 @@ async function executeScatterplot(
     if (!isScatterplotToolArgs(args)) {
       throw new Error('Invalid scatterplot function arguments.');
     }
-    if (!isScatterplotToolContext(options.context)) {
+    if (!isEChartsToolContext(options.context)) {
       throw new Error('Invalid scatterplot function context.');
     }
 

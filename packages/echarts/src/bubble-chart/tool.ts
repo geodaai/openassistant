@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { tool } from '@openassistant/utils';
 import { generateId } from '@openassistant/common';
 import { BubbleChartComponentContainer } from './component/bubble-chart-component';
-import { GetValues, OnSelected } from '../types';
+import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../types';
 
 /**
  * The bubble chart tool.
@@ -39,7 +39,7 @@ export const bubbleChart = tool<
   }>,
   ExecuteBubbleChartResult['llmResult'],
   ExecuteBubbleChartResult['additionalData'],
-  BubbleChartToolContext
+  EChartsToolContext
 >({
   description: 'create a bubble chart',
   parameters: z.object({
@@ -115,22 +115,6 @@ export function isBubbleChartFunctionArgs(
   );
 }
 
-export type BubbleChartToolContext = {
-  getValues: GetValues;
-  onSelected?: OnSelected;
-  config?: {
-    isDraggable?: boolean;
-    isExpanded?: boolean;
-    theme?: string;
-  };
-};
-
-export function isBubbleChartFunctionContext(
-  data: unknown
-): data is BubbleChartToolContext {
-  return typeof data === 'object' && data !== null && 'getValues' in data;
-}
-
 async function executeBubbleChart(
   args,
   options
@@ -144,7 +128,7 @@ async function executeBubbleChart(
     const { datasetName, variableX, variableY, variableSize, variableColor } =
       args;
 
-    if (!isBubbleChartFunctionContext(options.context)) {
+    if (!isEChartsToolContext(options.context)) {
       throw new Error(
         'Invalid context for bubbleChart tool. Please provide a valid context.'
       );

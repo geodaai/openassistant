@@ -22,4 +22,4 @@ export * from './spatial_ops/buffer';
 
 export * from './types';
 export * from './utils';
-export * from './vercel-tools';
+export * from './register-tools';

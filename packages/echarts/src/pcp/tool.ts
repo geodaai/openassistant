@@ -6,7 +6,7 @@ import {
   ParallelCoordinateDataProps,
   processParallelCoordinateData,
 } from './component/utils';
-import { GetValues, OnSelected } from '../types';
+import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../types';
 
 /**
  * The PCP tool is used to create a parallel coordinates plot.
@@ -38,7 +38,7 @@ export const pcp = tool<
   }>,
   ExecutePCPResult['llmResult'],
   ExecutePCPResult['additionalData'],
-  PCPToolContext
+  EChartsToolContext
 >({
   description: 'create a parallel coordinates plot',
   parameters: z.object({
@@ -92,16 +92,6 @@ export type ExecutePCPResult = {
   };
 };
 
-export type PCPToolContext = {
-  getValues: GetValues;
-  onSelected?: OnSelected;
-  config?: {
-    isDraggable?: boolean;
-    isExpanded?: boolean;
-    theme?: string;
-  };
-};
-
 type PCPToolArgs = {
   variableNames: string[];
   datasetName: string;
@@ -115,6 +105,11 @@ async function executePCP(args, options): Promise<ExecutePCPResult> {
   try {
     if (!isPCPToolArgs(args)) {
       throw new Error('Invalid PCP function arguments.');
+    }
+    if (!isEChartsToolContext(options.context)) {
+      throw new Error(
+        'Invalid context for PCP tool. Please provide a valid context.'
+      );
     }
     const { getValues, onSelected, config } = options.context;
     const { datasetName, variableNames } = args;

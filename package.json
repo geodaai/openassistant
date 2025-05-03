@@ -10,7 +10,7 @@
   "scripts": {
     "clean": "rm -rf packages/*/dist",
     "start": "lerna run start --scope=@openassistant/ui",
-    "build-slow": "lerna run build --npm-client=yarn --concurrency=1",
+    "build-slow": "lerna run build --scope=@openassistant/utils && lerna run build --npm-client=yarn --concurrency=1 --ignore=@openassistant/utils",
     "build-geoda": "lerna run build --scope=@openassistant/geoda",
     "build": "lerna run build --parallel",
     "watch": "lerna run watch --parallel",

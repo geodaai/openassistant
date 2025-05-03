@@ -33,7 +33,7 @@ export const centroid = tool({
     if (geojson) {
       const geojsonObject = JSON.parse(geojson);
       geometries = geojsonObject.features;
-    } else if (datasetName) {
+    } else if (datasetName && getGeometries) {
       geometries = await getGeometries(datasetName);
     }
     

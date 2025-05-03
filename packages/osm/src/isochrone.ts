@@ -2,6 +2,7 @@ import { tool } from '@openassistant/utils';
 import { z } from 'zod';
 import { generateId, cacheData } from './utils';
 import { FeatureCollection } from 'geojson';
+import { isOsmToolContext, OsmToolContext } from './register-tools';
 
 interface MapboxIsochroneResponse {
   type: 'FeatureCollection';
@@ -24,15 +25,6 @@ interface MapboxIsochroneResponse {
   }>;
 }
 
-export function isIsochroneToolContext(
-  context: unknown
-): context is IsochroneToolContext {
-  return (
-    typeof context === 'object' &&
-    context !== null &&
-    'getMapboxToken' in context
-  );
-}
 
 export const isochrone = tool<
   // tool parameters
@@ -53,7 +45,7 @@ export const isochrone = tool<
   // additional data
   ExecuteIsochroneResult['additionalData'],
   // context
-  IsochroneToolContext
+  OsmToolContext
 >({
   description:
     'Get isochrone polygons showing reachable areas within a given time limit from a starting point using Mapbox Isochrone API',
@@ -97,9 +89,9 @@ export const isochrone = tool<
 
       // Generate cache key
       const cacheKey = generateId();
-      if (!options?.context || !isIsochroneToolContext(options.context)) {
+      if (!options?.context || !isOsmToolContext(options.context)) {
         throw new Error(
-          'Context is required and must implement IsochroneToolContext'
+          'Context is required and must implement OsmToolContext'
         );
       }
       const mapboxAccessToken = options.context.getMapboxToken();

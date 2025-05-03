@@ -4,7 +4,11 @@ import { generateId } from '@openassistant/common';
 
 import { BoxplotDataProps, createBoxplot } from './component/utils';
 import { BoxplotComponentContainer } from './component/box-plot-component';
-import { GetValues, OnSelected } from '../types';
+import {
+  EChartsToolContext,
+  isEChartsToolContext,
+  OnSelected,
+} from '../types';
 
 /**
  * The boxplot tool is used to create a boxplot chart.
@@ -52,7 +56,7 @@ export const boxplot = tool<
   // additional data of the tool
   ExecuteBoxplotResult['additionalData'],
   // type of the context
-  BoxplotFunctionContext
+  EChartsToolContext
 >({
   description: 'create a boxplot chart',
   parameters: z.object({
@@ -122,32 +126,12 @@ export type ExecuteBoxplotResult = {
   };
 };
 
-/**
- * Configuration and callback context for the boxplot function.
- */
-export type BoxplotFunctionContext = {
-  getValues: GetValues;
-  onSelected?: OnSelected;
-  config?: { isDraggable?: boolean; theme?: string; isExpanded?: boolean };
-};
-
-/**
- * Check if the context is a BoxplotFunctionContext.
- */
-export function isBoxplotFunctionContext(
-  context: unknown
-): context is BoxplotFunctionContext {
-  return (
-    typeof context === 'object' && context !== null && 'getValues' in context
-  );
-}
-
 async function executeBoxplot(
   { datasetName, variableNames, boundIQR = 1.5 },
   options
 ): Promise<ExecuteBoxplotResult> {
   try {
-    if (!isBoxplotFunctionContext(options.context)) {
+    if (!isEChartsToolContext(options.context)) {
       throw new Error('Invalid context');
     }
     const { getValues, onSelected, config } = options.context;

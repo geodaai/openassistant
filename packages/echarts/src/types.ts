@@ -25,3 +25,24 @@ export type OnSelected = (
    */
   selectedIndices: number[]
 ) => void;
+
+export type EChartsToolContext = {
+  getValues: GetValues;
+  onSelected?: OnSelected;
+  filteredIndex?: number[];
+  config?: {
+    isDraggable?: boolean;
+    theme?: string;
+    isExpanded?: boolean;
+    showLoess?: boolean;
+    showRegressionLine?: boolean;
+  };
+};
+
+export function isEChartsToolContext(
+  context: unknown
+): context is EChartsToolContext {
+  return (
+    typeof context === 'object' && context !== null && 'getValues' in context
+  );
+}

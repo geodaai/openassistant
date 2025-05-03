@@ -8,7 +8,7 @@ import {
 } from '@kepler.gl/processors';
 import * as arrow from 'apache-arrow';
 import { arrowSchemaToFields } from './utils';
-
+import { GetDataset, GetGeometries } from '../types';
 /**
  * The createMap tool is used to create a map visualization using Kepler.gl.
  *
@@ -148,8 +148,8 @@ config: {
 export type KeplerglTool = typeof keplergl;
 
 export type KeplerglToolContext = {
-  getDataset?: (args: { datasetName: string }) => Promise<unknown>;
-  getGeometries?: (args: { datasetName: string }) => Promise<unknown>;
+  getDataset?: GetDataset;
+  getGeometries?: GetGeometries;
   config?: { isDraggable?: boolean; theme?: string };
 };
 
@@ -222,12 +222,12 @@ async function executeCreateMap(
     let dataContent;
 
     if (getDataset) {
-      dataContent = await getDataset({ datasetName });
+      dataContent = await getDataset(datasetName);
     }
 
     if (!dataContent && getGeometries) {
       // get dataContent from previous tool call
-      dataContent = await getGeometries({ datasetName });
+      dataContent = await getGeometries(datasetName);
     }
 
     if (!dataContent) {

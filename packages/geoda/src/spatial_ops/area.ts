@@ -61,7 +61,7 @@ export const area = tool<
     if (geojson) {
       const geojsonObject = JSON.parse(geojson);
       geometries = geojsonObject.features;
-    } else if (datasetName) {
+    } else if (datasetName && getGeometries) {
       geometries = await getGeometries(datasetName);
     } else {
       throw new Error('No geometries found');

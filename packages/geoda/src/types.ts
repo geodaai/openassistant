@@ -28,5 +28,6 @@ export type GetGeometries = (
 ) => Promise<SpatialGeometry> | null;
 
 export type SpatialToolContext = {
-  getGeometries: GetGeometries;
+  getGeometries?: GetGeometries;
+  getValues?: GetValues;
 };

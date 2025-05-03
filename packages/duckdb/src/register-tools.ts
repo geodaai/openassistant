@@ -1,30 +1,16 @@
-import { boxplot } from './boxplot/tool';
-import { bubbleChart } from './bubble-chart/tool';
-import { histogram } from './histogram/tool';
-import { pcp } from './pcp/tool';
-import { scatterplot } from './scatterplot/tool';
-
+import { localQuery } from './tool';
 import { getTool, OnToolCompleted } from '@openassistant/utils';
-import { GetValues, OnSelected } from './types';
-
-export type ToolContext = {
-  getValues: GetValues;
-  onSelected?: OnSelected;
-};
+import { LocalQueryContext } from './types';
 
 export function registerTools() {
   return {
-    boxplot,
-    bubbleChart,
-    histogram,
-    pcp,
-    scatterplot,
+    localQuery,
   };
 }
 
 export function getVercelAiTool(
   toolName: string,
-  toolContext: ToolContext,
+  toolContext: LocalQueryContext,
   onToolCompleted: OnToolCompleted
 ) {
   const tool = registerTools()[toolName];
@@ -35,7 +21,7 @@ export function getVercelAiTool(
 }
 
 export function getVercelTools(
-  toolContext: ToolContext,
+  toolContext: LocalQueryContext,
   onToolCompleted: OnToolCompleted
 ) {
   const tools = registerTools();
