@@ -1,4 +1,4 @@
-import { tool } from '@openassistant/core';
+import { tool } from '@openassistant/utils';
 import { z } from 'zod';
 import { generateId, cacheData } from './utils';
 import { FeatureCollection } from 'geojson';
@@ -22,6 +22,16 @@ interface MapboxIsochroneResponse {
       coordinates: number[][][];
     };
   }>;
+}
+
+export function isIsochroneToolContext(
+  context: unknown
+): context is IsochroneToolContext {
+  return (
+    typeof context === 'object' &&
+    context !== null &&
+    'getMapboxToken' in context
+  );
 }
 
 export const isochrone = tool<
@@ -87,6 +97,11 @@ export const isochrone = tool<
 
       // Generate cache key
       const cacheKey = generateId();
+      if (!options?.context || !isIsochroneToolContext(options.context)) {
+        throw new Error(
+          'Context is required and must implement IsochroneToolContext'
+        );
+      }
       const mapboxAccessToken = options.context.getMapboxToken();
 
       // Build Mapbox API URL

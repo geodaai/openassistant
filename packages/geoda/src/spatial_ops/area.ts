@@ -1,8 +1,38 @@
-import { tool } from '@openassistant/core';
+import { tool } from '@openassistant/utils';
 import { z } from 'zod';
 import { getArea } from '@geoda/core';
+import { SpatialToolContext } from '../types';
+import { isSpatialToolContext } from 'src/utils';
 
-export const area = tool({
+export type ExecuteAreaResult = {
+  llmResult: {
+    success: boolean;
+    result: string;
+    areas: number[];
+    distanceUnit: 'KM' | 'Mile';
+  };
+  additionalData?: {
+    datasetName?: string;
+    geojson?: string;
+    distanceUnit: 'KM' | 'Mile';
+    areas: number[];
+  };
+};
+
+export const area = tool<
+  // tool parameters
+  z.ZodObject<{
+    geojson: z.ZodOptional<z.ZodString>;
+    datasetName: z.ZodOptional<z.ZodString>;
+    distanceUnit: z.ZodDefault<z.ZodEnum<['KM', 'Mile']>>;
+  }>,
+  // llm result
+  ExecuteAreaResult['llmResult'],
+  // additional data
+  ExecuteAreaResult['additionalData'],
+  // context
+  SpatialToolContext
+>({
   description: 'Calculate area of geometries',
   parameters: z.object({
     geojson: z
@@ -19,6 +49,11 @@ export const area = tool({
   }),
   execute: async (args, options) => {
     const { datasetName, geojson, distanceUnit = 'KM' } = args;
+    if (!options?.context || !isSpatialToolContext(options.context)) {
+      throw new Error(
+        'Context is required and must implement SpatialToolContext'
+      );
+    }
     const { getGeometries } = options.context;
 
     let geometries;
@@ -26,8 +61,10 @@ export const area = tool({
     if (geojson) {
       const geojsonObject = JSON.parse(geojson);
       geometries = geojsonObject.features;
+    } else if (datasetName) {
+      geometries = await getGeometries(datasetName);
     } else {
-      geometries = await getGeometries({ datasetName });
+      throw new Error('No geometries found');
     }
 
     if (!geometries) {
@@ -46,6 +83,6 @@ export const area = tool({
     };
   },
   context: {
-    getGeometries: () => {},
+    getGeometries: () => null,
   },
 });

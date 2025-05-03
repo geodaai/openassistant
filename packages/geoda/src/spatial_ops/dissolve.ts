@@ -1,7 +1,7 @@
-import { tool } from '@openassistant/core';
+import { tool } from '@openassistant/utils';
 import { z } from 'zod';
 import { spatialDissolve } from '@geoda/core';
-import { generateId } from '../utils';
+import { generateId, isSpatialToolContext } from '../utils';
 import { cacheData } from '../utils';
 
 export const dissolve = tool({
@@ -20,6 +20,9 @@ export const dissolve = tool({
   }),
   execute: async (args, options) => {
     const { datasetName, geojson } = args;
+    if (!options?.context || !isSpatialToolContext(options.context)) {
+      throw new Error('Context is required and must implement DissolveToolContext');
+    }
     const { getGeometries } = options.context;
 
     let geometries;
@@ -27,8 +30,8 @@ export const dissolve = tool({
     if (geojson) {
       const geojsonObject = JSON.parse(geojson);
       geometries = geojsonObject.features;
-    } else {
-      geometries = await getGeometries({ datasetName });
+    } else if (datasetName) {
+      geometries = await getGeometries(datasetName);
     }
 
     if (!geometries) {

@@ -1,7 +1,7 @@
 {
-  "name": "@openassistant/common",
+  "name": "@openassistant/utils",
   "version": "0.3.6",
-  "description": "Common utilities for OpenAssistant",
+  "description": "Utility functions for OpenAssistant tools",
   "author": "Xun Li<lixun910@gmail.com>",
   "license": "MIT",
   "main": "./dist/index.cjs.js",
@@ -15,14 +15,10 @@
     }
   },
   "dependencies": {
-    "@iconify/react": "^5.1.0",
-    "@nextui-org/react": "^2.6.10",
-    "framer-motion": "^11.15.0",
-    "re-resizable": "^6.10.3"
+    "zod": "^3.22.4"
   },
   "peerDependencies": {
-    "react": ">=18.2",
-    "react-dom": ">=18.2"
+    "react": ">=18.2"
   },
   "publishConfig": {
     "access": "public"
@@ -37,6 +33,5 @@
     "src",
     "README.md",
     "package.json"
-  ],
-  "gitHead": "232930873ca397af1dbaa234a00c5d27dba29a26"
+  ]
 }

@@ -1,8 +1,38 @@
-import { tool } from '@openassistant/core';
+import { tool } from '@openassistant/utils';
 import { z } from 'zod';
 import { getPerimeter } from '@geoda/core';
+import { SpatialToolContext } from '../types';
+import { isSpatialToolContext } from '../utils';
 
-export const perimeter = tool({
+type ExecutePerimeterResult = {
+  llmResult: {
+    success: boolean;
+    result: string;
+    perimeters: number[];
+    distanceUnit: 'KM' | 'Mile';
+  };
+  additionalData?: {
+    datasetName?: string;
+    geojson?: string;
+    distanceUnit: 'KM' | 'Mile';
+    perimeters: number[];
+  };
+};
+
+export const perimeter = tool<
+  // tool parameters
+  z.ZodObject<{
+    geojson: z.ZodOptional<z.ZodString>;
+    datasetName: z.ZodOptional<z.ZodString>;
+    distanceUnit: z.ZodDefault<z.ZodEnum<['KM', 'Mile']>>;
+  }>,
+  // llm result
+  ExecutePerimeterResult['llmResult'],
+  // additional data
+  ExecutePerimeterResult['additionalData'],
+  // context
+  SpatialToolContext
+>({
   description: 'Calculate perimeter of geometries',
   parameters: z.object({
     geojson: z
@@ -21,6 +51,11 @@ export const perimeter = tool({
   }),
   execute: async (args, options) => {
     const { datasetName, geojson, distanceUnit = 'KM' } = args;
+    if (!options?.context || !isSpatialToolContext(options.context)) {
+      throw new Error(
+        'Context is required and must implement SpatialToolContext'
+      );
+    }
     const { getGeometries } = options.context;
 
     let geometries;
@@ -28,11 +63,9 @@ export const perimeter = tool({
     if (geojson) {
       const geojsonObject = JSON.parse(geojson);
       geometries = geojsonObject.features;
+    } else if (datasetName) {
+      geometries = await getGeometries(datasetName);
     } else {
-      geometries = await getGeometries({ datasetName });
-    }
-
-    if (!geometries) {
       throw new Error('No geometries found');
     }
 
@@ -48,6 +81,6 @@ export const perimeter = tool({
     };
   },
   context: {
-    getGeometries: () => {},
+    getGeometries: () => null,
   },
 });

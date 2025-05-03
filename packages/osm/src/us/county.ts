@@ -1,11 +1,11 @@
-import { tool } from '@openassistant/core';
+import { tool } from '@openassistant/utils';
 import { z } from 'zod';
 import { cacheData, generateId, getCachedData } from '../utils';
 
 export const getUsCountyGeojson = tool({
   description: 'Get the GeoJSON data of a United States county',
   parameters: z.object({
-    fips: z.array(
+    fipsCodes: z.array(
       z
         .string()
         .describe(

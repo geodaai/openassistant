@@ -43,6 +43,9 @@ const baseConfig = createBaseConfig({
   define: {
     'process.env.NODE_ENV': isStart ? '"development"' : '"production"',
   },
+  mainFields: ['module', 'main'],
+  resolveExtensions: ['.js', '.jsx', '.ts', '.tsx'],
+  nodePaths: ['node_modules'],
 });
 
 if (isWatch) {

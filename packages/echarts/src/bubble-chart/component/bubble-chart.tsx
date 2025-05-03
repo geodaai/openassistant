@@ -9,7 +9,7 @@ import {
   ToolboxComponent,
 } from 'echarts/components';
 import * as echarts from 'echarts/core';
-import ReactEChartsCore from 'echarts-for-react/lib/core';
+import ReactEChartsCore from 'echarts-for-react';
 
 import { ECHARTS_DARK_THEME } from '../../echarts-theme';
 import { handleBrushSelection } from '../../echarts-updater';

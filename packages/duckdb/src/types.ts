@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { AsyncDuckDB } from '@duckdb/duckdb-wasm';
-import { ExtendedTool } from '@openassistant/core';
+import { ExtendedTool } from '@openassistant/utils';
 
 /**
  * Parameters for the localQuery tool

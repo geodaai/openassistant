@@ -1,4 +1,4 @@
-import { tool } from '@openassistant/core';
+import { tool } from '@openassistant/utils';
 import { z } from 'zod';
 import { WeightsMeta } from '@geoda/core';
 import { spatialLag } from '@geoda/lisa';
@@ -8,9 +8,13 @@ import {
 } from '@openassistant/echarts';
 
 import { GetValues } from '../types';
-import { SpatialWeights } from './callback-function';
 import { MoranScatterPlotToolComponent } from './component/moran-scatter-component';
 import { getCachedWeightsById } from '../weights/tool';
+
+export type SpatialWeights = {
+  weights: number[][];
+  weightsMeta: WeightsMeta;
+};
 
 export const globalMoran = tool<
   // parameters of the tool

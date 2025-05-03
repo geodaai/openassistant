@@ -6,7 +6,7 @@ import {
   ToolboxComponent,
 } from 'echarts/components';
 import { LineChart, ScatterChart } from 'echarts/charts';
-import ReactEChartsCore from 'echarts-for-react/lib/core';
+import ReactEChartsCore from 'echarts-for-react';
 import { CanvasRenderer } from 'echarts/renderers';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { calculateLoessRegression } from '../../math/linear-regression';

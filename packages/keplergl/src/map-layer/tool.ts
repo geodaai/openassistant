@@ -1,4 +1,4 @@
-import { tool } from '@openassistant/core';
+import { tool } from '@openassistant/utils';
 import { z } from 'zod';
 import { KeplerGlToolComponent } from './component/keplergl-component';
 import {
@@ -7,7 +7,7 @@ import {
   ProcessFileDataContent,
 } from '@kepler.gl/processors';
 import * as arrow from 'apache-arrow';
-import { arrowSchemaToFields } from './callback-function';
+import { arrowSchemaToFields } from './utils';
 
 /**
  * The createMap tool is used to create a map visualization using Kepler.gl.
@@ -182,11 +182,7 @@ export type ExecuteCreateMapResult = {
 export function isKeplerglToolContext(
   context: unknown
 ): context is KeplerglToolContext {
-  return (
-    typeof context === 'object' &&
-    context !== null &&
-    'config' in context
-  );
+  return typeof context === 'object' && context !== null && 'config' in context;
 }
 
 export type KeplerglToolArgs = {

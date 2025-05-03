@@ -1,5 +1,5 @@
-import { tool } from '@openassistant/core';
 import { z } from 'zod';
+import { tool } from '@openassistant/utils';
 
 export const geocoding = tool<
   // tool parameters

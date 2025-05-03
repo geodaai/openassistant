@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect, useRef } from 'react';
 import { Provider } from 'react-redux';
 import AutoSizer from 'react-virtualized-auto-sizer';
@@ -12,10 +10,19 @@ import { addDataToMap } from '@kepler.gl/actions';
 import { theme as keplerTheme } from '@kepler.gl/styles';
 import { messages } from '@kepler.gl/localization';
 import { KeplerMiniMap } from './keplergl-mini-map';
-import { CreateMapOutputData } from '../callback-component';
 import { KeplerState, MAP_ID, store } from './keplergl-provider';
 import { ExpandableContainer } from '@openassistant/common';
 import { generateId } from '@openassistant/common';
+import { FileCacheItem } from '@kepler.gl/processors';
+
+export type CreateMapOutputData = {
+  id?: string;
+  datasetName: string;
+  datasetForKepler: FileCacheItem[];
+  theme?: string;
+  isDraggable?: boolean;
+  layerConfig?: string;
+};
 
 export function KeplerGlToolComponent(props: CreateMapOutputData) {
   const id = props.id || generateId();

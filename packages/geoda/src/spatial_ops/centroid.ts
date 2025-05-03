@@ -1,7 +1,7 @@
-import { tool } from '@openassistant/core';
+import { tool } from '@openassistant/utils';
 import { z } from 'zod';
 import { getCentroids, SpatialGeometry } from '@geoda/core';
-import { generateId } from '../utils';
+import { generateId, isSpatialToolContext } from '../utils';
 import { Feature, Geometry } from 'geojson';
 import { cacheData } from '../utils';
 
@@ -23,17 +23,20 @@ export const centroid = tool({
   }),
   execute: async (args, options) => {
     const { datasetName, geojson } = args;
+    if (!options?.context || !isSpatialToolContext(options.context)) {
+      throw new Error('Context is required and must implement SpatialToolContext');
+    }
     const { getGeometries } = options.context;
 
-    let geometries: SpatialGeometry;
+    let geometries: SpatialGeometry | null = null;
 
     if (geojson) {
       const geojsonObject = JSON.parse(geojson);
       geometries = geojsonObject.features;
-    } else {
-      geometries = await getGeometries({ datasetName });
+    } else if (datasetName) {
+      geometries = await getGeometries(datasetName);
     }
-
+    
     if (!geometries) {
       throw new Error('No geometries found');
     }

@@ -1,7 +1,7 @@
 import { CanvasRenderer } from 'echarts/renderers';
 import { ParallelChart } from 'echarts/charts';
 import * as echarts from 'echarts/core';
-import ReactEChartsCore from 'echarts-for-react/lib/core';
+import ReactEChartsCore from 'echarts-for-react';
 import { useMemo, useRef, useState } from 'react';
 import { useBrushLink } from '@openassistant/common';
 

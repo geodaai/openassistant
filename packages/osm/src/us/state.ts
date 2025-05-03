@@ -1,4 +1,4 @@
-import { tool } from '@openassistant/core';
+import { tool } from '@openassistant/utils';
 import { z } from 'zod';
 import { cacheData, generateId, getCachedData } from '../utils';
 
@@ -22,7 +22,7 @@ export const getUsStateGeojson = tool<
       const features: GeoJSON.Feature[] = [];
 
       for (const state of states) {
-        let geojson = getCachedData(states);
+        let geojson = getCachedData(state);
         if (!geojson) {
           // get the Geojson file from the following url:
           // https://www.ncei.noaa.gov/pub/data/nidis/geojson/state/geostates/AK.geojson

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { tool } from '@openassistant/core';
+import { tool } from '@openassistant/utils';
 import { generateId } from '@openassistant/common';
 import { BubbleChartComponentContainer } from './component/bubble-chart-component';
 import { GetValues, OnSelected } from '../types';

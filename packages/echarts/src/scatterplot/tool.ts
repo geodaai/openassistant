@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { tool } from '@openassistant/core';
+import { tool } from '@openassistant/utils';
 import { generateId } from '@openassistant/common';
 import { ScatterplotComponentContainer } from './component/scatter-plot-component';
 import { computeRegression } from './component/scatter-regression';

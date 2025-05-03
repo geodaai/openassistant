@@ -1,4 +1,4 @@
-import { ExtendedTool, tool } from '@openassistant/core';
+import { tool } from '@openassistant/utils';
 import { Table as ArrowTable, tableFromArrays } from 'apache-arrow';
 import { z } from 'zod';
 import { getDuckDB, QueryDuckDBFunctionContext } from './query';

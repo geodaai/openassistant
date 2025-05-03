@@ -2,9 +2,20 @@ import { WeightsMeta } from '@geoda/core';
 import { FeatureCollection } from 'geojson';
 
 import { getCachedWeightsById } from './weights/tool';
+import { SpatialToolContext } from './types';
 
 export function generateId() {
   return Math.random().toString(36).substring(2, 15);
+}
+
+export function isSpatialToolContext(
+  context: unknown
+): context is SpatialToolContext {
+  return (
+    typeof context === 'object' &&
+    context !== null &&
+    'getGeometries' in context
+  );
 }
 
 export type PreviousExecutionOutput = {

@@ -3,8 +3,16 @@
   "version": "0.3.6",
   "author": "Xun Li<lixun910@gmail.com>",
   "description": "The GeoDa spatial analysis tools for OpenAssistant",
-  "main": "dist/index.esm.js",
+  "main": "dist/index.cjs.js",
   "types": "dist/index.d.ts",
+  "module": "dist/index.esm.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs.js"
+    }
+  },
   "scripts": {
     "build": "node esbuild.config.mjs",
     "watch": "node esbuild.config.mjs --watch",
@@ -28,7 +36,6 @@
     "@loaders.gl/schema": "^4.3.3",
     "@nextui-org/react": "^2.6.8",
     "@openassistant/common": "workspace:*",
-    "@openassistant/core": "workspace:*",
     "@openassistant/echarts": "workspace:*",
     "framer-motion": "^11.15.0",
     "tailwindcss": "^3.4.17"

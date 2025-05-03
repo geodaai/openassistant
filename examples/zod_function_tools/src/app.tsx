@@ -1,4 +1,4 @@
-import { tool } from '@openassistant/core';
+import { tool } from '@openassistant/utils';
 import { AiAssistant } from '@openassistant/ui';
 import { z } from 'zod';
 

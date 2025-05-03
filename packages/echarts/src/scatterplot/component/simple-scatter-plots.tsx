@@ -6,7 +6,7 @@ import {
   ToolboxComponent,
 } from 'echarts/components';
 import { LineChart, ScatterChart } from 'echarts/charts';
-import ReactEChartsCore from 'echarts-for-react/lib/core';
+import ReactEChartsCore from 'echarts-for-react';
 import { CanvasRenderer } from 'echarts/renderers';
 import { useMemo, useRef, useState } from 'react';
 import { useBrushLink } from '@openassistant/common';
@@ -14,6 +14,7 @@ import { useBrushLink } from '@openassistant/common';
 import { getSimpleScatterChartOption } from './simple-chart-option';
 import { handleBrushSelection } from '../../echarts-updater';
 import { OnSelected } from '../../types';
+
 // Register the required ECharts components
 echarts.use([
   TooltipComponent,

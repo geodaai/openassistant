@@ -1,4 +1,4 @@
-import { tool } from '@openassistant/core';
+import { tool } from '@openassistant/utils';
 import { z } from 'zod';
 import { generateId, cacheData } from './utils';
 
@@ -39,6 +39,10 @@ type MapboxResponse = {
   message?: string;
 };
 
+export function isRoutingToolContext(context: unknown): context is RoutingToolContext {
+  return typeof context === 'object' && context !== null && 'getMapboxToken' in context;
+}
+
 export const routing = tool<
   // tool parameters
   z.ZodObject<{
@@ -50,6 +54,7 @@ export const routing = tool<
       longitude: z.ZodNumber;
       latitude: z.ZodNumber;
     }>;
+    mode: z.ZodOptional<z.ZodEnum<['driving', 'walking', 'cycling']>>;
   }>,
   // llm result
   ExecuteRoutingResult['llmResult'],
@@ -71,7 +76,8 @@ export const routing = tool<
     }),
     mode: z
       .enum(['driving', 'walking', 'cycling'])
-      .describe('The mode of the routing'),
+      .describe('The mode of the routing')
+      .optional(),
   }),
   execute: async (args, options): Promise<ExecuteRoutingResult> => {
     const controller = new AbortController();
@@ -83,6 +89,9 @@ export const routing = tool<
 
       // Generate cache key
       const cacheKey = generateId();
+      if (!options?.context || !isRoutingToolContext(options.context)) {
+        throw new Error('Context is required and must implement RoutingToolContext');
+      }
       const mapboxAccessToken = options.context.getMapboxToken();
 
       // Using Mapbox Directions API
@@ -229,8 +238,14 @@ type ExecuteRoutingResult = {
     error?: string;
   };
   additionalData?: {
-    origin: [number, number];
-    destination: [number, number];
+    origin: {
+      longitude: number;
+      latitude: number;
+    };
+    destination: {
+      longitude: number;
+      latitude: number;
+    };
     route: {
       distance: number;
       duration: number;

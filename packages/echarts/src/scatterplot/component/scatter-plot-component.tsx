@@ -1,4 +1,3 @@
-import { ScatterplotOutputData } from '../callback-function';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Button,
@@ -10,6 +9,12 @@ import {
   TableCell,
 } from '@nextui-org/react';
 import { Icon } from '@iconify/react';
+import {
+  ExpandableContainer,
+  generateId,
+  useDraggable,
+} from '@openassistant/common';
+
 import { ScatterRegressionPlot } from './scatter-regression-plot';
 import { SimpleScatterPlot } from './simple-scatter-plots';
 import { RegressionResults } from '../../math/linear-regression';
@@ -17,11 +22,40 @@ import {
   computeRegression,
   ComputeRegressionResult,
 } from './scatter-regression';
-import {
-  ExpandableContainer,
-  generateId,
-  useDraggable,
-} from '@openassistant/common';
+import { OnSelected } from '../../types';
+/**
+ * The data of the scatterplot function.
+ *
+ * @param id - The id of the scatterplot.
+ * @param datasetName - The name of the dataset.
+ * @param xVariableName - The name of the x variable.
+ * @param yVariableName - The name of the y variable.
+ * @param xData - The x data.
+ * @param yData - The y data.
+ * @param regressionResults - The regression results.
+ * @param filteredIndex - The indices of the selected points.
+ * @param onSelected - The callback function can be used to sync the selections of the scatterplot with the original dataset.
+ * @param theme - The theme of the scatterplot.
+ * @param showLoess - Whether to show the loess regression.
+ * @param showRegressionLine - Whether to show the regression line.
+ */
+export type ScatterplotOutputData = {
+  id?: string;
+  datasetName: string;
+  xVariableName: string;
+  yVariableName: string;
+  xData: number[];
+  yData: number[];
+  regressionResults: ComputeRegressionResult;
+  filteredIndex?: number[];
+  onSelected?: OnSelected;
+  theme?: string;
+  showLoess?: boolean;
+  showRegressionLine?: boolean;
+  isExpanded?: boolean;
+  setIsExpanded?: (isExpanded: boolean) => void;
+  isDraggable?: boolean;
+};
 
 /**
  * @internal

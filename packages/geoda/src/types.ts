@@ -23,4 +23,10 @@ export type WeightsProps = {
  * @param datasetName - The name of the dataset.
  * @returns The geometries of the dataset. See {@link SpatialGeometry} for more details.
  */
-export type GetGeometries = (datasetName: string) => Promise<SpatialGeometry>;
+export type GetGeometries = (
+  datasetName: string
+) => Promise<SpatialGeometry> | null;
+
+export type SpatialToolContext = {
+  getGeometries: GetGeometries;
+};

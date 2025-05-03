@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
-import { ToolManager } from '@openassistant/tool';
 import { generateText } from 'ai';
 import { openai } from '@ai-sdk/openai';
+import { getTool } from '@openassistant/echarts';
 
 // Load environment variables
 dotenv.config();
@@ -9,13 +9,6 @@ dotenv.config();
 const key = process.env.OPENAI_API_KEY;
 
 async function main() {
-  console.log('Initializing ToolManager Example...');
-
-  // Initialize ToolManager
-  const toolManager = new ToolManager();
-
-  await toolManager.loadPackage('@openassistant/echarts/dist/index.cjs');
-
   // Register a simple calculator tool
   const context = {
     getValues: (datasetName, variableName) => {
@@ -23,7 +16,11 @@ async function main() {
       return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     },
   };
-  const histogram = toolManager.getTool('histogram', context);
+  const onToolCompleted = (toolCallId, result) => {
+    console.log('toolCallId', toolCallId);
+    console.log('result', result);
+  };
+  const histogram = getTool('histogram', context, onToolCompleted);
 
   // use tool in vercel ai
   const model = openai('gpt-4o', { apiKey: key });
@@ -31,7 +28,7 @@ async function main() {
   const result = await generateText({
     model,
     system:
-      'You are a helpful assistant that can use tools to get information.',
+      'You are a helpful assistant that can use tools to get information. Please make a plan before using tools.',
     prompt: 'create a histogram of HR60 in dataset Natregimes',
     tools: {
       histogram,

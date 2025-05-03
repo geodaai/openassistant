@@ -1,11 +1,43 @@
-import { tool } from '@openassistant/core';
+import { tool } from '@openassistant/utils';
 import { z } from 'zod';
 import { getBuffers } from '@geoda/core';
-import { generateId } from '../utils';
+import { generateId, isSpatialToolContext } from '../utils';
 import { Feature } from 'geojson';
 import { cacheData } from '../utils';
+import { SpatialToolContext } from '../types';
 
-export const buffer = tool({
+export type ExecuteBufferResult = {
+  llmResult: {
+    success: boolean;
+    datasetName: string;
+    result: string;
+  };
+  additionalData?: {
+    datasetName?: string;
+    geojson?: string;
+    distance: number;
+    distanceUnit: 'KM' | 'Mile';
+    pointsPerCircle: number;
+    buffers: Feature[];
+  };
+};
+
+export const buffer = tool<
+  // tool parameters
+  z.ZodObject<{
+    geojson: z.ZodOptional<z.ZodString>;
+    datasetName: z.ZodOptional<z.ZodString>;
+    distance: z.ZodNumber;
+    distanceUnit: z.ZodEnum<['KM', 'Mile']>;
+    pointsPerCircle: z.ZodOptional<z.ZodNumber>;
+  }>,
+  // llm result
+  ExecuteBufferResult['llmResult'],
+  // additional data
+  ExecuteBufferResult['additionalData'],
+  // context
+  SpatialToolContext
+>({
   description: 'Buffer geometries',
   parameters: z.object({
     geojson: z
@@ -35,6 +67,11 @@ export const buffer = tool({
       distanceUnit = 'KM',
       pointsPerCircle = 10,
     } = args;
+    if (!options?.context || !isSpatialToolContext(options.context)) {
+      throw new Error(
+        'Context is required and must implement SpatialToolContext'
+      );
+    }
     const { getGeometries } = options.context;
 
     let geometries;
@@ -42,11 +79,9 @@ export const buffer = tool({
     if (geojson) {
       const geojsonObject = JSON.parse(geojson);
       geometries = geojsonObject.features;
+    } else if (datasetName) {
+      geometries = await getGeometries(datasetName);
     } else {
-      geometries = await getGeometries({ datasetName });
-    }
-
-    if (!geometries) {
       throw new Error('No geometries found');
     }
 
@@ -73,7 +108,7 @@ export const buffer = tool({
           bufferId,
       },
       additionalData: {
-        datasetName,
+        datasetName: datasetName || undefined,
         geojson,
         distance,
         distanceUnit,
@@ -83,6 +118,6 @@ export const buffer = tool({
     };
   },
   context: {
-    getGeometries: () => {},
+    getGeometries: () => null,
   },
 });

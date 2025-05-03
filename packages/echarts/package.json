@@ -3,7 +3,7 @@
   "version": "0.3.6",
   "author": "Xun Li<lixun910@gmail.com>",
   "description": "The echarts addon for OpenAssistant",
-  "main": "./dist/index.esm.js",
+  "main": "./dist/index.cjs.js",
   "types": "./dist/index.d.ts",
   "module": "./dist/index.esm.js",
   "exports": {
@@ -13,7 +13,8 @@
       "require": "./dist/index.cjs.js"
     },
     "./dist/index.css": "./dist/index.esm.css",
-    "./dist/index.cjs": "./dist/index.cjs.js"
+    "./dist/index.cjs.js": "./dist/index.cjs.js",
+    "./dist/index.esm.js": "./dist/index.esm.js"
   },
   "scripts": {
     "build": "node esbuild.config.mjs",
@@ -32,16 +33,10 @@
   "dependencies": {
     "@iconify/react": "^5.1.0",
     "@nextui-org/react": "^2.6.10",
-    "@nextui-org/theme": "^2.4.4",
     "@openassistant/common": "workspace:*",
-    "@openassistant/core": "workspace:*",
     "echarts": "^5.5.1",
     "echarts-for-react": "^3.0.2",
-    "framer-motion": "^11.15.0",
     "jstat": "^1.9.6",
-    "next-themes": "^0.4.4",
-    "re-resizable": "^6.10.3",
-    "react-virtualized-auto-sizer": "^1.0.24",
     "simple-statistics": "^7.8.7",
     "tailwindcss": "^3.4.17"
   },

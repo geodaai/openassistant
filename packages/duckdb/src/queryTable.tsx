@@ -1,7 +1,4 @@
-'use client';
-
 import { ChangeEvent, useEffect, useMemo, useState, useRef } from 'react';
-import { CustomFunctionCall } from '@openassistant/core';
 import { Table as ArrowTable, tableFromArrays } from 'apache-arrow';
 import * as duckdb from '@duckdb/duckdb-wasm';
 import {
@@ -34,37 +31,6 @@ export type QueryDuckDBOutputData = {
   ) => void;
   isDraggable?: boolean;
 };
-
-/**
- * @internal
- * @deprecated Use {@link QueryDuckDBComponent} instead
- */
-export function queryDuckDBCallbackMessage(
-  props: CustomFunctionCall
-): JSX.Element | null {
-  const data = props.output.data as QueryDuckDBOutputData;
-
-  if (!data) {
-    return null;
-  }
-
-  // const onDragStart = (e: DragEvent<HTMLButtonElement>) => {
-  //   e.dataTransfer.setData(
-  //     'text/plain',
-  //     JSON.stringify({
-  //       id: `query-${id}`,
-  //       type: 'query',
-  //       data: data,
-  //     })
-  //   );
-  // };
-
-  return (
-    <div className="mt-4">
-      <QueryDuckDBComponent {...data} />
-    </div>
-  );
-}
 
 export function QueryDuckDBComponent({
   db,
