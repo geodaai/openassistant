@@ -2,7 +2,7 @@
 
 > **ScatterplotOutputData**: `object`
 
-Defined in: [scatterplot/component/scatter-plot-component.tsx:42](https://github.com/GeoDaCenter/openassistant/blob/36f516b8229288259590b2d9dab3b10cbfc3cbfd/packages/echarts/src/scatterplot/component/scatter-plot-component.tsx#L42)
+Defined in: [scatterplot/component/scatter-plot-component.tsx:42](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/echarts/src/scatterplot/component/scatter-plot-component.tsx#L42)
 
 The data of the scatterplot function.
 

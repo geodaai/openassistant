@@ -2,7 +2,7 @@
 
 > **numericFormatter**(`value`): `string`
 
-Defined in: [utils.ts:6](https://github.com/GeoDaCenter/openassistant/blob/36f516b8229288259590b2d9dab3b10cbfc3cbfd/packages/common/src/utils.ts#L6)
+Defined in: [utils.ts:6](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/common/src/utils.ts#L6)
 
 Formats a number to a more human-readable format, using compact notation
 

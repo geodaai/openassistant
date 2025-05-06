@@ -2,7 +2,7 @@
 
 > `const` **dissolve**: `ExtendedTool`\<[`DissolveFunctionArgs`](../type-aliases/DissolveFunctionArgs.md), [`DissolveLlmResult`](../type-aliases/DissolveLlmResult.md), [`DissolveAdditionalData`](../type-aliases/DissolveAdditionalData.md), [`SpatialToolContext`](../type-aliases/SpatialToolContext.md)\>
 
-Defined in: [packages/geoda/src/spatial\_ops/dissolve.ts:67](https://github.com/GeoDaCenter/openassistant/blob/36f516b8229288259590b2d9dab3b10cbfc3cbfd/packages/geoda/src/spatial_ops/dissolve.ts#L67)
+Defined in: [packages/geoda/src/spatial\_ops/dissolve.ts:67](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/geoda/src/spatial_ops/dissolve.ts#L67)
 
 The dissolve tool is used to merge multiple geometries into a single geometry.
 

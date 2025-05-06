@@ -2,7 +2,7 @@
 
 > **ScatterplotLlmResult**: `object`
 
-Defined in: [scatterplot/tool.ts:88](https://github.com/GeoDaCenter/openassistant/blob/36f516b8229288259590b2d9dab3b10cbfc3cbfd/packages/echarts/src/scatterplot/tool.ts#L88)
+Defined in: [scatterplot/tool.ts:88](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/echarts/src/scatterplot/tool.ts#L88)
 
 ## Type declaration
 

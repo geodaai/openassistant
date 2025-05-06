@@ -3,17 +3,28 @@
 [Documentation](https://openassistant-doc.vercel.app) |
 [Playground](https://openassistant-playground.vercel.app)
 
-OpenAssistant is a javascript library for building AI assistant with powerful data analysis tools and an interactive React chat component.
+OpenAssistant is a javascript library helping your build your AI application with powerful data analysis tools and an interactive React chat component.
 
-OpenAssistant is built based on [Vercel AI SDK](https://sdk.vercel.ai/docs) and provides the following AI tools:
+OpenAssistant provides the following AI tools which are compatible with [Vercel AI SDK](https://sdk.vercel.ai/docs):
 
-- eCharts: interactive data visualization
+- Plot Tools: interactive data visualization
   - box plot
   - bubble chart
   - histogram
   - parallel coordinates
   - scatter plot with regression lines
-- GeoDa: spatial data analysis
+- GeoTools
+  - geocoding (using OSM API)
+  - routing (using Mapbox API)
+  - isochrone (using Mapbox API)
+  - U.S. zipcode search and download
+  - U.S. state download
+  - U.S. county download
+- Map Tools
+  - visualize geospatial data in kepler.gl
+- DuckDB Tools
+  - query local data using duckdb
+- Data Analysis Tools (geoda)
   - data classification: quantile, equal interval, natural breaks, standard deviation, percentile, box etc.
   - spatial operations
     - buffer
@@ -26,19 +37,8 @@ OpenAssistant is built based on [Vercel AI SDK](https://sdk.vercel.ai/docs) and 
   - spatial weights: queen/rook contiguity, KNN weights, distance-based weights, kernel weights
   - spatial analysis
     - global indicators of spatial association: Global Moran's I
-    - local indicators of spatial association (LISA): local Moran's I, local Getis-Ord Gi*, local Geary, quantile LISA
+    - local indicators of spatial association (LISA): local Moran's I, local Getis-Ord Gi\*, local Geary, quantile LISA
     - spatial regression: OLS, spatial lag, spatial error model
-- GeoTools
-  - geocoding (using OSM API)
-  - routing (using Mapbox API)
-  - isochrone (using Mapbox API)
-  - U.S. zipcode search and download
-  - U.S. state download
-  - U.S. county download
-- Kepler.gl
-  - visualize geospatial data in kepler.gl 
-- DuckDB
-  - query local data using duckdb
 
 See an example using using geotools, spatial join and map tools with LLM to answer a user's question `Can you map the buffered (100 meters) driving route between "123 Main St, San Francisco, CA" and "450 10th St, San Francisco, CA"?`:
 
@@ -72,9 +72,10 @@ Add all echarts tools (histogram, box plot, etc.) to your application:
 
 ```ts
 import { getVercelTools } from '@openassistant/echarts';
+import { generateText } from 'ai';
 
 const context = {
-  // 
+  //
   getValues: async (datasetName, variableName) => {
     // your getValues function, e.g.
     return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -88,11 +89,9 @@ const onToolCompleted = (toolCallId, additionalData) => {
 
 const echartsTools = getVercelTools(context, onToolCompleted);
 
-// use tool in vercel ai
-const model = openai('gpt-4o', { apiKey: key });
-
+// use tool with vercel ai sdk
 const result = await generateText({
-  model,
+  model: openai('gpt-4o', { apiKey: key }),
   system: 'You are a helpful assistant',
   prompt: 'create a histogram of HR60 in dataset Natregimes',
   tools: { ...echartsTools },
@@ -126,8 +125,8 @@ See the example code 🔗 [here](https://github.com/GeoDaCenter/openassistant/tr
 
 ### 2. Add a React Chat Component to your App
 
-OpenAssistant provides a pre-built chat component that you can use in your React application.
-For more details, see package [openassistant/ui](http://localhost:3000/docs/chatui/add-config-ui).
+OpenAssistant also provides a chat component that helps you build your AI application with an interactive chat interface.
+Click [here](https://openassistant-doc.vercel.app/docs/chatui/add-config-ui) for more details about the chat components.
 
 #### Installation
 
@@ -191,7 +190,6 @@ module.exports = {
 
 See the source code of the example 🔗 [here](https://github.com/geodacenter/openassistant/tree/main/examples/react_tailwind).
 :::
-
 
 #### Use Tools with chat component
 
@@ -272,6 +270,7 @@ For message persistence, see the example 🔗 [here](https://github.com/geodacen
 ### 3. Use a uniform interface for different AI providers
 
 If you want to build your own chat interface, you can use the OpenAssistant core package, whic provides
+
 - a uniform interface for different AI providers
 - a set of powerful LLM tools (data analysis, visualization, mapping, etc.)
 - an interactive React chat component (optional)
@@ -345,9 +344,10 @@ OpenAssistant also supports the following model providers:
 
 :::
 
-See an example of  using OpenAssistant core package to create your own tools 🔗 [here](https://github.com/GeoDaCenter/openassistant/tree/main/examples/zod_function_tools).
+See an example of using OpenAssistant core package to create your own tools 🔗 [here](https://github.com/GeoDaCenter/openassistant/tree/main/examples/zod_function_tools).
 
 See a more complex example of using OpenAssistant core package to create a multi-step tool 🔗 [here](https://github.com/GeoDaCenter/openassistant/tree/main/examples/multisteps_tools).
+
 ## 🌟 Features
 
 - 🤖 **One interface for multiple AI providers**
