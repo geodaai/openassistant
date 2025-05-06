@@ -33,6 +33,7 @@
     "@openassistant/keplergl": "workspace:*",
     "@openassistant/osm": "workspace:*",
     "@openassistant/ui": "workspace:*",
+    "@openassistant/utils": "workspace:*",
     "github-markdown-css": "^5.8.1",
     "next": "^14.2.21",
     "react": "^18.3.1",

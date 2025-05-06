@@ -25534,6 +25534,7 @@ __metadata:
     "@openassistant/keplergl": "workspace:*"
     "@openassistant/osm": "workspace:*"
     "@openassistant/ui": "workspace:*"
+    "@openassistant/utils": "workspace:*"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
     "@types/react-grid-layout": "npm:^1"

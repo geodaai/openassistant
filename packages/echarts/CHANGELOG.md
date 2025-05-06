@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.8](https://github.com/GeoDaCenter/openassistant/compare/@openassistant/echarts@0.0.5...@openassistant/echarts@0.3.8) (2025-05-06)
+
+### Bug Fixes
+
+* tool type errors; update docs ([881891e](https://github.com/GeoDaCenter/openassistant/commit/881891e2bfe80e2fadc5d3c717bf2a6e192b0fae))
+
+## 0.3.7 (2025-05-06)
+
+### Features
+
+* update playground ([#15](https://github.com/GeoDaCenter/openassistant/issues/15)) ([6ed4ca9](https://github.com/GeoDaCenter/openassistant/commit/6ed4ca97901626b84eb5667bdbab3d38cc33570a))
+
+## 0.0.6 (2025-01-21)
+
 ## [0.3.7](https://github.com/GeoDaCenter/openassistant/compare/@openassistant/echarts@0.0.5...@openassistant/echarts@0.3.7) (2025-05-06)
 
 ### Features
