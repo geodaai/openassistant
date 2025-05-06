@@ -13,6 +13,12 @@ import {
   spatialWeights,
   SpatialWeightsTool,
   SpatialWeightsToolComponent,
+  buffer,
+  centroid,
+  dissolve,
+  length,
+  area,
+  perimeter,
 } from '@openassistant/geoda';
 import {
   getUsStateGeojson,
@@ -34,10 +40,10 @@ import {
   PCPTool,
   scatterplot,
   ScatterplotTool,
+  BoxplotTool,
+  BubbleChartTool,
+  boxplot,
 } from '@openassistant/echarts';
-import { BubbleChartTool } from '@openassistant/echarts';
-import { boxplot } from '@openassistant/echarts';
-import { BoxplotTool } from '@openassistant/echarts';
 import { localQuery } from '@openassistant/duckdb';
 import { KeplerglTool } from '@openassistant/keplergl';
 import { keplergl } from '@openassistant/keplergl';
@@ -209,7 +215,7 @@ const keplerglTool: KeplerglTool = {
   ...keplergl,
   context: {
     ...keplergl.context,
-    getDataset: async ({ datasetName }) => SAMPLE_DATASETS[datasetName],
+    getDataset: async (datasetName) => SAMPLE_DATASETS[datasetName],
     config: {
       ...keplergl.context?.config,
       isDraggable,
@@ -238,4 +244,10 @@ export const tools = {
   geocoding,
   routing,
   isochrone,
+  buffer,
+  centroid,
+  dissolve,
+  length,
+  area,
+  perimeter,
 };

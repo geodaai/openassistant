@@ -25,7 +25,10 @@ export function App() {
         .object({ cityName: z.string() })
         .describe('The city name to get the weather for'),
       execute: async ({ cityName }, options) => {
-        const getStation = options.context?.getStation;
+        if (!options || !options.context || !options.context['getStation']) {
+          throw new Error('Context is required');
+        }
+        const getStation = options.context['getStation'];
         const station = getStation ? await getStation(cityName) : null;
         return {
           llmResult: {

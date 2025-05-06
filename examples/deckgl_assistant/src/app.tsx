@@ -7,12 +7,9 @@ import '@deck.gl/widgets/stylesheet.css';
 import { SAMPLE_DATASETS } from './dataset';
 import { AiAssistantWidget } from './ai-assistant-widgets';
 
-import { histogramFunctionDefinition } from '@openassistant/echarts';
-import {
-  CallbackFunctionProps,
-  CustomFunctionContext,
-} from '@openassistant/core';
-import { queryDuckDBFunctionDefinition } from '@openassistant/duckdb';
+import { histogram } from '@openassistant/echarts';
+import { localQuery } from '@openassistant/duckdb';
+import { z } from 'zod';
 
 type PointData = {
   index: number;
@@ -73,129 +70,87 @@ Fields:
 - population
   `;
 
-  // a llm tool to change the radius of the points
-  function radiusFunctionDefinition(context: CustomFunctionContext<any>) {
-    return {
-      name: 'radius',
-      description: 'Make the radius of the points larger or smaller',
-      properties: {
-        radiusMultiplier: {
-          type: 'number',
-          description: 'The multiplier for the radius of the points',
-        },
-      },
-      required: ['radiusMultiplier'],
-      callbackFunction: async (props: CallbackFunctionProps) => {
-        const { functionName, functionArgs, functionContext } = props;
-        const { radiusMultiplier } = functionArgs;
-
-        const { changeRadius } = functionContext as {
-          changeRadius: (radiusMultiplier: number) => void;
-        };
-        changeRadius(Number(radiusMultiplier));
-
-        return {
-          type: 'success',
-          name: functionName,
-          result: `Radius multiplier set to ${radiusMultiplier}`,
-        };
-      },
-      callbackFunctionContext: context,
-    };
-  }
-
   function highlightPoints(indices: number[]) {
     // highlight the points
     setFilteredIndices(indices);
   }
 
-  const filterByStateCallbackFunctionContext = {
-    points: SAMPLE_DATASETS.myVenues,
-  };
-
-  function filterByStateCallback(props) {
-    const { functionArgs, functionContext } = props;
-    const { state, boundingBox } = functionArgs;
-    const { points } = functionContext;
-    // get the index of the points that fits inside the bounding box
-    const filteredIndices = points
-      .filter((point) => {
-        const isInside =
-          point.longitude >= boundingBox[0] &&
-          point.longitude <= boundingBox[2] &&
-          point.latitude >= boundingBox[1] &&
-          point.latitude <= boundingBox[3];
-        return isInside;
-      })
-      .map((point) => point.index);
-
-    // highlight the filtered points
-    highlightPoints(filteredIndices);
-
-    return {
-      type: 'success',
-      result: `${filteredIndices.length} points are filtered by state ${state} and bounding box ${boundingBox}`,
-    };
-  }
-
-  function filterByStateFunctionDefinition(
-    callbackFunction,
-    callbackFunctionContext
-  ) {
-    return {
-      name: 'filterByState',
-      description: 'Filter points by state',
-      properties: {
-        state: {
-          type: 'string',
-          description: 'The state to filter by',
-        },
-        boundingBox: {
-          type: 'array',
-          description:
-            'The bounding box coordinates of the state. The format is [minLongitude, minLatitude, maxLongitude, maxLatitude]. If not provided, please try to use approximate bounding box of the state.00',
-          items: {
-            type: 'number',
-          },
-        },
-      },
-      required: ['state'],
-      callbackFunction,
-      callbackFunctionContext,
-    };
-  }
-
   // Define LLM tools
-  const functionTools = [
-    histogramFunctionDefinition({
-      getValues: (datasetName: string, variableName: string) => {
-        const dataset = SAMPLE_DATASETS[datasetName];
-        return dataset.map((item) => item[variableName]);
+  const functionTools = {
+    histogram: {
+      ...histogram,
+      context: {
+        getValues: (datasetName: string, variableName: string) => {
+          const dataset = SAMPLE_DATASETS[datasetName];
+          return dataset.map((item) => item[variableName]);
+        },
+        onSelected: (datasetName: string, selectedIndices: number[]) => {
+          console.log(datasetName, selectedIndices);
+          setFilteredIndices([...selectedIndices]);
+        },
+        config: { isDraggable: true, theme: 'light' },
       },
-      onSelected: (datasetName: string, selectedIndices: number[]) => {
-        console.log(datasetName, selectedIndices);
-        setFilteredIndices([...selectedIndices]);
+    },
+    localQuery: {
+      ...localQuery,
+      context: {
+        getValues: (datasetName, variableName) => {
+          const dataset = SAMPLE_DATASETS[datasetName];
+          return dataset.map((row) => row[variableName]);
+        },
+        config: { isDraggable: true },
       },
-      config: { isDraggable: true, theme: 'light' },
-    }),
-    radiusFunctionDefinition({
-      changeRadius: (radiusMultiplier: number) => {
+    },
+    radius: {
+      description: 'Change the radius of the points',
+      parameters: z.object({
+        radiusMultiplier: z.number(),
+      }),
+      execute: async ({ radiusMultiplier }) => {
         console.log('changeRadius', radiusMultiplier);
         setRadiusMultiplier(radiusMultiplier);
+        return {
+          llmResult: {
+            success: true,
+            result: `Radius multiplier set to ${radiusMultiplier}`,
+          },
+        };
       },
-    }),
-    filterByStateFunctionDefinition(
-      filterByStateCallback,
-      filterByStateCallbackFunctionContext
-    ),
-    queryDuckDBFunctionDefinition({
-      getValues: (datasetName, variableName) => {
-        const dataset = SAMPLE_DATASETS[datasetName];
-        return dataset.map((row) => row[variableName]);
+    },
+    filterByState: {
+      description: 'Filter points by state',
+      parameters: z.object({
+        state: z.string(),
+        boundingBox: z.array(z.number()),
+      }),
+      execute: async ({ state, boundingBox }, options) => {
+        const { filterByStateCallbackFunctionContext } = options.context;
+        const { points } = filterByStateCallbackFunctionContext();
+
+        // get the index of the points that fits inside the bounding box
+        const filteredIndices = points
+          .filter((point) => {
+            const isInside =
+              point.longitude >= boundingBox[0] &&
+              point.longitude <= boundingBox[2] &&
+              point.latitude >= boundingBox[1] &&
+              point.latitude <= boundingBox[3];
+            return isInside;
+          })
+          .map((point) => point.index);
+
+        // highlight the filtered points
+        highlightPoints(filteredIndices);
+
+        return {
+          llmResult: {
+            type: 'success',
+            result: `${filteredIndices.length} points are filtered by state ${state} and bounding box ${boundingBox}`,
+          },
+        };
       },
-      config: { isDraggable: true },
-    }),
-  ];
+    },
+  };
 
   // Create a scatterplot layer with key prop for forcing updates
   const layers = [
@@ -241,7 +196,7 @@ Fields:
               apiKey: process.env.OPENAI_TOKEN || '',
               welcomeMessage: 'Hello, how can I help you today?',
               instructions,
-              functionTools,
+              tools: functionTools,
             }),
           ]}
         >

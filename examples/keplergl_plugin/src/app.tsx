@@ -17,7 +17,7 @@ export function App() {
     ...keplergl,
     context: {
       ...keplergl.context,
-      getDataset: async ({ datasetName }) => SAMPLE_DATASETS[datasetName],
+      getDataset: async (datasetName) => SAMPLE_DATASETS[datasetName],
       config: {
         isDraggable: false,
       },

@@ -69,7 +69,7 @@ export type AiAssistantWidgetProps = {
   /**
    * The function tools of the assistant.
    */
-  functionTools?: UseAssistantProps['functions'];
+  tools?: UseAssistantProps['tools'];
   /**
    * The temperature of the assistant.
    */
@@ -111,7 +111,7 @@ export class AiAssistantWidget implements Widget<AiAssistantWidgetProps> {
   model: string = 'gpt-4o';
   welcomeMessage: string = 'Hello, how can I help you today?';
   instructions: string = '';
-  functionTools: UseAssistantProps['functions'] = [];
+  tools: UseAssistantProps['tools'] = {};
   historyMessages: MessageModel[] = [];
   temperature: number = 0.5;
   topP: number = 1.0;
@@ -137,7 +137,7 @@ export class AiAssistantWidget implements Widget<AiAssistantWidgetProps> {
     if (options.chatEndpoint) this.chatEndpoint = options.chatEndpoint;
     if (options.voiceEndpoint) this.voiceEndpoint = options.voiceEndpoint;
     if (options.instructions) this.instructions = options.instructions;
-    if (options.functionTools) this.functionTools = options.functionTools;
+    if (options.tools) this.tools = options.tools;
     if (options.showConfigPanel) this.showConfigPanel = options.showConfigPanel;
   }
 
@@ -195,7 +195,7 @@ export class AiAssistantWidget implements Widget<AiAssistantWidgetProps> {
           model={this.model}
           welcomeMessage={this.welcomeMessage}
           instructions={this.instructions}
-          functions={this.functionTools}
+          tools={this.tools}
           temperature={this.temperature}
           topP={this.topP}
           baseUrl={this.baseUrl}
@@ -203,22 +203,22 @@ export class AiAssistantWidget implements Widget<AiAssistantWidgetProps> {
           chatEndpoint={this.chatEndpoint}
           voiceEndpoint={this.voiceEndpoint}
           theme={this.theme}
-          historyMessages={
+          initialMessages={
             this.showConfigPanel
               ? [
                   {
-                    id: 'welcome-message',
-                    content: this.welcomeMessage,
-                    role: 'assistant',
-                    message: this.welcomeMessage,
+                    sender: 'assistant',
+                    messageContent: {
+                      text: this.welcomeMessage,
+                    },
                     direction: 'incoming',
-                    position: 'single'
+                    position: 'single',
                   },
                   {
-                    id: 'config-panel',
-                    content: '',
-                    role: 'assistant',
-                    message: 'Please select your prefered LLM model and use your API key to start the chat.',
+                    sender: 'assistant',
+                    messageContent: {
+                      text: 'Please select your prefered LLM model and use your API key to start the chat.',
+                    },
                     direction: 'incoming',
                     position: 'single',
                     payload: (

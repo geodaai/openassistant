@@ -42,7 +42,8 @@ export type GeocodingAdditionalData = {
 export const geocoding = tool<
   GeocodingFunctionArgs,
   GeocodingLlmResult,
-  GeocodingAdditionalData
+  GeocodingAdditionalData,
+  GeocodingToolContext
 >({
   description: 'Geocode an address to get the latitude and longitude of the address',
   parameters: z.object({

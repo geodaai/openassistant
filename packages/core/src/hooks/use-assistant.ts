@@ -7,9 +7,10 @@ import {
   ToolCallMessage,
 } from '../types';
 import { VercelAi } from '../llm/vercelai';
-import { createAssistant, ExtendedTool } from '../utils/create-assistant';
-import { Message, StepResult, ToolChoice } from 'ai';
-import { ToolSet } from 'ai';
+import { createAssistant } from '../utils/create-assistant';
+import { Message, StepResult, ToolChoice, ToolSet } from 'ai';
+import { ExtendedTool } from '@openassistant/utils';
+
 /**
  * Props for configuring the AI Assistant and useAssistant hook.
  */
@@ -65,10 +66,10 @@ export type UseAssistantProps = {
   functions?:
     | Array<RegisterFunctionCallingProps>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    | Record<string, ExtendedTool<any>>;
+    | Record<string, ExtendedTool<any, any, any, any>>;
   /** Custom tools the assistant can use. E.g. `{ localQuery: localQueryTool }` */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  tools?: Record<string, ExtendedTool<any>>;
+  tools?: Record<string, ExtendedTool<any, any, any, any>>;
   /** Controls how the assistant selects tools to use. */
   toolChoice?: ToolChoice<ToolSet>;
   /** Maximum number of steps/iterations in a conversation. */

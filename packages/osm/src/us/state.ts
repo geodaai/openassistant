@@ -48,7 +48,8 @@ export type ExecuteGetUsStateGeojsonResult = {
 export const getUsStateGeojson = tool<
   GetUsStateGeojsonFunctionArgs,
   GetUsStateGeojsonLlmResult,
-  GetUsStateGeojsonAdditionalData
+  GetUsStateGeojsonAdditionalData,
+  object
 >({
   description: 'Get the GeoJSON data of one or more United States states',
   parameters: z.object({

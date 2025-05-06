@@ -171,7 +171,7 @@ variables:
             apiKey={process.env.OPENAI_API_KEY || ''}
             version="1.0.0"
             instructions={instructions}
-            functions={{
+            tools={{
               boxplot: boxplotTool,
               think: thinkTool,
               bubbleChart: bubbleChartTool,

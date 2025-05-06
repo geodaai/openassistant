@@ -26,21 +26,21 @@ export type ExecuteGetUsCountyGeojsonResult = {
 
 /**
  * Get US County GeoJSON Tool
- * 
+ *
  * This tool retrieves the GeoJSON data for all counties in a US state by its state code.
  * It returns the counties' boundary geometries and properties.
- * 
+ *
  * Example user prompts:
  * - "Get all counties in California"
  * - "Show me the county boundaries of New York state"
  * - "What are the counties in Texas?"
- * 
+ *
  * Example code:
  * ```typescript
  * import { getVercelAiTool } from "@openassistant/osm";
- * 
+ *
  * const countyTool = getVercelAiTool('getUsCountyGeojson');
- * 
+ *
  * generateText({
  *   model: 'gpt-4o-mini',
  *   prompt: 'What are the counties in Texas?',
@@ -51,9 +51,11 @@ export type ExecuteGetUsCountyGeojsonResult = {
 export const getUsCountyGeojson = tool<
   GetUsCountyGeojsonFunctionArgs,
   GetUsCountyGeojsonLlmResult,
-  GetUsCountyGeojsonAdditionalData
+  GetUsCountyGeojsonAdditionalData,
+  object
 >({
-  description: 'Get GeoJSON data for all counties in a US state by its state code',
+  description:
+    'Get GeoJSON data for all counties in a US state by its state code',
   parameters: z.object({
     fipsCodes: z.array(
       z

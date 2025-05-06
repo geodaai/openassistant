@@ -53,7 +53,8 @@ export type ExecuteGetUsZipcodeGeojsonResult = {
 export const getUsZipcodeGeojson = tool<
   GetUsZipcodeGeojsonFunctionArgs,
   GetUsZipcodeGeojsonLlmResult,
-  GetUsZipcodeGeojsonAdditionalData
+  GetUsZipcodeGeojsonAdditionalData,
+  object
 >({
   description: 'Get the GeoJSON data of one or more United States zipcodes',
   parameters: z.object({

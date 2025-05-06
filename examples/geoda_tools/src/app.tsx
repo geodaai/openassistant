@@ -105,7 +105,7 @@ export default function App() {
     ...getUsStateGeojson,
   };
 
-  const getMapData = async ({ datasetName }: { datasetName: string }) => {
+  const getMapData = async (datasetName: string) => {
     let result;
 
     const geoms = getCachedData(datasetName);

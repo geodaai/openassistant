@@ -2,11 +2,13 @@ import { z } from 'zod';
 
 export type Parameters = z.ZodTypeAny;
 
-export type inferParameters<PARAMETERS extends Parameters> = PARAMETERS extends z.ZodTypeAny
-  ? z.infer<PARAMETERS>
-  : never;
+export type inferParameters<PARAMETERS extends Parameters> =
+  PARAMETERS extends z.ZodTypeAny ? z.infer<PARAMETERS> : never;
 
-export type ExecuteFunctionResult<RETURN_TYPE = never, ADDITIONAL_DATA = never> = {
+export type ExecuteFunctionResult<
+  RETURN_TYPE = never,
+  ADDITIONAL_DATA = never,
+> = {
   llmResult: RETURN_TYPE extends never ? RETURN_TYPE : object;
   additionalData?: ADDITIONAL_DATA extends never ? ADDITIONAL_DATA : object;
 };
@@ -47,4 +49,4 @@ export function tool<
   tool: ExtendedTool<PARAMETERS, RETURN_TYPE, ADDITIONAL_DATA, CONTEXT>
 ): ExtendedTool<PARAMETERS, RETURN_TYPE, ADDITIONAL_DATA, CONTEXT> {
   return tool;
-} 
+}

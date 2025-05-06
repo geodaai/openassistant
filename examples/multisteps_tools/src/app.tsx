@@ -26,7 +26,7 @@ function WeatherStation({
 }
 
 export function App() {
-  const functions = {
+  const tools = {
     temperature: tool({
       description: 'Get the temperature in a city from a weather station',
       parameters: z.object({ cityName: z.string(), reason: z.string() }),
@@ -84,7 +84,7 @@ export function App() {
           model="gpt-4o"
           welcomeMessage="Hello, how can I help you today?"
           instructions="You are a helpful assistant. Explain the steps you are taking to solve the user's problem."
-          functions={functions}
+          tools={tools}
           useMarkdown={true}
         />
       </div>

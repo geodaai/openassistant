@@ -1,4 +1,4 @@
-import { MessageModel, tool } from '@openassistant/core';
+import { MessageModel } from '@openassistant/core';
 import { AiAssistant } from '@openassistant/ui';
 import { z } from 'zod';
 import { SAVED_MESSAGES } from './messages';
@@ -27,7 +27,7 @@ function WeatherStation({
 }
 
 export function App() {
-  const functions = {
+  const tools = {
     weather: tool({
       description: 'Get the weather in a city from a weather station',
       parameters: z.object({ cityName: z.string(), reason: z.string() }),
@@ -81,7 +81,9 @@ export function App() {
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">Chat Message Persistent Example</h1>
+        <h1 className="text-3xl font-bold mb-8">
+          Chat Message Persistent Example
+        </h1>
         <div className="rounded-lg shadow-lg p-6 h-[800px]">
           <AiAssistant
             name="My Assistant"
@@ -91,7 +93,7 @@ export function App() {
             model="gpt-4o"
             welcomeMessage="Hello, how can I help you today?"
             instructions="You are a helpful assistant."
-            functions={functions}
+            tools={tools}
             useMarkdown={true}
             onMessagesUpdated={onMessagesUpdated}
             initialMessages={SAVED_MESSAGES}
