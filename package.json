@@ -73,7 +73,8 @@
     "@deck.gl/layers": "8.9.36",
     "@deck.gl/react": "8.9.36",
     "@deck.gl/mesh-layers": "8.9.36",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "zod": "3.24.4"
   },
   "packageManager": "yarn@4.0.0"
 }

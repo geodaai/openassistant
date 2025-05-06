@@ -7362,7 +7362,7 @@ __metadata:
     ai: "npm:^4.3.13"
     openai: "npm:^4.93.0"
     openai-zod-functions: "npm:^0.1.2"
-    zod: "npm:^3.24.1"
+    zod: "npm:^3.24.4"
     zod-to-json-schema: "npm:^3.24.1"
   peerDependencies:
     "@ai-sdk/anthropic": ^1.1.14
@@ -7474,7 +7474,7 @@ __metadata:
   dependencies:
     "@openassistant/utils": "workspace:*"
     zip3: "npm:^1.0.4"
-    zod: "npm:^3.22.4"
+    zod: "npm:^3.24.4"
   languageName: unknown
   linkType: soft
 
@@ -7502,7 +7502,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@openassistant/utils@workspace:packages/utils"
   dependencies:
-    zod: "npm:^3.22.4"
+    zod: "npm:^3.24.4"
   peerDependencies:
     react: ">=18.2"
   languageName: unknown
@@ -16519,9 +16519,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "echarts-tools-example@workspace:examples/echarts_tools"
   dependencies:
-    "@openassistant/core": "workspace:*"
     "@openassistant/echarts": "workspace:*"
     "@openassistant/ui": "workspace:*"
+    "@openassistant/utils": "workspace:*"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
     autoprefixer: "npm:^10.4.20"
@@ -24105,6 +24105,7 @@ __metadata:
   dependencies:
     "@nextui-org/react": "npm:^2.6.10"
     "@openassistant/ui": "workspace:*"
+    "@openassistant/utils": "workspace:*"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
     autoprefixer: "npm:^10.4.20"
@@ -25562,7 +25563,7 @@ __metadata:
     tailwindcss: "npm:^3.4.17"
     typescript: "npm:^5.7.3"
     utf-8-validate: "npm:^6.0.5"
-    zod: "npm:^3.24.1"
+    zod: "npm:^3.24.4"
   languageName: unknown
   linkType: soft
 
@@ -31624,7 +31625,7 @@ __metadata:
     ai: "npm:^4.3.13"
     dotenv: "npm:^16.4.5"
     readline-sync: "npm:^1.4.10"
-    zod: "npm:^3.24.1"
+    zod: "npm:^3.24.4"
   languageName: unknown
   linkType: soft
 
@@ -32789,10 +32790,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^3.22.4, zod@npm:^3.24.1":
-  version: 3.24.2
-  resolution: "zod@npm:3.24.2"
-  checksum: 604c62a8cf8e330d78b106a557f4b44f5d14845d20b1360a423ccc09b58cb8525ccf7e4b40cf1bd4852d22393d2c67774b5817ec5a2fedab25f543b36ed15943
+"zod@npm:3.24.4":
+  version: 3.24.4
+  resolution: "zod@npm:3.24.4"
+  checksum: 3d545792fa54bb27ee5dbc34a5709e81f603185fcc94c8204b5d95c20dc4c81d870ff9c51f3884a30ef05cdc601449f4c4df254ac4783f0827b1faed7c1cdb48
   languageName: node
   linkType: hard
 
