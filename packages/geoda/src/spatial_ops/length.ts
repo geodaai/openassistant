@@ -3,6 +3,57 @@ import { z } from 'zod';
 import { getLength } from '@geoda/core';
 import { isSpatialToolContext } from '../utils';
 
+export type LengthFunctionArgs = z.ZodObject<{
+  geojson: z.ZodOptional<z.ZodString>;
+  datasetName: z.ZodOptional<z.ZodString>;
+  distanceUnit: z.ZodEnum<['KM', 'Mile']>;
+}>;
+
+export type LengthLlmResult = {
+  success: boolean;
+  result: string;
+  lengths: number[];
+  distanceUnit: 'KM' | 'Mile';
+};
+
+export type LengthAdditionalData = {
+  datasetName?: string;
+  geojson?: string;
+  lengths: number[];
+  distanceUnit: 'KM' | 'Mile';
+};
+
+/**
+ * Length Tool
+ *
+ * This tool calculates the length of geometries in a GeoJSON dataset.
+ * It supports both direct GeoJSON input and dataset names, and can calculate
+ * lengths in either kilometers or miles.
+ *
+ * Example user prompts:
+ * - "Calculate the length of these roads in kilometers"
+ * - "What is the total length of the river network in miles?"
+ * - "Measure the length of these boundaries"
+ *
+ * Example code:
+ * ```typescript
+ * import { getVercelAiTool } from '@openassistant/geoda';
+ * import { generateText } from 'ai';
+ *
+ * const toolContext = {
+ *   getGeometries: (datasetName) => {
+ *     return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+ *   },
+ * };
+ * const lengthTool = getVercelAiTool('length', toolContext, onToolCompleted);
+ *
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
+ *   prompt: 'Calculate the length of these roads in kilometers',
+ *   tools: {length: lengthTool},
+ * });
+ * ```
+ */
 export const length = tool({
   description: 'Calculate length of geometries',
   parameters: z.object({

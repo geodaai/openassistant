@@ -2,7 +2,7 @@
 
 > **createHistogramBins**(`values`, `numberOfBins`): `object`
 
-Defined in: [packages/echarts/src/histogram/component/utils.ts:10](https://github.com/GeoDaCenter/openassistant/blob/a9f2271d1019f6c25c10dd4b3bdb64fcf16999b2/packages/echarts/src/histogram/component/utils.ts#L10)
+Defined in: [histogram/component/utils.ts:15](https://github.com/GeoDaCenter/openassistant/blob/36f516b8229288259590b2d9dab3b10cbfc3cbfd/packages/echarts/src/histogram/component/utils.ts#L15)
 
 Create histogram bins.
 
@@ -10,15 +10,15 @@ Create histogram bins.
 
 ### values
 
-`number`[]
+(`string` \| `number`)[]
 
-The values of the variable.
+The values of the variable (can be numbers or strings).
 
 ### numberOfBins
 
 `number` = `5`
 
-The number of bins to create.
+The number of bins to create (only used for numeric values).
 
 ## Returns
 
@@ -45,3 +45,7 @@ The histogram bins.
 ### indices
 
 > **indices**: `number`[][]
+
+## Throws
+
+Error if the number of unique string values exceeds 20

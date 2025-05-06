@@ -2,13 +2,53 @@ import { tool } from '@openassistant/utils';
 import { z } from 'zod';
 import { cacheData, generateId, getCachedData } from '../utils';
 
+export type GetUsStateGeojsonFunctionArgs = z.ZodObject<{
+  states: z.ZodArray<z.ZodString>;
+}>;
+
+export type GetUsStateGeojsonLlmResult = {
+  success: boolean;
+  datasetId?: string;
+  result?: string;
+  error?: string;
+};
+
+export type GetUsStateGeojsonAdditionalData = {
+  states: string[];
+  datasetId: string;
+  geojson: GeoJSON.FeatureCollection;
+};
+
+export type ExecuteGetUsStateGeojsonResult = {
+  llmResult: GetUsStateGeojsonLlmResult;
+  additionalData?: GetUsStateGeojsonAdditionalData;
+};
+
+/**
+ * Get US State GeoJSON Tool
+ * 
+ * This tool retrieves the GeoJSON data for a US state by its state code.
+ * It returns the state's boundary geometry and properties.
+ * 
+ * Example user prompts:
+ * - "Get the GeoJSON for California"
+ * - "Show me the boundary of New York state"
+ * - "What's the geometry of Texas?"
+ * 
+ * Example code:
+ * ```typescript
+ * import { getUsStateGeojson, GetUsStateGeojsonTool } from "@openassistant/osm";
+ * 
+ * const stateTool: GetUsStateGeojsonTool = {
+ *   ...getUsStateGeojson,
+ *   context: {}
+ * };
+ * ```
+ */
 export const getUsStateGeojson = tool<
-  z.ZodObject<{
-    states: z.ZodArray<z.ZodString>;
-  }>,
-  ExecuteGetUsStateGeojsonResult['llmResult'],
-  ExecuteGetUsStateGeojsonResult['additionalData'],
-  never
+  GetUsStateGeojsonFunctionArgs,
+  GetUsStateGeojsonLlmResult,
+  GetUsStateGeojsonAdditionalData
 >({
   description: 'Get the GeoJSON data of one or more United States states',
   parameters: z.object({
@@ -66,17 +106,3 @@ export const getUsStateGeojson = tool<
 });
 
 export type GetUsStateGeojsonTool = typeof getUsStateGeojson;
-
-export type ExecuteGetUsStateGeojsonResult = {
-  llmResult: {
-    success: boolean;
-    datasetId?: string;
-    result?: string;
-    error?: string;
-  };
-  additionalData?: {
-    states: string[];
-    datasetId: string;
-    geojson: GeoJSON.FeatureCollection;
-  };
-};

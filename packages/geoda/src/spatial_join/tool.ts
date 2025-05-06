@@ -13,22 +13,95 @@ import { SpatialJoinToolComponent } from './component/spatial-count-component';
 import { GetValues, GetGeometries } from '../types';
 import { cacheData, generateId, getGeoDaCachedData } from '../utils';
 
+export type SpatialJoinFunctionArgs = z.ZodObject<{
+  firstDatasetName: z.ZodString;
+  secondDatasetName: z.ZodString;
+  joinVariableNames: z.ZodArray<z.ZodString>;
+  joinOperators: z.ZodArray<
+    z.ZodEnum<['sum', 'mean', 'min', 'max', 'median', 'count']>
+  >;
+}>;
+
+export type SpatialJoinLlmResult = {
+  success: boolean;
+  result?: {
+    firstDatasetName: string;
+    secondDatasetName: string;
+    joinVariableNames?: string[];
+    joinOperators?: string[];
+    firstTenRows?: number[][];
+    details: string;
+  };
+  error?: string;
+};
+
+export type SpatialJoinAdditionalData = {
+  firstDatasetName: string;
+  secondDatasetName: string;
+  joinVariableNames?: string[];
+  joinOperators?: string[];
+  joinResult: number[][];
+  joinValues: Record<string, number[]>;
+  joinedDatasetId?: string;
+  joinedDataset?: GeoJSON.FeatureCollection | unknown[];
+};
+
+export type SpatialJoinFunctionContext = {
+  getGeometries: GetGeometries;
+  getValues?: GetValues;
+  saveAsDataset?: (datasetName: string, data: Record<string, number[]>) => void;
+};
+
+/**
+ * The spatial join tool is used to join geometries from one dataset with geometries from another dataset.
+ *
+ * The tool supports various join operations:
+ * - sum: sum of values in overlapping geometries
+ * - mean: average of values in overlapping geometries
+ * - min: minimum value in overlapping geometries
+ * - max: maximum value in overlapping geometries
+ * - median: median value in overlapping geometries
+ * - count: count of overlapping geometries
+ *
+ * When user prompts e.g. *can you join the population data with county boundaries?*
+ *
+ * 1. The LLM will execute the callback function of spatialJoinFunctionDefinition, and perform the spatial join using the geometries retrieved from `getGeometries` function.
+ * 2. The result will include joined values and a new dataset with the joined geometries.
+ * 3. The LLM will respond with the join results and details about the new dataset.
+ *
+ * ### For example
+ * ```
+ * User: can you join the population data with county boundaries?
+ * LLM: I've performed a spatial join between the population data and county boundaries. The result shows the total population in each county...
+ * ```
+ *
+ * ### Code example
+ * ```typescript
+ * import { getVercelAiTool } from '@openassistant/geoda';
+ * import { generateText } from 'ai';
+ *
+ * const toolContext = {
+ *   getGeometries: (datasetName) => {
+ *     return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+ *   },
+ *   getValues: (datasetName, variableName) => {
+ *     return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+ *   },
+ * };
+ * const joinTool = getVercelAiTool('spatialJoin', toolContext, onToolCompleted);
+ *
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
+ *   prompt: 'Can you join the population data with county boundaries?',
+ *   tools: {spatialJoin: joinTool},
+ * });
+ * ```
+ */
 export const spatialJoin = tool<
-  // parameters of the tool
-  z.ZodObject<{
-    firstDatasetName: z.ZodString;
-    secondDatasetName: z.ZodString;
-    joinVariableNames: z.ZodArray<z.ZodString>;
-    joinOperators: z.ZodArray<
-      z.ZodEnum<['sum', 'mean', 'min', 'max', 'median', 'count']>
-    >;
-  }>,
-  // return type of the tool
-  ExecuteSpatialJoinResult['llmResult'],
-  // additional data of the tool
-  ExecuteSpatialJoinResult['additionalData'],
-  // type of the context
-  SpatialCountFunctionContext
+  SpatialJoinFunctionArgs,
+  SpatialJoinLlmResult,
+  SpatialJoinAdditionalData,
+  SpatialJoinFunctionContext
 >({
   description: `Spatial join geometries from the first dataset with geometries from the second dataset.
 For example, if you want to get the number of people in each county,the first dataset should contains the number of people and the second dataset should contains the counties.`,
@@ -61,40 +134,6 @@ For example, if you want to get the number of people in each county,the first da
 
 export type SpatialJoinTool = typeof spatialJoin;
 
-/**
- * The context for the spatial count function
- * @param getGeometries - the function to get the geometries from the dataset: (datasetName: string) => SpatialJoinGeometries
- * @returns the geometries from the dataset
- */
-export type SpatialCountFunctionContext = {
-  getGeometries: GetGeometries;
-  getValues?: GetValues;
-  saveAsDataset?: (datasetName: string, data: Record<string, number[]>) => void;
-};
-
-export type ExecuteSpatialJoinResult = {
-  llmResult: {
-    success: boolean;
-    result?: {
-      firstDatasetName: string;
-      secondDatasetName: string;
-      joinVariableNames?: string[];
-      joinOperators?: string[];
-      firstTenRows?: number[][];
-      details: string;
-    };
-    error?: string;
-  };
-  additionalData?: {
-    firstDatasetName: string;
-    secondDatasetName: string;
-    joinVariableNames?: string[];
-    joinOperators?: string[];
-    joinResult: number[][];
-    joinValues: Record<string, number[]>;
-  };
-};
-
 type SpatialJoinArgs = {
   firstDatasetName: string;
   secondDatasetName: string;
@@ -115,7 +154,7 @@ function isSpatialJoinArgs(args: unknown): args is SpatialJoinArgs {
 
 function isSpatialJoinContext(
   context: unknown
-): context is SpatialCountFunctionContext {
+): context is SpatialJoinFunctionContext {
   return (
     typeof context === 'object' &&
     context !== null &&
@@ -127,7 +166,10 @@ function isSpatialJoinContext(
 async function executeSpatialJoin(
   args,
   options
-): Promise<ExecuteSpatialJoinResult> {
+): Promise<{
+  llmResult: SpatialJoinLlmResult;
+  additionalData?: SpatialJoinAdditionalData;
+}> {
   if (!isSpatialJoinArgs(args)) {
     throw new Error('Invalid arguments for spatialJoin tool');
   }

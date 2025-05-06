@@ -1,7 +1,39 @@
 # Variable: bubbleChart
 
-> `const` **bubbleChart**: `ExtendedTool`\<`ZodObject`\<\{ `datasetName`: `ZodString`; `variableColor`: `ZodOptional`\<`ZodString`\>; `variableSize`: `ZodString`; `variableX`: `ZodString`; `variableY`: `ZodString`; \}, `UnknownKeysParam`, `ZodTypeAny`, \{ `datasetName`: `string`; `variableColor`: `string`; `variableSize`: `string`; `variableX`: `string`; `variableY`: `string`; \}, \{ `datasetName`: `string`; `variableColor`: `string`; `variableSize`: `string`; `variableX`: `string`; `variableY`: `string`; \}\>, \{ `data`: \{ `datasetName`: `string`; `details`: `string`; `id`: `string`; \}; `error`: `string`; `instruction`: `string`; `success`: `boolean`; \}, `undefined` \| \{ `data`: \{ `variableColor`: \{ `name`: `string`; `values`: `number`[]; \}; `variableSize`: \{ `name`: `string`; `values`: `number`[]; \}; `variableX`: \{ `name`: `string`; `values`: `number`[]; \}; `variableY`: \{ `name`: `string`; `values`: `number`[]; \}; \}; `datasetName`: `string`; `id`: `string`; `isDraggable`: `boolean`; `isExpanded`: `boolean`; `theme`: `string`; \}, [`BubbleChartToolContext`](../type-aliases/BubbleChartToolContext.md)\>
+> `const` **bubbleChart**: `ExtendedTool`\<[`BubbleChartToolArgs`](../type-aliases/BubbleChartToolArgs.md), [`BubbleChartLlmResult`](../type-aliases/BubbleChartLlmResult.md), [`BubbleChartAdditionalData`](../type-aliases/BubbleChartAdditionalData.md), [`EChartsToolContext`](../type-aliases/EChartsToolContext.md)\>
 
-Defined in: [packages/echarts/src/bubble-chart/tool.ts:13](https://github.com/GeoDaCenter/openassistant/blob/a9f2271d1019f6c25c10dd4b3bdb64fcf16999b2/packages/echarts/src/bubble-chart/tool.ts#L13)
+Defined in: [bubble-chart/tool.ts:42](https://github.com/GeoDaCenter/openassistant/blob/36f516b8229288259590b2d9dab3b10cbfc3cbfd/packages/echarts/src/bubble-chart/tool.ts#L42)
 
 The bubble chart tool.
+
+To use it, you need to provide the implementation of the `getValues` function.
+
+## Example
+
+```ts
+import { getVercelAiTool } from '@openassistant/echarts';
+import { generateText } from 'ai';
+
+const toolContext = {
+  getValues: async (datasetName, variableName) => {
+    return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+  },
+};
+
+const onToolCompleted = (toolCallId: string, additionalData?: unknown) => {
+  console.log('Tool call completed:', toolCallId, additionalData);
+  // render the bubble chart using <BubbleChartComponentContainer props={additionalData} />
+};
+
+const bubbleChartTool = getVercelAiTool('bubbleChart', toolContext, onToolCompleted);
+
+generateText({
+  model: openai('gpt-4o-mini', { apiKey: key }),
+  prompt: 'Can you create a bubble chart of the population and income for each location in dataset myVenues, and use the size of the bubble to represent the revenue?',
+  tools: {bubbleChart: bubbleChartTool},
+});
+```
+
+### getValues()
+
+See BubbleChartFunctionContext for detailed usage.

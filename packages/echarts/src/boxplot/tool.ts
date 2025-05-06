@@ -4,29 +4,34 @@ import { generateId } from '@openassistant/common';
 
 import { BoxplotDataProps, createBoxplot } from './component/utils';
 import { BoxplotComponentContainer } from './component/box-plot-component';
-import {
-  EChartsToolContext,
-  isEChartsToolContext,
-  OnSelected,
-} from '../types';
+import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../types';
 
 /**
- * The boxplot tool is used to create a boxplot chart.
+ * The boxplot tool is used to create a box plot for a given dataset and variable.
  *
  * @example
  * ```typescript
- * import { boxplot } from '@openassistant/echarts';
+ * import { getVercelAiTool } from '@openassistant/echarts';
+ * import { generateText } from 'ai';
  *
- * const boxplotTool = {
- *   ...boxplot,
- *   context: {
- *     ...boxplot.context,
- *     getValues: (datasetName: string, variableName: string) => {
- *       // get the values of the variable from your dataset, e.g.
- *       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
- *     },
+ * const toolContext = {
+ *   getValues: async (datasetName: string, variableName: string) => {
+ *     return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
  *   },
- * }
+ * };
+ *
+ * const onToolCompleted = (toolCallId: string, additionalData?: unknown) => {
+ *   console.log('Tool call completed:', toolCallId, additionalData);
+ *   // render the boxplot using <BoxplotComponentContainer props={additionalData} />
+ * };
+ *
+ * const boxplotTool = getVercelAiTool('boxplot', toolContext, onToolCompleted);
+ *
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
+ *   prompt: 'Can you create a box plot of the revenue per capita for each location in dataset myVenues?',
+ *   tools: {boxplot: boxplotTool},
+ * });
  * ```
  *
  * ### getValues()
@@ -42,19 +47,14 @@ import {
  *
  * A duckdb table will be created using the values returned from `getValues()`, and LLM will generate a sql query to query the table to answer the user's prompt.
  *
-
  */
 export const boxplot = tool<
   // parameters of the tool
-  z.ZodObject<{
-    datasetName: z.ZodString;
-    variableNames: z.ZodArray<z.ZodString>;
-    boundIQR: z.ZodOptional<z.ZodNumber>;
-  }>,
+  BoxplotToolArgs,
   // return type of the tool
-  ExecuteBoxplotResult['llmResult'],
+  BoxplotLlmResult,
   // additional data of the tool
-  ExecuteBoxplotResult['additionalData'],
+  BoxplotAdditionalData,
   // type of the context
   EChartsToolContext
 >({
@@ -97,33 +97,43 @@ export const boxplot = tool<
  */
 export type BoxplotTool = typeof boxplot;
 
+export type BoxplotToolArgs = z.ZodObject<{
+  datasetName: z.ZodString;
+  variableNames: z.ZodArray<z.ZodString>;
+  boundIQR: z.ZodOptional<z.ZodNumber>;
+}>;
+
+export type BoxplotLlmResult = {
+  success: boolean;
+  result?: {
+    id: string;
+    boxplotData: BoxplotDataProps;
+    boundIQR: number;
+    datasetName: string;
+  };
+  error?: string;
+  instruction?: string;
+};
+
+export type BoxplotAdditionalData = {
+  id: string;
+  datasetName: string;
+  variables: string[];
+  boxplotData: BoxplotDataProps;
+  boundIQR: number;
+  data?: Record<string, number[]>;
+  theme?: string;
+  isDraggable?: boolean;
+  isExpanded?: boolean;
+  onSelected?: OnSelected;
+};
+
 /**
  * The result of the boxplot tool.
  */
 export type ExecuteBoxplotResult = {
-  llmResult: {
-    success: boolean;
-    result?: {
-      id: string;
-      boxplotData: BoxplotDataProps;
-      boundIQR: number;
-      datasetName: string;
-    };
-    error?: string;
-    instruction?: string;
-  };
-  additionalData?: {
-    id: string;
-    datasetName: string;
-    variables: string[];
-    boxplotData: BoxplotDataProps;
-    boundIQR: number;
-    data?: Record<string, number[]>;
-    theme?: string;
-    isDraggable?: boolean;
-    isExpanded?: boolean;
-    onSelected?: OnSelected;
-  };
+  llmResult: BoxplotLlmResult;
+  additionalData?: BoxplotAdditionalData;
 };
 
 async function executeBoxplot(

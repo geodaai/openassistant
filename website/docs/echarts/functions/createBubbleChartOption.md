@@ -1,18 +1,62 @@
 # Function: createBubbleChartOption()
 
-> **createBubbleChartOption**(`props`): `EChartsOption`
+> **createBubbleChartOption**(`data`): `EChartsOption`
 
-Defined in: [packages/echarts/src/bubble-chart/component/bubble-chart-option.ts:35](https://github.com/GeoDaCenter/openassistant/blob/a9f2271d1019f6c25c10dd4b3bdb64fcf16999b2/packages/echarts/src/bubble-chart/component/bubble-chart-option.ts#L35)
+Defined in: [bubble-chart/component/bubble-chart-option.ts:35](https://github.com/GeoDaCenter/openassistant/blob/36f516b8229288259590b2d9dab3b10cbfc3cbfd/packages/echarts/src/bubble-chart/component/bubble-chart-option.ts#L35)
 
 Creates an ECharts option configuration for rendering a bubble chart.
 
 ## Parameters
 
-### props
+### data
 
-[`BubbleChartOutputData`](../type-aliases/BubbleChartOutputData.md)
+#### variableColor?
 
-The input data for the bubble chart
+\{ `name`: `string`; `values`: (`string` \| `number`)[]; \}
+
+#### variableColor.name
+
+`string`
+
+#### variableColor.values
+
+(`string` \| `number`)[]
+
+#### variableSize
+
+\{ `name`: `string`; `values`: `number`[]; \}
+
+#### variableSize.name
+
+`string`
+
+#### variableSize.values
+
+`number`[]
+
+#### variableX
+
+\{ `name`: `string`; `values`: `number`[]; \}
+
+#### variableX.name
+
+`string`
+
+#### variableX.values
+
+`number`[]
+
+#### variableY
+
+\{ `name`: `string`; `values`: `number`[]; \}
+
+#### variableY.name
+
+`string`
+
+#### variableY.values
+
+`number`[]
 
 ## Returns
 

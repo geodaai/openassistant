@@ -2,78 +2,14 @@
 
 > **ExecuteDataClassifyResult**: `object`
 
-Defined in: [packages/geoda/src/data-classify/tool.ts:120](https://github.com/GeoDaCenter/openassistant/blob/a9f2271d1019f6c25c10dd4b3bdb64fcf16999b2/packages/geoda/src/data-classify/tool.ts#L120)
+Defined in: [packages/geoda/src/data-classify/tool.ts:167](https://github.com/GeoDaCenter/openassistant/blob/36f516b8229288259590b2d9dab3b10cbfc3cbfd/packages/geoda/src/data-classify/tool.ts#L167)
 
 ## Type declaration
 
 ### additionalData?
 
-> `optional` **additionalData**: `object`
-
-#### additionalData.breaks
-
-> **breaks**: `number`[]
-
-#### additionalData.datasetName
-
-> **datasetName**: `string`
-
-#### additionalData.hinge?
-
-> `optional` **hinge**: `number`
-
-#### additionalData.k
-
-> **k**: `number`
-
-#### additionalData.method
-
-> **method**: `string`
-
-#### additionalData.variableName
-
-> **variableName**: `string`
+> `optional` **additionalData**: [`DataClassifyAdditionalData`](DataClassifyAdditionalData.md)
 
 ### llmResult
 
-> **llmResult**: `object`
-
-#### llmResult.error?
-
-> `optional` **error**: `string`
-
-#### llmResult.instruction?
-
-> `optional` **instruction**: `string`
-
-#### llmResult.result?
-
-> `optional` **result**: `object`
-
-#### llmResult.result.breaks
-
-> **breaks**: `number`[]
-
-#### llmResult.result.datasetName
-
-> **datasetName**: `string`
-
-#### llmResult.result.hinge?
-
-> `optional` **hinge**: `number`
-
-#### llmResult.result.k
-
-> **k**: `number`
-
-#### llmResult.result.method
-
-> **method**: `string`
-
-#### llmResult.result.variableName
-
-> **variableName**: `string`
-
-#### llmResult.success
-
-> **success**: `boolean`
+> **llmResult**: [`DataClassifyLlmResult`](DataClassifyLlmResult.md)

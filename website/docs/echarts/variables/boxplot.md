@@ -1,31 +1,40 @@
 # Variable: boxplot
 
-> `const` **boxplot**: `ExtendedTool`\<`ZodObject`\<\{ `boundIQR`: `ZodOptional`\<`ZodNumber`\>; `datasetName`: `ZodString`; `variableNames`: `ZodArray`\<`ZodString`\>; \}, `UnknownKeysParam`, `ZodTypeAny`, \{ `boundIQR`: `number`; `datasetName`: `string`; `variableNames`: `string`[]; \}, \{ `boundIQR`: `number`; `datasetName`: `string`; `variableNames`: `string`[]; \}\>, \{ `error`: `string`; `instruction`: `string`; `result`: \{ `boundIQR`: `number`; `boxplotData`: [`BoxplotDataProps`](../type-aliases/BoxplotDataProps.md); `datasetName`: `string`; `id`: `string`; \}; `success`: `boolean`; \}, `undefined` \| \{ `boundIQR`: `number`; `boxplotData`: [`BoxplotDataProps`](../type-aliases/BoxplotDataProps.md); `data`: `Record`\<`string`, `number`[]\>; `datasetName`: `string`; `id`: `string`; `isDraggable`: `boolean`; `isExpanded`: `boolean`; `theme`: `string`; `variables`: `string`[]; \}, [`BoxplotFunctionContext`](../type-aliases/BoxplotFunctionContext.md)\>
+> `const` **boxplot**: `ExtendedTool`\<[`BoxplotToolArgs`](../type-aliases/BoxplotToolArgs.md), [`BoxplotLlmResult`](../type-aliases/BoxplotLlmResult.md), [`BoxplotAdditionalData`](../type-aliases/BoxplotAdditionalData.md), [`EChartsToolContext`](../type-aliases/EChartsToolContext.md)\>
 
-Defined in: [packages/echarts/src/boxplot/tool.ts:42](https://github.com/GeoDaCenter/openassistant/blob/a9f2271d1019f6c25c10dd4b3bdb64fcf16999b2/packages/echarts/src/boxplot/tool.ts#L42)
+Defined in: [boxplot/tool.ts:51](https://github.com/GeoDaCenter/openassistant/blob/36f516b8229288259590b2d9dab3b10cbfc3cbfd/packages/echarts/src/boxplot/tool.ts#L51)
 
-The boxplot tool is used to create a boxplot chart.
+The boxplot tool is used to create a box plot for a given dataset and variable.
 
 ## Example
 
 ```typescript
-import { boxplot } from '@openassistant/echarts';
+import { getVercelAiTool } from '@openassistant/echarts';
+import { generateText } from 'ai';
 
-const boxplotTool = {
-  ...boxplot,
-  context: {
-    ...boxplot.context,
-    getValues: (datasetName: string, variableName: string) => {
-      // get the values of the variable from your dataset, e.g.
-      return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
-    },
+const toolContext = {
+  getValues: async (datasetName: string, variableName: string) => {
+    return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
   },
-}
+};
+
+const onToolCompleted = (toolCallId: string, additionalData?: unknown) => {
+  console.log('Tool call completed:', toolCallId, additionalData);
+  // render the boxplot using <BoxplotComponentContainer props={additionalData} />
+};
+
+const boxplotTool = getVercelAiTool('boxplot', toolContext, onToolCompleted);
+
+generateText({
+  model: openai('gpt-4o-mini', { apiKey: key }),
+  prompt: 'Can you create a box plot of the revenue per capita for each location in dataset myVenues?',
+  tools: {boxplot: boxplotTool},
+});
 ```
 
 ### getValues()
 
-See [BoxplotFunctionContext](../type-aliases/BoxplotFunctionContext.md) for detailed usage.
+See BoxplotFunctionContext for detailed usage.
 
 User implements this function to get the values of the variable from dataset.
 

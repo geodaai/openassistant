@@ -25,26 +25,82 @@ interface MapboxIsochroneResponse {
   }>;
 }
 
+export type IsochroneFunctionArgs = z.ZodObject<{
+  origin: z.ZodObject<{
+    longitude: z.ZodNumber;
+    latitude: z.ZodNumber;
+  }>;
+  timeLimit: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+  distanceLimit: z.ZodOptional<z.ZodNumber>;
+  profile: z.ZodOptional<
+    z.ZodDefault<z.ZodEnum<['driving', 'walking', 'cycling']>>
+  >;
+  polygons: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
+}>;
 
-export const isochrone = tool<
-  // tool parameters
-  z.ZodObject<{
-    origin: z.ZodObject<{
-      longitude: z.ZodNumber;
-      latitude: z.ZodNumber;
+export type IsochroneLlmResult = {
+  success: boolean;
+  result?: {
+    datasetName: string;
+    polygons: Array<{
+      time: number;
+      distance: number;
+      geometry: GeoJSON.Polygon;
     }>;
-    timeLimit: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
-    distanceLimit: z.ZodOptional<z.ZodNumber>;
-    profile: z.ZodOptional<
-      z.ZodDefault<z.ZodEnum<['driving', 'walking', 'cycling']>>
-    >;
-    polygons: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
-  }>,
-  // llm result
-  ExecuteIsochroneResult['llmResult'],
-  // additional data
-  ExecuteIsochroneResult['additionalData'],
-  // context
+    origin: GeoJSON.FeatureCollection;
+  };
+  error?: string;
+};
+
+export type IsochroneAdditionalData = {
+  origin: {
+    longitude: number;
+    latitude: number;
+  };
+  isochrone: {
+    polygons: Array<{
+      time: number;
+      distance: number;
+      geometry: GeoJSON.Polygon;
+    }>;
+  };
+  cacheId: string;
+};
+
+export type ExecuteIsochroneResult = {
+  llmResult: IsochroneLlmResult;
+  additionalData?: IsochroneAdditionalData;
+};
+
+/**
+ * Isochrone Tool
+ *
+ * This tool generates isochrone polygons showing reachable areas within a given time or distance limit
+ * from a starting point using Mapbox's Isochrone API. It supports different transportation modes
+ * and can return either polygons or linestrings.
+ *
+ * Example user prompts:
+ * - "Show me all areas reachable within 15 minutes of Times Square by car"
+ * - "What areas can I reach within 2km of the Eiffel Tower on foot?"
+ * - "Generate isochrones for a 30-minute cycling radius from Central Park"
+ *
+ * Example code:
+ * ```typescript
+ * import { getVercelAiTool } from "@openassistant/osm";
+ *
+ * const isochroneTool = getVercelAiTool('isochrone');
+ * 
+ * generateText({
+ *   model: 'gpt-4o-mini',
+ *   prompt: 'What areas can I reach within 2km of the Eiffel Tower on foot?',
+ *   tools: {isochrone: isochroneTool},
+ * });
+ * ```
+ */
+export const isochrone = tool<
+  IsochroneFunctionArgs,
+  IsochroneLlmResult,
+  IsochroneAdditionalData,
   OsmToolContext
 >({
   description:
@@ -196,34 +252,4 @@ export type IsochroneTool = typeof isochrone;
 
 export type IsochroneToolContext = {
   getMapboxToken: () => string;
-};
-
-type ExecuteIsochroneResult = {
-  llmResult: {
-    success: boolean;
-    result?: {
-      datasetName: string;
-      polygons: Array<{
-        time: number;
-        distance: number;
-        geometry: GeoJSON.Polygon;
-      }>;
-      origin: GeoJSON.FeatureCollection;
-    };
-    error?: string;
-  };
-  additionalData?: {
-    origin: {
-      longitude: number;
-      latitude: number;
-    };
-    isochrone: {
-      polygons: Array<{
-        time: number;
-        distance: number;
-        geometry: GeoJSON.Polygon;
-      }>;
-    };
-    cacheId: string;
-  };
 };

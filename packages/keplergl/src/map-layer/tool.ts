@@ -9,23 +9,43 @@ import {
 import * as arrow from 'apache-arrow';
 import { arrowSchemaToFields } from './utils';
 import { GetDataset, GetGeometries } from '../types';
+
+export type KeplerGlToolArgs = z.ZodObject<{
+  datasetName: z.ZodString;
+  geometryColumn: z.ZodOptional<z.ZodString>;
+  latitudeColumn: z.ZodOptional<z.ZodString>;
+  longitudeColumn: z.ZodOptional<z.ZodString>;
+  mapType: z.ZodOptional<
+    z.ZodEnum<['point', 'line', 'arc', 'polygon', 'heatmap', 'hexbin', 'h3']>
+  >;
+}>;
+
 /**
  * The createMap tool is used to create a map visualization using Kepler.gl.
  *
  * @example
  * ```typescript
- * import { createMap } from '@openassistant/keplergl';
+ * import { getVercelAiTool } from '@openassistant/keplergl';
+ * import { generateText } from 'ai';
  *
- * const createMapTool = {
- *   ...createMap,
- *   context: {
- *     ...createMap.context,
- *     getDataset: async (datasetName: string) => {
- *       // get the dataset from your data source
- *       return YOUR_DATASET;
- *     },
+ * const toolContext = {
+ *   getDataset: async (datasetName: string) => {
+ *     return YOUR_DATASET;
  *   },
- * }
+ * };
+ *
+ * const onToolCompleted = (toolCallId: string, additionalData?: unknown) => {
+ *   console.log('Tool call completed:', toolCallId, additionalData);
+ *   // render the map using <KeplerGlToolComponent props={additionalData} />
+ * };
+ *
+ * const createMapTool = getVercelAiTool('keplergl', toolContext, onToolCompleted);
+ *
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
+ *   prompt: 'Create a point map using the dataset "my_venues"',
+ *   tools: {createMap: createMapTool},
+ * });
  * ```
  *
  * ### getDataset()
@@ -39,21 +59,9 @@ import { GetDataset, GetGeometries } from '../types';
  * - theme: The theme of the map
  */
 export const keplergl = tool<
-  // parameters of the tool
-  z.ZodObject<{
-    datasetName: z.ZodString;
-    geometryColumn: z.ZodOptional<z.ZodString>;
-    latitudeColumn: z.ZodOptional<z.ZodString>;
-    longitudeColumn: z.ZodOptional<z.ZodString>;
-    mapType: z.ZodOptional<
-      z.ZodEnum<['point', 'line', 'arc', 'polygon', 'heatmap', 'hexbin', 'h3']>
-    >;
-  }>,
-  // return type of the tool
-  ExecuteCreateMapResult['llmResult'],
-  // additional data of the tool
-  ExecuteCreateMapResult['additionalData'],
-  // type of the context
+  KeplerGlToolArgs,
+  KeplerGlToolLlmResult,
+  KeplerGlToolAdditionalData,
   KeplerglToolContext
 >({
   description: 'create a map',
@@ -75,57 +83,12 @@ export const keplergl = tool<
       .enum(['point', 'line', 'arc', 'polygon', 'heatmap', 'hexbin', 'h3'])
       .optional()
       .describe('The type of the map. The default is "point".'),
-    config: z.string().optional()
-      .describe(`The Kepler.gl layer configuration JSON object to style the map based on user prompt.
-Please follow the kepler.gl layer configuration schema.
-- NOTE: please use the mentioned variable as colorField
-config: {
-  config: {
-    visState: {
-      layers: [
-        {
-          id: string;
-          type: string;
-          config: {
-            dataId: string;
-            label: string;
-            color: string;
-            colorField: string; // IMPORTANT: This field is required
-            colorDomain: number[];
-            colorScale: 'quantile' | 'quantize' | 'custom';
-            highlightColor?: string;
-            columns: {
-              [key: string]: string;
-            };
-            isVisible: boolean;
-            sizeField: string;
-            sizeDomain: number[];
-            sizeScale: string;
-            strokeColorDomain: number[];
-            strokeColorField: string;
-            strokeColorScale: string;
-            visConfig:{
-              opacity?: number;
-              colorField: string; // IMPORTANT: This field is required
-              colorRange?: {
-                name: string;
-                type: string;
-                category: string;
-                colors: string[];
-              },
-              outline: boolean;
-              radius: number;
-              radiusRange: number[];
-              strokeColor: string;
-              strokeColorRange?: Object;
-            },
-          }
-        }
-      ]
-    }
-  }
-}
-`),
+    config: z
+      .string()
+      .optional()
+      .describe(
+        `The Kepler.gl layer configuration JSON object to style the map based on user prompt. Please follow the kepler.gl layer configuration schema.`
+      ),
   }),
   execute: executeCreateMap,
   context: {
@@ -153,30 +116,34 @@ export type KeplerglToolContext = {
   config?: { isDraggable?: boolean; theme?: string };
 };
 
+export type KeplerGlToolLlmResult = {
+  success: boolean;
+  datasetName?: string;
+  geometryColumn?: string;
+  latitudeColumn?: string;
+  longitudeColumn?: string;
+  mapType?: string;
+  fields?: string;
+  layerConfig?: string;
+  details?: string;
+  error?: string;
+  instruction?: string;
+};
+
+export type KeplerGlToolAdditionalData = {
+  datasetName: string;
+  geometryColumn?: string;
+  latitudeColumn?: string;
+  longitudeColumn?: string;
+  mapType?: string;
+  datasetForKepler: FileCacheItem[];
+  isDraggable: boolean;
+  layerConfig?: string;
+};
+
 export type ExecuteCreateMapResult = {
-  llmResult: {
-    success: boolean;
-    datasetName?: string;
-    geometryColumn?: string;
-    latitudeColumn?: string;
-    longitudeColumn?: string;
-    mapType?: string;
-    fields?: string;
-    layerConfig?: string;
-    details?: string;
-    error?: string;
-    instruction?: string;
-  };
-  additionalData?: {
-    datasetName: string;
-    geometryColumn?: string;
-    latitudeColumn?: string;
-    longitudeColumn?: string;
-    mapType?: string;
-    datasetForKepler: FileCacheItem[];
-    isDraggable: boolean;
-    layerConfig?: string;
-  };
+  llmResult: KeplerGlToolLlmResult;
+  additionalData?: KeplerGlToolAdditionalData;
 };
 
 export function isKeplerglToolContext(

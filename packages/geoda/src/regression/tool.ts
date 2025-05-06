@@ -10,20 +10,76 @@ import { GetValues, WeightsProps } from '../types';
 import { printRegressionResult, runRegression } from './utils';
 import { getWeights } from '../utils';
 
+export type SpatialRegressionFunctionArgs = z.ZodObject<{
+  datasetName: z.ZodString;
+  dependentVariable: z.ZodString;
+  independentVariables: z.ZodArray<z.ZodString>;
+  modelType: z.ZodEnum<['classic', 'spatial-lag', 'spatial-error']>;
+  weightsId: z.ZodOptional<z.ZodString>;
+}>;
+
+export type SpatialRegressionLlmResult = {
+  success: boolean;
+  result?: string;
+  error?: string;
+};
+
+export type SpatialRegressionAdditionalData = {
+  datasetName: string;
+  report: LinearRegressionResult | SpatialLagResult | SpatialErrorResult | null;
+};
+
+export type SpatialRegressionFunctionContext = {
+  getValues: GetValues;
+  config?: {
+    theme?: string;
+  };
+};
+
+/**
+ * The spatial regression tool is used to perform regression analysis with spatial data.
+ *
+ * The tool supports three types of regression models:
+ * - Classic (OLS) regression
+ * - Spatial lag model (accounting for spatial dependence in the dependent variable)
+ * - Spatial error model (accounting for spatial dependence in the error term)
+ *
+ * When user prompts e.g. *can you run a spatial regression analysis on the housing data?*
+ *
+ * 1. The LLM will execute the callback function of spatialRegressionFunctionDefinition, and perform the regression analysis using the data retrieved from `getValues` function.
+ * 2. The result will include regression coefficients, significance tests, and model diagnostics.
+ * 3. The LLM will respond with the analysis results and suggestions for model improvement.
+ *
+ * ### For example
+ * ```
+ * User: can you run a spatial regression analysis on the housing data?
+ * LLM: I've performed a spatial lag regression analysis on the housing data. The model shows significant spatial effects...
+ * ```
+ *
+ * ### Code example
+ * ```typescript
+ * import { getVercelAiTool } from '@openassistant/geoda';
+ * import { generateText } from 'ai';
+ *
+ * const toolContext = {
+ *   getValues: (datasetName, variableName) => {
+ *     return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+ *   },
+ * };
+ *
+ * const regressionTool = getVercelAiTool('spatialRegression', toolContext, onToolCompleted);
+ *
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
+ *   prompt: 'Can you run a spatial regression analysis of "revenue ~ population + income" on the data?',
+ *   tools: {spatialRegression: regressionTool},
+ * });
+ * ```
+ */
 export const spatialRegression = tool<
-  // parameters of the tool
-  z.ZodObject<{
-    datasetName: z.ZodString;
-    dependentVariable: z.ZodString;
-    independentVariables: z.ZodArray<z.ZodString>;
-    modelType: z.ZodEnum<['classic', 'spatial-lag', 'spatial-error']>;
-    weightsId: z.ZodOptional<z.ZodString>;
-  }>,
-  // return type of the tool
-  ExecuteSpatialRegressionResult['llmResult'],
-  // additional data of the tool
-  ExecuteSpatialRegressionResult['additionalData'],
-  // type of the context
+  SpatialRegressionFunctionArgs,
+  SpatialRegressionLlmResult,
+  SpatialRegressionAdditionalData,
   SpatialRegressionFunctionContext
 >({
   description: `Apply spatial regression analysis.
@@ -50,29 +106,6 @@ Note:
 });
 
 export type SpatialRegressionTool = typeof spatialRegression;
-
-export type ExecuteSpatialRegressionResult = {
-  llmResult: {
-    success: boolean;
-    result?: string;
-    error?: string;
-  };
-  additionalData?: {
-    datasetName: string;
-    report:
-      | LinearRegressionResult
-      | SpatialLagResult
-      | SpatialErrorResult
-      | null;
-  };
-};
-
-export type SpatialRegressionFunctionContext = {
-  getValues: GetValues;
-  config?: {
-    theme?: string;
-  };
-};
 
 type SpatialRegressionArgs = {
   datasetName: string;
@@ -109,7 +142,10 @@ function isSpatialRegressionContext(
 async function executeSpatialRegression(
   args,
   options
-): Promise<ExecuteSpatialRegressionResult> {
+): Promise<{
+  llmResult: SpatialRegressionLlmResult;
+  additionalData?: SpatialRegressionAdditionalData;
+}> {
   try {
     if (!isSpatialRegressionArgs(args)) {
       throw new Error('Invalid arguments for spatialRegression tool');

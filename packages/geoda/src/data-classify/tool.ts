@@ -11,30 +11,92 @@ import {
 } from '@geoda/core';
 import { GetValues } from '../types';
 
+export type DataClassifyFunctionArgs = z.ZodObject<{
+  datasetName: z.ZodString;
+  variableName: z.ZodString;
+  method: z.ZodEnum<
+    [
+      'quantile',
+      'natural breaks',
+      'equal interval',
+      'percentile',
+      'box',
+      'standard deviation',
+      'unique values',
+    ]
+  >;
+  k: z.ZodNumber;
+  hinge: z.ZodOptional<z.ZodNumber>;
+}>;
+
+export type DataClassifyLlmResult = {
+  success: boolean;
+  result?: {
+    datasetName: string;
+    variableName: string;
+    method: string;
+    k: number;
+    hinge?: number;
+    breaks: number[];
+  };
+  error?: string;
+  instruction?: string;
+};
+
+export type DataClassifyAdditionalData = {
+  datasetName: string;
+  variableName: string;
+  method: string;
+  k: number;
+  hinge?: number;
+  breaks: number[];
+};
+
+export type DataClassifyFunctionContext = {
+  getValues: GetValues;
+};
+
+/**
+ * The data classify tool is used to classify the data into k bins or classes.
+ *
+ * The classification method can be one of the following types: quantile, natural breaks, equal interval, percentile, box, standard deviation, unique values.
+ *
+ * When user prompts e.g. *can you classify the data of population into 5 classes?*
+ *
+ * 1. The LLM will execute the callback function of dataClassifyFunctionDefinition, and apply data classification using the data retrived from `getValues` function.
+ * 2. The result will be an array of break points, which can be used to classify the data into k bins or classes.
+ * 3. The LLM will respond with the break points to the user.
+ *
+ * ### For example
+ * ```
+ * User: can you classify the data of population into 5 classes?
+ * LLM:  Yes, I've used the quantile method to classify the data of population into 5 classes. The break points are [10000, 20000, 30000, 40000, 50000].
+ * ```
+ *
+ * ### Code example
+ * ```typescript
+ * import { getVercelAiTool } from '@openassistant/geoda';
+ * import { generateText } from 'ai';
+ *
+ * const toolContext = {
+ *   getValues: async (datasetName: string, variableName: string) => {
+ *     return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+ *   },
+ * };
+ *
+ * const classifyTool = getVercelAiTool('dataClassify', toolContext, onToolCompleted);
+ *
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
+ *   prompt: 'Can you classify the data of population into 5 classes?',
+ *   tools: {dataClassify: classifyTool},
+ * });
+ * ```
+ */
 export const dataClassify = tool<
-  // parameters of the tool
-  z.ZodObject<{
-    datasetName: z.ZodString;
-    variableName: z.ZodString;
-    method: z.ZodEnum<
-      [
-        'quantile',
-        'natural breaks',
-        'equal interval',
-        'percentile',
-        'box',
-        'standard deviation',
-        'unique values',
-      ]
-    >;
-    k: z.ZodNumber;
-    hinge: z.ZodOptional<z.ZodNumber>;
-  }>,
-  // return type of the tool
-  ExecuteDataClassifyResult['llmResult'],
-  // additional data of the tool
-  ExecuteDataClassifyResult['additionalData'],
-  // type of the context
+  DataClassifyFunctionArgs,
+  DataClassifyLlmResult,
+  DataClassifyAdditionalData,
   DataClassifyFunctionContext
 >({
   description: 'Classify the data into k bins or classes',
@@ -66,82 +128,9 @@ export const dataClassify = tool<
   },
 });
 
-/**
- * The context of the data classify function.
- * @param getValues - Get the values of a variable from the dataset. See {@link GetValues} for more details.
- */
-export type DataClassifyFunctionContext = {
-  getValues: GetValues;
-};
-
-/**
- * The type of the data classify tool.
- *
- * The function tool can be used to classify the data into k bins or classes.
- * The classification method can be one of the following types: quantile, natural breaks, equal interval, percentile, box, standard deviation, unique values.
- *
- * When user prompts e.g. *can you classify the data of population into 5 classes?*
- *
- * 1. The LLM will execute the callback function of dataClassifyFunctionDefinition, and apply data classification using the data retrived from `getValues` function.
- * 2. The result will be an array of break points, which can be used to classify the data into k bins or classes.
- * 3. The LLM will respond with the break points to the user.
- *
- * ### For example
- * ```
- * User: can you classify the data of population into 5 classes?
- * LLM:  Yes, I've used the quantile method to classify the data of population into 5 classes. The break points are [10000, 20000, 30000, 40000, 50000].
- * ```
- *
- * ### Code example
- * ```typescript
- * import { AiAssistant, dataClassify, DataClassifyTool } from "ai-assistant";
- *
- * const classifyTool: DataClassifyTool = {
- *   ...dataClassify,
- *   context: {
- *     ...dataClassify.context,
- *     getValues: (datasetName, variableName) => {
- *       // return the values of the variable from the dataset
- *       return [];
- *     }
- *   }
- * };
- *
- * <AiAssistant
- *   modelProvider="openai",
- *   modelName="gpt-4o",
- *   apiKey="your-api-key",
- *   tool={classifyTool}
- * />
- * ```
- */
 export type DataClassifyTool = typeof dataClassify;
 
-export type ExecuteDataClassifyResult = {
-  llmResult: {
-    success: boolean;
-    result?: {
-      datasetName: string;
-      variableName: string;
-      method: string;
-      k: number;
-      hinge?: number;
-      breaks: number[];
-    };
-    error?: string;
-    instruction?: string;
-  };
-  additionalData?: {
-    datasetName: string;
-    variableName: string;
-    method: string;
-    k: number;
-    hinge?: number;
-    breaks: number[];
-  };
-};
-
-type DataClassifyArgs = {
+type DataClassifyToolArgs = {
   datasetName: string;
   variableName: string;
   method: string;
@@ -149,7 +138,7 @@ type DataClassifyArgs = {
   hinge?: number;
 };
 
-function isDataClassifyArgs(args: unknown): args is DataClassifyArgs {
+function isDataClassifyToolArgs(args: unknown): args is DataClassifyToolArgs {
   return (
     typeof args === 'object' &&
     args !== null &&
@@ -175,12 +164,17 @@ function isDataClassifyContext(
   );
 }
 
+export type ExecuteDataClassifyResult = {
+  llmResult: DataClassifyLlmResult;
+  additionalData?: DataClassifyAdditionalData;
+};
+
 async function executeDataClassify(
   args,
   options
 ): Promise<ExecuteDataClassifyResult> {
   try {
-    if (!isDataClassifyArgs(args)) {
+    if (!isDataClassifyToolArgs(args)) {
       throw new Error('Invalid arguments for dataClassify tool');
     }
 

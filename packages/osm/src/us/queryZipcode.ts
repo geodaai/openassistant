@@ -2,21 +2,60 @@ import { tool } from '@openassistant/utils';
 import { z } from 'zod';
 import { cacheData, getCachedData } from '../utils';
 
-export const queryUSZipcodes = tool<
-  z.ZodObject<{
-    mapBounds: z.ZodObject<{
-      northwest: z.ZodObject<{
-        longitude: z.ZodNumber;
-        latitude: z.ZodNumber;
-      }>;
-      southeast: z.ZodObject<{
-        longitude: z.ZodNumber;
-        latitude: z.ZodNumber;
-      }>;
+export type QueryZipcodeFunctionArgs = z.ZodObject<{
+  mapBounds: z.ZodObject<{
+    northwest: z.ZodObject<{
+      longitude: z.ZodNumber;
+      latitude: z.ZodNumber;
     }>;
-  }>,
-  ExecuteQueryUSZipcodesResult['llmResult'],
-  ExecuteQueryUSZipcodesResult['additionalData']
+    southeast: z.ZodObject<{
+      longitude: z.ZodNumber;
+      latitude: z.ZodNumber;
+    }>;
+  }>;
+}>;
+
+export type QueryZipcodeLlmResult = {
+  success: boolean;
+  zipcodes?: string[];
+  result?: string;
+  error?: string;
+};
+
+export type QueryZipcodeAdditionalData = {
+  zipcodes: string[];
+};
+
+export type ExecuteQueryUSZipcodesResult = {
+  llmResult: QueryZipcodeLlmResult;
+  additionalData?: QueryZipcodeAdditionalData;
+};
+
+/**
+ * Query US Zipcodes Tool
+ * 
+ * This tool queries US zipcodes within a given map bounds. It returns a list of zipcodes
+ * with their coordinates that fall within the specified bounding box.
+ * 
+ * Example user prompts:
+ * - "Find all zipcodes in Manhattan"
+ * - "What zipcodes are in the San Francisco Bay Area?"
+ * - "Get zipcodes within this map view"
+ * 
+ * Example code:
+ * ```typescript
+ * import { queryUSZipcodes, QueryUSZipcodesTool } from "@openassistant/osm";
+ * 
+ * const queryZipcodeTool: QueryUSZipcodesTool = {
+ *   ...queryUSZipcodes,
+ *   context: {}
+ * };
+ * ```
+ */
+export const queryUSZipcodes = tool<
+  QueryZipcodeFunctionArgs,
+  QueryZipcodeLlmResult,
+  QueryZipcodeAdditionalData
 >({
   description: 'Query US zipcodes within a given map bounds',
   parameters: z.object({
@@ -98,15 +137,3 @@ export const queryUSZipcodes = tool<
 });
 
 export type QueryUSZipcodesTool = typeof queryUSZipcodes;
-
-export type ExecuteQueryUSZipcodesResult = {
-  llmResult: {
-    success: boolean;
-    zipcodes?: string[];
-    result?: string;
-    error?: string;
-  };
-  additionalData?: {
-    zipcodes: string[];
-  };
-};

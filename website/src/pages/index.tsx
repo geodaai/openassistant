@@ -34,16 +34,15 @@ function HomepageHeader() {
             component
           </div>
           <div className="flex flex-row gap-2 justify-center">
-            <div className="mt-8 rounded-lg  w-fit bg-gray-200 dark:bg-gray-800 p-4">
-              <Link size="lg" href="/docs/intro" showAnchorIcon color="success">
+            <div className="mt-8 rounded-lg  w-fit bg-gray-400 dark:bg-gray-800 p-4">
+              <Link size="lg" href="/docs/intro" color="success">
                 Get Started
               </Link>
             </div>
-            <div className="mt-8 rounded-lg  w-fit bg-gray-200 dark:bg-gray-800 p-4">
+            <div className="mt-8 rounded-lg  w-fit bg-gray-400 dark:bg-gray-800 p-4">
               <Link
                 size="lg"
                 href="https://openassistant-playground.vercel.app"
-                showAnchorIcon
                 color="primary"
               >
                 Playground

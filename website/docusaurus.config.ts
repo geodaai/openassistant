@@ -63,6 +63,8 @@ const config: Config = {
         tsconfig: '../packages/core/tsconfig.json',
         out: 'docs/core',
         watch: false,
+        excludePrivate: true,
+        excludeInternal: true,
       },
     ],
     [
@@ -73,6 +75,9 @@ const config: Config = {
         tsconfig: '../packages/echarts/tsconfig.json',
         out: 'docs/echarts',
         watch: false,
+        excludePrivate: true,
+        excludeInternal: true,
+        name: 'simple',
       },
     ],
     [
@@ -83,6 +88,8 @@ const config: Config = {
         tsconfig: '../packages/geoda/tsconfig.json',
         out: 'docs/geoda',
         watch: false,
+        excludePrivate: true,
+        excludeInternal: true,
       },
     ],
     [
@@ -93,6 +100,8 @@ const config: Config = {
         tsconfig: '../packages/ui/tsconfig.json',
         out: 'docs/ui',
         watch: false,
+        excludePrivate: true,
+        excludeInternal: true,
       },
     ],
     [
@@ -103,6 +112,20 @@ const config: Config = {
         tsconfig: '../packages/duckdb/tsconfig.json',
         out: 'docs/duckdb',
         watch: false,
+        excludePrivate: true,
+        excludeInternal: true,
+      },
+    ],
+    [
+      'docusaurus-plugin-typedoc',
+      {
+        id: 'osm',
+        entryPoints: ['../packages/osm/src/index.ts'],
+        tsconfig: '../packages/osm/tsconfig.json',
+        out: 'docs/osm',
+        watch: false,
+        excludePrivate: true,
+        excludeInternal: true,
       },
     ],
   ],

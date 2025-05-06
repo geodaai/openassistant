@@ -4,23 +4,81 @@ import { createWeights, WeightsMeta, CreateWeightsProps } from '@geoda/core';
 import { WeightsProps, GetGeometries } from '../types';
 
 // global variable to store the created weights
+/**
+ * @internal
+ */
 export const globalWeightsData: Record<string, WeightsProps> = {};
 
+export type SpatialWeightsFunctionArgs = z.ZodObject<{
+  datasetName: z.ZodString;
+  type: z.ZodEnum<['knn', 'queen', 'rook', 'threshold']>;
+  k: z.ZodOptional<z.ZodNumber>;
+  orderOfContiguity: z.ZodOptional<z.ZodNumber>;
+  includeLowerOrder: z.ZodOptional<z.ZodBoolean>;
+  precisionThreshold: z.ZodOptional<z.ZodNumber>;
+  distanceThreshold: z.ZodOptional<z.ZodNumber>;
+  isMile: z.ZodOptional<z.ZodBoolean>;
+  useCentroids: z.ZodOptional<z.ZodBoolean>;
+  mapBounds: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
+}>;
+
+export type SpatialWeightsLlmResult = {
+  success: boolean;
+  result?: {
+    datasetName: string;
+    weightsId: string;
+    weightsMeta: WeightsMeta;
+    mapBounds?: number[];
+    details?: string;
+  };
+  error?: string;
+};
+
+export type SpatialWeightsAdditionalData = {
+  datasetName: string;
+  weights: number[][];
+  weightsMeta: WeightsMeta;
+};
+
+/**
+ * Spatial Weights Tool
+ *
+ * This tool creates spatial weights matrices for spatial analysis. It supports multiple types of weights:
+ * - K-Nearest Neighbors (knn)
+ * - Queen Contiguity
+ * - Rook Contiguity
+ * - Distance-based Threshold
+ *
+ * The weights are cached in memory using a unique ID generated from the input parameters.
+ *
+ * Example user prompts:
+ * - "Create a queen contiguity weights matrix for these counties"
+ * - "Generate k-nearest neighbor weights with k=5 for these points"
+ * - "Calculate distance-based weights with a 10km threshold"
+ *
+ * Example code:
+ * ```typescript
+ * import { getVercelAiTool } from '@openassistant/geoda';
+ * import { generateText } from 'ai';
+ *
+ * const toolContext = {
+ *   getGeometries: (datasetName) => {
+ *     return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+ *   },
+ * };
+ * const weightsTool = getVercelAiTool('spatialWeights', toolContext, onToolCompleted);
+ *
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
+ *   prompt: 'Create a queen contiguity weights matrix for these counties',
+ *   tools: {spatialWeights: weightsTool},
+ * });
+ * ```
+ */
 export const spatialWeights = tool<
-  z.ZodObject<{
-    datasetName: z.ZodString;
-    type: z.ZodEnum<['knn', 'queen', 'rook', 'threshold']>;
-    k: z.ZodOptional<z.ZodNumber>;
-    orderOfContiguity: z.ZodOptional<z.ZodNumber>;
-    includeLowerOrder: z.ZodOptional<z.ZodBoolean>;
-    precisionThreshold: z.ZodOptional<z.ZodNumber>;
-    distanceThreshold: z.ZodOptional<z.ZodNumber>;
-    isMile: z.ZodOptional<z.ZodBoolean>;
-    useCentroids: z.ZodOptional<z.ZodBoolean>;
-    mapBounds: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
-  }>,
-  ExecuteSpatialWeightsResult['llmResult'],
-  ExecuteSpatialWeightsResult['additionalData'],
+  SpatialWeightsFunctionArgs,
+  SpatialWeightsLlmResult,
+  SpatialWeightsAdditionalData,
   SpatialWeightsFunctionContext
 >({
   description: 'Create a spatial weights.',

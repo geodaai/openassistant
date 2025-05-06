@@ -2,4 +2,4 @@
 
 > **SpatialJoinTool**: *typeof* [`spatialJoin`](../variables/spatialJoin.md)
 
-Defined in: [packages/geoda/src/spatial-count/tool.ts:65](https://github.com/GeoDaCenter/openassistant/blob/a9f2271d1019f6c25c10dd4b3bdb64fcf16999b2/packages/geoda/src/spatial-count/tool.ts#L65)
+Defined in: [packages/geoda/src/spatial\_join/tool.ts:135](https://github.com/GeoDaCenter/openassistant/blob/36f516b8229288259590b2d9dab3b10cbfc3cbfd/packages/geoda/src/spatial_join/tool.ts#L135)

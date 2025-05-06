@@ -16,18 +16,94 @@ export type SpatialWeights = {
   weightsMeta: WeightsMeta;
 };
 
+export type MoranScatterPlotFunctionArgs = z.ZodObject<{
+  datasetName: z.ZodString;
+  variableName: z.ZodString;
+  weightsId: z.ZodOptional<z.ZodString>;
+}>;
+
+export type MoranScatterPlotLlmResult = {
+  success: boolean;
+  result?: {
+    datasetName: string;
+    variableName: string;
+    weightsId: string;
+    globalMoranI: number;
+    details: string;
+  };
+  error?: string;
+};
+
+export type MoranScatterPlotAdditionalData = {
+  datasetName: string;
+  variableName: string;
+  weightsId: string;
+  weights: number[][];
+  weightsMeta: WeightsMeta;
+  values: number[];
+  lagValues: number[];
+  regression: SimpleLinearRegressionResult;
+  slope: number;
+  isDraggable?: boolean;
+  isExpanded?: boolean;
+  theme?: string;
+};
+
+export type MoranScatterPlotFunctionContext = {
+  /** Get the values of variable from the dataset. */
+  getValues: GetValues;
+  /** The configuration of the scatterplot. */
+  config?: {
+    isDraggable?: boolean;
+    isExpanded?: boolean;
+    theme?: string;
+  };
+};
+
+/**
+ * The Moran scatterplot tool is used to create a scatterplot of spatial data and calculate Global Moran's I.
+ *
+ * The tool creates a scatterplot where:
+ * - X-axis represents the original variable values
+ * - Y-axis represents the spatial lag values
+ * - The slope of the regression line represents Global Moran's I
+ *
+ * When user prompts e.g. *can you create a Moran scatterplot for the population data?*
+ *
+ * 1. The LLM will execute the callback function of moranScatterPlotFunctionDefinition, and create the scatterplot using the data retrieved from `getValues` function.
+ * 2. The result will include the Global Moran's I value and a scatterplot visualization.
+ * 3. The LLM will respond with the analysis results to the user.
+ *
+ * ### For example
+ * ```
+ * User: can you create a Moran scatterplot for the population data?
+ * LLM: I've created a Moran scatterplot for the population data. The Global Moran's I is 0.75, indicating strong positive spatial autocorrelation...
+ * ```
+ *
+ * ### Code example
+ * ```typescript
+ * import { getVercelAiTool } from '@openassistant/geoda';
+ * import { generateText } from 'ai';
+ *
+ * const toolContext = {
+ *   getValues: (datasetName, variableName) => {
+ *     return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+ *   },
+ * };
+ *
+ * const moranTool = getVercelAiTool('globalMoran', toolContext, onToolCompleted);
+ *
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
+ *   prompt: 'Can you create a Moran scatterplot for the population data?',
+ *   tools: {globalMoran: moranTool},
+ * });
+ * ```
+ */
 export const globalMoran = tool<
-  // parameters of the tool
-  z.ZodObject<{
-    datasetName: z.ZodString;
-    variableName: z.ZodString;
-    weightsId: z.ZodOptional<z.ZodString>;
-  }>,
-  // return type of the tool
-  ExecuteMoranScatterPlotResult['llmResult'],
-  // additional data of the tool
-  ExecuteMoranScatterPlotResult['additionalData'],
-  // type of the context
+  MoranScatterPlotFunctionArgs,
+  MoranScatterPlotLlmResult,
+  MoranScatterPlotAdditionalData,
   MoranScatterPlotFunctionContext
 >({
   description: 'Create a Moran scatterplot',
@@ -46,48 +122,6 @@ export const globalMoran = tool<
 });
 
 export type GlobalMoranTool = typeof globalMoran;
-
-export type ExecuteMoranScatterPlotResult = {
-  llmResult: {
-    success: boolean;
-    result?: {
-      datasetName: string;
-      variableName: string;
-      weightsId: string;
-      globalMoranI: number;
-      details: string;
-    };
-    error?: string;
-  };
-  additionalData?: {
-    datasetName: string;
-    variableName: string;
-    weightsId: string;
-    weights: number[][];
-    weightsMeta: WeightsMeta;
-    values: number[];
-    lagValues: number[];
-    regression: SimpleLinearRegressionResult;
-    slope: number;
-    isDraggable?: boolean;
-    isExpanded?: boolean;
-    theme?: string;
-  };
-};
-
-/**
- * The context of the scatterplot function. The context will be used by the function calling to create the scatterplot.
- */
-export type MoranScatterPlotFunctionContext = {
-  /** Get the values of variable from the dataset. */
-  getValues: GetValues;
-  /** The configuration of the scatterplot. */
-  config?: {
-    isDraggable?: boolean;
-    isExpanded?: boolean;
-    theme?: string;
-  };
-};
 
 type MoranScatterPlotArgs = {
   datasetName: string;
@@ -129,7 +163,10 @@ function isMoranScatterPlotContext(
 async function executeMoranScatterPlot(
   args,
   options
-): Promise<ExecuteMoranScatterPlotResult> {
+): Promise<{
+  llmResult: MoranScatterPlotLlmResult;
+  additionalData?: MoranScatterPlotAdditionalData;
+}> {
   try {
     if (!isMoranScatterPlotArgs(args)) {
       throw new Error('Invalid arguments for moranScatterPlot tool');

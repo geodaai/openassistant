@@ -7,12 +7,53 @@ import { cacheData, generateId, getCachedData } from '../utils';
 // Add delay function to prevent rate limiting
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+export type GetUsZipcodeGeojsonFunctionArgs = z.ZodObject<{
+  zipcodes: z.ZodArray<z.ZodString>;
+}>;
+
+export type GetUsZipcodeGeojsonLlmResult = {
+  success: boolean;
+  datasetId?: string;
+  result?: string;
+  error?: string;
+};
+
+export type GetUsZipcodeGeojsonAdditionalData = {
+  zipcodes: string[];
+  datasetId: string;
+  geojson: GeoJSON.FeatureCollection;
+};
+
+export type ExecuteGetUsZipcodeGeojsonResult = {
+  llmResult: GetUsZipcodeGeojsonLlmResult;
+  additionalData?: GetUsZipcodeGeojsonAdditionalData;
+};
+
+/**
+ * Get US Zipcode GeoJSON Tool
+ *
+ * This tool retrieves the GeoJSON data for all zipcodes in a US state by its state code.
+ * It returns the zipcodes' boundary geometries and properties.
+ *
+ * Example user prompts:
+ * - "Get all zipcodes in California"
+ * - "Show me the zipcode boundaries of New York state"
+ * - "What are the zipcodes in Texas?"
+ *
+ * Example code:
+ * ```typescript
+ * import { getUsZipcodeGeojson, GetUsZipcodeGeojsonTool } from "@openassistant/osm";
+ *
+ * const zipcodeTool: GetUsZipcodeGeojsonTool = {
+ *   ...getUsZipcodeGeojson,
+ *   context: {}
+ * };
+ * ```
+ */
 export const getUsZipcodeGeojson = tool<
-  z.ZodObject<{
-    zipcodes: z.ZodArray<z.ZodString>;
-  }>,
-  ExecuteGetUsZipcodeGeojsonResult['llmResult'],
-  ExecuteGetUsZipcodeGeojsonResult['additionalData']
+  GetUsZipcodeGeojsonFunctionArgs,
+  GetUsZipcodeGeojsonLlmResult,
+  GetUsZipcodeGeojsonAdditionalData
 >({
   description: 'Get the GeoJSON data of one or more United States zipcodes',
   parameters: z.object({
@@ -96,17 +137,3 @@ export const getUsZipcodeGeojson = tool<
 });
 
 export type GetUsZipcodeGeojsonTool = typeof getUsZipcodeGeojson;
-
-export type ExecuteGetUsZipcodeGeojsonResult = {
-  llmResult: {
-    success: boolean;
-    datasetId?: string;
-    result?: string;
-    error?: string;
-  };
-  additionalData?: {
-    zipcodes: string[];
-    datasetId: string;
-    geojson: GeoJSON.FeatureCollection;
-  };
-};

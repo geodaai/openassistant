@@ -2,7 +2,7 @@
 
 > **getHistogramChartOption**(`filteredIndex`, `histogramData`, `barDataIndexes`): `EChartsOption`
 
-Defined in: [packages/echarts/src/histogram/component/histogram-option.ts:19](https://github.com/GeoDaCenter/openassistant/blob/a9f2271d1019f6c25c10dd4b3bdb64fcf16999b2/packages/echarts/src/histogram/component/histogram-option.ts#L19)
+Defined in: [histogram/component/histogram-option.ts:32](https://github.com/GeoDaCenter/openassistant/blob/36f516b8229288259590b2d9dab3b10cbfc3cbfd/packages/echarts/src/histogram/component/histogram-option.ts#L32)
 
 ## Parameters
 

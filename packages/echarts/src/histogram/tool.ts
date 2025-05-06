@@ -10,34 +10,46 @@ import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../types';
  *
  * @example
  * ```typescript
- * import { histogram } from '@openassistant/echarts';
+ * import { getVercelAiTool } from '@openassistant/echarts';
+ * import { generateText } from 'ai';
  *
- * const histogramTool = {
- *   ...histogram,
- *   context: {
- *     ...histogram.context,
- *     getValues: (datasetName: string, variableName: string) => {
- *       // get the values of the variable from your dataset, e.g.
- *       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
- *     },
+ * const toolContext = {
+ *   getValues: async (datasetName: string, variableName: string) => {
+ *     return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
  *   },
- * }
+ * };
+ *
+ * const onToolCompleted = (toolCallId: string, additionalData?: unknown) => {
+ *   console.log('Tool call completed:', toolCallId, additionalData);
+ *   // render the histogram using <HistogramComponentContainer props={additionalData} />
+ * };
+ *
+ * const histogramTool = getVercelAiTool('histogram', toolContext, onToolCompleted);
+ *
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
+ *   prompt: 'Can you create a histogram of the revenue per capita for each location in dataset myVenues?',
+ *   tools: {histogram: histogramTool},
+ * });
  * ```
  *
  * ### getValues()
  *
- * See {@link HistogramToolContext} for detailed usage.
+ * See {@link HistogramFunctionContext} for detailed usage.
  *
  * User implements this function to get the values of the variable from dataset.
+ *
+ * For prompts like "_can you show a histogram of the revenue per capita for each location in dataset myVenues_", the tool will
+ * call the `getValues()` function twice:
+ * - get the values of **revenue** from dataset: getValues('myVenues', 'revenue')
+ * - get the values of **population** from dataset: getValues('myVenues', 'population')
+ *
+ * A duckdb table will be created using the values returned from `getValues()`, and LLM will generate a sql query to query the table to answer the user's prompt.
  */
 export const histogram = tool<
-  z.ZodObject<{
-    datasetName: z.ZodString;
-    variableName: z.ZodString;
-    numberOfBins: z.ZodOptional<z.ZodNumber>;
-  }>,
-  ExecuteHistogramResult['llmResult'],
-  ExecuteHistogramResult['additionalData'],
+  HistogramToolArgs,
+  HistogramLlmResult,
+  HistogramAdditionalData,
   EChartsToolContext
 >({
   description: 'create a histogram',
@@ -73,36 +85,46 @@ export const histogram = tool<
  */
 export type HistogramTool = typeof histogram;
 
+export type HistogramToolArgs = z.ZodObject<{
+  datasetName: z.ZodString;
+  variableName: z.ZodString;
+  numberOfBins: z.ZodOptional<z.ZodNumber>;
+}>;
+
+export type HistogramLlmResult = {
+  success: boolean;
+  result?: {
+    id: string;
+    datasetName: string;
+    variableName: string;
+    details: string;
+  };
+  error?: string;
+  instruction?: string;
+};
+
+export type HistogramAdditionalData = {
+  id: string;
+  datasetName: string;
+  variableName: string;
+  histogramData: {
+    bin: number;
+    binStart: number | string;
+    binEnd: number | string;
+  }[];
+  barDataIndexes: number[][];
+  theme?: string;
+  isDraggable?: boolean;
+  isExpanded?: boolean;
+  onSelected?: OnSelected;
+};
+
 /**
  * The result of the histogram tool.
  */
 export type ExecuteHistogramResult = {
-  llmResult: {
-    success: boolean;
-    result?: {
-      id: string;
-      datasetName: string;
-      variableName: string;
-      details: string;
-    };
-    error?: string;
-    instruction?: string;
-  };
-  additionalData?: {
-    id: string;
-    datasetName: string;
-    variableName: string;
-    histogramData: {
-      bin: number;
-      binStart: number | string;
-      binEnd: number | string;
-    }[];
-    barDataIndexes: number[][];
-    theme?: string;
-    isDraggable?: boolean;
-    isExpanded?: boolean;
-    onSelected?: OnSelected;
-  };
+  llmResult: HistogramLlmResult;
+  additionalData?: HistogramAdditionalData;
 };
 
 async function executeHistogram(

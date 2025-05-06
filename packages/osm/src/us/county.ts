@@ -2,8 +2,58 @@ import { tool } from '@openassistant/utils';
 import { z } from 'zod';
 import { cacheData, generateId, getCachedData } from '../utils';
 
-export const getUsCountyGeojson = tool({
-  description: 'Get the GeoJSON data of a United States county',
+export type GetUsCountyGeojsonFunctionArgs = z.ZodObject<{
+  fipsCodes: z.ZodArray<z.ZodString>;
+}>;
+
+export type GetUsCountyGeojsonLlmResult = {
+  success: boolean;
+  result?: string;
+  datasetId?: string;
+  error?: string;
+};
+
+export type GetUsCountyGeojsonAdditionalData = {
+  fipsCodes: string[];
+  geojson: GeoJSON.FeatureCollection;
+  datasetId: string;
+};
+
+export type ExecuteGetUsCountyGeojsonResult = {
+  llmResult: GetUsCountyGeojsonLlmResult;
+  additionalData?: GetUsCountyGeojsonAdditionalData;
+};
+
+/**
+ * Get US County GeoJSON Tool
+ * 
+ * This tool retrieves the GeoJSON data for all counties in a US state by its state code.
+ * It returns the counties' boundary geometries and properties.
+ * 
+ * Example user prompts:
+ * - "Get all counties in California"
+ * - "Show me the county boundaries of New York state"
+ * - "What are the counties in Texas?"
+ * 
+ * Example code:
+ * ```typescript
+ * import { getVercelAiTool } from "@openassistant/osm";
+ * 
+ * const countyTool = getVercelAiTool('getUsCountyGeojson');
+ * 
+ * generateText({
+ *   model: 'gpt-4o-mini',
+ *   prompt: 'What are the counties in Texas?',
+ *   tools: {getUsCountyGeojson: countyTool},
+ * });
+ * ```
+ */
+export const getUsCountyGeojson = tool<
+  GetUsCountyGeojsonFunctionArgs,
+  GetUsCountyGeojsonLlmResult,
+  GetUsCountyGeojsonAdditionalData
+>({
+  description: 'Get GeoJSON data for all counties in a US state by its state code',
   parameters: z.object({
     fipsCodes: z.array(
       z
@@ -67,17 +117,3 @@ export const getUsCountyGeojson = tool({
 });
 
 export type GetUsCountyGeojsonTool = typeof getUsCountyGeojson;
-
-export type ExecuteGetUsCountyGeojsonResult = {
-  llmResult: {
-    success: boolean;
-    datasetId?: string;
-    result?: string;
-    error?: string;
-  };
-  additionalData?: {
-    fipsCodes: string[];
-    datasetId: string;
-    geojson: GeoJSON.FeatureCollection;
-  };
-};

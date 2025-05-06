@@ -42,6 +42,7 @@
 - [ProcessImageMessageProps](type-aliases/ProcessImageMessageProps.md)
 - [ProcessMessageProps](type-aliases/ProcessMessageProps.md)
 - [RegisterFunctionCallingProps](type-aliases/RegisterFunctionCallingProps.md)
+- [RegisterToolProps](type-aliases/RegisterToolProps.md)
 - [SendImageMessageProps](type-aliases/SendImageMessageProps.md)
 - [SendTextMessageProps](type-aliases/SendTextMessageProps.md)
 - [StreamMessage](type-aliases/StreamMessage.md)

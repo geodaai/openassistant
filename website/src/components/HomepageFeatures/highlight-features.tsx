@@ -35,29 +35,12 @@ export const highlightFeatures: HighlightFeature[] = [
   {
     title: (
       <>
-        Build AI Assistant with powerful{' '}
-        <span className="text-warning">tools</span>
+        Powerful <span className="text-warning">tools</span> for data analysis
       </>
     ),
     items: [
       {
-        iconLabel: 'Data Analysis (GeoDa)',
-        image: '/img/geoda-light.png',
-        icon: 'gravity-ui:geo-polygons',
-        iconColor: 'text-blue-400',
-        code: [
-          {
-            title: 'page.tsx',
-            content: codeMap,
-          },
-          {
-            title: 'my-datasets.ts',
-            content: codeSampleDataset,
-          },
-        ],
-      },
-      {
-        iconLabel: 'Plots (eCharts)',
+        iconLabel: 'Plots',
         image: '/img/plots-dark.png',
         icon: 'ant-design:dot-chart-outlined',
         iconColor: 'text-blue-400',
@@ -73,7 +56,23 @@ export const highlightFeatures: HighlightFeature[] = [
         ],
       },
       {
-        iconLabel: 'SQL Query (DuckDB)',
+        iconLabel: 'Mapping (Kepler.gl)',
+        image: '/img/geoda-light.png',
+        icon: 'gravity-ui:geo-polygons',
+        iconColor: 'text-blue-400',
+        code: [
+          {
+            title: 'page.tsx',
+            content: codeMap,
+          },
+          {
+            title: 'my-datasets.ts',
+            content: codeSampleDataset,
+          },
+        ],
+      },
+      {
+        iconLabel: 'SQL Query',
         image: '/img/sql-dark.png',
         icon: 'solar:database-bold',
         iconColor: 'text-blue-400',
@@ -88,10 +87,42 @@ export const highlightFeatures: HighlightFeature[] = [
           },
         ],
       },
+      {
+        iconLabel: 'Geo Tools',
+        image: '/img/geo-tools.png',
+        icon: 'wpf:geo-fence',
+        iconColor: 'text-blue-400',
+        code: [
+          {
+            title: 'page.tsx',
+            content: codeSQL,
+          },
+          {
+            title: 'my-datasets.ts',
+            content: codeSampleDataset,
+          },
+        ],
+      },
+      {
+        iconLabel: 'Data Analysis (GeoDa)',
+        image: '/img/geoda-tool.png',
+        icon: 'carbon:data-vis-1',
+        iconColor: 'text-blue-400',
+        code: [
+          {
+            title: 'page.tsx',
+            content: codeMap,
+          },
+          {
+            title: 'my-datasets.ts',
+            content: codeSampleDataset,
+          },
+        ],
+      },
     ],
   },
   {
-    title: <>Add chat component to your app with ease</>,
+    title: <>React chat component</>,
     items: [
       {
         image: '/img/getstart-light.png',
@@ -150,7 +181,7 @@ export const highlightFeatures: HighlightFeature[] = [
   {
     title: (
       <>
-        Built-in <span className="text-secondary-400">interactive</span> AI  
+        Built-in <span className="text-secondary-400">interactive</span> AI
         features
       </>
     ),

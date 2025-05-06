@@ -26,7 +26,5 @@
 
 - [getDuckDB](functions/getDuckDB.md)
 - [initDuckDB](functions/initDuckDB.md)
-- [queryDuckDBCallbackFunction](functions/queryDuckDBCallbackFunction.md)
-- [~~queryDuckDBCallbackMessage~~](functions/queryDuckDBCallbackMessage.md)
 - [QueryDuckDBComponent](functions/QueryDuckDBComponent.md)
-- [queryDuckDBFunctionDefinition](functions/queryDuckDBFunctionDefinition.md)
+- [registerTools](functions/registerTools.md)

@@ -4,8 +4,70 @@ import { getCentroids, SpatialGeometry } from '@geoda/core';
 import { generateId, isSpatialToolContext } from '../utils';
 import { Feature, Geometry } from 'geojson';
 import { cacheData } from '../utils';
+import { SpatialToolContext } from '../types';
 
-export const centroid = tool({
+export type CentroidFunctionArgs = z.ZodObject<{
+  geojson: z.ZodOptional<z.ZodString>;
+  datasetName: z.ZodOptional<z.ZodString>;
+}>;
+
+export type CentroidLlmResult = {
+  success: boolean;
+  datasetName: string;
+  result: string;
+};
+
+export type CentroidAdditionalData = {
+  datasetName?: string;
+  geojson?: string;
+  centroids: Array<number[] | null>;
+};
+
+/**
+ * The centroid tool is used to calculate the centroids (geometric centers) of geometries.
+ *
+ * The tool supports:
+ * - Calculating centroids from GeoJSON input
+ * - Calculating centroids from geometries in a dataset
+ * - Returns centroids as points that can be used for mapping
+ *
+ * When user prompts e.g. *can you find the center points of these counties?*
+ *
+ * 1. The LLM will execute the callback function of centroidFunctionDefinition, and calculate the centroids using the geometries retrieved from `getGeometries` function.
+ * 2. The result will include the centroid points and a new dataset name for mapping.
+ * 3. The LLM will respond with the centroid calculation results and the new dataset name.
+ *
+ * ### For example
+ * ```
+ * User: can you find the center points of these counties?
+ * LLM: I've calculated the centroids of the counties. The centroid points are saved in dataset "centroid_123"...
+ * ```
+ *
+ * ### Code example
+ * ```typescript
+ * import { getVercelAiTool } from '@openassistant/geoda';
+ * import { generateText } from 'ai';
+ *
+ * const toolContext = {
+ *   getGeometries: (datasetName) => {
+ *     return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+ *   },
+ * };
+ * const centroidTool = getVercelAiTool('centroid', toolContext, onToolCompleted);
+ *
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
+ *   prompt: 'Can you find the center points of these counties?',
+ *   tools: {centroid: centroidTool},
+ * });
+ * ```
+ */
+export const centroid = tool<
+  CentroidFunctionArgs,
+  CentroidLlmResult,
+  CentroidAdditionalData,
+  SpatialToolContext
+>({
   description: 'Calculate centroids of geometries',
   parameters: z.object({
     geojson: z
@@ -24,7 +86,9 @@ export const centroid = tool({
   execute: async (args, options) => {
     const { datasetName, geojson } = args;
     if (!options?.context || !isSpatialToolContext(options.context)) {
-      throw new Error('Context is required and must implement SpatialToolContext');
+      throw new Error(
+        'Context is required and must implement SpatialToolContext'
+      );
     }
     const { getGeometries } = options.context;
 
@@ -36,7 +100,7 @@ export const centroid = tool({
     } else if (datasetName && getGeometries) {
       geometries = await getGeometries(datasetName);
     }
-    
+
     if (!geometries) {
       throw new Error('No geometries found');
     }
@@ -78,6 +142,8 @@ export const centroid = tool({
     };
   },
   context: {
-    getGeometries: () => {},
+    getGeometries: () => null,
   },
 });
+
+export type CentroidTool = typeof centroid;

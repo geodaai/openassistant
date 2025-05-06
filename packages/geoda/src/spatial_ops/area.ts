@@ -2,35 +2,66 @@ import { tool } from '@openassistant/utils';
 import { z } from 'zod';
 import { getArea } from '@geoda/core';
 import { SpatialToolContext } from '../types';
-import { isSpatialToolContext } from 'src/utils';
+import { isSpatialToolContext } from '../utils';
 
-export type ExecuteAreaResult = {
-  llmResult: {
-    success: boolean;
-    result: string;
-    areas: number[];
-    distanceUnit: 'KM' | 'Mile';
-  };
-  additionalData?: {
-    datasetName?: string;
-    geojson?: string;
-    distanceUnit: 'KM' | 'Mile';
-    areas: number[];
-  };
+export type AreaFunctionArgs = z.ZodObject<{
+  geojson: z.ZodOptional<z.ZodString>;
+  datasetName: z.ZodOptional<z.ZodString>;
+  distanceUnit: z.ZodDefault<z.ZodEnum<['KM', 'Mile']>>;
+}>;
+
+export type AreaLlmResult = {
+  success: boolean;
+  result: string;
+  areas: number[];
+  distanceUnit: 'KM' | 'Mile';
 };
 
+export type AreaAdditionalData = {
+  datasetName?: string;
+  geojson?: string;
+  distanceUnit: 'KM' | 'Mile';
+  areas: number[];
+};
+
+/**
+ * Area Tool
+ *
+ * This tool calculates the area of geometries in a GeoJSON dataset.
+ * It supports both direct GeoJSON input and dataset names, and can calculate
+ * areas in either square kilometers or square miles.
+ *
+ * Example user prompts:
+ * - "Calculate the area of these counties in square kilometers"
+ * - "What is the total area of these land parcels in square miles?"
+ * - "Measure the area of these polygons"
+ *
+ * Example code:
+ * ```typescript
+ * import { getVercelAiTool } from '@openassistant/geoda';
+ * import { generateText } from 'ai';
+ * const toolContext = {
+ *   getGeometries: (datasetName) => {
+ *     return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+ *   },
+ * };
+ * const areaTool = getVercelAiTool('area', toolContext, onToolCompleted);
+ *
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
+ *   prompt: 'Calculate the area of these counties in square kilometers',
+ *   tools: {area: areaTool},
+ * });
+ * ```
+ *
+ * You can also use this tool with other tools, e.g. geocoding, so you don't need to provide the `getGeometries` function.
+ * The geometries from geocoding tool will be used as the input for this tool.
+ * ```
+ */
 export const area = tool<
-  // tool parameters
-  z.ZodObject<{
-    geojson: z.ZodOptional<z.ZodString>;
-    datasetName: z.ZodOptional<z.ZodString>;
-    distanceUnit: z.ZodDefault<z.ZodEnum<['KM', 'Mile']>>;
-  }>,
-  // llm result
-  ExecuteAreaResult['llmResult'],
-  // additional data
-  ExecuteAreaResult['additionalData'],
-  // context
+  AreaFunctionArgs,
+  AreaLlmResult,
+  AreaAdditionalData,
   SpatialToolContext
 >({
   description: 'Calculate area of geometries',
@@ -86,3 +117,5 @@ export const area = tool<
     getGeometries: () => null,
   },
 });
+
+export type AreaTool = typeof area;

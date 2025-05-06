@@ -2,7 +2,7 @@
 
 > **BoxplotOutputData**: `object` & [`CreateBoxplotProps`](CreateBoxplotProps.md)
 
-Defined in: [packages/echarts/src/boxplot/component/box-plot.tsx:50](https://github.com/GeoDaCenter/openassistant/blob/a9f2271d1019f6c25c10dd4b3bdb64fcf16999b2/packages/echarts/src/boxplot/component/box-plot.tsx#L50)
+Defined in: [boxplot/component/box-plot.tsx:51](https://github.com/GeoDaCenter/openassistant/blob/36f516b8229288259590b2d9dab3b10cbfc3cbfd/packages/echarts/src/boxplot/component/box-plot.tsx#L51)
 
 The data for the box plot
 
@@ -35,6 +35,10 @@ The data for the box plot
 ### isExpanded?
 
 > `optional` **isExpanded**: `boolean`
+
+### onSelected?
+
+> `optional` **onSelected**: [`OnSelected`](OnSelected.md)
 
 ### setIsExpanded()?
 

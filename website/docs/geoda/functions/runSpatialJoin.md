@@ -1,8 +1,8 @@
 # Function: runSpatialJoin()
 
-> **runSpatialJoin**(`__namedParameters`): `Promise`\<\{ `additionalData`: \{ `firstDatasetName`: `string`; `joinOperators`: `undefined` \| `string`[]; `joinResult`: `number`[][]; `joinValues`: `Record`\<`string`, `number`[]\>; `joinVariableNames`: `undefined` \| `string`[]; \}; `llmResult`: \{ `error`: `undefined`; `result`: \{ `details`: `string`; `firstDatasetName`: `string`; `firstTwoRows`: `object`[]; `joinOperators`: `undefined` \| `string`[]; `joinVariableNames`: `undefined` \| `string`[]; \}; `success`: `boolean`; \}; \} \| \{ `additionalData`: `undefined`; `llmResult`: \{ `error`: `string`; `result`: `undefined`; `success`: `boolean`; \}; \}\>
+> **runSpatialJoin**(`__namedParameters`): `Promise`\<\{ `additionalData`: \{ `firstDatasetName`: `string`; `joinedDataset`: `unknown`[] \| `FeatureCollection`\<`Geometry`, `GeoJsonProperties`\>; `joinedDatasetId`: `string`; `joinOperators`: `undefined` \| `string`[]; `joinResult`: `number`[][]; `joinValues`: `Record`\<`string`, `number`[]\>; `joinVariableNames`: `undefined` \| `string`[]; `secondDatasetName`: `string`; \}; `llmResult`: \{ `error`: `undefined`; `result`: \{ `details`: `string`; `firstDatasetName`: `string`; `firstTwoRows`: `object`[]; `joinedDatasetId`: `string`; `joinOperators`: `undefined` \| `string`[]; `joinVariableNames`: `undefined` \| `string`[]; `secondDatasetName`: `string`; \}; `success`: `boolean`; \}; \} \| \{ `additionalData`: `undefined`; `llmResult`: \{ `error`: `string`; `result`: `undefined`; `success`: `boolean`; \}; \}\>
 
-Defined in: [packages/geoda/src/spatial-count/tool.ts:163](https://github.com/GeoDaCenter/openassistant/blob/a9f2271d1019f6c25c10dd4b3bdb64fcf16999b2/packages/geoda/src/spatial-count/tool.ts#L163)
+Defined in: [packages/geoda/src/spatial\_join/tool.ts:200](https://github.com/GeoDaCenter/openassistant/blob/36f516b8229288259590b2d9dab3b10cbfc3cbfd/packages/geoda/src/spatial_join/tool.ts#L200)
 
 ## Parameters
 
@@ -40,10 +40,10 @@ Defined in: [packages/geoda/src/spatial-count/tool.ts:163](https://github.com/Ge
 
 `FeatureCollection`\<`Geometry`, `GeoJsonProperties`\>
 
-#### secondDataset
+#### secondDatasetName
 
-`string` \| `string`[]
+`string`
 
 ## Returns
 
-`Promise`\<\{ `additionalData`: \{ `firstDatasetName`: `string`; `joinOperators`: `undefined` \| `string`[]; `joinResult`: `number`[][]; `joinValues`: `Record`\<`string`, `number`[]\>; `joinVariableNames`: `undefined` \| `string`[]; \}; `llmResult`: \{ `error`: `undefined`; `result`: \{ `details`: `string`; `firstDatasetName`: `string`; `firstTwoRows`: `object`[]; `joinOperators`: `undefined` \| `string`[]; `joinVariableNames`: `undefined` \| `string`[]; \}; `success`: `boolean`; \}; \} \| \{ `additionalData`: `undefined`; `llmResult`: \{ `error`: `string`; `result`: `undefined`; `success`: `boolean`; \}; \}\>
+`Promise`\<\{ `additionalData`: \{ `firstDatasetName`: `string`; `joinedDataset`: `unknown`[] \| `FeatureCollection`\<`Geometry`, `GeoJsonProperties`\>; `joinedDatasetId`: `string`; `joinOperators`: `undefined` \| `string`[]; `joinResult`: `number`[][]; `joinValues`: `Record`\<`string`, `number`[]\>; `joinVariableNames`: `undefined` \| `string`[]; `secondDatasetName`: `string`; \}; `llmResult`: \{ `error`: `undefined`; `result`: \{ `details`: `string`; `firstDatasetName`: `string`; `firstTwoRows`: `object`[]; `joinedDatasetId`: `string`; `joinOperators`: `undefined` \| `string`[]; `joinVariableNames`: `undefined` \| `string`[]; `secondDatasetName`: `string`; \}; `success`: `boolean`; \}; \} \| \{ `additionalData`: `undefined`; `llmResult`: \{ `error`: `string`; `result`: `undefined`; `success`: `boolean`; \}; \}\>

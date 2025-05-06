@@ -2,7 +2,7 @@
 
 > **ScatterplotOutputData**: `object`
 
-Defined in: [packages/echarts/src/scatterplot/callback-function.ts:62](https://github.com/GeoDaCenter/openassistant/blob/a9f2271d1019f6c25c10dd4b3bdb64fcf16999b2/packages/echarts/src/scatterplot/callback-function.ts#L62)
+Defined in: [scatterplot/component/scatter-plot-component.tsx:42](https://github.com/GeoDaCenter/openassistant/blob/36f516b8229288259590b2d9dab3b10cbfc3cbfd/packages/echarts/src/scatterplot/component/scatter-plot-component.tsx#L42)
 
 The data of the scatterplot function.
 
@@ -28,27 +28,13 @@ The data of the scatterplot function.
 
 > `optional` **isExpanded**: `boolean`
 
-### onSelected()?
+### onSelected?
 
-> `optional` **onSelected**: (`datasetName`, `selectedIndices`) => `void`
-
-#### Parameters
-
-##### datasetName
-
-`string`
-
-##### selectedIndices
-
-`number`[]
-
-#### Returns
-
-`void`
+> `optional` **onSelected**: [`OnSelected`](OnSelected.md)
 
 ### regressionResults
 
-> **regressionResults**: [`ComputeRegressionResult`](ComputeRegressionResult.md)
+> **regressionResults**: `ComputeRegressionResult`
 
 ### setIsExpanded()?
 

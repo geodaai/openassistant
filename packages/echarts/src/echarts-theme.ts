@@ -1,3 +1,6 @@
+/**
+ * @internal
+ */
 export const ECHARTS_DARK_THEME = {
   color: [
     '#dd6b66',

@@ -2,7 +2,7 @@
 
 > **createAssistant**(`props`): `Promise`\<[`VercelAi`](../classes/VercelAi.md)\>
 
-Defined in: [packages/core/src/utils/create-assistant.ts:220](https://github.com/GeoDaCenter/openassistant/blob/a9f2271d1019f6c25c10dd4b3bdb64fcf16999b2/packages/core/src/utils/create-assistant.ts#L220)
+Defined in: [packages/core/src/utils/create-assistant.ts:219](https://github.com/GeoDaCenter/openassistant/blob/36f516b8229288259590b2d9dab3b10cbfc3cbfd/packages/core/src/utils/create-assistant.ts#L219)
 
 Creates an AI assistant instance with the specified configuration
 

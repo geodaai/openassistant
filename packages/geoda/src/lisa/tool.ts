@@ -11,27 +11,93 @@ import {
 import { GetValues } from '../types';
 import { getWeights } from '../utils';
 
+export type LisaFunctionArgs = z.ZodObject<{
+  method: z.ZodEnum<
+    ['localMoran', 'localGeary', 'localG', 'localGStar', 'quantileLisa']
+  >;
+  weightsID: z.ZodOptional<z.ZodString>;
+  variableName: z.ZodString;
+  multiVariableNames: z.ZodOptional<z.ZodArray<z.ZodString>>;
+  biVariableNames: z.ZodOptional<z.ZodArray<z.ZodString>>;
+  permutation: z.ZodOptional<z.ZodNumber>;
+  significanceThreshold: z.ZodOptional<z.ZodNumber>;
+  datasetName: z.ZodString;
+  k?: z.ZodOptional<z.ZodNumber>;
+  quantile?: z.ZodOptional<z.ZodNumber>;
+  mapBounds?: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
+}>;
+
+export type LisaLlmResult = {
+  success: boolean;
+  result?: {
+    mapBounds?: number[];
+    lisaMethod: string;
+    datasetId: string;
+    significanceThreshold: number;
+    variableName: string;
+    permutations: number;
+    globalMoranI?: number;
+    clusters: Array<{
+      label: string;
+      color: string;
+      numberOfObservations: number;
+    }>;
+  };
+  error?: string;
+  instructions?: string;
+};
+
+export type LisaAdditionalData = LocalMoranResult & {
+  datasetName: string;
+  significanceThreshold: number;
+};
+
+export type LisaFunctionContext = {
+  getValues: GetValues;
+};
+
+/**
+ * The LISA tool is used to apply local indicators of spatial association (LISA) statistics
+ * to identify local clusters and spatial outliers.
+ *
+ * The LISA method can be one of the following types: localMoran, localGeary, localG, localGStar, quantileLisa.
+ *
+ * When user prompts e.g. *can you perform a LISA analysis on the population data?*
+ *
+ * 1. The LLM will execute the callback function of lisaFunctionDefinition, and apply LISA analysis using the data retrieved from `getValues` function.
+ * 2. The result will include clusters, significance values, and other spatial statistics.
+ * 3. The LLM will respond with the analysis results to the user.
+ *
+ * ### For example
+ * ```
+ * User: can you perform a LISA analysis on the population data?
+ * LLM: I've performed a Local Moran's I analysis on the population data. The results show several significant clusters...
+ * ```
+ *
+ * ### Code example
+ * ```typescript
+ * import { getVercelAiTool } from '@openassistant/geoda';
+ * import { generateText } from 'ai';
+ *
+ * const toolContext = {
+ *   getValues: (datasetName, variableName) => {
+ *     return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+ *   },
+ * };
+ *
+ * const lisaTool = getVercelAiTool('lisa', toolContext, onToolCompleted);
+ *
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
+ *   prompt: 'Can you perform a LISA analysis on the population data?',
+ *   tools: {lisa: lisaTool},
+ * });
+ * ```
+ */
 export const lisa = tool<
-  // parameters of the tool
-  z.ZodObject<{
-    method: z.ZodEnum<
-      ['localMoran', 'localGeary', 'localG', 'localGStar', 'quantileLisa']
-    >;
-    weightsID: z.ZodOptional<z.ZodString>;
-    variableName: z.ZodString;
-    multiVariableNames: z.ZodOptional<z.ZodArray<z.ZodString>>;
-    biVariableNames: z.ZodOptional<z.ZodArray<z.ZodString>>;
-    permutation: z.ZodOptional<z.ZodNumber>;
-    significanceThreshold: z.ZodOptional<z.ZodNumber>;
-    datasetName: z.ZodString;
-    k?: z.ZodOptional<z.ZodNumber>;
-    quantile?: z.ZodOptional<z.ZodNumber>;
-  }>,
-  // return type of the tool
-  ExecuteLisaResult['llmResult'],
-  // additional data of the tool
-  ExecuteLisaResult['additionalData'],
-  // type of the context
+  LisaFunctionArgs,
+  LisaLlmResult,
+  LisaAdditionalData,
   LisaFunctionContext
 >({
   description:
@@ -88,43 +154,7 @@ export const lisa = tool<
   },
 });
 
-/**
- * The context of the LISA function.
- */
-export type LisaFunctionContext = {
-  getValues: GetValues;
-};
-
-/**
- * The type of the LISA tool.
- */
 export type LisaTool = typeof lisa;
-
-export type ExecuteLisaResult = {
-  llmResult: {
-    success: boolean;
-    result?: {
-      mapBounds?: number[];
-      lisaMethod: string;
-      datasetId: string;
-      significanceThreshold: number;
-      variableName: string;
-      permutations: number;
-      globalMoranI?: number;
-      clusters: Array<{
-        label: string;
-        color: string;
-        numberOfObservations: number;
-      }>;
-    };
-    error?: string;
-    instructions?: string;
-  };
-  additionalData?: LocalMoranResult & {
-    datasetName: string;
-    significanceThreshold: number;
-  };
-};
 
 type LisaArgs = {
   method: string;
@@ -162,7 +192,13 @@ function isLisaContext(context: unknown): context is LisaFunctionContext {
   );
 }
 
-async function executeLisa(args, options): Promise<ExecuteLisaResult> {
+async function executeLisa(
+  args,
+  options
+): Promise<{
+  llmResult: LisaLlmResult;
+  additionalData?: LisaAdditionalData;
+}> {
   try {
     if (!isLisaArgs(args)) {
       throw new Error('Invalid arguments for lisa tool');

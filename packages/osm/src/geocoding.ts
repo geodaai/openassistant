@@ -1,22 +1,57 @@
 import { z } from 'zod';
 import { tool } from '@openassistant/utils';
 
+export type GeocodingFunctionArgs = z.ZodObject<{
+  address: z.ZodString;
+}>;
+
+export type GeocodingLlmResult = {
+  success: boolean;
+  result?: GeoJSON.FeatureCollection;
+  error?: string;
+};
+
+export type GeocodingAdditionalData = {
+  address: string;
+  geojson: GeoJSON.FeatureCollection;
+};
+
+/**
+ * Geocoding Tool
+ * 
+ * This tool converts addresses into geographic coordinates (latitude and longitude) using OpenStreetMap's Nominatim service.
+ * 
+ * Example user prompts:
+ * - "Find the coordinates for 123 Main Street, New York"
+ * - "What are the coordinates of the Eiffel Tower?"
+ * - "Get the location of Central Park"
+ * 
+ * Example code:
+ * ```typescript
+ * import { getVercelAiTool } from "@openassistant/osm";
+ *
+ * const geocodingTool = getVercelAiTool('geocoding');
+ * 
+ * generateText({
+ *   model: 'gpt-4o-mini',
+ *   prompt: 'What are the coordinates of the Eiffel Tower?',
+ *   tools: {geocoding: geocodingTool},
+ * });
+ * ```
+ */
 export const geocoding = tool<
-  // tool parameters
-  z.ZodObject<{
-    address: z.ZodString;
-  }>,
-  // llm result
-  ExecuteGeocodingResult['llmResult'],
-  // additional data
-  ExecuteGeocodingResult['additionalData']
+  GeocodingFunctionArgs,
+  GeocodingLlmResult,
+  GeocodingAdditionalData
 >({
-  description:
-    'Geocode an address to get the latitude and longitude of the address',
+  description: 'Geocode an address to get the latitude and longitude of the address',
   parameters: z.object({
     address: z.string().describe('The address to geocode'),
   }),
-  execute: async (args): Promise<ExecuteGeocodingResult> => {
+  execute: async (args): Promise<{
+    llmResult: GeocodingLlmResult;
+    additionalData?: GeocodingAdditionalData;
+  }> => {
     try {
       const { address } = args;
       const response = await fetch(

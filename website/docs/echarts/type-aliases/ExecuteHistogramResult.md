@@ -2,7 +2,7 @@
 
 > **ExecuteHistogramResult**: `object`
 
-Defined in: [packages/echarts/src/histogram/tool.ts:58](https://github.com/GeoDaCenter/openassistant/blob/a9f2271d1019f6c25c10dd4b3bdb64fcf16999b2/packages/echarts/src/histogram/tool.ts#L58)
+Defined in: [histogram/tool.ts:125](https://github.com/GeoDaCenter/openassistant/blob/36f516b8229288259590b2d9dab3b10cbfc3cbfd/packages/echarts/src/histogram/tool.ts#L125)
 
 The result of the histogram tool.
 
@@ -10,72 +10,8 @@ The result of the histogram tool.
 
 ### additionalData?
 
-> `optional` **additionalData**: `object`
-
-#### additionalData.barDataIndexes
-
-> **barDataIndexes**: `number`[][]
-
-#### additionalData.datasetName
-
-> **datasetName**: `string`
-
-#### additionalData.histogramData
-
-> **histogramData**: `object`[]
-
-#### additionalData.id
-
-> **id**: `string`
-
-#### additionalData.isDraggable?
-
-> `optional` **isDraggable**: `boolean`
-
-#### additionalData.isExpanded?
-
-> `optional` **isExpanded**: `boolean`
-
-#### additionalData.theme?
-
-> `optional` **theme**: `string`
-
-#### additionalData.variableName
-
-> **variableName**: `string`
+> `optional` **additionalData**: [`HistogramAdditionalData`](HistogramAdditionalData.md)
 
 ### llmResult
 
-> **llmResult**: `object`
-
-#### llmResult.error?
-
-> `optional` **error**: `string`
-
-#### llmResult.instruction?
-
-> `optional` **instruction**: `string`
-
-#### llmResult.result?
-
-> `optional` **result**: `object`
-
-#### llmResult.result.datasetName
-
-> **datasetName**: `string`
-
-#### llmResult.result.details
-
-> **details**: `string`
-
-#### llmResult.result.id
-
-> **id**: `string`
-
-#### llmResult.result.variableName
-
-> **variableName**: `string`
-
-#### llmResult.success
-
-> **success**: `boolean`
+> **llmResult**: [`HistogramLlmResult`](HistogramLlmResult.md)

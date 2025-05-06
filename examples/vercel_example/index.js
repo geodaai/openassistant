@@ -20,7 +20,8 @@ async function main() {
     console.log('toolCallId', toolCallId);
     console.log('additionalData', additionalData);
   };
-  const histogram = getVercelAiTool('histogram', context, onToolCompleted);
+
+  // const histogram = getVercelAiTool('histogram', context, onToolCompleted);
   const echartsTools = getVercelTools(context, onToolCompleted);
 
   // use tool in vercel ai

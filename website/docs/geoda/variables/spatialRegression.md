@@ -1,5 +1,44 @@
 # Variable: spatialRegression
 
-> `const` **spatialRegression**: `ExtendedTool`\<`ZodObject`\<\{ `datasetName`: `ZodString`; `dependentVariable`: `ZodString`; `independentVariables`: `ZodArray`\<`ZodString`\>; `modelType`: `ZodEnum`\<\[`"classic"`, `"spatial-lag"`, `"spatial-error"`\]\>; `weightsId`: `ZodOptional`\<`ZodString`\>; \}, `UnknownKeysParam`, `ZodTypeAny`, \{ `datasetName`: `string`; `dependentVariable`: `string`; `independentVariables`: `string`[]; `modelType`: `"classic"` \| `"spatial-lag"` \| `"spatial-error"`; `weightsId`: `string`; \}, \{ `datasetName`: `string`; `dependentVariable`: `string`; `independentVariables`: `string`[]; `modelType`: `"classic"` \| `"spatial-lag"` \| `"spatial-error"`; `weightsId`: `string`; \}\>, \{ `error`: `string`; `result`: `string`; `success`: `boolean`; \}, `undefined` \| \{ `datasetName`: `string`; `report`: `null` \| `LinearRegressionResult` \| `SpatialLagResult` \| `SpatialErrorResult`; \}, [`SpatialRegressionFunctionContext`](../type-aliases/SpatialRegressionFunctionContext.md)\>
+> `const` **spatialRegression**: `ExtendedTool`\<[`SpatialRegressionFunctionArgs`](../type-aliases/SpatialRegressionFunctionArgs.md), [`SpatialRegressionLlmResult`](../type-aliases/SpatialRegressionLlmResult.md), [`SpatialRegressionAdditionalData`](../type-aliases/SpatialRegressionAdditionalData.md), [`SpatialRegressionFunctionContext`](../type-aliases/SpatialRegressionFunctionContext.md)\>
 
-Defined in: [packages/geoda/src/regression/tool.ts:13](https://github.com/GeoDaCenter/openassistant/blob/a9f2271d1019f6c25c10dd4b3bdb64fcf16999b2/packages/geoda/src/regression/tool.ts#L13)
+Defined in: [packages/geoda/src/regression/tool.ts:79](https://github.com/GeoDaCenter/openassistant/blob/36f516b8229288259590b2d9dab3b10cbfc3cbfd/packages/geoda/src/regression/tool.ts#L79)
+
+The spatial regression tool is used to perform regression analysis with spatial data.
+
+The tool supports three types of regression models:
+- Classic (OLS) regression
+- Spatial lag model (accounting for spatial dependence in the dependent variable)
+- Spatial error model (accounting for spatial dependence in the error term)
+
+When user prompts e.g. *can you run a spatial regression analysis on the housing data?*
+
+1. The LLM will execute the callback function of spatialRegressionFunctionDefinition, and perform the regression analysis using the data retrieved from `getValues` function.
+2. The result will include regression coefficients, significance tests, and model diagnostics.
+3. The LLM will respond with the analysis results and suggestions for model improvement.
+
+### For example
+```
+User: can you run a spatial regression analysis on the housing data?
+LLM: I've performed a spatial lag regression analysis on the housing data. The model shows significant spatial effects...
+```
+
+### Code example
+```typescript
+import { getVercelAiTool } from '@openassistant/geoda';
+import { generateText } from 'ai';
+
+const toolContext = {
+  getValues: (datasetName, variableName) => {
+    return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+  },
+};
+
+const regressionTool = getVercelAiTool('spatialRegression', toolContext, onToolCompleted);
+
+generateText({
+  model: openai('gpt-4o-mini', { apiKey: key }),
+  prompt: 'Can you run a spatial regression analysis of "revenue ~ population + income" on the data?',
+  tools: {spatialRegression: regressionTool},
+});
+```

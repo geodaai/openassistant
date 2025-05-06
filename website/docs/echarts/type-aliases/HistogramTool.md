@@ -2,6 +2,6 @@
 
 > **HistogramTool**: *typeof* [`histogram`](../variables/histogram.md)
 
-Defined in: [packages/echarts/src/histogram/tool.ts:53](https://github.com/GeoDaCenter/openassistant/blob/a9f2271d1019f6c25c10dd4b3bdb64fcf16999b2/packages/echarts/src/histogram/tool.ts#L53)
+Defined in: [histogram/tool.ts:86](https://github.com/GeoDaCenter/openassistant/blob/36f516b8229288259590b2d9dab3b10cbfc3cbfd/packages/echarts/src/histogram/tool.ts#L86)
 
 The type of the histogram tool.
