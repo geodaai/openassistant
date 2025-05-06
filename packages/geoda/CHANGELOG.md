@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.10](https://github.com/GeoDaCenter/openassistant/compare/@openassistant/geoda@0.0.5...@openassistant/geoda@0.3.10) (2025-05-06)
+
+### Bug Fixes
+
+* the spatial join should have same length of joinOperators and joinVariableNames ([c297cb9](https://github.com/GeoDaCenter/openassistant/commit/c297cb9488ec9d1a52e3e68e5a562e8962a2bc52))
+
+## 0.3.9 (2025-05-06)
+
+## 0.3.8 (2025-05-06)
+
+## 0.3.7 (2025-05-06)
+
+### Features
+
+* update playground ([#15](https://github.com/GeoDaCenter/openassistant/issues/15)) ([6ed4ca9](https://github.com/GeoDaCenter/openassistant/commit/6ed4ca97901626b84eb5667bdbab3d38cc33570a))
+
+## 0.0.6 (2025-01-21)
+
+## 0.0.5 (2025-01-09)
+
 ## [0.3.9](https://github.com/GeoDaCenter/openassistant/compare/@openassistant/geoda@0.0.5...@openassistant/geoda@0.3.9) (2025-05-06)
 
 ## 0.3.8 (2025-05-06)
