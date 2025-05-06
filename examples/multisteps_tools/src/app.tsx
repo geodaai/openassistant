@@ -1,6 +1,20 @@
-import { tool } from '@openassistant/core';
+import { tool } from '@openassistant/utils';
 import { AiAssistant } from '@openassistant/ui';
 import { z } from 'zod';
+
+type WeatherContext = {
+  getStation: (cityName: string) => Promise<string>;
+  getTemperature: (cityName: string) => Promise<number>;
+};
+
+function isWeatherContext(context: any): context is WeatherContext {
+  return (
+    typeof context === 'object' &&
+    context !== null &&
+    'getStation' in context &&
+    'getTemperature' in context
+  );
+}
 
 function WeatherStation({
   temperature,
@@ -27,13 +41,16 @@ function WeatherStation({
 
 export function App() {
   const tools = {
-    temperature: tool({
+    temperature: tool<z.ZodTypeAny, any, any, WeatherContext>({
       description: 'Get the temperature in a city from a weather station',
       parameters: z.object({ cityName: z.string(), reason: z.string() }),
       execute: async ({ cityName, reason }, options) => {
-        const getStation = options.context?.getStation;
+        if (!isWeatherContext(options?.context)) {
+          throw new Error('Options are required');
+        }
+        const getStation = options.context.getStation;
         const station = getStation ? await getStation(cityName) : null;
-        const getTemperature = options.context?.getTemperature;
+        const getTemperature = options.context.getTemperature;
         const temperature = getTemperature
           ? await getTemperature(cityName)
           : null;

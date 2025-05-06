@@ -111,7 +111,7 @@ export const think = tool({
 #### Usage
 
 ```ts
-import { tool } from '@openassistant/core';
+import { tool } from '@openassistant/utils';
 import { z } from 'zod';
 
 const weather =  tool({
