@@ -1,19 +1,17 @@
-# @openassistant/types
+# @openassistant/utils
 
-Type definitions for OpenAssistant tools.
+Utility functions for OpenAssistant tools.
 
 ## Installation
 
 ```bash
-npm install @openassistant/types
-# or
-yarn add @openassistant/types
+npm install @openassistant/utils
 ```
 
 ## Usage
 
 ```typescript
-import { tool, ExtendedTool } from '@openassistant/types';
+import { tool } from '@openassistant/utils';
 
 // Define your tool
 const myTool = tool({
@@ -23,6 +21,6 @@ const myTool = tool({
   }),
   execute: async (args) => {
     // your implementation
-  }
+  },
 });
-``` 
+```
