@@ -32,7 +32,7 @@ export type ExecuteQueryUSZipcodesResult = {
 };
 
 /**
- * Query US Zipcodes Tool
+ * Query US Zipcodes Tool using the zipcode centroids geojson data from the Github repository: https://github.com/GeoDaCenter/data-and-lab
  * 
  * This tool queries US zipcodes within a given map bounds. It returns a list of zipcodes
  * with their coordinates that fall within the specified bounding box.

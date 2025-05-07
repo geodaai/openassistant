@@ -6,6 +6,7 @@ import { lisa } from './lisa/tool';
 import { globalMoran } from './moran-scatterplot/tool';
 import { spatialRegression } from './regression/tool';
 import { spatialJoin } from './spatial_join/tool';
+import { spatialFilter } from './spatial_join/spatial-filter';
 import { spatialWeights } from './weights/tool';
 import { area } from './spatial_ops/area';
 import { buffer } from './spatial_ops/buffer';
@@ -21,6 +22,7 @@ export function registerTools() {
     globalMoran,
     spatialRegression,
     spatialJoin,
+    spatialFilter,
     spatialWeights,
     area,
     buffer,
@@ -43,7 +45,7 @@ export function getVercelAiTool(
   return getTool(tool, toolContext, onToolCompleted);
 }
 
-export function getVercelTools(
+export function getVercelAiTools(
   toolContext: SpatialToolContext,
   onToolCompleted: OnToolCompleted
 ) {

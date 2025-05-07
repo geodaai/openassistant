@@ -4,7 +4,7 @@ export * from './data-classify/tool';
 
 export * from './spatial_join/tool';
 export * from './spatial_join/component/spatial-count-component';
-
+export * from './spatial_join/spatial-filter';
 export * from './weights/tool';
 export * from './weights/component/weights-meta-table';
 

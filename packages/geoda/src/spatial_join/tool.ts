@@ -14,8 +14,8 @@ import { GetValues, GetGeometries } from '../types';
 import { cacheData, generateId, getGeoDaCachedData } from '../utils';
 
 export type SpatialJoinFunctionArgs = z.ZodObject<{
-  firstDatasetName: z.ZodString;
-  secondDatasetName: z.ZodString;
+  rightDatasetName: z.ZodString;
+  leftDatasetName: z.ZodString;
   joinVariableNames: z.ZodArray<z.ZodString>;
   joinOperators: z.ZodArray<
     z.ZodEnum<['sum', 'mean', 'min', 'max', 'median', 'count']>
@@ -25,19 +25,18 @@ export type SpatialJoinFunctionArgs = z.ZodObject<{
 export type SpatialJoinLlmResult = {
   success: boolean;
   result?: {
-    firstDatasetName: string;
-    secondDatasetName: string;
-    joinVariableNames?: string[];
-    joinOperators?: string[];
-    firstTenRows?: number[][];
+    firstTwoRows?: {
+      [x: string]: number[];
+    }[];
+    joinedDatasetId?: string;
     details: string;
   };
   error?: string;
 };
 
 export type SpatialJoinAdditionalData = {
-  firstDatasetName: string;
-  secondDatasetName: string;
+  rightDatasetName: string;
+  leftDatasetName: string;
   joinVariableNames?: string[];
   joinOperators?: string[];
   joinResult: number[][];
@@ -103,17 +102,16 @@ export const spatialJoin = tool<
   SpatialJoinAdditionalData,
   SpatialJoinFunctionContext
 >({
-  description: `Spatial join geometries from the first dataset with geometries from the second dataset.
-For example, if you want to get the number of people in each county,the first dataset should contains the number of people and the second dataset should contains the counties.
-joinOperators should have the same length as joinVariableNames.`,
+  description: `Spatial join geometries from the right dataset with geometries from the left dataset. For example:
+1. if you want to get the number of (or average value of) points in each polygon, the right dataset should contains the points and the left dataset should contains the polygons.
+2. if you want to check which point belongs to which polygon, the right dataset should contains the points and the left dataset should contains the polygons.
+Please Note:
+1. joinOperators can NOT be empty and should have the same length as joinVariableNames.
+2. IMPORTANT:joinVariables should comes from the right dataset.`,
   parameters: z.object({
-    firstDatasetName: z.string(),
-    secondDatasetName: z.string(),
-    joinVariableNames: z
-      .array(z.string())
-      .describe(
-        'The array of variable names from the first dataset to be joined.'
-      ),
+    rightDatasetName: z.string(),
+    leftDatasetName: z.string(),
+    joinVariableNames: z.array(z.string()),
     joinOperators: z.array(
       z.enum(['sum', 'mean', 'min', 'max', 'median', 'count'])
     ),
@@ -136,8 +134,8 @@ joinOperators should have the same length as joinVariableNames.`,
 export type SpatialJoinTool = typeof spatialJoin;
 
 type SpatialJoinArgs = {
-  firstDatasetName: string;
-  secondDatasetName: string;
+  rightDatasetName: string;
+  leftDatasetName: string;
   joinVariableNames: string[];
   joinOperators: string[];
 };
@@ -146,10 +144,10 @@ function isSpatialJoinArgs(args: unknown): args is SpatialJoinArgs {
   return (
     typeof args === 'object' &&
     args !== null &&
-    'firstDatasetName' in args &&
-    'secondDatasetName' in args &&
-    typeof args.firstDatasetName === 'string' &&
-    typeof args.secondDatasetName === 'string'
+    'rightDatasetName' in args &&
+    'leftDatasetName' in args &&
+    typeof args.rightDatasetName === 'string' &&
+    typeof args.leftDatasetName === 'string'
   );
 }
 
@@ -180,16 +178,16 @@ async function executeSpatialJoin(
   }
 
   const {
-    firstDatasetName,
-    secondDatasetName,
+    rightDatasetName,
+    leftDatasetName,
     joinVariableNames,
     joinOperators,
   } = args;
   const { getGeometries, getValues } = options.context;
 
   return runSpatialJoin({
-    firstDatasetName,
-    secondDatasetName,
+    rightDatasetName,
+    leftDatasetName,
     previousExecutionOutput: options.previousExecutionOutput,
     joinVariableNames,
     joinOperators,
@@ -199,15 +197,15 @@ async function executeSpatialJoin(
 }
 
 export async function runSpatialJoin({
-  firstDatasetName,
-  secondDatasetName,
+  rightDatasetName,
+  leftDatasetName,
   joinVariableNames,
   joinOperators,
   getGeometries,
   getValues,
 }: {
-  firstDatasetName: string;
-  secondDatasetName: string;
+  rightDatasetName: string;
+  leftDatasetName: string;
   previousExecutionOutput?: {
     data?: {
       geojson?: GeoJSON.FeatureCollection;
@@ -220,30 +218,30 @@ export async function runSpatialJoin({
 }) {
   try {
     // Get geometries from both datasets
-    let firstGeometries = await getGeometries(firstDatasetName);
-    let secondGeometries = await getGeometries(secondDatasetName);
+    let rightGeometries = await getGeometries(rightDatasetName);
+    let leftGeometries = await getGeometries(leftDatasetName);
 
-    if (!firstGeometries || firstGeometries.length === 0) {
-      const cacheData = await getGeoDaCachedData(firstDatasetName);
+    if (!rightGeometries || rightGeometries.length === 0) {
+      const cacheData = await getGeoDaCachedData(rightDatasetName);
       if (cacheData) {
-        firstGeometries = (cacheData as GeoJSON.FeatureCollection).features;
+        rightGeometries = (cacheData as GeoJSON.FeatureCollection).features;
       } else {
         throw new Error('First dataset geometries not found');
       }
     }
 
-    if (!secondGeometries || secondGeometries.length === 0) {
-      const cacheData = await getGeoDaCachedData(secondDatasetName);
+    if (!leftGeometries || leftGeometries.length === 0) {
+      const cacheData = await getGeoDaCachedData(leftDatasetName);
       if (cacheData) {
-        secondGeometries = (cacheData as GeoJSON.FeatureCollection).features;
+        leftGeometries = (cacheData as GeoJSON.FeatureCollection).features;
       } else {
         throw new Error('Second dataset geometries not found');
       }
     }
 
     const result = await spatialJoinFunc({
-      leftGeometries: secondGeometries,
-      rightGeometries: firstGeometries,
+      leftGeometries,
+      rightGeometries,
     });
 
     // get basic statistics of the result for LLM
@@ -254,20 +252,30 @@ export async function runSpatialJoin({
     };
 
     // get the values of the left dataset if joinVariableNames is provided
-    if (joinVariableNames && joinOperators) {
+    if (
+      joinVariableNames &&
+      joinOperators &&
+      joinVariableNames.length > 0 &&
+      joinOperators.length > 0
+    ) {
       await Promise.all(
         joinVariableNames.map(async (variableName, index) => {
           try {
             const operator = joinOperators[index];
-            const values = await getValues(firstDatasetName, variableName);
-            // apply join to values in each row
-            const joinedValues = result.map((row) =>
-              applyJoin(
-                operator,
-                row.map((index) => values[index])
-              )
-            );
-            joinValues[variableName] = joinedValues;
+            const values = await getValues(rightDatasetName, variableName);
+            try {
+              // apply join to values in each row
+              const joinedValues = result.map((row) =>
+                applyJoin(
+                  operator,
+                  row.map((index) => values[index])
+                )
+              );
+              joinValues[variableName] = joinedValues;
+            } catch {
+              // if the join operator is not supported, return an array with first value of the variable if exists
+              joinValues[variableName] = values.length > 0 ? [values[0]] : [];
+            }
           } catch (error) {
             throw new Error(
               `Error applying join operator to variable ${variableName}: ${error}`
@@ -279,12 +287,12 @@ export async function runSpatialJoin({
 
     // append joinValues to the left geometries
     const leftGeometriesWithJoinValues = appendJoinValuesToGeometries(
-      secondGeometries,
+      leftGeometries,
       joinValues
     );
 
     // cache the joined dataset
-    const joinedDatasetId = generateId();
+    const joinedDatasetId = `join_${generateId()}`;
     cacheData(joinedDatasetId, leftGeometriesWithJoinValues);
 
     // joinValues is a record of variable names and their values
@@ -298,18 +306,14 @@ export async function runSpatialJoin({
       llmResult: {
         success: true,
         result: {
-          firstDatasetName,
-          secondDatasetName,
-          joinVariableNames,
-          joinOperators,
           firstTwoRows,
           joinedDatasetId,
           details: `Spatial count function executed successfully and the joined dataset is saved in DatasetName: ${joinedDatasetId}. ${JSON.stringify(basicStatistics)}`,
         },
       },
       additionalData: {
-        firstDatasetName,
-        secondDatasetName,
+        rightDatasetName,
+        leftDatasetName,
         joinVariableNames,
         joinOperators,
         joinResult: result,
@@ -393,7 +397,8 @@ function appendJoinValuesToGeometries(
     case SpatialJoinGeometryType.ArcLayerData: {
       // return a csv style array of features with joinValues
       const featuresWithJoinValues = geometries.map((feature, index) => [
-        ...feature,
+        // feature is ArcLayerData: {source: [], target: [], index: number}
+        feature,
         ...variableNames.map((name) => joinValues[name][index]),
       ]);
       // append the variable names to the first row
@@ -403,12 +408,28 @@ function appendJoinValuesToGeometries(
     case SpatialJoinGeometryType.PointLayerData: {
       // return a csv style array of features with joinValues
       const featuresWithJoinValues = geometries.map((feature, index) => [
-        ...feature,
+        // feature is PointLayerData: {position: [], index: number}
+        feature,
         ...variableNames.map((name) => joinValues[name][index]),
       ]);
       // append the variable names to the first row
       featuresWithJoinValues.unshift(['geometry', ...variableNames]);
-      return featuresWithJoinValues;
+
+      // convert geometries to FeatureCollection
+      const featureCollection: GeoJSON.FeatureCollection = {
+        type: 'FeatureCollection',
+        features: geometries.map((feature, index) => ({
+          type: 'Feature' as const,
+          geometry: {
+            type: 'Point' as const,
+            coordinates: feature.position,
+          },
+          properties: Object.fromEntries(
+            variableNames.map((name) => [name, joinValues[name][index]])
+          ),
+        })),
+      };
+      return featureCollection;
     }
     default:
       throw new Error('Unsupported geometry type');

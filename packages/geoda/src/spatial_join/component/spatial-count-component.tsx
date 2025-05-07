@@ -124,7 +124,7 @@ export function SpatialJoinToolComponent(props: SpatialCountComponentProps) {
     setIsExpanded(flag);
   };
 
-  const height = Math.min(props.joinResult.length, 10) * 30 + 90;
+  const height = Math.min(props.joinResult.length, 10) * 30 + 120;
 
   return (
     <ExpandableContainer

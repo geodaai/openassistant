@@ -56,9 +56,6 @@ export function MessageContent({
             <ScreenshotImage customMessage={customMessage} />
           )}
 
-        {/* show error message if any */}
-        {hasFailed && <FailedMessage githubIssueLink={githubIssueLink} />}
-
         {/* show tool call messages */}
         {message?.parts?.map((part, i) => (
           <PartComponent
@@ -83,6 +80,9 @@ export function MessageContent({
         {customMessage && React.isValidElement(customMessage) && (
           <div className="flex flex-col gap-2">{customMessage}</div>
         )}
+
+        {/* show error message if any */}
+        {hasFailed && <FailedMessage githubIssueLink={githubIssueLink} />}
       </div>
 
       {/* show loading spinner */}

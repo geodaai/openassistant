@@ -2,6 +2,10 @@ import * as duckdb from '@duckdb/duckdb-wasm';
 
 const JSDELIVR_BUNDLES = duckdb.getJsDelivrBundles();
 
+/**
+ * @internal
+ * The duckdb instance if not provided by the user.
+ */
 export let db: duckdb.AsyncDuckDB | null = null;
 let initializationPromise: Promise<void> | null = null;
 

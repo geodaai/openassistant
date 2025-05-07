@@ -89,7 +89,7 @@ class ToolCallErrorBoundary extends React.Component<
     if (this.state.hasError) {
       return (
         <div className="text-sm text-danger">
-          Failed to render tool component. Please try again or contact support.
+          Failed to render tool component.
         </div>
       );
     }
@@ -154,7 +154,9 @@ export function ToolCallComponent({
     ? Object.entries(llmResultTable).map(([key, value]) => ({
         key,
         value:
-          typeof value === 'object' ? JSON.stringify(value) : String(value),
+          typeof value === 'object' 
+            ? JSON.stringify(value, (_, v) => typeof v === 'bigint' ? v.toString() : v) 
+            : String(value),
       }))
     : [];
 
@@ -195,7 +197,7 @@ export function ToolCallComponent({
                       <span>: </span>
                       <span>
                         {typeof value === 'object' && value !== null
-                          ? JSON.stringify(value)
+                          ? JSON.stringify(value, (_, v) => typeof v === 'bigint' ? v.toString() : v)
                           : String(value)}
                       </span>
                       {index < array.length - 1 && (

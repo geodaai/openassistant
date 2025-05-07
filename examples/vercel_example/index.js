@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { generateText } from 'ai';
 import { openai } from '@ai-sdk/openai';
-import { getVercelAiTool, getVercelTools } from '@openassistant/echarts';
+import { getVercelAiTools } from '@openassistant/echarts';
 
 // Load environment variables
 dotenv.config();
@@ -22,7 +22,7 @@ async function main() {
   };
 
   // const histogram = getVercelAiTool('histogram', context, onToolCompleted);
-  const echartsTools = getVercelTools(context, onToolCompleted);
+  const echartsTools = getVercelAiTools(context, onToolCompleted);
 
   // use tool in vercel ai
   const model = openai('gpt-4o', { apiKey: key });

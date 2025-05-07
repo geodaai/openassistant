@@ -41,23 +41,22 @@ export async function sendTextMessageHandler({
     },
   ];
 
-  // add incoming message to show typing indicator for chatbot
-  setMessages([
-    ...updatedMesssages,
-    {
-      message: '',
-      direction: 'incoming',
-      sender: 'assistant',
-      position: 'normal',
-      messageContent: {
-        reasoning: '',
-        toolCallMessages: [],
-        text: '',
-      },
+  let lastMessage: MessageModel = {
+    message: '',
+    direction: 'incoming',
+    sender: 'assistant',
+    position: 'normal',
+    messageContent: {
+      reasoning: '',
+      toolCallMessages: [],
+      text: '',
+      parts: [],
     },
-  ]);
+  };
 
-  
+  // add incoming message to show typing indicator for chatbot
+  setMessages([...updatedMesssages, lastMessage]);
+
   // send message to AI model
   try {
     // send message to AI model
@@ -70,17 +69,15 @@ export async function sendTextMessageHandler({
         message,
       }) => {
         // update the last message with the response
-        const newMessages: MessageModel[] = [
-          ...updatedMesssages,
-          {
-            message: deltaMessage,
-            direction: 'incoming',
-            sender: 'assistant',
-            position: 'normal',
-            payload: customMessage,
-            messageContent: message,
-          }
-        ];
+        lastMessage = {
+          message: deltaMessage,
+          direction: 'incoming',
+          sender: 'assistant',
+          position: 'normal',
+          payload: customMessage,
+          messageContent: message,
+        };
+        const newMessages: MessageModel[] = [...updatedMesssages, lastMessage];
         setMessages(newMessages);
         if (isCompleted) {
           // when the message is completed, set typing indicator to false
@@ -96,22 +93,14 @@ export async function sendTextMessageHandler({
       },
     });
   } catch (error) {
+    console.error(error);
     setTypingIndicator(false);
-    const errorMessage = 'Error occured while processing the request. ' + error;
-    const newMessages: MessageModel[] = [
-      ...updatedMesssages,
-      {
-        message: errorMessage,
-        direction: 'incoming',
-        sender: 'error',
-        position: 'normal',
-        messageContent: {
-          reasoning: '',
-          toolCallMessages: [],
-          text: errorMessage,
-        },
-      },
-    ];
+    // append errorMessage to the last message
+    lastMessage.messageContent?.parts?.push({
+      type: 'text',
+      text: 'Error occured while processing the request. ' + error,
+    });
+    const newMessages: MessageModel[] = [...updatedMesssages, lastMessage];
     setMessages(newMessages);
     if (onMessagesUpdated) {
       onMessagesUpdated(newMessages);
@@ -158,20 +147,18 @@ export async function sendImageMessageHandler({
     },
   ];
   // add incoming message to show typing indicator for chatbot
-  setMessages([
-    ...updatedMesssages,
-    {
-      message: '',
-      direction: 'incoming',
-      sender: 'assistant',
-      position: 'normal',
-      messageContent: {
-        reasoning: '',
-        toolCallMessages: [],
-        text: '',
-      },
+  let lastMessage: MessageModel = {
+    message: '',
+    direction: 'incoming',
+    sender: 'assistant',
+    position: 'normal',
+    messageContent: {
+      reasoning: '',
+      toolCallMessages: [],
+      text: '',
     },
-  ]);
+  };
+  setMessages([...updatedMesssages, lastMessage]);
 
   // send message to AI model
   try {
@@ -179,19 +166,22 @@ export async function sendImageMessageHandler({
     await sendImageMessage({
       message: newMessage,
       imageBase64String,
-      streamMessageCallback: ({ deltaMessage, customMessage, isCompleted, message }) => {
+      streamMessageCallback: ({
+        deltaMessage,
+        customMessage,
+        isCompleted,
+        message,
+      }) => {
         // update the last message with the response
-        const newMessages: MessageModel[] = [
-          ...updatedMesssages,
-          {
-            message: deltaMessage,
-            direction: 'incoming',
-            sender: 'assistant',
-            position: 'normal',
-            payload: customMessage,
-            messageContent: message,
-          },
-        ];
+        lastMessage = {
+          message: deltaMessage,
+          direction: 'incoming',
+          sender: 'assistant',
+          position: 'normal',
+          payload: customMessage,
+          messageContent: message,
+        };
+        const newMessages = [...updatedMesssages, lastMessage];
         setMessages(newMessages);
         if (isCompleted) {
           setTypingIndicator(false);
@@ -207,22 +197,14 @@ export async function sendImageMessageHandler({
       },
     });
   } catch (error) {
+    console.error(error);
     setTypingIndicator(false);
-    const errorMessage = 'Error occured while processing the request. ' + error;
-    const newMessages: MessageModel[] = [
-      ...updatedMesssages,
-      {
-        message: errorMessage,
-        direction: 'incoming',
-        sender: 'error',
-        position: 'normal',
-        messageContent: {
-          reasoning: '',
-          toolCallMessages: [],
-          text: errorMessage,
-        },
-      },
-    ];
+    // append errorMessage to the last message
+    lastMessage.messageContent?.parts?.push({
+      type: 'text',
+      text: 'Error occured while processing the request. ' + error,
+    });
+    const newMessages: MessageModel[] = [...updatedMesssages, lastMessage];
     setMessages(newMessages);
     if (onMessagesUpdated) {
       onMessagesUpdated(newMessages);

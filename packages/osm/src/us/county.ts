@@ -24,8 +24,12 @@ export type ExecuteGetUsCountyGeojsonResult = {
   additionalData?: GetUsCountyGeojsonAdditionalData;
 };
 
+// Add delay function to prevent rate limiting
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 /**
- * Get US County GeoJSON Tool
+ * Get US County GeoJSON Tool from the Github repository: https://github.com/hyperknot/country-levels-export
+ * Note: to avoid overloading the Github API, we only fetch the GeoJSON data every 1 second.
  *
  * This tool retrieves the GeoJSON data for all counties in a US state by its state code.
  * It returns the counties' boundary geometries and properties.
@@ -73,6 +77,9 @@ export const getUsCountyGeojson = tool<
       for (const fips of fipsCodes) {
         let geojson = getCachedData(fips);
         if (!geojson) {
+          // Add a delay between requests (1000ms) to avoid rate limiting
+          await delay(1000);
+
           const stateCode = fips.substring(0, 2);
           const response = await fetch(
             `https://raw.githubusercontent.com/hyperknot/country-levels-export/master/geojson/medium/fips/${stateCode}/${fips}.geojson`
@@ -80,9 +87,10 @@ export const getUsCountyGeojson = tool<
 
           // the above url return Feature directly, not FeatureCollection
           geojson = await response.json();
-          if (geojson) {
-            cacheData(fips, geojson);
-          }
+        }
+        if (geojson) {
+          cacheData(fips, geojson);
+          features.push(geojson as unknown as GeoJSON.Feature);
         }
       }
 
@@ -91,7 +99,7 @@ export const getUsCountyGeojson = tool<
         features,
       };
 
-      const datasetId = generateId();
+      const datasetId = `county_${generateId()}`;
 
       cacheData(datasetId, finalGeojson);
 

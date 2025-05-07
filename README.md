@@ -71,7 +71,7 @@ npm install @openassistant/echarts
 Add all echarts tools (histogram, box plot, etc.) to your application:
 
 ```ts
-import { getVercelTools } from '@openassistant/echarts';
+import { getVercelAiTools } from '@openassistant/echarts';
 import { generateText } from 'ai';
 
 const context = {
@@ -87,7 +87,7 @@ const onToolCompleted = (toolCallId, additionalData) => {
   console.log('toolCallId: additionalData', toolCallId, additionalData);
 };
 
-const echartsTools = getVercelTools(context, onToolCompleted);
+const echartsTools = getVercelAiTools(context, onToolCompleted);
 
 // use tool with vercel ai sdk
 const result = await generateText({

@@ -9,7 +9,7 @@ import {
   LocalMoranResult,
 } from '@geoda/lisa';
 import { GetValues } from '../types';
-import { getWeights } from '../utils';
+import { generateId, getWeights } from '../utils';
 
 export type LisaFunctionArgs = z.ZodObject<{
   method: z.ZodEnum<
@@ -50,6 +50,7 @@ export type LisaLlmResult = {
 export type LisaAdditionalData = LocalMoranResult & {
   datasetName: string;
   significanceThreshold: number;
+  lisaDatasetName: string;
 };
 
 export type LisaFunctionContext = {
@@ -273,6 +274,9 @@ async function executeLisa(
       };
     });
 
+    // create a lisa dataset name
+    const lisaDatasetName = `${datasetName}_${method}_${variableName}_${generateId()}`;
+
     const result = {
       lisaMethod: method,
       datasetId: datasetName,
@@ -288,9 +292,14 @@ async function executeLisa(
         success: true,
         ...(mapBounds ? { mapBounds } : {}),
         result,
-        instructions: `Important: When performing LISA analysis, visualization is handled automatically. Do not ask about visualization - the map will be created automatically after the analysis.`,
+        instructions: `Important: When performing LISA analysis, visualization is handled manually. Do not ask about visualization - the map should be created manually after the analysis.`,
       },
-      additionalData: { ...lm, datasetName, significanceThreshold },
+      additionalData: {
+        ...lm,
+        datasetName,
+        significanceThreshold,
+        lisaDatasetName,
+      },
     };
   } catch (error) {
     return {

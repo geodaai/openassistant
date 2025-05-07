@@ -20,7 +20,7 @@ export function getVercelAiTool(
   return getTool(tool, toolContext, onToolCompleted);
 }
 
-export function getVercelTools(
+export function getVercelAiTools(
   toolContext: LocalQueryContext,
   onToolCompleted: OnToolCompleted
 ) {

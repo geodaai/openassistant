@@ -30,8 +30,9 @@ export type ExecuteGetUsZipcodeGeojsonResult = {
 };
 
 /**
- * Get US Zipcode GeoJSON Tool
- *
+ * Get US Zipcode GeoJSON Tool from the Github repository: https://github.com/greencoder/us-zipcode-to-geojson
+ * Note: to avoid overloading the Github API, we only fetch the GeoJSON data every 1 second.
+ *  
  * This tool retrieves the GeoJSON data for all zipcodes in a US state by its state code.
  * It returns the zipcodes' boundary geometries and properties.
  *
@@ -81,27 +82,16 @@ export const getUsZipcodeGeojson = tool<
             `https://raw.githubusercontent.com/greencoder/us-zipcode-to-geojson/refs/heads/master/data/${stateCode}/${zipcode}.geojson`
           );
 
-          // Check for rate limiting
-          if (response.status === 429) {
-            // If rate limited, wait longer and retry
-            await delay(2000);
-            const retryResponse = await fetch(
-              `https://raw.githubusercontent.com/greencoder/us-zipcode-to-geojson/refs/heads/master/data/${stateCode}/${zipcode}.geojson`
-            );
-            if (retryResponse.status === 429) {
-              throw new Error('Rate limit exceeded after retry');
-            }
-            geojson = await retryResponse.json();
-          } else {
-            geojson = await response.json();
-          }
-
+          // the above url return FeatureCollection
+          geojson = await response.json();
           if (geojson && 'features' in geojson) {
-            // remove the first feature (centroid) from the geojson
+            // remove the first feature (which is the centroid) from the geojson
             geojson.features.shift();
-            cacheData(zipcode, geojson);
-            features.push(...geojson.features);
           }
+        }
+        if (geojson && 'features' in geojson) {
+          cacheData(zipcode, geojson);
+          features.push(...geojson.features);
         }
       }
 
@@ -110,7 +100,7 @@ export const getUsZipcodeGeojson = tool<
         features,
       };
 
-      const datasetId = generateId();
+      const datasetId = `zipcode_${generateId()}`;
 
       cacheData(datasetId, finalGeojson);
 
