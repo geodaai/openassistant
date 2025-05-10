@@ -69,15 +69,23 @@ export async function createAssistant(props: UseAssistantProps) {
         ...rest,
         execute: async (args, options) => {
           const { toolCallId } = options;
-          const result = await execute(args, { ...options, context });
+          try {
+            const result = await execute(args, { ...options, context });
 
-          const { additionalData, llmResult } = result;
+            const { additionalData, llmResult } = result;
 
-          if (additionalData && toolCallId) {
-            AssistantModel.addToolResult(toolCallId, additionalData);
+            if (additionalData && toolCallId) {
+              AssistantModel.addToolResult(toolCallId, additionalData);
+            }
+
+            return llmResult;
+          } catch (error) {
+            console.error(error);
+            return {
+              success: false,
+              error: `Execute tool ${functionName} failed: ${error}`,
+            }
           }
-
-          return llmResult;
         },
       };
 

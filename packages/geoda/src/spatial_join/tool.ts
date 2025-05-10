@@ -102,12 +102,13 @@ export const spatialJoin = tool<
   SpatialJoinAdditionalData,
   SpatialJoinFunctionContext
 >({
-  description: `Spatial join geometries from the right dataset with geometries from the left dataset. For example:
-1. if you want to get the number of (or average value of) points in each polygon, the right dataset should contains the points and the left dataset should contains the polygons.
-2. if you want to check which point belongs to which polygon, the right dataset should contains the points and the left dataset should contains the polygons.
+  description: `Spatial join geometries two geometric datasets. For example:
+1. to get the number of points in polygons, "right dataset = points" and "left dataset = polygons"
+2. to check which point belongs to which polygon, "right dataset = polygons" and "left dataset = points"
 Please Note:
-1. joinOperators can NOT be empty and should have the same length as joinVariableNames.
-2. IMPORTANT:joinVariables should comes from the right dataset.`,
+1. left dataset and right dataset should be different.
+2. joinOperators can NOT be empty and should have the same length as joinVariableNames.
+3. IMPORTANT: joinVariables should comes from the right dataset.`,
   parameters: z.object({
     rightDatasetName: z.string(),
     leftDatasetName: z.string(),

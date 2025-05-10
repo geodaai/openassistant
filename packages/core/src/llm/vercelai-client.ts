@@ -14,12 +14,7 @@ import {
   StepResult,
   TextPart,
 } from 'ai';
-import {
-  Message,
-  ToolInvocation,
-  ToolInvocationUIPart,
-  extractMaxToolInvocationStep,
-} from '@ai-sdk/ui-utils';
+import { ToolInvocation, ToolInvocationUIPart } from '@ai-sdk/ui-utils';
 import { shouldTriggerNextRequest, VercelAi } from './vercelai';
 import { tiktokenCounter } from '../utils/token-counter';
 
@@ -316,17 +311,6 @@ export abstract class VercelAiClient extends VercelAi {
     // total max steps
     const maxSteps = VercelAiClient.maxSteps || 20;
     const messageCount = localMessages.length;
-
-    const lastMessage = localMessages[localMessages.length - 1];
-    const toolInvocations = (lastMessage as Message).parts
-      ?.filter((part) => part.type === 'tool-invocation')
-      .map((part) => (part as ToolInvocationUIPart).toolInvocation);
-
-    // current max step
-    const maxStep = toolInvocations
-      ? extractMaxToolInvocationStep(toolInvocations)
-      : undefined;
-
     const tools = VercelAiClient.tools;
 
     const { fullStream } = streamText({
@@ -350,9 +334,7 @@ export abstract class VercelAiClient extends VercelAi {
     });
 
     for await (const chunk of fullStream) {
-      if (chunk.type === 'step-start') {
-        console.log('step-start', chunk);
-      } else if (chunk.type === 'text-delta') {
+      if (chunk.type === 'text-delta') {
         messageContent = await this.handleTextStreaming(
           chunk.textDelta,
           messageContent,
@@ -361,6 +343,7 @@ export abstract class VercelAiClient extends VercelAi {
       } else if (chunk.type === 'tool-call') {
         // reset message content if tool call is started
         messageContent = '';
+        this.toolSteps++;
         await this.handleToolCallStreaming(
           chunk.toolCallId,
           chunk.toolName,
@@ -392,8 +375,14 @@ export abstract class VercelAiClient extends VercelAi {
     // check after LLM response is finished
     // auto-submit when all tool calls in the last assistant message have results:
     if (
-      shouldTriggerNextRequest(localMessages, messageCount, maxSteps, maxStep)
+      shouldTriggerNextRequest(
+        localMessages,
+        messageCount,
+        maxSteps,
+        this.toolSteps
+      )
     ) {
+      console.log('trigger next request');
       await this.triggerRequest({
         streamMessageCallback,
         onStepFinish,

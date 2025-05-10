@@ -38,15 +38,22 @@ export default function App() {
   };
 
   const getGeometries: GetGeometries = async (datasetName: string) => {
-    // get points in [longitude, latitude] array format from dataset
-    const points: PointLayerData[] = SAMPLE_DATASETS[datasetName].map(
-      (item, index) => ({
-        position: [item.longitude, item.latitude],
-        index,
-        neighbors: [],
-      })
-    );
-    return points;
+    if (datasetName === 'myVenues') {
+      // get points in [longitude, latitude] array format from dataset
+      const points: PointLayerData[] = SAMPLE_DATASETS[datasetName].map(
+        (item, index) => ({
+          position: [item.longitude, item.latitude],
+          index,
+          neighbors: [],
+        })
+      );
+      return points;
+    }
+    const geoms = getCachedData(datasetName);
+    if (geoms && 'features' in geoms && geoms.features.length > 0) {
+      return geoms.features;
+    }
+    throw new Error(`Dataset ${datasetName} not found`);
   };
 
   // Configure the dataClassify tool

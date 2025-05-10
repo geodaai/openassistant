@@ -1,6 +1,5 @@
 import { AbstractAssistant } from './assistant';
 import {
-  AIMessage,
   AudioToTextProps,
   ProcessImageMessageProps,
   ProcessMessageProps,
@@ -12,6 +11,7 @@ import {
 } from '../types';
 import {
   CoreMessage,
+  CoreToolMessage,
   CoreUserMessage,
   StepResult,
   ToolCall,
@@ -22,7 +22,6 @@ import {
 import {
   Message,
   ToolInvocation,
-  ToolInvocationUIPart,
   UIMessage,
   callChatApi,
   generateId,
@@ -42,37 +41,13 @@ Check if the message is an assistant message with completed tool calls.
 The message must have at least one tool invocation and all tool invocations
 must have a result.
  */
-export function isAssistantMessageWithCompletedToolCalls(message: Message) {
-  // return (
-  //   message.role === 'assistant' &&
-  //   message.toolInvocations &&
-  //   message.toolInvocations.length > 0 &&
-  //   message.toolInvocations.every(
-  //     (toolInvocation) => 'result' in toolInvocation
-  //   )
-  // );
-  if (message.role !== 'assistant') {
-    return false;
+export function isAssistantMessageWithCompletedToolCalls(message: CoreMessage) {
+  // check message is a CoreToolMessage
+  if (message.role === 'tool') {
+    const toolMessage = message as CoreToolMessage;
+    return toolMessage.content.length > 0;
   }
-
-  if (!message.parts || message.parts.length === 0) {
-    return false;
-  }
-
-  const lastStepStartIndex = message.parts.reduce((lastIndex, part, index) => {
-    return part.type === 'step-start' ? index : lastIndex;
-  }, -1);
-
-  const lastStepToolInvocations = message.parts
-    .slice(lastStepStartIndex + 1)
-    .filter((part) => part.type === 'tool-invocation');
-
-  return (
-    lastStepToolInvocations.length > 0 &&
-    lastStepToolInvocations.every(
-      (part) => 'result' in (part as ToolInvocationUIPart).toolInvocation
-    )
-  );
+  return false;
 }
 
 /**
@@ -80,28 +55,22 @@ export function isAssistantMessageWithCompletedToolCalls(message: Message) {
  * @param messages Current message array
  * @param messageCount Previous message count before last request
  * @param maxSteps Maximum number of allowed steps
- * @param maxStep Current maximum tool invocation step
+ * @param currentStep Current maximum tool invocation step
  * @returns boolean indicating if another request should be triggered
  */
 export function shouldTriggerNextRequest(
-  messages: AIMessage[],
+  messages: CoreMessage[],
   messageCount: number,
   maxSteps: number,
-  maxStep: number | undefined
+  currentStep: number
 ): boolean {
-  const lastMessage = messages[messages.length - 1] as Message;
-
-  // get toolInvocations from last message
-  const toolInvocations = lastMessage.parts
-    ?.filter((part) => part.type === 'tool-invocation')
-    .map((part) => (part as ToolInvocationUIPart).toolInvocation);
+  const lastMessage = messages[messages.length - 1];
 
   return Boolean(
     // ensure there is a last message:
     Boolean(lastMessage) &&
       // ensure we actually have new messages (to prevent infinite loops in case of errors):
-      (messages.length > messageCount ||
-        extractMaxToolInvocationStep(toolInvocations) !== maxStep) &&
+      messages.length > messageCount &&
       // check if the feature is enabled:
       maxSteps > 1 &&
       // check that next step is possible:
@@ -110,7 +79,7 @@ export function shouldTriggerNextRequest(
       // note: analysis text + tool calls + answer text
       // Boolean(lastMessage.content) && // empty string or undefined
       // limit the number of automatic steps:
-      (extractMaxToolInvocationStep(toolInvocations) ?? 0) < maxSteps
+      currentStep < maxSteps
   );
 }
 
@@ -320,7 +289,7 @@ export class VercelAi extends AbstractAssistant {
       this.messages.push(newMessage);
     }
 
-    // reset tool steps
+    // reset tool steps, which represents how many steps have been made for this message request
     this.toolSteps = 0;
 
     // reset stream message
@@ -368,14 +337,6 @@ export class VercelAi extends AbstractAssistant {
     const messageCount = this.messages.length;
 
     const lastMessage = this.messages[this.messages.length - 1];
-    const toolInvocations = (lastMessage as Message).parts
-      ?.filter((part) => part.type === 'tool-invocation')
-      .map((part) => (part as ToolInvocationUIPart).toolInvocation);
-
-    const maxStep =
-      'toolInvocations' in lastMessage
-        ? extractMaxToolInvocationStep(toolInvocations)
-        : undefined;
 
     // call the chat api with new message
     await callChatApi({
@@ -434,7 +395,12 @@ export class VercelAi extends AbstractAssistant {
     });
 
     if (
-      shouldTriggerNextRequest(this.messages, messageCount, maxSteps, maxStep)
+      shouldTriggerNextRequest(
+        this.messages,
+        messageCount,
+        maxSteps,
+        this.toolSteps
+      )
     ) {
       await this.triggerRequest({ streamMessageCallback });
     }

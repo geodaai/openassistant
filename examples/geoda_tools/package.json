@@ -10,6 +10,7 @@
   "author": "Xun Li <lixun910@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "@openassistant/core": "workspace:*",
     "@openassistant/geoda": "workspace:*",
     "@openassistant/keplergl": "workspace:*",
     "@openassistant/osm": "workspace:*",

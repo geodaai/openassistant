@@ -18587,6 +18587,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "geoda_tools@workspace:examples/geoda_tools"
   dependencies:
+    "@openassistant/core": "workspace:*"
     "@openassistant/geoda": "workspace:*"
     "@openassistant/keplergl": "workspace:*"
     "@openassistant/osm": "workspace:*"
