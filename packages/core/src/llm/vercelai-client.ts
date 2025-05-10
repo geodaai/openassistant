@@ -359,6 +359,8 @@ export abstract class VercelAiClient extends VercelAi {
           streamMessageCallback
         );
       } else if (chunk.type === 'tool-call') {
+        // reset message content if tool call is started
+        messageContent = '';
         await this.handleToolCallStreaming(
           chunk.toolCallId,
           chunk.toolName,

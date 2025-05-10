@@ -1,6 +1,6 @@
 import { GetAssistantModelByProvider } from '../lib/model-utils';
 import { UseAssistantProps } from '../hooks/use-assistant';
-import { Tool } from 'ai';
+import { Tool, convertToCoreMessages } from 'ai';
 
 /**
  * Creates an AI assistant instance with the specified configuration
@@ -98,7 +98,7 @@ export async function createAssistant(props: UseAssistantProps) {
     props.historyMessages.length > 0 &&
     assistant.getMessages().length === 0
   ) {
-    assistant.setMessages(props.historyMessages);
+    assistant.setMessages(convertToCoreMessages(props.historyMessages));
   }
 
   // set the abort controller
