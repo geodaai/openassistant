@@ -29,65 +29,61 @@ export async function sendTextMessageHandler({
   const updatedMesssages: MessageModel[] = [
     ...messages,
     {
-      message: newMessage,
       direction: 'outgoing',
       sender: 'user',
       position: 'normal',
       messageContent: {
-        reasoning: '',
-        toolCallMessages: [],
-        text: newMessage,
+        parts: [
+          {
+            type: 'text',
+            text: newMessage,
+          },
+        ],
       },
     },
   ];
 
+  // add empty incoming message
   let lastMessage: MessageModel = {
-    message: '',
     direction: 'incoming',
     sender: 'assistant',
     position: 'normal',
-    messageContent: {
-      reasoning: '',
-      toolCallMessages: [],
-      text: '',
-      parts: [],
-    },
+    messageContent: { parts: [] },
   };
 
   // add incoming message to show typing indicator for chatbot
   setMessages([...updatedMesssages, lastMessage]);
 
-  // send message to AI model
   try {
     // send message to AI model
     await sendTextMessage({
       message: newMessage,
-      streamMessageCallback: ({
-        deltaMessage,
-        customMessage,
-        isCompleted,
-        message,
-      }) => {
+      streamMessageCallback: ({ customMessage, isCompleted, message }) => {
         // update the last message with the response
         lastMessage = {
-          message: deltaMessage,
-          direction: 'incoming',
-          sender: 'assistant',
-          position: 'normal',
+          ...lastMessage,
           payload: customMessage,
           messageContent: message,
         };
         const newMessages: MessageModel[] = [...updatedMesssages, lastMessage];
         setMessages(newMessages);
+
+        // when the message is completed, set typing indicator to false
         if (isCompleted) {
-          // when the message is completed, set typing indicator to false
           setTypingIndicator(false);
+          // call the onMessagesUpdated callback if it is provided
           if (onMessagesUpdated) {
             onMessagesUpdated(newMessages);
           }
           // check if the message is empty
-          if (newMessages[newMessages.length - 1]?.message?.length === 0) {
-            newMessages[newMessages.length - 1].message = '...';
+          const lastMessage = newMessages[newMessages.length - 1];
+          if (lastMessage?.messageContent?.parts?.length === 0) {
+            lastMessage.messageContent.parts = [
+              {
+                type: 'text',
+                text: 'Sorry, AI has not provided any response. Please try again.',
+              },
+            ];
           }
         }
       },
@@ -134,29 +130,26 @@ export async function sendImageMessageHandler({
   const updatedMesssages: MessageModel[] = [
     ...messages,
     {
-      message: newMessage,
       direction: 'outgoing',
       sender: 'user',
       position: 'normal',
       payload: imageBase64String,
       messageContent: {
-        reasoning: '',
-        toolCallMessages: [],
-        text: newMessage,
+        parts: [
+          {
+            type: 'text',
+            text: newMessage,
+          },
+        ],
       },
     },
   ];
   // add incoming message to show typing indicator for chatbot
   let lastMessage: MessageModel = {
-    message: '',
     direction: 'incoming',
     sender: 'assistant',
     position: 'normal',
-    messageContent: {
-      reasoning: '',
-      toolCallMessages: [],
-      text: '',
-    },
+    messageContent: { parts: [] },
   };
   setMessages([...updatedMesssages, lastMessage]);
 
@@ -166,18 +159,10 @@ export async function sendImageMessageHandler({
     await sendImageMessage({
       message: newMessage,
       imageBase64String,
-      streamMessageCallback: ({
-        deltaMessage,
-        customMessage,
-        isCompleted,
-        message,
-      }) => {
+      streamMessageCallback: ({ customMessage, isCompleted, message }) => {
         // update the last message with the response
         lastMessage = {
-          message: deltaMessage,
-          direction: 'incoming',
-          sender: 'assistant',
-          position: 'normal',
+          ...lastMessage,
           payload: customMessage,
           messageContent: message,
         };
@@ -189,9 +174,15 @@ export async function sendImageMessageHandler({
             onMessagesUpdated(newMessages);
           }
           // check if the message is empty
-          if (newMessages[newMessages.length - 1]?.message?.length === 0) {
-            newMessages[newMessages.length - 1].message =
-              'Sorry, AI has not provided any response. Please check if image prompt is supported by the selected AI model.';
+          // check if the message is empty
+          const lastMessage = newMessages[newMessages.length - 1];
+          if (lastMessage?.messageContent?.parts?.length === 0) {
+            lastMessage.messageContent.parts = [
+              {
+                type: 'text',
+                text: 'Sorry, AI has not provided any response. Please check if image prompt is supported by the selected AI model.',
+              },
+            ];
           }
         }
       },

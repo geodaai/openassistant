@@ -6,6 +6,7 @@ export type Conversation = {
   prompt: string;
   response: StreamMessage;
 };
+
 export const ConversationSchema = z.object({
   prompt: z.string(),
   response: StreamMessageSchema,
@@ -54,30 +55,14 @@ export function rebuildMessages(conversations: Conversation[]): Message[] {
     });
 
     // Handle assistant messages with tool calls
-    if (msg.response?.toolCallMessages?.length) {
-      // Add tool invocations message
+    for (const part of msg.response?.parts || []) {
       result.push({
         id: generateId(),
         role: 'assistant',
         content: '',
-        toolInvocations: msg.response.toolCallMessages.map((tool, index) => ({
-          toolCallId: tool.toolCallId,
-          result: tool.llmResult,
-          state: 'result',
-          toolName: tool.toolName,
-          args: tool.args,
-          step: index + 1,
-        })),
+        parts: [part],
       });
     }
-
-    // Add final response message
-    result.push({
-      id: generateId(),
-      role: 'assistant',
-      content: msg.response.text || '',
-      toolInvocations: [],
-    });
   }
 
   return result;

@@ -7,11 +7,9 @@ import {
   ToolSet,
 } from 'ai';
 import { Message } from '@ai-sdk/ui-utils';
-import { convertOpenAIToolsToVercelTools } from './tool-utils';
-import { proceedToolCall } from '../utils/toolcall';
-import { CustomFunctionOutputProps, CustomFunctions } from '../types';
 import { tiktokenCounterPerMessage } from '../utils/token-counter';
 import { trimMessages } from '../utils/trim-messages';
+import { executeToolCall } from 'src/utils/toolcall';
 
 /**
  * Chat handler class to manage chat requests and responses
@@ -20,7 +18,6 @@ export class ChatHandler {
   private model: LanguageModel;
   // tools registered at server side
   private tools?: ToolSet;
-  private toolFunctions: CustomFunctions = {};
   // tools registered at client side
   private localTools?: ToolSet;
   private instructions?: string;
@@ -61,7 +58,7 @@ export class ChatHandler {
 
     // update tools and instructions if provided (first time)
     if (tools) {
-      this.localTools = convertOpenAIToolsToVercelTools(tools);
+      this.localTools = tools;
     }
 
     // combine server side and client side tools
@@ -99,19 +96,8 @@ export class ChatHandler {
         const responseMsg = response.messages[response.messages.length - 1];
         const toolInvocations: ToolInvocation[] = [];
 
-        // handle tool calls
-        const previousOutput: CustomFunctionOutputProps<unknown, unknown>[] =
-          [];
-
         for (const toolCall of toolCalls) {
-          const toolInvocation = await this.handleToolCall({
-            toolCall,
-            previousOutput,
-          });
-
-          if (toolInvocation && 'result' in toolInvocation) {
-            previousOutput.push(toolInvocation.result);
-          }
+          const toolInvocation = await this.handleToolCall(toolCall);
 
           if (toolInvocation) {
             toolInvocations.push(toolInvocation);
@@ -138,23 +124,15 @@ export class ChatHandler {
     this.messageTokenCount.push(await tiktokenCounterPerMessage(message));
   }
 
-  async handleToolCall({
-    toolCall,
-    previousOutput,
-  }: {
-    toolCall: ToolCall<string, unknown>;
-    previousOutput?: CustomFunctionOutputProps<unknown, unknown>[];
-  }): Promise<ToolInvocation | null> {
+  async handleToolCall(
+    toolCall: ToolCall<string, unknown>
+  ): Promise<ToolInvocation | null> {
     // handle server side tool call
     // check if tool call is registered at server side
     const functionName = toolCall.toolName;
 
     if (this.tools?.[functionName]) {
-      const output = await proceedToolCall({
-        toolCall,
-        customFunctions: this.toolFunctions,
-        previousOutput,
-      });
+      const output = await executeToolCall(toolCall, this.tools);
 
       return {
         toolCallId: toolCall.toolCallId,

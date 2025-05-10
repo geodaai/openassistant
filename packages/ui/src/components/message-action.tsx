@@ -1,6 +1,6 @@
 import { Icon } from '@iconify/react';
 import { Button, Tooltip } from '@nextui-org/react';
-import { StreamMessage } from '@openassistant/core';
+import { StreamMessage, TextUIPart } from '@openassistant/core';
 
 export const MessageActions = ({
   isMessageDraggable,
@@ -24,14 +24,19 @@ export const MessageActions = ({
     index: number,
     message?: StreamMessage
   ) => {
-    // when message is string
-    if (message?.text) {
+    if (message?.parts && message.parts.length > 0) {
+      // find text parts
+      const textParts = message.parts.filter((part) => part.type === 'text');
+      // compose text from all text parts
+      const text = textParts
+        .map((part) => (part as TextUIPart).text)
+        .join('\n');
       e.dataTransfer.setData(
         'text/plain',
         JSON.stringify({
           id: `message-${index}`,
           type: 'text',
-          data: message.text,
+          data: text,
         })
       );
     }

@@ -4,6 +4,7 @@ import {
   useAssistant,
   UseAssistantProps,
 } from '@openassistant/core';
+import { generateId } from '@openassistant/utils';
 import { Message } from '@ai-sdk/ui-utils';
 import MessageCard from './message-card';
 import PromptInputWithBottomActions from './prompt-input-with-bottom-actions';
@@ -12,7 +13,6 @@ import {
   sendImageMessageHandler,
   sendTextMessageHandler,
 } from './assistant-utils';
-
 /**
  * Type of AiAssistantProps.
  */
@@ -68,15 +68,17 @@ export type AiAssistantProps = UseAssistantProps & {
  * @returns The welcome message.
  */
 const createWelcomeMessage = (welcomeMessage: string): MessageModel => ({
-  message: welcomeMessage,
   sentTime: 'just now',
   sender: 'assistant',
   direction: 'incoming',
   position: 'first',
   messageContent: {
-    reasoning: '',
-    toolCallMessages: [],
-    text: welcomeMessage,
+    parts: [
+      {
+        type: 'text',
+        text: welcomeMessage,
+      },
+    ],
   },
 });
 
@@ -87,44 +89,26 @@ function rebuildMessages(historyMessages: MessageModel[]): Message[] {
     if (msg.direction === 'outgoing') {
       // Handle user messages
       result.push({
-        id: Math.random().toString(36).substring(2), // Generate random ID
+        id: generateId(),
         role: 'user',
-        content: msg.message || '',
-        parts: [
-          {
-            type: 'text',
-            text: msg.message || '',
-          },
-        ],
+        content: '',
+        parts: msg.messageContent?.parts || [],
       });
     } else if (msg.direction === 'incoming') {
       // Handle assistant messages with tool calls
-      if (msg.messageContent?.toolCallMessages?.length) {
+      if (msg.messageContent?.parts?.length) {
         // Add tool invocations message
         result.push({
-          id: `msg-${Math.random().toString(36).substring(2)}`,
+          id: generateId(),
           role: 'assistant',
           content: '',
-          toolInvocations: msg.messageContent.toolCallMessages.map(
-            (tool, index) => ({
-              toolCallId: tool.toolCallId,
-              result: tool.llmResult,
-              state: 'result',
-              toolName: tool.toolName,
-              args: tool.args,
-              step: index + 1,
-            })
-          ),
+          // return parts without property "additionalData"
+          parts: msg.messageContent.parts.map((part) => ({
+            ...part,
+            additionalData: undefined,
+          })),
         });
       }
-
-      // Add final response message
-      result.push({
-        id: `msg-${Math.random().toString(36).substring(2)}`,
-        role: 'assistant',
-        content: msg.messageContent?.text || '',
-        toolInvocations: [],
-      });
     }
   }
 
@@ -168,7 +152,6 @@ export function AiAssistant(props: AiAssistantProps) {
     model: props.model,
     apiKey: props.apiKey,
     instructions: props.instructions,
-    functions: props.functions,
     tools: props.tools,
     name: props.name,
     description: props.description,
@@ -239,7 +222,7 @@ export function AiAssistant(props: AiAssistantProps) {
 
   const reportQuestion = (messageIndex: number) => {
     // report the message
-    const question = messages[messageIndex].message;
+    const question = `${messages[messageIndex]}`;
     if (props.onFeedback) {
       props.onFeedback(question || '');
     }

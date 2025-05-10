@@ -40,7 +40,6 @@ export function App() {
               apiKey=""
               welcomeMessage="Hi, I am your assistant. How can I help you today?"
               instructions=""
-              functions={[]}
               enableVoice={true}
               enableScreenCapture={true}
               screenCapturedBase64={screenCaptured}

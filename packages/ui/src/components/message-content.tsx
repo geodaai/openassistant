@@ -5,7 +5,7 @@ import {
   StreamMessage,
   ToolCallComponents,
 } from '@openassistant/core';
-import { MarkdownContent, PartComponent } from './message-toolcall';
+import { PartComponent } from './message-toolcall';
 
 const FailedMessage = ({ githubIssueLink }: { githubIssueLink?: string }) => (
   <p className="mb-2" data-testid="failed-message">
@@ -56,7 +56,7 @@ export function MessageContent({
             <ScreenshotImage customMessage={customMessage} />
           )}
 
-        {/* show tool call messages */}
+        {/* show parts of the message */}
         {message?.parts?.map((part, i) => (
           <PartComponent
             key={`${part.type}-${i}`}
@@ -67,16 +67,8 @@ export function MessageContent({
           />
         ))}
 
-        {/* show markdown message */}
-        {!message?.parts &&
-          message?.text &&
-          (useMarkdown ? (
-            <MarkdownContent text={message.text} />
-          ) : (
-            <div>{message.text}</div>
-          ))}
 
-        {/* show React payload when it is a valid React element */}
+        {/* show React payload e.g. LLM Model Configure Panel when it is a valid React element */}
         {customMessage && React.isValidElement(customMessage) && (
           <div className="flex flex-col gap-2">{customMessage}</div>
         )}

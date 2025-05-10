@@ -3,7 +3,6 @@ import {
   AudioToTextProps,
   ProcessImageMessageProps,
   ProcessMessageProps,
-  RegisterFunctionCallingProps,
   RegisterToolProps,
 } from '../types';
 
@@ -71,26 +70,9 @@ export abstract class AbstractAssistant {
   }
 
   /**
-   * Register custom function for function calling
-   */
-  public static registerFunctionCalling(props: RegisterFunctionCallingProps) {
-    throw new Error('Method not implemented.');
-  }
-
-  /**
    * audio to text
    */
   public async audioToText(props: AudioToTextProps): Promise<string> {
-    throw new Error('Method not implemented.');
-  }
-
-  /**
-   * Add additional context to the conversation, so LLM can understand the context better
-   */
-  public async addAdditionalContext(props: {
-    context: string;
-    callback?: () => void;
-  }) {
     throw new Error('Method not implemented.');
   }
 

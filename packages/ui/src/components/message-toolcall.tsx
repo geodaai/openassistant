@@ -1,8 +1,5 @@
-import {
-  ToolCallMessage,
-  ToolCallComponents,
-  StreamMessagePart,
-} from '@openassistant/core';
+import { ToolCallComponents, StreamMessagePart } from '@openassistant/core';
+import { ToolInvocation } from 'ai';
 import React, { ReactNode } from 'react';
 import remarkGfm from 'remark-gfm';
 import Markdown from 'react-markdown';
@@ -117,45 +114,48 @@ export function PartComponent({
         </div>
       </div>
     );
-  } else if (part.type === 'tool' && showTools) {
+  } else if (part.type === 'tool-invocation' && showTools) {
     return (
       <>
-        {part.toolCallMessages.map((toolCallMessage) => (
-          <ToolCallComponent
-            key={toolCallMessage.toolCallId}
-            toolCallMessage={toolCallMessage}
-            components={components}
-          />
-        ))}
+        <ToolCallComponent
+          key={part.toolInvocation.toolCallId}
+          toolInvocation={part.toolInvocation}
+          additionalData={part.additionalData}
+          components={components}
+        />
       </>
     );
+  } else {
+    return <>This part is not supported: {part.type}</>;
   }
-  return null;
 }
 
 export function ToolCallComponent({
-  toolCallMessage,
+  toolInvocation,
+  additionalData,
   components,
 }: {
-  toolCallMessage: ToolCallMessage;
+  toolInvocation: ToolInvocation;
+  additionalData: unknown;
   components?: ToolCallComponents;
 }) {
-  const { toolName, additionalData, text, args, llmResult, isCompleted } =
-    toolCallMessage;
-
+  const { toolName, args, state } = toolInvocation;
+  const isCompleted = state === 'result';
+  const llmResult = state === 'result' ? toolInvocation.result : {};
   const Component = components?.find(
     (component) => component.toolName === toolName
   )?.component as React.ComponentType<Record<string, unknown>> | undefined;
 
-  const llmResultTable = llmResult as Record<string, unknown> | undefined;
-  const toolSuccess = Boolean(llmResultTable?.success);
+  const toolSuccess = Boolean(llmResult?.success);
 
-  const tableItems = llmResultTable
-    ? Object.entries(llmResultTable).map(([key, value]) => ({
+  const tableItems = llmResult
+    ? Object.entries(llmResult).map(([key, value]) => ({
         key,
         value:
-          typeof value === 'object' 
-            ? JSON.stringify(value, (_, v) => typeof v === 'bigint' ? v.toString() : v) 
+          typeof value === 'object'
+            ? JSON.stringify(value, (_, v) =>
+                typeof v === 'bigint' ? v.toString() : v
+              )
             : String(value),
       }))
     : [];
@@ -197,7 +197,9 @@ export function ToolCallComponent({
                       <span>: </span>
                       <span>
                         {typeof value === 'object' && value !== null
-                          ? JSON.stringify(value, (_, v) => typeof v === 'bigint' ? v.toString() : v)
+                          ? JSON.stringify(value, (_, v) =>
+                              typeof v === 'bigint' ? v.toString() : v
+                            )
                           : String(value)}
                       </span>
                       {index < array.length - 1 && (
@@ -208,7 +210,7 @@ export function ToolCallComponent({
                   <span className="text-gray-400">)</span>
                 </div>
               </div>
-              {llmResultTable && (
+              {llmResult && (
                 <div className="flex flex-col gap-1 p-4">
                   <div className="text-tiny font-bold">result:</div>
                   <Table aria-label="LLM result table" hideHeader isCompact>
@@ -227,7 +229,6 @@ export function ToolCallComponent({
                   </Table>
                 </div>
               )}
-              {text}
             </AccordionItem>
           </Accordion>
         </CardBody>

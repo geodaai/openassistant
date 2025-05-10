@@ -1,11 +1,8 @@
 import {
   AudioToTextProps,
-  CustomFunctionOutputProps,
   StreamMessageCallback,
   ToolCallMessage,
-  TextPart,
 } from '../types';
-import { ReactNode } from 'react';
 import {
   generateText,
   LanguageModel,
@@ -15,16 +12,16 @@ import {
   ToolChoice,
   ToolSet,
   StepResult,
-  CoreMessage,
+  TextPart,
 } from 'ai';
-import { Message, extractMaxToolInvocationStep } from '@ai-sdk/ui-utils';
 import {
-  shouldTriggerNextRequest,
-  TriggerRequestOutput,
-  VercelAi,
-} from './vercelai';
+  Message,
+  ToolInvocation,
+  ToolInvocationUIPart,
+  extractMaxToolInvocationStep,
+} from '@ai-sdk/ui-utils';
+import { shouldTriggerNextRequest, VercelAi } from './vercelai';
 import { tiktokenCounter } from '../utils/token-counter';
-import { proceedToolCall } from '../utils/toolcall';
 
 /**
  * Configuration properties for VercelAiClient
@@ -194,166 +191,90 @@ export abstract class VercelAiClient extends VercelAi {
     return updatedMessages;
   }
 
-  /**
-   * Checks if a tool invocation is a duplicate of the last one
-   * @protected
-   * @param {Message} message - Message to check
-   * @returns {boolean} True if duplicate
-   */
-  protected isDuplicateToolInvocation(message: Message): boolean {
-    if (!message.toolInvocations?.length) return false;
-
-    const lastMessage = this.messages[this.messages.length - 1] as Message;
-    if (!lastMessage?.toolInvocations?.length) return false;
-
-    return (
-      message.toolInvocations[0].toolName ===
-        lastMessage.toolInvocations[0].toolName &&
-      JSON.stringify(message.toolInvocations[0].args) ===
-        JSON.stringify(lastMessage.toolInvocations[0].args)
-    );
-  }
-
-  /**
-   * Handles completion of a step in the LLM interaction
-   * @protected
-   * @param {StepResult<ToolSet>} event - Step result
-   * @param {string} messageContent - Current message content
-   * @param {LanguageModelUsage} tokensUsed - Token usage stats
-   * @param {Function} [onStepFinish] - Optional callback for step completion
-   * @returns {Promise<ReactNode | null>} Custom message element if any
-   */
-  protected async handleStepFinish(
-    event: StepResult<ToolSet>,
-    messageContent: string,
-    tokensUsed: LanguageModelUsage,
-    streamMessageCallback: StreamMessageCallback,
-    onStepFinish?: (
-      event: StepResult<ToolSet>,
-      toolCallMessages: ToolCallMessage[]
-    ) => Promise<void> | void
+  protected async handleToolCallStreaming(
+    toolCallId: string,
+    toolName: string,
+    args: Record<string, unknown>,
+    streamMessageCallback: StreamMessageCallback
   ) {
-    const { toolCalls, response, usage } = event;
-    const responseMsg = response.messages[response.messages.length - 1];
-    const toolCallMessages: ToolCallMessage[] = [];
-
-    // add final message to the messages array
-    const message: Message = {
-      id: responseMsg.id,
-      role: responseMsg.role as 'assistant',
-      content: messageContent,
-      toolInvocations: [],
+    const toolInvocation: ToolInvocation = {
+      state: 'call',
+      toolCallId,
+      toolName,
+      args,
     };
 
-    // handle tool calls
-    const functionOutput: CustomFunctionOutputProps<unknown, unknown>[] = [];
+    this.streamMessage.parts?.push({
+      type: 'tool-invocation',
+      toolInvocation,
+    });
 
-    // since we are handling the function calls, we need to save the tool results for onStepFinish callback
-    const toolResults: StepResult<ToolSet>['toolResults'] = [];
-
-    // before handling tool calls, create tool call messages
-    for (const toolCall of toolCalls) {
-      const toolCallMessage = {
-        toolCallId: toolCall.toolCallId,
-        toolName: toolCall.toolName,
-        args: toolCall.args,
-        text: '',
+    if (streamMessageCallback) {
+      streamMessageCallback({
+        deltaMessage: '',
+        message: this.streamMessage,
         isCompleted: false,
-      };
-      toolCallMessages.push(toolCallMessage);
+      });
+    }
+  }
+
+  protected async handleToolCallFinish(
+    toolCallId: string,
+    result: unknown,
+    streamMessageCallback: StreamMessageCallback
+  ) {
+    // find the tool invocation in the stream message
+    const toolPart = this.streamMessage.parts?.findLast(
+      (part) =>
+        part.type === 'tool-invocation' &&
+        part.toolInvocation.toolCallId === toolCallId
+    ) as ToolInvocationUIPart & { additionalData: unknown };
+
+    // update the tool invocation in the stream message
+    toolPart.toolInvocation = {
+      ...toolPart.toolInvocation,
+      state: 'result',
+      result,
+    };
+
+    // update the additional data
+    const additionalData = VercelAi.toolResults?.[toolCallId];
+    if (additionalData) {
+      toolPart.additionalData = additionalData;
     }
 
-    // add part
-    if (toolCallMessages.length > 0) {
+    // update the stream message
+    streamMessageCallback({
+      deltaMessage: '',
+      message: this.streamMessage,
+    });
+  }
+
+  protected async handleTextStreaming(
+    textDelta: string,
+    messageContent: string,
+    streamMessageCallback: StreamMessageCallback
+  ): Promise<string> {
+    if (messageContent.length === 0) {
+      // add text part at the beginning of text streaming
       this.streamMessage.parts?.push({
-        type: 'tool',
-        toolCallMessages,
-      });
-    }
-
-    if (streamMessageCallback) {
-      streamMessageCallback({
-        deltaMessage: '',
-        customMessage: null,
-        message: this.streamMessage,
-      });
-    }
-
-    // handle tool calls
-    for (let i = 0; i < toolCalls.length; i++) {
-      const toolCall = toolCalls[i];
-      const output: CustomFunctionOutputProps<unknown, unknown> =
-        await proceedToolCall({
-          toolCall,
-          customFunctions: VercelAi.customFunctions,
-          previousOutput: functionOutput,
-        });
-
-      functionOutput.push(output);
-      this.toolSteps++;
-
-      const toolResult = {
-        toolCallId: toolCall.toolCallId,
-        toolName: toolCall.toolName,
-        args: toolCall.args,
-      };
-
-      const toolInvocation = {
-        ...toolResult,
-        result: output.result,
-        state: 'result' as const,
-        step: this.toolSteps,
-      };
-      message.toolInvocations?.push(toolInvocation);
-      // @ts-expect-error fix type
-      toolResults.push(toolInvocation);
-
-      const toolCallMessage = {
-        toolCallId: toolCall.toolCallId,
-        toolName: toolCall.toolName,
-        args: toolCall.args,
-        llmResult: output.result,
-        additionalData: output.data,
-        component: output.component,
+        type: 'text',
         text: '',
-        isCompleted: true,
-      };
-
-      // update tool call message
-      toolCallMessages[i] = toolCallMessage;
-
-      // suppose no tool call streaming
-      this.streamMessage.toolCallMessages?.push(toolCallMessage);
-    }
-
-    // update last part
-    if (toolCallMessages.length > 0 && this.streamMessage.parts) {
-      this.streamMessage.parts[this.streamMessage.parts.length - 1] = {
-        type: 'tool',
-        toolCallMessages,
-      };
-    }
-
-    if (streamMessageCallback) {
-      streamMessageCallback({
-        deltaMessage: '',
-        customMessage: null,
-        message: this.streamMessage,
       });
     }
-
-    tokensUsed.promptTokens = usage?.promptTokens || 0;
-    tokensUsed.completionTokens = usage?.completionTokens || 0;
-    tokensUsed.totalTokens = usage?.totalTokens || 0;
-
-    if (!this.isDuplicateToolInvocation(message)) {
-      if (onStepFinish) {
-        await onStepFinish({ ...event, toolResults }, toolCallMessages);
-      }
+    messageContent += textDelta;
+    // find last text part
+    const lastTextPart = this.streamMessage.parts?.findLast(
+      (part) => part.type === 'text'
+    );
+    if (lastTextPart) {
+      (lastTextPart as TextPart).text += textDelta;
     }
-
-    // TODO: we don't return customMessage anymore, since it will be handled by 'component' at user side
-    return message;
+    streamMessageCallback({
+      deltaMessage: messageContent,
+      message: this.streamMessage,
+    });
+    return messageContent;
   }
 
   /**
@@ -375,41 +296,42 @@ export abstract class VercelAiClient extends VercelAi {
       event: StepResult<ToolSet>,
       toolCallMessages: ToolCallMessage[]
     ) => Promise<void> | void;
-  }): Promise<TriggerRequestOutput> {
+  }) {
     if (!this.llm) {
       throw new Error(
         'LLM instance is not initialized. Please call configure() first if you want to create a client LLM instance.'
       );
     }
 
-    // make a copy of the messages array
+    // make a copy of the messages array, so we can modify it in callbacks e.g. onStepFinish
     const localMessages = [...this.getMessages()];
 
     let messageContent: string = '';
-    const customMessage: ReactNode | null = null;
     const tokensUsed: LanguageModelUsage = {
       promptTokens: 0,
       completionTokens: 0,
       totalTokens: 0,
     };
 
+    // total max steps
     const maxSteps = VercelAiClient.maxSteps || 20;
     const messageCount = localMessages.length;
 
     const lastMessage = localMessages[localMessages.length - 1];
+    const toolInvocations = (lastMessage as Message).parts
+      ?.filter((part) => part.type === 'tool-invocation')
+      .map((part) => (part as ToolInvocationUIPart).toolInvocation);
 
-    const maxStep =
-      'toolInvocations' in lastMessage
-        ? extractMaxToolInvocationStep(lastMessage.toolInvocations)
-        : undefined;
+    // current max step
+    const maxStep = toolInvocations
+      ? extractMaxToolInvocationStep(toolInvocations)
+      : undefined;
 
     const tools = VercelAiClient.tools;
 
     const { fullStream } = streamText({
       model: this.llm,
-      messages: localMessages as
-        | Array<CoreMessage>
-        | Array<Omit<Message, 'id'>>,
+      messages: localMessages,
       tools,
       toolCallStreaming: false, // TODO: disable tool call streaming for now
       toolChoice: VercelAiClient.toolChoice,
@@ -419,50 +341,44 @@ export abstract class VercelAiClient extends VercelAi {
       maxSteps,
       abortSignal: this.abortController?.signal,
       onStepFinish: async (event: StepResult<ToolSet>) => {
-        const newMessage = await this.handleStepFinish(
-          event,
-          messageContent,
-          tokensUsed,
-          streamMessageCallback,
-          onStepFinish
-        );
-        localMessages.push(newMessage);
+        const { usage } = event;
+        tokensUsed.promptTokens = usage?.promptTokens || 0;
+        tokensUsed.completionTokens = usage?.completionTokens || 0;
+        tokensUsed.totalTokens = usage?.totalTokens || 0;
+        localMessages.push(...event.response.messages);
       },
     });
 
     for await (const chunk of fullStream) {
-      if (chunk.type === 'text-delta') {
-        if (messageContent.length === 0) {
-          // add text part at the beginning of text streaming
-          this.streamMessage.parts?.push({
-            type: 'text',
-            text: '',
-          });
-        }
-        // deprecated: use parts instead
-        messageContent += chunk.textDelta;
-        // deprecated: use parts instead
-        this.streamMessage.text += chunk.textDelta;
-        // find last text part
-        const lastTextPart = this.streamMessage.parts?.findLast(
-          (part) => part.type === 'text'
+      if (chunk.type === 'step-start') {
+        console.log('step-start', chunk);
+      } else if (chunk.type === 'text-delta') {
+        messageContent = await this.handleTextStreaming(
+          chunk.textDelta,
+          messageContent,
+          streamMessageCallback
         );
-        if (lastTextPart) {
-          (lastTextPart as TextPart).text += chunk.textDelta;
-        }
-        streamMessageCallback({
-          // deprecated: use parts instead
-          deltaMessage: messageContent,
-          customMessage,
-          message: this.streamMessage,
-        });
+      } else if (chunk.type === 'tool-call') {
+        await this.handleToolCallStreaming(
+          chunk.toolCallId,
+          chunk.toolName,
+          chunk.args,
+          streamMessageCallback
+        );
+        // @ts-expect-error TODO: fix type
+      } else if (chunk.type === 'tool-result') {
+        const { toolCallId, result } = chunk;
+        await this.handleToolCallFinish(
+          toolCallId,
+          result,
+          streamMessageCallback
+        );
       } else if (chunk.type === 'reasoning') {
-        this.streamMessage.reasoning += chunk.textDelta;
-        streamMessageCallback({
-          deltaMessage: messageContent,
-          customMessage,
-          message: this.streamMessage,
-        });
+        messageContent = await this.handleTextStreaming(
+          chunk.textDelta,
+          messageContent,
+          streamMessageCallback
+        );
       } else if (chunk.type === 'error') {
         throw new Error(`Error from Vercel AI API: ${chunk.error}`);
       }
@@ -474,7 +390,7 @@ export abstract class VercelAiClient extends VercelAi {
     // check after LLM response is finished
     // auto-submit when all tool calls in the last assistant message have results:
     if (
-      shouldTriggerNextRequest(this.messages, messageCount, maxSteps, maxStep)
+      shouldTriggerNextRequest(localMessages, messageCount, maxSteps, maxStep)
     ) {
       await this.triggerRequest({
         streamMessageCallback,
@@ -482,7 +398,7 @@ export abstract class VercelAiClient extends VercelAi {
       });
     }
 
-    return { customMessage, tokensUsed };
+    return { tokensUsed };
   }
 
   /**
