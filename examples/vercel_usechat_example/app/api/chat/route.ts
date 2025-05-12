@@ -1,42 +1,28 @@
 import { openai } from '@ai-sdk/openai';
-import { geocoding } from '@openassistant/osm';
-import { getTool } from '@openassistant/utils';
-import { dataClassify } from '@openassistant/geoda';
-
+import { getDuckDBTool } from '@openassistant/duckdb';
 import { streamText } from 'ai';
 
-// Create a context object for the tools
-const context = {
-  getValues: async (datasetName: string, variableName: string) => {
-    console.log('getValues', datasetName, variableName);
-    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  },
-};
+// create a tool for local query (runs in browser)
+const localQueryTool = getDuckDBTool('localQuery', {
+  isExecutable: false,
+});
 
-const onToolCompleted = (toolCallId: string, additionalData: unknown) => {
-  console.log('toolCallId', toolCallId);
-  console.log('additionalData', additionalData);
-};
-
-console.log('geocoding', geocoding);
-const geocodingTool = getTool(geocoding, context, onToolCompleted);
-const dataClassifyTool = getTool(dataClassify, context, onToolCompleted);
-
-console.log('geocodingTool', geocodingTool);
+const systemPrompt = `You are a helpful assistant that can answer questions and help with tasks. 
+You can use the following datasets:
+- datasetName: natregimes
+- variables: [HR60, PO60]
+`;
 
 export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
 
-    const model = openai('gpt-4o', {
-      apiKey: process.env.OPENAI_API_KEY || '',
-    });
-
     const result = await streamText({
-      model,
+      model: openai('gpt-4o'),
       messages: messages,
+      system: systemPrompt,
       tools: {
-        geocodingTool,
+        localQuery: localQueryTool,
       },
     });
 

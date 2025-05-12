@@ -26,8 +26,8 @@ export interface LocalQueryContext {
    * @param variableName - The name of the variable to get values for
    * @returns An array of values for the specified variable
    */
-  getValues: (datasetName: string, variableName: string) => unknown[];
-  
+  getValues: (datasetName: string, variableName: string) => Promise<unknown[]>;
+
   /**
    * Function called when values are selected in the query result
    * @param datasetName - The name of the dataset
@@ -39,7 +39,7 @@ export interface LocalQueryContext {
     columnName: string,
     selectedValues: unknown[]
   ) => void;
-  
+
   /**
    * Configuration options
    */
@@ -47,7 +47,7 @@ export interface LocalQueryContext {
     isDraggable?: boolean;
     [key: string]: unknown;
   };
-  
+
   /**
    * Optional DuckDB instance for querying
    */
@@ -115,9 +115,11 @@ export type LocalQueryExecuteFunction = (
 /**
  * The complete LocalQuery tool type definition
  */
-export type LocalQueryTool = ExtendedTool<z.ZodObject<{
-  datasetName: z.ZodString;
-  variableNames: z.ZodArray<z.ZodString>;
-  sql: z.ZodString;
-  dbTableName: z.ZodString;
-}>>; 
+export type LocalQueryTool = ExtendedTool<
+  z.ZodObject<{
+    datasetName: z.ZodString;
+    variableNames: z.ZodArray<z.ZodString>;
+    sql: z.ZodString;
+    dbTableName: z.ZodString;
+  }>
+>;

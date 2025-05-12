@@ -21,4 +21,13 @@ module.exports = {
       version: 'detect',
     },
   },
+  overrides: [
+    {
+      files: ['next.config.js'],
+      rules: {
+        '@typescript-eslint/no-require-imports': 'off',
+        '@typescript-eslint/no-var-requires': 'off'
+      }
+    }
+  ]
 };

@@ -2,14 +2,13 @@ import { tool, generateId } from '@openassistant/utils';
 import { Table as ArrowTable, tableFromArrays } from 'apache-arrow';
 import { z } from 'zod';
 import { getDuckDB, QueryDuckDBFunctionContext } from './query';
-import { QueryDuckDBComponent } from './queryTable';
 
 /**
- * The localQuery tool is used to execute a query against a local dataset.
+ * [**Browser Tool**] The localQuery tool is used to execute a query against a local dataset.
  *
  * @example
  * ```typescript
- * import { getVercelAiTool } from '@openassistant/osm';
+ * import { getDuckDBTool } from '@openassistant/duckdb';
  *
  *
  * // context
@@ -20,13 +19,12 @@ import { QueryDuckDBComponent } from './queryTable';
  *   },
  * }
  *
- * // onToolCompleted
  * const onToolCompleted = (toolCallId: string, additionalData?: unknown) => {
  *   // do something with the additionalData
  * }
  *
  * // get the tool
- * const localQueryTool = getVercelAiTool('localQuery', context, onToolCompleted);
+ * const localQueryTool = getDuckDBTool('localQuery', {context, onToolCompleted});
  *
  * generateText({
  *   model: 'gpt-4o-mini',
@@ -46,10 +44,55 @@ import { QueryDuckDBComponent } from './queryTable';
  *
  * A duckdb table will be created using the values returned from `getValues()`, and LLM will generate a sql query to query the table to answer the user's prompt.
  *
- * ### onSelected()
+ * ## Server Side Usage
  *
- * User implements this function to sync the selections of the query result table with the original dataset.
+ * Here is an example of how to use the localQuery tool in server side:
  *
+ * `app/api/chat/route.ts`
+ * ```typescript
+ * import { getDuckDBTools } from '@openassistant/duckdb';
+ *
+ * // localQuery tool will be running on the client side
+ * const localQueryTool = getDuckDBTool('localQuery', {isExecutable: false});
+ *
+ * export async function POST(req: Request) {
+ *   // ...
+ *   const result = streamText({
+ *     model: openai('gpt-4o-mini'),
+ *     messages: messages,
+ *     tools: {localQuery: localQueryTool},
+ *   });
+ * }
+ * ```
+ *
+ * `app/page.tsx`
+ * ```typescript
+ * import { useChat } from 'ai/react';
+ * import { getDuckDBTool } from '@openassistant/duckdb';
+ *
+ * const localQueryTool = getDuckDBTool('localQuery', {
+ *   context: {
+ *     getValues: async (datasetName: string, variableName: string) => {
+ *       // get the values of the variable from your dataset, e.g.
+ *       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+ *     },
+ *   },
+ *   onToolCompleted: (toolCallId: string, additionalData?: unknown) => {
+ *     // do something with the additionalData
+ *   },
+ *   isExecutable: true,
+ * });
+ *
+ * const { messages, input, handleInputChange, handleSubmit } = useChat({
+ *   maxSteps: 20,
+ *   onToolCall: async (toolCallId, toolCall) => {
+ *      if (toolCall.name === 'localQuery') {
+ *        const result = await localQueryTool.execute(toolCall.args, toolCall.options);
+ *        return result;
+ *      }
+ *   }
+ * });
+ * ```
  */
 export const localQuery = tool({
   description: `You are a SQL (duckdb) expert. You can help to query users datasets using select query clause.`,
@@ -58,15 +101,15 @@ export const localQuery = tool({
     variableNames: z
       .array(z.string())
       .describe('The names of the variables to include in the query.'),
-    sql: z
-      .string()
-      .describe(
-        'The SQL query to execute. Please follow the SQL syntax of duckdb.'
-      ),
     dbTableName: z
       .string()
       .describe(
-        'The name of the table used in the sql string. Please use the datasetName as the table name, and remove any space or special characters from the datasetName.'
+        'The name of the table to create and query. Please append a 6-digit random number to the end of the table name to avoid conflicts.'
+      ),
+    sql: z
+      .string()
+      .describe(
+        'The SQL query to execute. Please follow the SQL syntax of duckdb. Please use the dbTableName to query the table.'
       ),
   }),
   execute: executeLocalQuery,
@@ -85,7 +128,6 @@ export const localQuery = tool({
     },
     duckDB: null,
   },
-  component: QueryDuckDBComponent,
 });
 
 async function executeLocalQuery(
@@ -111,11 +153,12 @@ async function executeLocalQuery(
       throw new Error('DuckDB instance is not initialized');
     }
 
+    // here we don't pass the arrowResult to LLM or additionalData
+
     const conn = await db.connect();
-    const safeDbTableName = `${dbTableName}`;
-    await conn.query(`DROP TABLE IF EXISTS ${safeDbTableName}`);
+    await conn.query(`DROP TABLE IF EXISTS ${dbTableName}`);
     await conn.insertArrowTable(arrowTable, {
-      name: safeDbTableName,
+      name: dbTableName,
       create: true,
     });
 
@@ -125,16 +168,9 @@ async function executeLocalQuery(
     // console.log(tableNames);
     const arrowResult = await conn.query(sql);
 
-    // here we don't pass the arrowResult to LLM or additionalData
-    // because the arrowResult is too large to be passed to LLM
-    // and we don't want to persist the arrowResult in store as well
-    // const result = arrowResult.toArray().map((row) => row.toJSON());
-    // However, we still generate a filtered dataset name which could be used
-    // for possible tool callback to create a filtered dataset
-    const filteredDatasetName = `${datasetName}_filtered_${generateId()}`;
-
     await conn.close();
-    // Get first 2 rows of the result as a json object
+
+    // Get first 2 rows of the result as a json object to LLM
     const subResult = arrowResult.toArray().slice(0, 2);
     const firstTwoRows = subResult.map((row) => {
       const json = row.toJSON();
@@ -142,7 +178,7 @@ async function executeLocalQuery(
       return Object.fromEntries(
         Object.entries(json).map(([key, value]) => [
           key,
-          typeof value === 'bigint' ? value.toString() : value
+          typeof value === 'bigint' ? value.toString() : value,
         ])
       );
     });
@@ -150,7 +186,7 @@ async function executeLocalQuery(
     return {
       llmResult: {
         success: true,
-        filteredDatasetName,
+        dbTableName,
         data: {
           firstTwoRows,
         },
@@ -158,11 +194,9 @@ async function executeLocalQuery(
       additionalData: {
         title: 'Query Result',
         sql,
-        columnData,
         variableNames,
         datasetName,
         dbTableName,
-        filteredDatasetName,
         config,
       },
     };
@@ -177,13 +211,4 @@ async function executeLocalQuery(
       },
     };
   }
-}
-
-// Export the tools registration function
-export async function registerTools(): Promise<
-  Record<string, typeof localQuery>
-> {
-  return {
-    localQuery,
-  };
 }

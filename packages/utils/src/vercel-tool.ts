@@ -8,7 +8,7 @@ export interface Tool<TContext = unknown> {
   parameters: Record<string, unknown>;
   execute: (
     args: Record<string, unknown>,
-    options: ToolExecutionOptions & { context: TContext }
+    options: ToolExecutionOptions & { context?: TContext }
   ) => Promise<{
     llmResult: unknown;
     additionalData?: unknown;
@@ -18,7 +18,7 @@ export interface Tool<TContext = unknown> {
 export interface ToolResult {
   description: string;
   parameters: Record<string, unknown>;
-  execute: (
+  execute?: (
     args: Record<string, unknown>,
     options: ToolExecutionOptions
   ) => Promise<unknown>;
@@ -29,11 +29,17 @@ export type OnToolCompleted = (
   additionalData?: unknown
 ) => void;
 
-export function getTool<TContext = unknown>(
-  tool: Tool<TContext>,
-  toolContext: TContext,
-  onToolCompleted: OnToolCompleted
-): ToolResult {
+export function getTool<TContext = unknown>({
+  tool,
+  options: toolOptions,
+}: {
+  tool: Tool<TContext>;
+  options?: {
+    toolContext?: TContext;
+    onToolCompleted?: OnToolCompleted;
+    isExecutable?: boolean;
+  };
+}): ToolResult {
   // create a vercel ai tool.execute function
   const execute = async (
     args: Record<string, unknown>,
@@ -42,11 +48,11 @@ export function getTool<TContext = unknown>(
     // add context to options
     const result = await tool.execute(args, {
       ...options,
-      context: toolContext,
+      context: toolOptions?.toolContext,
     });
 
-    if (options.toolCallId) {
-      onToolCompleted(options.toolCallId, result.additionalData);
+    if (options.toolCallId && toolOptions?.onToolCompleted) {
+      toolOptions.onToolCompleted(options.toolCallId, result.additionalData);
     }
 
     return result.llmResult;
@@ -55,6 +61,6 @@ export function getTool<TContext = unknown>(
   return {
     description: tool.description,
     parameters: tool.parameters,
-    execute,
+    ...(toolOptions?.isExecutable ? { execute } : {}),
   };
 }

@@ -15,33 +15,53 @@ import {
   SelectItem,
 } from '@nextui-org/react';
 import './index.css';
-import { getDuckDB } from './query';
+
+// type guard for QueryDuckDBOutputData
+export function isQueryDuckDBOutputData(
+  data: unknown
+): data is QueryDuckDBOutputData {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'variableNames' in data &&
+    'datasetName' in data &&
+    'sql' in data &&
+    'dbTableName' in data
+  );
+}
+
+export type OnSelected = (
+  datasetName: string,
+  columnName: string,
+  selectedValues: unknown[]
+) => void;
 
 export type QueryDuckDBOutputData = {
-  db?: duckdb.AsyncDuckDB;
-  columnData: { [key: string]: unknown[] };
   variableNames: string[];
   datasetName: string;
   sql: string;
   dbTableName: string;
-  onSelected?: (
-    datasetName: string,
-    columnName: string,
-    selectedValues: unknown[]
-  ) => void;
-  isDraggable?: boolean;
 };
 
 export function QueryDuckDBComponent({
-  db,
-  columnData,
   variableNames,
   datasetName,
   sql,
   dbTableName,
   onSelected,
-}: QueryDuckDBOutputData): JSX.Element | null {
+  getDuckDB,
+  getValues,
+}: QueryDuckDBOutputData & {
+  onSelected?: OnSelected;
+  getDuckDB?: (
+    externalDB?: duckdb.AsyncDuckDB | undefined
+  ) => Promise<duckdb.AsyncDuckDB | null>;
+  getValues: (datasetName: string, variableName: string) => Promise<unknown[]>;
+}): JSX.Element | null {
   const queryInProgress = useRef<Promise<void> | null>(null);
+  const [columnData, setColumnData] = useState<{ [key: string]: unknown[] }>(
+    {}
+  );
 
   // sync selections by
   const [syncSelection, setSyncSelection] = useState(false);
@@ -77,38 +97,47 @@ export function QueryDuckDBComponent({
       // Create a new promise for this query
       queryInProgress.current = (async () => {
         try {
-          const duckDB = await getDuckDB(db);
-          if (!duckDB) {
+          const db = await getDuckDB?.();
+          if (!db) {
             throw new Error('DuckDB instance is not initialized');
           }
-          if (columnData && dbTableName && sql) {
-            // use double quotes for the table name
-            const safeDbTableName = `${dbTableName}`;
+
+          const conn = await db.connect();
+
+          // check if dbTableName exists
+          const tableNames = await conn.query('SHOW TABLES');
+          const tableNamesArray = tableNames
+            .toArray()
+            .map((row) => row.toJSON());
+          const tableExists = tableNamesArray.find(
+            (table) => table.name === dbTableName
+          );
+          if (!tableExists) {
+            // create the table
+            // get values for each variable
+            const columnData = {};
+            for (const varName of variableNames) {
+              columnData[varName] = await getValues(datasetName, varName);
+            }
+            setColumnData(columnData);
 
             // Create Arrow Table from column data with explicit type
             const arrowTable: ArrowTable = tableFromArrays(columnData);
-
-            // connect to the database
-            const conn = await duckDB.connect();
-
-            // drop the table if it exists
-            await conn.query(`DROP TABLE IF EXISTS ${safeDbTableName}`);
-
-            // insert the arrow table to the database
-            await conn.insertArrowTable(arrowTable, { name: safeDbTableName });
-
-            // Execute the provided SQL query
-            const arrowResult = await conn.query(sql);
-
-            const result = arrowResult.toArray().map((row) => row.toJSON());
-            setQueryResult(result);
-
-            // delete the table from the database
-            await conn.query(`DROP TABLE ${safeDbTableName}`);
-
-            // close the connection
-            await conn.close();
+            const conn = await db.connect();
+            await conn.insertArrowTable(arrowTable, {
+              name: dbTableName,
+              create: true,
+            });
           }
+
+          // query the table
+          const arrowResult = await conn.query(sql);
+
+          // get query results
+          const queryResult = arrowResult.toArray().map((row) => row.toJSON());
+          setQueryResult(queryResult);
+
+          await conn.close();
         } catch (error) {
           setError(error instanceof Error ? error.message : String(error));
         } finally {

@@ -1,10 +1,47 @@
 'use client';
 
 import { useChat } from '@ai-sdk/react';
+import { getDuckDBTool } from '@openassistant/duckdb';
 import { useState } from 'react';
+import { MessageParts } from './components/parts';
 
 export default function Home() {
-  const { messages, input, handleInputChange, handleSubmit } = useChat();
+  const [toolAdditionalData, setToolAdditionalData] = useState<
+    Record<string, unknown>
+  >({});
+  const context = {
+    getValues: async (datasetName: string, variableName: string) => {
+      console.log('getValues', datasetName, variableName);
+      return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    },
+  };
+
+  const onToolCompleted = (toolCallId: string, additionalData: unknown) => {
+    // save {toolCallId: additionalData} for rendering
+    setToolAdditionalData((prev) => ({
+      ...prev,
+      [toolCallId]: additionalData,
+    }));
+  };
+
+  const { messages, input, handleInputChange, handleSubmit } = useChat({
+    maxSteps: 20,
+    // local tools are handled by the client
+    onToolCall: async ({ toolCall }) => {
+      const { toolName, args, toolCallId } = toolCall;
+      if (toolName === 'localQuery') {
+        const localQueryTool = getDuckDBTool('localQuery', {
+          toolContext: context,
+          onToolCompleted,
+        });
+        const result = await localQueryTool.execute?.(
+          args as Record<string, unknown>,
+          { toolCallId }
+        );
+        return result;
+      }
+    },
+  });
 
   return (
     <main className="flex min-h-screen flex-col items-center p-24">
@@ -27,7 +64,11 @@ export default function Home() {
               <div className="font-semibold mb-1">
                 {message.role === 'assistant' ? 'Assistant' : 'You'}:
               </div>
-              <div className="whitespace-pre-wrap">{message.content}</div>
+              <MessageParts
+                parts={message.parts}
+                toolAdditionalData={toolAdditionalData}
+                getValues={context.getValues}
+              />
             </div>
           ))}
         </div>
@@ -49,4 +90,4 @@ export default function Home() {
       </div>
     </main>
   );
-} 
+}

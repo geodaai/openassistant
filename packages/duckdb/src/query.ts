@@ -79,7 +79,7 @@ type OnSelectedCallback = (
  * @property onSelected - The callback function can be used to sync the selections of the query result table with the original dataset. See {@link OnSelectedCallback} for more details.
  */
 export type QueryDuckDBFunctionContext = {
-  getValues: (datasetName: string, variableName: string) => unknown[];
+  getValues: (datasetName: string, variableName: string) => Promise<unknown[]>;
   duckDB?: duckdb.AsyncDuckDB;
   onSelected?: OnSelectedCallback;
   config: {
