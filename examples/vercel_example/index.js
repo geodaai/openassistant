@@ -11,10 +11,10 @@ const key = process.env.OPENAI_API_KEY;
 async function main() {
   // Register a simple calculator tool
   const context = {
-    // getValues: (datasetName, variableName) => {
-    //   console.log('getValues', datasetName, variableName);
-    //   return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    // },
+    getValues: (datasetName, variableName) => {
+      console.log('getValues', datasetName, variableName);
+      return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    },
   };
   const onToolCompleted = (toolCallId, additionalData) => {
     console.log('toolCallId', toolCallId);

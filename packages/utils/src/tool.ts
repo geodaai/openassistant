@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { ToolExecutionOptions } from './vercel-tool';
 
 export type Parameters = z.ZodTypeAny;
 
@@ -20,9 +21,8 @@ export type ExecuteFunction<
   CONTEXT = never,
 > = (
   args: inferParameters<PARAMETERS>,
-  options?: {
+  options?: ToolExecutionOptions & {
     context?: CONTEXT extends never ? CONTEXT : unknown;
-    previousExecutionOutput?: unknown;
   }
 ) => PromiseLike<ExecuteFunctionResult<RETURN_TYPE, ADDITIONAL_DATA>>;
 

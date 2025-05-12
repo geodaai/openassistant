@@ -39,7 +39,14 @@ export function getVercelAiTools(
   onToolCompleted: OnToolCompleted
 ) {
   const tools = registerTools();
-  return Object.keys(tools).map((key) => {
-    return getVercelAiTool(key, toolContext, onToolCompleted);
-  });
+
+  // return Record<string, ToolResult>
+  const toolsResult = Object.fromEntries(
+    Object.keys(tools).map((key) => {
+      return [key, getVercelAiTool(key, toolContext, onToolCompleted)];
+    })
+  );
+
+  console.log('toolsResult', toolsResult);
+  return toolsResult;
 }

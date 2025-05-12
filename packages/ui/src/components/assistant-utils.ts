@@ -63,7 +63,7 @@ export async function sendTextMessageHandler({
         lastMessage = {
           ...lastMessage,
           payload: customMessage,
-          messageContent: message,
+          messageContent: message || { parts: [] },
         };
         const newMessages: MessageModel[] = [...updatedMesssages, lastMessage];
         setMessages(newMessages);
@@ -164,7 +164,7 @@ export async function sendImageMessageHandler({
         lastMessage = {
           ...lastMessage,
           payload: customMessage,
-          messageContent: message,
+          messageContent: message || { parts: [] },
         };
         const newMessages = [...updatedMesssages, lastMessage];
         setMessages(newMessages);

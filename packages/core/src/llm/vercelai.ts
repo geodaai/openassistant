@@ -42,9 +42,10 @@ The message must have at least one tool invocation and all tool invocations
 must have a result.
  */
 export function isAssistantMessageWithCompletedToolCalls(message: CoreMessage) {
-  // check message is a CoreToolMessage
+  // check message is a CoreToolMessage since it always comes with a pair: CoreAssistantMessage and CoreToolMessage
   if (message.role === 'tool') {
     const toolMessage = message as CoreToolMessage;
+    // check if the tool message has a result
     return toolMessage.content.length > 0;
   }
   return false;
@@ -249,16 +250,6 @@ export class VercelAi extends AbstractAssistant {
     });
   }
 
-  /**
-   * Process the text message by sending it to the LLM.
-   *
-   * @param textMessage - The text message to send to the LLM
-   * @param streamMessageCallback - The callback function to handle the stream message. See {@link StreamMessage} for more details.
-   * @param imageMessage - Optional image message to process
-   * @param onStepFinish - Optional callback function to handle step completion
-   *
-   * @returns Promise containing the newly added message
-   */
   public override async processTextMessage({
     textMessage,
     streamMessageCallback,
@@ -269,9 +260,10 @@ export class VercelAi extends AbstractAssistant {
       this.abortController = new AbortController();
     }
 
-    // record the length of the messages array
+    // record the length of the messages array before adding new messages
     const messagesLength = this.messages.length;
 
+    // adding the user message to the messages array
     if (!imageMessage && textMessage) {
       const newMessage: CoreUserMessage = {
         role: 'user',
@@ -314,7 +306,7 @@ export class VercelAi extends AbstractAssistant {
 
     // return the newly added message, could be more than one
     const newMessages = this.messages.slice(messagesLength);
-    return { messages: newMessages };
+    return { streamMessage: this.streamMessage, messages: newMessages };
   }
 
   protected async triggerRequest({

@@ -9,8 +9,10 @@ import { ResizablePlotContainer } from './resizable-container';
 import { Popover } from '@nextui-org/react';
 import { Icon } from '@iconify/react';
 import { EChartsSkeleton } from './echarts-skeleton';
+import dynamic from 'next/dynamic';
 
-export function ExpandableContainer({
+// Create a client-side only version of the component
+const ClientExpandableContainer = ({
   children,
   defaultWidth,
   defaultHeight,
@@ -24,7 +26,7 @@ export function ExpandableContainer({
   draggable?: boolean;
   onDragStart?: DragEventHandler<HTMLButtonElement>;
   onExpanded?: (isExpanded: boolean) => void;
-}) {
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const targetRef = useRef(null);
@@ -138,4 +140,10 @@ export function ExpandableContainer({
       </div>
     </ResizablePlotContainer>
   );
-}
+};
+
+// Export a dynamically imported version of the component that only renders on the client side
+export const ExpandableContainer = dynamic(
+  () => Promise.resolve(ClientExpandableContainer),
+  { ssr: false }
+);

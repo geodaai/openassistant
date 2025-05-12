@@ -51,7 +51,7 @@ export const histogram = tool<
   HistogramLlmResult,
   HistogramAdditionalData,
   EChartsToolContext
-  >({
+>({
   description: 'create a histogram',
   parameters: z.object({
     datasetName: z.string().describe('The name of the dataset.'),
@@ -77,7 +77,6 @@ export const histogram = tool<
       theme: 'light',
     },
   },
-  component: HistogramComponentContainer,
 });
 
 /**

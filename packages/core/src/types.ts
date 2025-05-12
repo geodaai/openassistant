@@ -16,12 +16,6 @@ export type ToolCallComponent = {
   component?: unknown;
 };
 
-/**
- * Type of ToolCallComponents
- *
- * A dictionary of components, key is the class name of the component, value is the React component itself.
- * The component will be used to create the tool call message.
- */
 export type ToolCallComponents = ToolCallComponent[];
 
 export type AIMessage = CoreMessage | Message;

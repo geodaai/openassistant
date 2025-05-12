@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { StreamMessageCallback, ToolCallMessage } from '../types';
 import { VercelAi } from '../llm/vercelai';
 import { createAssistant } from '../utils/create-assistant';
-import { Message, StepResult, ToolChoice, ToolSet } from 'ai';
+import { convertToCoreMessages, Message, StepResult, ToolChoice, ToolSet } from 'ai';
 import { ExtendedTool } from '@openassistant/utils';
 
 /**
@@ -134,7 +134,7 @@ export function useAssistant(props: UseAssistantProps) {
 
       // restore the history messages
       if (props.historyMessages && props.historyMessages.length > 0) {
-        assistant.setMessages(props.historyMessages);
+        assistant.setMessages(convertToCoreMessages(props.historyMessages));
       }
 
       // set the abort controller
