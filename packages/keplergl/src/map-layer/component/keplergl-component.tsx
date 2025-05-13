@@ -12,7 +12,7 @@ import { messages } from '@kepler.gl/localization';
 import { KeplerMiniMap } from './keplergl-mini-map';
 import { KeplerState, MAP_ID, store } from './keplergl-provider';
 import { ExpandableContainer } from '@openassistant/common';
-import { generateId } from '@openassistant/common';
+import { generateId } from '@openassistant/utils';
 import { FileCacheItem } from '@kepler.gl/processors';
 
 export type CreateMapOutputData = {
@@ -23,6 +23,17 @@ export type CreateMapOutputData = {
   isDraggable?: boolean;
   layerConfig?: string;
 };
+
+export function isCreateMapOutputData(
+  data: unknown
+): data is CreateMapOutputData {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'datasetName' in data &&
+    'datasetForKepler' in data
+  );
+}
 
 export function KeplerGlToolComponent(props: CreateMapOutputData) {
   const id = props.id || generateId();

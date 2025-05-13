@@ -114,7 +114,7 @@ export const area = tool<
     };
   },
   context: {
-    getGeometries: () => null,
+    getGeometries: async () => null,
   },
 });
 

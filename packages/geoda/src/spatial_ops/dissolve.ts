@@ -130,7 +130,7 @@ export const dissolve = tool<
     };
   },
   context: {
-    getGeometries: () => null,
+    getGeometries: async () => null,
   },
 });
 

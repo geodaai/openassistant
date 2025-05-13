@@ -1,6 +1,5 @@
 import { tool } from '@openassistant/utils';
 import { z } from 'zod';
-import { KeplerGlToolComponent } from './component/keplergl-component';
 import {
   FileCacheItem,
   processFileData,
@@ -8,7 +7,7 @@ import {
 } from '@kepler.gl/processors';
 import * as arrow from 'apache-arrow';
 import { arrowSchemaToFields } from './utils';
-import { GetDataset, GetGeometries } from '../types';
+import { GetDataset, GetGeometries } from './types';
 
 export type KeplerGlToolArgs = z.ZodObject<{
   datasetName: z.ZodString;
@@ -96,7 +95,6 @@ export const keplergl = tool<
       isDraggable: false,
     },
   },
-  component: KeplerGlToolComponent,
 });
 
 /**
@@ -149,7 +147,7 @@ export type ExecuteCreateMapResult = {
 export function isKeplerglToolContext(
   context: unknown
 ): context is KeplerglToolContext {
-  return typeof context === 'object' && context !== null && 'config' in context;
+  return typeof context === 'object' && context !== null;
 }
 
 export type KeplerglToolArgs = {

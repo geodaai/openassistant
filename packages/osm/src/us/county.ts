@@ -28,29 +28,40 @@ export type ExecuteGetUsCountyGeojsonResult = {
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
- * Get US County GeoJSON Tool from the Github repository: https://github.com/hyperknot/country-levels-export
- * Note: to avoid overloading the Github API, we only fetch the GeoJSON data every 1 second.
- *
- * This tool retrieves the GeoJSON data for all counties in a US state by its state code.
- * It returns the counties' boundary geometries and properties.
+ * Get US County GeoJSON Tool
+ * 
+ * This tool can be used to get the GeoJSON data of one or more United States counties using the Github repository: https://github.com/hyperknot/country-levels-export
+ * 
+ * :::note
+ * to avoid overloading the Github API, we only fetch the GeoJSON data every 1 second.
+ * :::
  *
  * Example user prompts:
  * - "Get all counties in California"
  * - "Show me the county boundaries of New York state"
  * - "What are the counties in Texas?"
  *
- * Example code:
+ * :::tip
+ * This tool can be mixed with other tools for more complex tasks. For example, if you have a point datasets, you can use this tool
+ * to answer questions like "What are the total revenus in the counties of California?"
+ * :::
+ * 
+ * @example
  * ```typescript
- * import { getVercelAiTool } from "@openassistant/osm";
+ * import { getOsmTool, OsmToolNames } from "@openassistant/osm";
  *
- * const countyTool = getVercelAiTool('getUsCountyGeojson');
+ * const countyTool = getOsmTool(OsmToolNames.getUsCountyGeojson);
  *
- * generateText({
- *   model: 'gpt-4o-mini',
+ * streamText({
+ *   model: openai('gpt-4o'),
  *   prompt: 'What are the counties in Texas?',
- *   tools: {getUsCountyGeojson: countyTool},
+ *   tools: {
+ *     county: countyTool,
+ *   },
  * });
  * ```
+ * 
+ * For a more complete example, see the [OSM Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_osm_example).
  */
 export const getUsCountyGeojson = tool<
   GetUsCountyGeojsonFunctionArgs,

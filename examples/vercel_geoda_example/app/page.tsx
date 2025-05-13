@@ -61,7 +61,8 @@ export default function Home() {
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-4">ECharts Chat Example</h1>
           <p className="text-gray-600">
-            Try asking for a histogram or other chart visualization!
+            Try asking for classify data, create spatial weights, or run local
+            spatial statistics!
           </p>
         </div>
 

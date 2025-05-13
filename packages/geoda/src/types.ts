@@ -25,7 +25,7 @@ export type WeightsProps = {
  */
 export type GetGeometries = (
   datasetName: string
-) => Promise<SpatialGeometry> | null;
+) => Promise<SpatialGeometry | null>;
 
 export type SpatialToolContext = {
   getGeometries?: GetGeometries;

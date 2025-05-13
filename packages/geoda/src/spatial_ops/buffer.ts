@@ -158,7 +158,7 @@ export const buffer = tool<
     };
   },
   context: {
-    getGeometries: () => null,
+    getGeometries: async () => null,
   },
 });
 

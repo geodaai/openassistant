@@ -109,6 +109,6 @@ export const perimeter = tool<
     };
   },
   context: {
-    getGeometries: () => null,
+    getGeometries: async () => null,
   },
 });

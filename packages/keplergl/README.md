@@ -1,6 +1,6 @@
-# KeplerGL Tools
+# KeplerGL Component
 
-This package provides a tool to create a map from your dataset using @openassistant/keplergl.
+This package provides a component to create a map from your dataset using @openassistant/keplergl. It works with the `keplergl` tool in the `@openassistant/map` package.
 
 <img src="https://openassistant-doc.vercel.app/img/keplerPlugin-1.png" width="400" alt="KeplerGL Tool" />
 

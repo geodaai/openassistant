@@ -100,27 +100,42 @@ export type ExecuteRoutingResult = {
 
 /**
  * Routing Tool
- * 
+ *
  * This tool calculates routes between two points using Mapbox's Directions API.
  * It supports different transportation modes (driving, walking, cycling) and returns
  * detailed route information including distance, duration, and turn-by-turn directions.
- * 
+ *
+ * :::tip
+ * If you don't know the coordinates of the origin or destination point, you can use the geocoding tool to get it.
+ * :::
+ *
  * Example user prompts:
  * - "Find the driving route from Times Square to Central Park"
  * - "How do I walk from the Eiffel Tower to the Louvre?"
  * - "Get cycling directions from my current location to the nearest coffee shop"
- * 
+ *
  * Example code:
  * ```typescript
- * import { routing, RoutingTool } from "@openassistant/osm";
- * 
- * const routingTool: RoutingTool = {
- *   ...routing,
- *   context: {
- *     getMapboxToken: () => "your-mapbox-token"
- *   }
- * };
+ * import { getOsmTool, OsmToolNames } from "@openassistant/osm";
+ *
+ * const geocodingTool = getOsmTool(OsmToolNames.geocoding);
+ * const routingTool = getOsmTool(OsmToolNames.routing, {
+ *   toolContext: {
+ *     getMapboxToken: () => process.env.MAPBOX_TOKEN!,
+ *   },
+ * });
+ *
+ * streamText({
+ *   model: openai('gpt-4o'),
+ *   prompt: 'Find the driving route from Times Square to Central Park',
+ *   tools: {
+ *     geocoding: geocodingTool,
+ *     routing: routingTool,
+ *   },
+ * });
  * ```
+ *
+ * For a more complete example, see the [OSM Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_osm_example).
  */
 export const routing = tool<
   RoutingFunctionArgs,

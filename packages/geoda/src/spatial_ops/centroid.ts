@@ -142,7 +142,7 @@ export const centroid = tool<
     };
   },
   context: {
-    getGeometries: () => null,
+    getGeometries: async () => null,
   },
 });
 

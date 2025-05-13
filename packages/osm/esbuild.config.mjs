@@ -9,15 +9,6 @@ const isWatch = process.argv.includes('--watch');
 
 const baseConfig = createBaseConfig({
   entryPoints: ['src/index.ts'],
-  loader: {
-    '.js': 'jsx',
-    '.ts': 'tsx',
-    '.png': 'file',
-    '.jpg': 'file',
-    '.svg': 'file',
-    '.css': 'css',
-  },
-  jsx: 'automatic',
   plugins: [dtsPlugin()],
   external: ['@openassistant/core', 'zod', 'zip3'],
 });
