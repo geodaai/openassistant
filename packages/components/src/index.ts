@@ -24,3 +24,6 @@ export * from './echarts/scatterplot/simple-scatter-plots';
 
 export * from './echarts/echarts-updater';
 export * from './echarts/component-snapshot';
+
+export * from './geoda/weights-meta-table';
+export * from './geoda/spatial-count-component';

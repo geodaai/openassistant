@@ -12,13 +12,13 @@ export default function Home() {
   // context for local tools
   const context = {
     getValues: async (datasetName: string, variableName: string) => {
-      console.log('getValues', datasetName, variableName);
+      // simulate a local tool that returns a list of values
       return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     },
   };
 
   const onToolCompleted = (toolCallId: string, additionalData: unknown) => {
-    // save {toolCallId: additionalData} for rendering
+    // save local tool outputs for tool rendering
     if (toolAdditionalData.current[toolCallId] === undefined) {
       toolAdditionalData.current[toolCallId] = additionalData;
     }
@@ -26,7 +26,7 @@ export default function Home() {
 
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     maxSteps: 20,
-    // local tools are handled by the client
+    // local tools that are handled by the client
     onToolCall: async ({ toolCall }) => {
       const { toolName, args, toolCallId } = toolCall;
       if (toolName === 'localQuery') {

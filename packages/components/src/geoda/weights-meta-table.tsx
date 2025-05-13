@@ -14,7 +14,13 @@ import {
   useDraggable,
   generateId,
 } from '@openassistant/common';
-import '../../index.css';
+import '../index.css';
+
+export function isSpatialWeightsOutputData(
+  data: unknown
+): data is SpatialWeightsMetaTableProps {
+  return typeof data === 'object' && data !== null && 'weightsMeta' in data;
+}
 
 export type SpatialWeightsMetaTableProps = {
   id?: string;

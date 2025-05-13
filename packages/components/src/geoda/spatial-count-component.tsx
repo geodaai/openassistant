@@ -14,7 +14,7 @@ import {
   useDraggable,
   generateId,
 } from '@openassistant/common';
-import '../../index.css';
+import '../index.css';
 
 export type SpatialCountComponentProps = {
   id?: string;

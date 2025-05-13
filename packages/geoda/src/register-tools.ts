@@ -15,6 +15,23 @@ import { dissolve } from './spatial_ops/dissolve';
 import { length } from './spatial_ops/length';
 import { perimeter } from './spatial_ops/perimeter';
 
+// export the enum of tool names, so users can use it to check if a tool is available
+export enum GeoDaToolNames {
+  dataClassify = 'dataClassify',
+  lisa = 'lisa',
+  globalMoran = 'globalMoran',
+  spatialRegression = 'spatialRegression',
+  spatialJoin = 'spatialJoin',
+  spatialFilter = 'spatialFilter',
+  spatialWeights = 'spatialWeights',
+  area = 'area',
+  buffer = 'buffer',
+  centroid = 'centroid',
+  dissolve = 'dissolve',
+  length = 'length',
+  perimeter = 'perimeter',
+}
+
 export function registerTools() {
   return {
     dataClassify,

@@ -5,7 +5,7 @@ import {
   HistogramComponent,
 } from '@openassistant/components';
 import { getDuckDB } from '@openassistant/duckdb';
-import { useRef, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 
 interface ToolInvocationProps {
   toolCallId: string;

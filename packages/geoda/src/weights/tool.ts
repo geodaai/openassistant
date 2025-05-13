@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { createWeights, WeightsMeta, CreateWeightsProps } from '@geoda/core';
 import { WeightsProps, GetGeometries } from '../types';
 
-// global variable to store the created weights
+// global variable to store the created weights, which will be shared across tool calls e.g. lisa, spatial regression 
 /**
  * @internal
  */

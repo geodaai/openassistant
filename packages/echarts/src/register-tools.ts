@@ -7,6 +7,15 @@ import { scatterplot } from './scatterplot/tool';
 import { getTool, OnToolCompleted } from '@openassistant/utils';
 import { GetValues, OnSelected } from './types';
 
+// export the enum of tool names, so users can use it to check if a tool is available
+export enum EChartsToolNames {
+  boxplot = 'boxplot',
+  bubbleChart = 'bubbleChart',
+  histogram = 'histogram',
+  pcp = 'pcp',
+  scatterplot = 'scatterplot',
+}
+
 export type ToolContext = {
   getValues: GetValues;
   onSelected?: OnSelected;
