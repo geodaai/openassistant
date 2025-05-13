@@ -1,7 +1,5 @@
 import { z } from 'zod';
-import { tool } from '@openassistant/utils';
-import { generateId } from '@openassistant/common';
-import { BubbleChartComponentContainer } from './component/bubble-chart-component';
+import { tool, generateId } from '@openassistant/utils';
 import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../types';
 
 /**
@@ -66,7 +64,6 @@ export const bubbleChart = tool<
       theme: 'light',
     },
   },
-  component: BubbleChartComponentContainer,
 });
 
 export type BubbleChartTool = typeof bubbleChart;

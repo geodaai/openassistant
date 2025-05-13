@@ -22,31 +22,43 @@ export function registerTools() {
   };
 }
 
-export function getVercelAiTool(
+export function getEChartsTool(
   toolName: string,
-  toolContext: ToolContext,
-  onToolCompleted: OnToolCompleted
+  options: {
+    toolContext?: ToolContext;
+    onToolCompleted?: OnToolCompleted;
+    isExecutable?: boolean;
+  }
 ) {
   const tool = registerTools()[toolName];
   if (!tool) {
     throw new Error(`Tool "${toolName}" not found`);
   }
-  return getTool(tool, toolContext, onToolCompleted);
+  return getTool({
+    tool,
+    options: {
+      ...options,
+      isExecutable: options.isExecutable ?? true,
+    },
+  });
 }
 
-export function getVercelAiTools(
+export function getEChartsTools(
   toolContext: ToolContext,
-  onToolCompleted: OnToolCompleted
+  onToolCompleted: OnToolCompleted,
+  isExecutable: boolean = true
 ) {
   const tools = registerTools();
 
   // return Record<string, ToolResult>
   const toolsResult = Object.fromEntries(
     Object.keys(tools).map((key) => {
-      return [key, getVercelAiTool(key, toolContext, onToolCompleted)];
+      return [
+        key,
+        getEChartsTool(key, { toolContext, onToolCompleted, isExecutable }),
+      ];
     })
   );
 
-  console.log('toolsResult', toolsResult);
   return toolsResult;
 }

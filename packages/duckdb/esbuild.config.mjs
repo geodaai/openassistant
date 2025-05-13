@@ -4,36 +4,20 @@ import {
   createWatchMode,
   buildFormat,
 } from '../../esbuild.config.mjs';
-import tailwindPlugin from 'esbuild-plugin-tailwindcss';
 import { dtsPlugin } from 'esbuild-plugin-d.ts';
 
 const baseConfig = createBaseConfig({
   minify: false,
   entryPoints: ['src/index.ts'],
-  loader: {
-    '.js': 'jsx',
-    '.ts': 'tsx',
-    '.png': 'file',
-    '.jpg': 'file',
-    '.svg': 'file',
-    '.css': 'css',
-  },
   jsx: 'automatic',
-  plugins: [
-    tailwindPlugin({
-      config: './tailwind.config.js',
-    }),
-    dtsPlugin(),
-  ],
+  plugins: [dtsPlugin()],
   external: [
     'react',
     'react-dom',
     '@duckdb/duckdb-wasm',
     'apache-arrow',
     '@openassistant/core',
-    '@nextui-org/react',
-    'framer-motion',
-    'tailwindcss',
+    'zod',
   ],
 });
 

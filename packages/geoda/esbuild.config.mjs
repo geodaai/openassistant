@@ -3,44 +3,22 @@ import {
   buildFormat,
   createWatchMode,
 } from '../../esbuild.config.mjs';
-import tailwindPlugin from 'esbuild-plugin-tailwindcss';
 import { dtsPlugin } from 'esbuild-plugin-d.ts';
 
 const isWatch = process.argv.includes('--watch');
 
 const baseConfig = createBaseConfig({
   entryPoints: ['src/index.ts'],
-  loader: {
-    '.js': 'jsx',
-    '.ts': 'tsx',
-    '.png': 'file',
-    '.jpg': 'file',
-    '.svg': 'file',
-    '.css': 'css',
-  },
-  jsx: 'automatic',
-  plugins: [
-    tailwindPlugin({
-      config: './tailwind.config.js',
-    }),
-    dtsPlugin(),
-  ],
+  plugins: [dtsPlugin()],
   external: [
     'react',
     'react-dom',
     '@loaders.gl/core',
+    '@loaders.gl/gis',
     '@loaders.gl/schema',
-    '@nextui-org/react',
-    '@openassistant/core',
-    '@openassistant/common',
-    '@openassistant/echarts',
     '@geoda/core',
     '@geoda/lisa',
     '@geoda/regression',
-    'echarts-for-react',
-    'echarts',
-    'framer-motion',
-    'tailwindcss',
   ],
 });
 

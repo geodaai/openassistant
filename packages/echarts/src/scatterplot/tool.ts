@@ -1,8 +1,6 @@
 import { z } from 'zod';
-import { tool } from '@openassistant/utils';
-import { generateId } from '@openassistant/common';
-import { ScatterplotComponentContainer } from './component/scatter-plot-component';
-import { computeRegression } from './component/scatter-regression';
+import { tool, generateId } from '@openassistant/utils';
+import { computeRegression } from './utils';
 import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../types';
 
 /**
@@ -74,7 +72,6 @@ export const scatterplot = tool<
       showRegressionLine: true,
     },
   },
-  component: ScatterplotComponentContainer,
 });
 
 export type ScatterplotTool = typeof scatterplot;

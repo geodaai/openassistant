@@ -9,10 +9,8 @@ import { ResizablePlotContainer } from './resizable-container';
 import { Popover } from '@nextui-org/react';
 import { Icon } from '@iconify/react';
 import { EChartsSkeleton } from './echarts-skeleton';
-import dynamic from 'next/dynamic';
 
-// Create a client-side only version of the component
-const ClientExpandableContainer = ({
+export const ExpandableContainer = ({
   children,
   defaultWidth,
   defaultHeight,
@@ -141,9 +139,3 @@ const ClientExpandableContainer = ({
     </ResizablePlotContainer>
   );
 };
-
-// Export a dynamically imported version of the component that only renders on the client side
-export const ExpandableContainer = dynamic(
-  () => Promise.resolve(ClientExpandableContainer),
-  { ssr: false }
-);

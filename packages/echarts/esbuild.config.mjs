@@ -11,20 +11,7 @@ const isWatch = process.argv.includes('--watch');
 
 const baseConfig = createBaseConfig({
   entryPoints: ['src/index.ts'],
-  external: [
-    'react',
-    'react-dom',
-    'echarts',
-    'echarts-for-react',
-    '@iconify/react',
-    '@nextui-org/react',
-    '@nextui-org/theme',
-    'framer-motion',
-    'tailwindcss',
-    '@openassistant/core',
-    '@openassistant/common',
-    'sensorPool',
-  ],
+  external: ['react', 'react-dom', '@openassistant/utils', 'sensorPool'],
   loader: {
     '.js': 'jsx',
     '.ts': 'tsx',

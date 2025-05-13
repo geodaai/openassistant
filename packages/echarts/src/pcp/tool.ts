@@ -1,11 +1,9 @@
 import { z } from 'zod';
-import { tool } from '@openassistant/utils';
-import { generateId } from '@openassistant/common';
-import { ParallelCoordinateComponentContainer } from './component/pcp-component';
+import { tool, generateId } from '@openassistant/utils';
 import {
   ParallelCoordinateDataProps,
   processParallelCoordinateData,
-} from './component/utils';
+} from './utils';
 import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../types';
 
 /**
@@ -74,7 +72,6 @@ export const pcp = tool<
       theme: 'light',
     },
   },
-  component: ParallelCoordinateComponentContainer,
 });
 
 export type PCPTool = typeof pcp;

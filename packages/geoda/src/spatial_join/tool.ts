@@ -9,7 +9,6 @@ import { z } from 'zod';
 import { binaryToGeojson } from '@loaders.gl/gis';
 
 import { applyJoin } from './apply-join';
-import { SpatialJoinToolComponent } from './component/spatial-count-component';
 import { GetValues, GetGeometries } from '../types';
 import { cacheData, generateId, getGeoDaCachedData } from '../utils';
 
@@ -129,7 +128,6 @@ Please Note:
       throw new Error('saveAsDataset() of SpatialJoinTool is not implemented');
     },
   },
-  component: SpatialJoinToolComponent,
 });
 
 export type SpatialJoinTool = typeof spatialJoin;

@@ -33,24 +33,46 @@ export function registerTools() {
   };
 }
 
-export function getVercelAiTool(
+export function getGeoDaTool(
   toolName: string,
-  toolContext: SpatialToolContext,
-  onToolCompleted: OnToolCompleted
+  options: {
+    toolContext: SpatialToolContext;
+    onToolCompleted: OnToolCompleted;
+    isExecutable?: boolean;
+  }
 ) {
   const tool = registerTools()[toolName];
   if (!tool) {
     throw new Error(`Tool "${toolName}" not found`);
   }
-  return getTool(tool, toolContext, onToolCompleted);
+  return getTool({
+    tool,
+    options: {
+      ...options,
+      isExecutable: options.isExecutable ?? true,
+    },
+  });
 }
 
-export function getVercelAiTools(
+export function getGeoDaTools(
   toolContext: SpatialToolContext,
-  onToolCompleted: OnToolCompleted
+  onToolCompleted: OnToolCompleted,
+  isExecutable: boolean = true
 ) {
   const tools = registerTools();
-  return Object.keys(tools).map((key) => {
-    return getVercelAiTool(key, toolContext, onToolCompleted);
-  });
+
+  const toolsResult = Object.fromEntries(
+    Object.keys(tools).map((key) => {
+      return [
+        key,
+        getGeoDaTool(key, {
+          toolContext,
+          onToolCompleted,
+          isExecutable,
+        }),
+      ];
+    })
+  );
+
+  return toolsResult;
 }

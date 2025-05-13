@@ -8,7 +8,6 @@ import {
 } from '@openassistant/echarts';
 
 import { GetValues } from '../types';
-import { MoranScatterPlotToolComponent } from './component/moran-scatter-component';
 import { getCachedWeightsById } from '../weights/tool';
 
 export type SpatialWeights = {
@@ -118,7 +117,6 @@ export const globalMoran = tool<
       ),
   }),
   execute: executeMoranScatterPlot,
-  component: MoranScatterPlotToolComponent,
 });
 
 export type GlobalMoranTool = typeof globalMoran;

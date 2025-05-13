@@ -1,9 +1,7 @@
-import { tool } from '@openassistant/utils';
+import { tool, generateId } from '@openassistant/utils';
 import { z } from 'zod';
-import { generateId } from '@openassistant/common';
 
-import { BoxplotDataProps, createBoxplot } from './component/utils';
-import { BoxplotComponentContainer } from './component/box-plot-component';
+import { BoxplotDataProps, createBoxplot } from './utils';
 import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../types';
 
 /**
@@ -81,7 +79,6 @@ export const boxplot = tool<
       isDraggable: false,
     },
   },
-  component: BoxplotComponentContainer,
 });
 
 /**

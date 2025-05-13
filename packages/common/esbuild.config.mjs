@@ -33,18 +33,23 @@ const baseConfig = createBaseConfig({
     'framer-motion',
     'tailwindcss',
     '@iconify/react',
+    're-resizable',
   ],
 });
 
 if (isWatch) {
   // Create watch mode for both ESM and CJS formats
-  const esmConfig = { ...baseConfig, format: 'esm', outfile: 'dist/index.esm.js' };
+  const esmConfig = {
+    ...baseConfig,
+    format: 'esm',
+    outfile: 'dist/index.esm.js',
+  };
   const cjsConfig = {
     ...baseConfig,
     format: 'cjs',
     outfile: 'dist/index.cjs.js',
     platform: 'node',
-    target: ['es2017']
+    target: ['es2017'],
   };
 
   // Start watching both formats

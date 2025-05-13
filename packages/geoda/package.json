@@ -34,11 +34,7 @@
     "@loaders.gl/core": "^4.3.3",
     "@loaders.gl/gis": "^4.3.3",
     "@loaders.gl/schema": "^4.3.3",
-    "@nextui-org/react": "^2.6.8",
-    "@openassistant/common": "workspace:*",
-    "@openassistant/echarts": "workspace:*",
-    "framer-motion": "^11.15.0",
-    "tailwindcss": "^3.4.17"
+    "@openassistant/utils": "workspace:*"
   },
   "peerDependencies": {
     "react": ">=18.2",
@@ -47,5 +43,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "232930873ca397af1dbaa234a00c5d27dba29a26"
+  "gitHead": "bff68ca7f9786f9dee33a1760e50db5bd7cb41e3"
 }
