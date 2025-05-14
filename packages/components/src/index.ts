@@ -1,5 +1,7 @@
 export * from './queryTable';
 
+export * from './vegalite/vega-plot-component';
+
 export * from './echarts/boxplot/box-plot-component';
 export * from './echarts/boxplot/box-plot';
 export * from './echarts/boxplot/boxplot-option';

@@ -38,8 +38,11 @@
     "framer-motion": "^11.15.0",
     "jstat": "^1.9.6",
     "re-resizable": "^6.10.3",
+    "react-vega": "7.6.0",
     "simple-statistics": "^7.8.7",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^3.4.17",
+    "vega": "5.31.0",
+    "vega-lite": "5.23.0"
   },
   "peerDependencies": {
     "react": ">=18.2",

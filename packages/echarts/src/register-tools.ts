@@ -3,7 +3,7 @@ import { bubbleChart } from './bubble-chart/tool';
 import { histogram } from './histogram/tool';
 import { pcp } from './pcp/tool';
 import { scatterplot } from './scatterplot/tool';
-
+import { vegaLitePlot } from './vegalite/tool';
 import { getTool, OnToolCompleted } from '@openassistant/utils';
 import { GetValues, OnSelected } from './types';
 
@@ -14,6 +14,7 @@ export enum EChartsToolNames {
   histogram = 'histogram',
   pcp = 'pcp',
   scatterplot = 'scatterplot',
+  vegaLitePlot = 'vegaLitePlot',
 }
 
 export type ToolContext = {
@@ -28,6 +29,7 @@ export function registerTools() {
     histogram,
     pcp,
     scatterplot,
+    vegaLitePlot,
   };
 }
 

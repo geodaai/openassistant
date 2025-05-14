@@ -18,3 +18,5 @@ export * from './math/linear-regression';
 
 export * from './types';
 export * from './register-tools';
+
+export * from './vegalite/tool';

@@ -23,6 +23,9 @@ const baseConfig = createBaseConfig({
     'tailwindcss',
     '@openassistant/core',
     'sensorPool',
+    'vega',
+    'vega-lite',
+    'react-vega',
   ],
   loader: {
     '.js': 'jsx',
