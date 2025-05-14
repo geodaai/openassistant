@@ -4,11 +4,7 @@ import {
 } from '@openassistant/components';
 import { useMemo } from 'react';
 
-interface HistogramToolProps {
-  additionalData: unknown;
-}
-
-export function HistogramTool({ additionalData }: HistogramToolProps) {
+export function HistogramTool({ additionalData }: { additionalData: unknown }) {
   if (isHistogramOutputData(additionalData)) {
     return useMemo(
       () => <HistogramComponent {...additionalData} />,

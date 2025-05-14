@@ -5,6 +5,7 @@ import { getDuckDBTool, DuckDBToolNames } from '@openassistant/duckdb';
 import { getMapTool, MapToolNames } from '@openassistant/map';
 import { useRef } from 'react';
 import { MessageParts } from './components/parts';
+import { SpatialGeometry } from '@geoda/core';
 
 export default function Home() {
   // preserve the tool data between renders
@@ -32,12 +33,37 @@ export default function Home() {
         },
         properties: { id: index + 1 },
       }));
+    } else if (datasetName === 'world_countries') {
+      const points = [
+        [101.96625, 33.30202],
+        [101.97234, 33.29876],
+        [101.96018, 33.30543],
+      ];
+      return points.map((point, index) => ({
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: point,
+        },
+        properties: { id: index + 1 },
+      }));
     }
     return null;
-  }
+  };
 
-  const getGeometries = async (datasetName: string) => {
+  const getGeometries = async (datasetName: string): Promise<SpatialGeometry | null> => {
     // get cached geometries from other tools
+    const toolData = Object.values(toolAdditionalData.current);
+
+    for (const data of toolData) {
+      if (data && typeof data === 'object' && datasetName in data) {
+        const cache = (data as Record<string, unknown>)[datasetName];
+        if (cache) {
+          return cache as SpatialGeometry;
+        }
+      }
+    }
+
     return null;
   };
 

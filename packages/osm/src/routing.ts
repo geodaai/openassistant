@@ -1,6 +1,6 @@
-import { tool } from '@openassistant/utils';
 import { z } from 'zod';
-import { generateId, cacheData } from './utils';
+import { FeatureCollection } from 'geojson';
+import { generateId, cacheData, tool } from '@openassistant/utils';
 import { isOsmToolContext, OsmToolContext } from './register-tools';
 
 type MapboxStep = {
@@ -58,7 +58,7 @@ export type RoutingLlmResult = {
     datasetName: string;
     distance: number;
     duration: number;
-    geometry: GeoJSON.LineString;
+    geojson: GeoJSON.FeatureCollection;
     origin: GeoJSON.FeatureCollection;
     destination: GeoJSON.FeatureCollection;
     steps?: Array<{
@@ -225,8 +225,7 @@ export const routing = tool<
         })),
       };
 
-      // Cache the route data
-      cacheData(cacheKey, {
+      const geojson: FeatureCollection = {
         type: 'FeatureCollection',
         features: [
           {
@@ -235,7 +234,10 @@ export const routing = tool<
             properties: {},
           },
         ],
-      });
+      };
+
+      // Cache the route data
+      cacheData(cacheKey, geojson);
 
       return {
         llmResult: {
@@ -244,7 +246,7 @@ export const routing = tool<
             datasetName: cacheKey,
             distance: route.distance,
             duration: route.duration,
-            geometry: route.geometry,
+            geojson,
             origin: {
               type: 'FeatureCollection',
               features: [

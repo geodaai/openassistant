@@ -1,8 +1,11 @@
-import { tool } from '@openassistant/utils';
+import {
+  cacheData,
+  generateId,
+  getCachedData,
+  tool,
+} from '@openassistant/utils';
 import { z } from 'zod';
 import zips from 'zip3';
-
-import { cacheData, generateId, getCachedData } from '../utils';
 
 // Add delay function to prevent rate limiting
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -47,7 +50,7 @@ export type ExecuteGetUsZipcodeGeojsonResult = {
  * :::note
  * Note: to avoid overloading the Github API, we only fetch the GeoJSON data every 1 second.
  * :::
- * 
+ *
  * @example
  * ```typescript
  * import { getOsmTool, OsmToolNames } from "@openassistant/osm";

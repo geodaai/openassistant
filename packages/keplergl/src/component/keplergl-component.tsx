@@ -5,15 +5,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { IntlProvider } from 'react-intl';
 
-import { RootContext } from '@kepler.gl/components';
 import { addDataToMap } from '@kepler.gl/actions';
-import { theme as keplerTheme } from '@kepler.gl/styles';
+import { RootContext } from '@kepler.gl/components';
+import { Layer } from '@kepler.gl/layers';
 import { messages } from '@kepler.gl/localization';
-import { KeplerMiniMap } from './keplergl-mini-map';
-import { KeplerState, MAP_ID, store } from './keplergl-provider';
+import { FileCacheItem } from '@kepler.gl/processors';
+import { theme as keplerTheme } from '@kepler.gl/styles';
+
 import { ExpandableContainer } from '@openassistant/common';
 import { generateId } from '@openassistant/utils';
-import { FileCacheItem } from '@kepler.gl/processors';
+
+import { KeplerMiniMap } from './keplergl-mini-map';
+import { KeplerState, MAP_ID, store } from './keplergl-provider';
 
 export type CreateMapOutputData = {
   id?: string;
@@ -125,6 +128,13 @@ export function KeplerGlComponent(
   //   theme={keplerTheme}
   // /> */}
 
+  // get layerId using datasetName
+  const layerId = keplerState?.visState?.layers.find(
+    (layer: Layer) =>
+      layer.config.label === props.datasetName ||
+      layer.config.dataId === props.datasetName
+  )?.id;
+
   return (
     <>
       {keplerState?.visState?.layers?.length > 0 && keplerState?.uiState && (
@@ -132,7 +142,7 @@ export function KeplerGlComponent(
           <IntlProvider locale="en" messages={keplerMessages}>
             <KeplerMiniMap
               keplerTheme={keplerTheme}
-              layerId={keplerState?.visState?.layers[0]?.id}
+              layerId={layerId || keplerState?.visState?.layers[0]?.id}
               mapWidth={props.width}
               mapHeight={props.height}
             />

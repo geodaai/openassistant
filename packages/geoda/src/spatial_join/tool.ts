@@ -10,7 +10,7 @@ import { binaryToGeojson } from '@loaders.gl/gis';
 
 import { applyJoin } from './apply-join';
 import { GetValues, GetGeometries } from '../types';
-import { cacheData, generateId, getGeoDaCachedData } from '../utils';
+import { cacheData, generateId, getCachedData } from '@openassistant/utils';
 
 export type SpatialJoinFunctionArgs = z.ZodObject<{
   rightDatasetName: z.ZodString;
@@ -221,7 +221,7 @@ export async function runSpatialJoin({
     let leftGeometries = await getGeometries(leftDatasetName);
 
     if (!rightGeometries || rightGeometries.length === 0) {
-      const cacheData = await getGeoDaCachedData(rightDatasetName);
+      const cacheData = await getCachedData(rightDatasetName);
       if (cacheData) {
         rightGeometries = (cacheData as GeoJSON.FeatureCollection).features;
       } else {
@@ -230,7 +230,7 @@ export async function runSpatialJoin({
     }
 
     if (!leftGeometries || leftGeometries.length === 0) {
-      const cacheData = await getGeoDaCachedData(leftDatasetName);
+      const cacheData = await getCachedData(leftDatasetName);
       if (cacheData) {
         leftGeometries = (cacheData as GeoJSON.FeatureCollection).features;
       } else {

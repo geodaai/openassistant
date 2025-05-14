@@ -1,6 +1,5 @@
 export * from './geocoding';
 export * from './routing';
-export * from './utils';
 export * from './isochrone';
 
 export * from './us/county';

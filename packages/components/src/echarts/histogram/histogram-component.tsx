@@ -1,8 +1,5 @@
-import {
-  ExpandableContainer,
-  generateId,
-  useDraggable,
-} from '@openassistant/common';
+import { ExpandableContainer, useDraggable } from '@openassistant/common';
+import { generateId } from '@openassistant/utils';
 
 import { useState } from 'react';
 import { HistogramOutputData, HistogramPlot } from './histogram-plot';
@@ -44,7 +41,7 @@ export function HistogramComponent(
       onDragStart={onDragStart}
       onExpanded={onExpanded}
     >
-      <HistogramPlot {...props} />
+      <HistogramComponent {...props} />
     </ExpandableContainer>
   );
 }

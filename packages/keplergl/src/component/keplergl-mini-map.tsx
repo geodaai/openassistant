@@ -1,6 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
+
+import { wrapTo } from '@kepler.gl/actions';
 import {
   appInjector,
   MapContainerFactory,
@@ -8,11 +10,11 @@ import {
   mapFieldsSelector,
   MapViewStateContextProvider,
 } from '@kepler.gl/components';
-import { findMapBounds, uiStateUpdaters } from '@kepler.gl/reducers';
 import { Layer } from '@kepler.gl/layers';
-import { wrapTo } from '@kepler.gl/actions';
+import { findMapBounds, uiStateUpdaters } from '@kepler.gl/reducers';
 import { MapState } from '@kepler.gl/types';
 import { getCenterAndZoomFromBounds } from '@kepler.gl/utils';
+
 import { KeplerState, MAP_ID } from './keplergl-provider';
 
 // disable all map controls
@@ -156,7 +158,7 @@ export function KeplerMiniMap({
 
   // Calculate newMapState only once and store it
   if (!initialMapStateRef.current) {
-    const bounds = findMapBounds(mapFields.visState.layers) || [
+    const bounds = findMapBounds(selectedLayers) || [
       -180, -85.05112877980659, 180, 85.0511287798066,
     ];
     const centerAndZoom = getCenterAndZoomFromBounds(bounds, {

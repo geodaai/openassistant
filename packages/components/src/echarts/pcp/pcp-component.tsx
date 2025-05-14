@@ -1,8 +1,5 @@
-import {
-  ExpandableContainer,
-  generateId,
-  useDraggable,
-} from '@openassistant/common';
+import { ExpandableContainer, useDraggable } from '@openassistant/common';
+import { generateId } from '@openassistant/utils';
 import { useState } from 'react';
 
 import { ParallelCoordinateOutputData, ParallelCoordinatePlot } from './pcp';

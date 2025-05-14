@@ -9,7 +9,8 @@ import {
   LocalMoranResult,
 } from '@geoda/lisa';
 import { GetValues } from '../types';
-import { generateId, getWeights } from '../utils';
+import { getWeights } from '../utils';
+import { generateId } from '@openassistant/utils';
 
 export type LisaFunctionArgs = z.ZodObject<{
   method: z.ZodEnum<

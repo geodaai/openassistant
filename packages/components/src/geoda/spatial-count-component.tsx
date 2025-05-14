@@ -9,11 +9,8 @@ import {
   Pagination,
   Button,
 } from '@nextui-org/react';
-import {
-  ExpandableContainer,
-  useDraggable,
-  generateId,
-} from '@openassistant/common';
+import { ExpandableContainer, useDraggable } from '@openassistant/common';
+import { generateId } from '@openassistant/utils';
 import '../index.css';
 
 export type SpatialCountComponentProps = {

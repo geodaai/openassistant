@@ -1,6 +1,5 @@
-import { tool } from '@openassistant/utils';
 import { z } from 'zod';
-import { cacheData, getCachedData } from '../utils';
+import { cacheData, getCachedData, tool } from '@openassistant/utils';
 
 export type QueryZipcodeFunctionArgs = z.ZodObject<{
   mapBounds: z.ZodObject<{
@@ -60,7 +59,7 @@ export type ExecuteQueryUSZipcodesResult = {
  *   },
  * });
  * ```
- * 
+ *
  * For a more complete example, see the [OSM Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_osm_example).
  */
 export const queryUSZipcodes = tool<

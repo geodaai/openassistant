@@ -1,6 +1,10 @@
-import { tool } from '@openassistant/utils';
 import { z } from 'zod';
-import { cacheData, generateId, getCachedData } from '../utils';
+import {
+  cacheData,
+  generateId,
+  getCachedData,
+  tool,
+} from '@openassistant/utils';
 
 export type GetUsStateGeojsonFunctionArgs = z.ZodObject<{
   stateNames: z.ZodArray<z.ZodString>;

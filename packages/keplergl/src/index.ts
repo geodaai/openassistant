@@ -1,1 +1,1 @@
-export * from './map-layer/component/keplergl-component';
+export * from './component/keplergl-component';

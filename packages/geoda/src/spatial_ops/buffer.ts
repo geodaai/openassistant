@@ -1,9 +1,9 @@
 import { tool } from '@openassistant/utils';
 import { z } from 'zod';
 import { getBuffers } from '@geoda/core';
-import { generateId, isSpatialToolContext } from '../utils';
+import { isSpatialToolContext } from '../utils';
 import { Feature } from 'geojson';
-import { cacheData } from '../utils';
+import { cacheData, generateId } from '@openassistant/utils';
 import { SpatialToolContext } from '../types';
 
 export type BufferFunctionArgs = z.ZodObject<{

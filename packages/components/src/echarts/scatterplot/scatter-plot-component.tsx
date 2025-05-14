@@ -9,11 +9,8 @@ import {
   TableCell,
 } from '@nextui-org/react';
 import { Icon } from '@iconify/react';
-import {
-  ExpandableContainer,
-  generateId,
-  useDraggable,
-} from '@openassistant/common';
+import { ExpandableContainer, useDraggable } from '@openassistant/common';
+import { generateId } from '@openassistant/utils';
 import {
   RegressionResults,
   computeRegression,

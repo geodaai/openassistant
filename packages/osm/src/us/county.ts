@@ -1,6 +1,10 @@
-import { tool } from '@openassistant/utils';
 import { z } from 'zod';
-import { cacheData, generateId, getCachedData } from '../utils';
+import {
+  cacheData,
+  generateId,
+  getCachedData,
+  tool,
+} from '@openassistant/utils';
 
 export type GetUsCountyGeojsonFunctionArgs = z.ZodObject<{
   fipsCodes: z.ZodArray<z.ZodString>;
@@ -29,9 +33,9 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * Get US County GeoJSON Tool
- * 
+ *
  * This tool can be used to get the GeoJSON data of one or more United States counties using the Github repository: https://github.com/hyperknot/country-levels-export
- * 
+ *
  * :::note
  * to avoid overloading the Github API, we only fetch the GeoJSON data every 1 second.
  * :::
@@ -45,7 +49,7 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
  * This tool can be mixed with other tools for more complex tasks. For example, if you have a point datasets, you can use this tool
  * to answer questions like "What are the total revenus in the counties of California?"
  * :::
- * 
+ *
  * @example
  * ```typescript
  * import { getOsmTool, OsmToolNames } from "@openassistant/osm";
@@ -60,7 +64,7 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
  *   },
  * });
  * ```
- * 
+ *
  * For a more complete example, see the [OSM Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_osm_example).
  */
 export const getUsCountyGeojson = tool<

@@ -35,6 +35,7 @@ const baseConfig = createBaseConfig({
     '@iconify/react',
     're-resizable',
   ],
+  treeShaking: true,
 });
 
 if (isWatch) {

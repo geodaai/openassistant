@@ -27,6 +27,10 @@ const keplerReducer = keplerGlReducer.initialState({
     readonly: true,
     currentModal: null,
   },
+  visState: {},
+  mapState: {},
+  mapStyle: {},
+  providerState: {},
 });
 
 const initialState = {
@@ -35,7 +39,7 @@ const initialState = {
   },
 };
 
-const reducers= combineReducers({
+const reducers = combineReducers({
   keplerGl: keplerReducer,
 });
 

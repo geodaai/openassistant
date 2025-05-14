@@ -1,6 +1,10 @@
-import { tool } from '@openassistant/utils';
 import { z } from 'zod';
-import { generateId, cacheData } from './utils';
+import {
+  generateId,
+  cacheData,
+  tool,
+  getCachedData,
+} from '@openassistant/utils';
 import { FeatureCollection } from 'geojson';
 import { isOsmToolContext, OsmToolContext } from './register-tools';
 
@@ -78,7 +82,7 @@ export type ExecuteIsochroneResult = {
  * This tool generates isochrone polygons showing reachable areas within a given time or distance limit
  * from a starting point using Mapbox's Isochrone API. It supports different transportation modes
  * and can return either polygons or linestrings.
- * 
+ *
  * :::tip
  * If you don't know the coordinates of the origin point, you can use the geocoding tool to get it.
  * :::
@@ -98,7 +102,7 @@ export type ExecuteIsochroneResult = {
  *     getMapboxToken: () => process.env.MAPBOX_TOKEN!,
  *   },
  * });
- * 
+ *
  * streamText({
  *   model: openai('gpt-4o'),
  *   prompt: 'What areas can I reach within 2km of the Eiffel Tower on foot?',
@@ -214,6 +218,7 @@ export const isochrone = tool<
       // Cache the isochrone data
       cacheData(cacheKey, isochroneGeojson);
 
+      console.log('cacheData', getCachedData(cacheKey));
       return {
         llmResult: {
           success: true,
