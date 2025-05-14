@@ -1,4 +1,4 @@
-import { numericFormatter } from '@openassistant/common';
+import { numericFormatter } from '../../utils';
 
 /**
  * @internal

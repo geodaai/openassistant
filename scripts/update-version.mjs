@@ -7,11 +7,11 @@ const __dirname = dirname(__filename);
 
 // Read the current version from package.json
 const packageJson = JSON.parse(
-  readFileSync(join(__dirname, '../packages/common/package.json'), 'utf-8')
+  readFileSync(join(__dirname, '../packages/utils/package.json'), 'utf-8')
 );
 
 // Update version.ts
-const VERSION_FILE = join(__dirname, '../packages/common/src/version.ts');
+const VERSION_FILE = join(__dirname, '../packages/utils/src/version.ts');
 const versionContent = `export const VERSION = '${packageJson.version}';\n`;
 writeFileSync(VERSION_FILE, versionContent);
 

@@ -2,7 +2,7 @@
 
 > **useAssistant**(`props`): `object`
 
-Defined in: [packages/core/src/hooks/use-assistant.ts:117](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/hooks/use-assistant.ts#L117)
+Defined in: [packages/core/src/hooks/use-assistant.ts:106](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/hooks/use-assistant.ts#L106)
 
 A custom hook for managing an AI assistant.
 This hook provides functionality to initialize, send messages to, and control an AI assistant.
@@ -16,34 +16,6 @@ This hook provides functionality to initialize, send messages to, and control an
 ## Returns
 
 `object`
-
-### addAdditionalContext()
-
-> **addAdditionalContext**: (`params`) => `Promise`\<`void`\>
-
-Adds additional context to the ongoing conversation with the assistant.
-
-Adds additional context to the assistant's conversation.
-
-#### Parameters
-
-##### params
-
-The context and optional callback.
-
-###### context
-
-`string`
-
-#### Returns
-
-`Promise`\<`void`\>
-
-#### Param
-
-Object containing the context to add
-
-#### Returns
 
 ### apiKeyStatus
 

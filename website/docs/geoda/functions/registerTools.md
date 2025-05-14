@@ -2,7 +2,7 @@
 
 > **registerTools**(): `object`
 
-Defined in: [packages/geoda/src/register-tools.ts:17](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/geoda/src/register-tools.ts#L17)
+Defined in: [packages/geoda/src/register-tools.ts:35](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/register-tools.ts#L35)
 
 ## Returns
 
@@ -43,6 +43,34 @@ Defined in: [packages/geoda/src/register-tools.ts:17](https://github.com/GeoDaCe
 ### perimeter
 
 > **perimeter**: `ExtendedTool`\<[`PerimeterFunctionArgs`](../type-aliases/PerimeterFunctionArgs.md), [`PerimeterLlmResult`](../type-aliases/PerimeterLlmResult.md), [`PerimeterAdditionalData`](../type-aliases/PerimeterAdditionalData.md), [`SpatialToolContext`](../type-aliases/SpatialToolContext.md)\>
+
+### spatialFilter
+
+> **spatialFilter**: `object`
+
+#### spatialFilter.component?
+
+> `optional` **component**: `ElementType`\<`any`, keyof IntrinsicElements\>
+
+#### spatialFilter.context?
+
+> `optional` **context**: [`SpatialJoinFunctionContext`](../type-aliases/SpatialJoinFunctionContext.md)
+
+#### spatialFilter.description
+
+> **description**: `string`
+
+#### spatialFilter.execute
+
+> **execute**: `ExecuteFunction`\<[`SpatialJoinFunctionArgs`](../type-aliases/SpatialJoinFunctionArgs.md), [`SpatialJoinLlmResult`](../type-aliases/SpatialJoinLlmResult.md), [`SpatialJoinAdditionalData`](../type-aliases/SpatialJoinAdditionalData.md), [`SpatialJoinFunctionContext`](../type-aliases/SpatialJoinFunctionContext.md)\>
+
+#### spatialFilter.parameters
+
+> **parameters**: [`SpatialJoinFunctionArgs`](../type-aliases/SpatialJoinFunctionArgs.md)
+
+#### spatialFilter.priority?
+
+> `optional` **priority**: `number`
 
 ### spatialJoin
 

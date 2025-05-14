@@ -12,7 +12,7 @@ import { messages } from '@kepler.gl/localization';
 import { FileCacheItem } from '@kepler.gl/processors';
 import { theme as keplerTheme } from '@kepler.gl/styles';
 
-import { ExpandableContainer } from '@openassistant/common';
+import { ExpandableContainer } from '@openassistant/components';
 import { generateId } from '@openassistant/utils';
 
 import { KeplerMiniMap } from './keplergl-mini-map';

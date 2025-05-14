@@ -2,7 +2,7 @@
 
 > **AiAssistant**(`props`): `Element`
 
-Defined in: [assistant.tsx:148](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/ui/src/components/assistant.tsx#L148)
+Defined in: [assistant.tsx:132](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/ui/src/components/assistant.tsx#L132)
 
 Main AI Assistant component for React applications
 

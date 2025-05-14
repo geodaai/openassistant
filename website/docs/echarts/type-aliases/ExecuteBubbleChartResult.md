@@ -2,7 +2,7 @@
 
 > **ExecuteBubbleChartResult**: `object`
 
-Defined in: [bubble-chart/tool.ts:108](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/echarts/src/bubble-chart/tool.ts#L108)
+Defined in: [packages/echarts/src/bubble-chart/tool.ts:105](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/echarts/src/bubble-chart/tool.ts#L105)
 
 ## Type declaration
 

@@ -13,7 +13,7 @@
     "emitDeclarationOnly": true,
     "skipLibCheck": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../ui/src/components/component-snapshot.ts"],
   "exclude": [
     "node_modules",
     "../../node_modules",

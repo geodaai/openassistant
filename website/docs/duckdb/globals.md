@@ -1,5 +1,9 @@
 # @openassistant/duckdb
 
+## Enumerations
+
+- [DuckDBToolNames](enumerations/DuckDBToolNames.md)
+
 ## Interfaces
 
 - [LocalQueryAdditionalData](interfaces/LocalQueryAdditionalData.md)
@@ -15,16 +19,15 @@
 - [LocalQueryResult](type-aliases/LocalQueryResult.md)
 - [LocalQueryTool](type-aliases/LocalQueryTool.md)
 - [QueryDuckDBFunctionContext](type-aliases/QueryDuckDBFunctionContext.md)
-- [QueryDuckDBOutputData](type-aliases/QueryDuckDBOutputData.md)
 
 ## Variables
 
-- [db](variables/db.md)
 - [localQuery](variables/localQuery.md)
 
 ## Functions
 
 - [getDuckDB](functions/getDuckDB.md)
+- [getDuckDBTool](functions/getDuckDBTool.md)
+- [getDuckDBTools](functions/getDuckDBTools.md)
 - [initDuckDB](functions/initDuckDB.md)
-- [QueryDuckDBComponent](functions/QueryDuckDBComponent.md)
 - [registerTools](functions/registerTools.md)

@@ -2,7 +2,7 @@
 
 > **runRegression**(`__namedParameters`): `Promise`\<[`RegressionDataProps`](../type-aliases/RegressionDataProps.md)\>
 
-Defined in: [packages/geoda/src/regression/utils.ts:36](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/geoda/src/regression/utils.ts#L36)
+Defined in: [packages/geoda/src/regression/utils.ts:36](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/regression/utils.ts#L36)
 
 ## Parameters
 

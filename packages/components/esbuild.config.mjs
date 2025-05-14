@@ -22,7 +22,6 @@ const baseConfig = createBaseConfig({
     'framer-motion',
     'tailwindcss',
     '@openassistant/core',
-    '@openassistant/common',
     'sensorPool',
   ],
   loader: {

@@ -9,8 +9,10 @@ import {
   getKeyValue,
 } from '@nextui-org/react';
 import { WeightsMeta } from '@geoda/core';
-import { ExpandableContainer, useDraggable } from '@openassistant/common';
 import { generateId } from '@openassistant/utils';
+
+import { ExpandableContainer } from '../common/expandable-container';
+import { useDraggable } from '../hooks/use-draggable';
 import '../index.css';
 
 export function isSpatialWeightsOutputData(

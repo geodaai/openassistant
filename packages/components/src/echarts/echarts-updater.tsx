@@ -1,7 +1,8 @@
 import { EChartsType } from 'echarts';
 import debounce from 'lodash/debounce';
-import { OnBrushedCallback } from '@openassistant/common';
 import { OnSelected } from '@openassistant/echarts';
+
+import { OnBrushedCallback } from '../hooks/use-brush-link';
 
 /**
  * Debounced version of the onSelected callback to prevent too frequent updates

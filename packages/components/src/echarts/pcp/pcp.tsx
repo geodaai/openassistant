@@ -3,15 +3,15 @@ import { ParallelChart } from 'echarts/charts';
 import * as echarts from 'echarts/core';
 import ReactEChartsCore from 'echarts-for-react';
 import { useMemo, useRef, useState } from 'react';
-import { useBrushLink } from '@openassistant/common';
-
 import {
   ParallelCoordinateDataProps,
   OnSelected,
 } from '@openassistant/echarts';
+
 import { createParallelCoordinateOption } from './pcp-option';
 import { handleBrushSelection } from '../echarts-updater';
 import { ECHARTS_DARK_THEME } from '../echarts-theme';
+import { useBrushLink } from '../../hooks/use-brush-link';
 
 // Register the required components
 echarts.use([CanvasRenderer, ParallelChart]);

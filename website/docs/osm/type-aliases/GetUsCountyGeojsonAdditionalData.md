@@ -2,18 +2,18 @@
 
 > **GetUsCountyGeojsonAdditionalData**: `object`
 
-Defined in: [us/county.ts:16](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/osm/src/us/county.ts#L16)
+Defined in: [packages/osm/src/us/county.ts:20](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/osm/src/us/county.ts#L20)
 
 ## Type declaration
 
-### datasetId
+## Index Signature
 
-> **datasetId**: `string`
+\[`datasetName`: `string`\]: `unknown`
+
+### datasetName
+
+> **datasetName**: `string`
 
 ### fipsCodes
 
 > **fipsCodes**: `string`[]
-
-### geojson
-
-> **geojson**: `GeoJSON.FeatureCollection`

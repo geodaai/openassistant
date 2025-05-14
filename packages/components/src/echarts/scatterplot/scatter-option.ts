@@ -1,9 +1,9 @@
-import { numericFormatter } from '@openassistant/common';
 import { LoessResult, RegressionResults } from '@openassistant/echarts';
+import { numericFormatter } from '../../utils';
 
 /**
  * @internal
- * 
+ *
  * Get the regression line used in echarts scatterplot.
  *
  * @param allRegressionResults - The regression results.
@@ -227,8 +227,8 @@ export function getScatterplotChartOption({
           symbolSize: 6,
           itemStyle: {
             color: 'red',
-            borderWidth: 1
-          }
+            borderWidth: 1,
+          },
         },
         animationDelay: 0,
       },

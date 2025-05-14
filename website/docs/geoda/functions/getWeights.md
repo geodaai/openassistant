@@ -2,7 +2,7 @@
 
 > **getWeights**(`weightsId`, `previousExecutionOutput`?): `object`
 
-Defined in: [packages/geoda/src/utils.ts:28](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/geoda/src/utils.ts#L28)
+Defined in: [packages/geoda/src/utils.ts:23](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/utils.ts#L23)
 
 ## Parameters
 

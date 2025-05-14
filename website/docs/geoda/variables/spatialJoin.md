@@ -2,7 +2,7 @@
 
 > `const` **spatialJoin**: `ExtendedTool`\<[`SpatialJoinFunctionArgs`](../type-aliases/SpatialJoinFunctionArgs.md), [`SpatialJoinLlmResult`](../type-aliases/SpatialJoinLlmResult.md), [`SpatialJoinAdditionalData`](../type-aliases/SpatialJoinAdditionalData.md), [`SpatialJoinFunctionContext`](../type-aliases/SpatialJoinFunctionContext.md)\>
 
-Defined in: [packages/geoda/src/spatial\_join/tool.ts:100](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/geoda/src/spatial_join/tool.ts#L100)
+Defined in: [packages/geoda/src/spatial\_join/tool.ts:99](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/spatial_join/tool.ts#L99)
 
 The spatial join tool is used to join geometries from one dataset with geometries from another dataset.
 

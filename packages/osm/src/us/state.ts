@@ -12,15 +12,15 @@ export type GetUsStateGeojsonFunctionArgs = z.ZodObject<{
 
 export type GetUsStateGeojsonLlmResult = {
   success: boolean;
-  datasetId?: string;
+  datasetName?: string;
   result?: string;
   error?: string;
 };
 
 export type GetUsStateGeojsonAdditionalData = {
   stateNames: string[];
-  datasetId: string;
-  geojson: GeoJSON.FeatureCollection;
+  datasetName: string;
+  [datasetName: string]: unknown;
 };
 
 export type ExecuteGetUsStateGeojsonResult = {
@@ -114,17 +114,19 @@ export const getUsStateGeojson = tool<
         features,
       };
 
-      const datasetId = generateId();
-
-      cacheData(datasetId, finalGeojson);
+      const outputDatasetName = `states_${generateId()}`;
 
       return {
         llmResult: {
           success: true,
-          datasetId,
-          result: `Successfully fetched the GeoJSON data of the states. The GeoJSON data has been cached with the id ${datasetId}.`,
+          datasetName: outputDatasetName,
+          result: `Successfully fetched the GeoJSON data of the states. The GeoJSON data has been cached with the dataset name: ${outputDatasetName}.`,
         },
-        additionalData: { stateNames, geojson: finalGeojson, datasetId },
+        additionalData: {
+          stateNames,
+          datasetName: outputDatasetName,
+          [outputDatasetName]: finalGeojson
+        },
       };
     } catch (error) {
       return {

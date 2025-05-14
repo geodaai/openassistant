@@ -1,5 +1,4 @@
 import { EChartsOption } from 'echarts';
-import { numericFormatter } from '@openassistant/common';
 import {
   TopLevelFormatterParams,
   CallbackDataParams,
@@ -8,6 +7,7 @@ import {
   HistogramDataProps,
   NumericHistogramDataProps,
 } from '@openassistant/echarts';
+import { numericFormatter } from '../../utils';
 
 const defaultBarColors = [
   '#FF6B6B',

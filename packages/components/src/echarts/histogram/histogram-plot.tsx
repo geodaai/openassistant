@@ -13,10 +13,10 @@ import {
   ToolboxComponent,
 } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
-import { ECHARTS_DARK_THEME } from '../echarts-theme';
-
-import { getHistogramChartOption } from './histogram-option';
 import { HistogramDataProps } from '@openassistant/echarts';
+
+import { ECHARTS_DARK_THEME } from '../echarts-theme';
+import { getHistogramChartOption } from './histogram-option';
 import '../../index.css';
 
 echartsUse([

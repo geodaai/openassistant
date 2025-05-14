@@ -2,7 +2,7 @@
 
 > **getDuckDB**(`externalDB`?): `Promise`\<`null` \| `AsyncDuckDB`\>
 
-Defined in: [packages/duckdb/src/query.tsx:8](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/duckdb/src/query.tsx#L8)
+Defined in: [packages/duckdb/src/query.ts:12](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/duckdb/src/query.ts#L12)
 
 ## Parameters
 

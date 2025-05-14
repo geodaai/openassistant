@@ -1,4 +1,4 @@
-import { tool } from '@openassistant/utils';
+import { tool, generateId } from '@openassistant/utils';
 import {
   CheckGeometryType,
   SpatialGeometry,
@@ -10,7 +10,6 @@ import { binaryToGeojson } from '@loaders.gl/gis';
 
 import { applyJoin } from './apply-join';
 import { GetValues, GetGeometries } from '../types';
-import { cacheData, generateId, getCachedData } from '@openassistant/utils';
 
 export type SpatialJoinFunctionArgs = z.ZodObject<{
   rightDatasetName: z.ZodString;
@@ -23,12 +22,16 @@ export type SpatialJoinFunctionArgs = z.ZodObject<{
 
 export type SpatialJoinLlmResult = {
   success: boolean;
-  result?: {
-    firstTwoRows?: {
-      [x: string]: number[];
-    }[];
-    joinedDatasetId?: string;
-    details: string;
+  firstTwoRows?: {
+    [x: string]: number[];
+  }[];
+  datasetName?: string;
+  result?: string;
+  joinStats?: {
+    totalCount: number;
+    minCount: number;
+    maxCount: number;
+    averageCount: number;
   };
   error?: string;
 };
@@ -38,10 +41,8 @@ export type SpatialJoinAdditionalData = {
   leftDatasetName: string;
   joinVariableNames?: string[];
   joinOperators?: string[];
-  joinResult: number[][];
-  joinValues: Record<string, number[]>;
-  joinedDatasetId?: string;
-  joinedDataset?: GeoJSON.FeatureCollection | unknown[];
+  datasetName: string;
+  [datasetName: string]: unknown;
 };
 
 export type SpatialJoinFunctionContext = {
@@ -221,21 +222,11 @@ export async function runSpatialJoin({
     let leftGeometries = await getGeometries(leftDatasetName);
 
     if (!rightGeometries || rightGeometries.length === 0) {
-      const cacheData = await getCachedData(rightDatasetName);
-      if (cacheData) {
-        rightGeometries = (cacheData as GeoJSON.FeatureCollection).features;
-      } else {
-        throw new Error('First dataset geometries not found');
-      }
+      throw new Error('First dataset geometries not found');
     }
 
     if (!leftGeometries || leftGeometries.length === 0) {
-      const cacheData = await getCachedData(leftDatasetName);
-      if (cacheData) {
-        leftGeometries = (cacheData as GeoJSON.FeatureCollection).features;
-      } else {
-        throw new Error('Second dataset geometries not found');
-      }
+      throw new Error('Second dataset geometries not found');
     }
 
     const result = await spatialJoinFunc({
@@ -291,8 +282,7 @@ export async function runSpatialJoin({
     );
 
     // cache the joined dataset
-    const joinedDatasetId = `join_${generateId()}`;
-    cacheData(joinedDatasetId, leftGeometriesWithJoinValues);
+    const outputDatasetName = `join_${generateId()}`;
 
     // joinValues is a record of variable names and their values
     // return the first 10 rows of each variable, including the variable name
@@ -304,21 +294,18 @@ export async function runSpatialJoin({
     return {
       llmResult: {
         success: true,
-        result: {
-          firstTwoRows,
-          joinedDatasetId,
-          details: `Spatial count function executed successfully and the joined dataset is saved in DatasetName: ${joinedDatasetId}. ${JSON.stringify(basicStatistics)}`,
-        },
+        firstTwoRows,
+        datasetName: outputDatasetName,
+        result: `Spatial count function executed successfully and the joined dataset is saved in DatasetName: ${outputDatasetName}.`,
+        joinStats: basicStatistics,
       },
       additionalData: {
         rightDatasetName,
         leftDatasetName,
         joinVariableNames,
         joinOperators,
-        joinResult: result,
-        joinValues,
-        joinedDatasetId: joinedDatasetId,
-        joinedDataset: leftGeometriesWithJoinValues,
+        datasetName: outputDatasetName,
+        [outputDatasetName]: leftGeometriesWithJoinValues,
       },
     };
   } catch (error) {

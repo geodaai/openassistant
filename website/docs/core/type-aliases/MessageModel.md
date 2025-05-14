@@ -2,7 +2,7 @@
 
 > **MessageModel**: `object`
 
-Defined in: [packages/core/src/types.ts:112](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/types.ts#L112)
+Defined in: [packages/core/src/types.ts:76](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/types.ts#L76)
 
 Type of Message model used in the chat component
 
@@ -13,16 +13,6 @@ Type of Message model used in the chat component
 > **direction**: [`MessageDirection`](MessageDirection.md)
 
 The direction of the message
-
-### ~~message?~~
-
-> `optional` **message**: `string`
-
-The message to be sent and received from the assistant.
-
-#### Deprecated
-
-Use messageContent.text instead
 
 ### messageContent?
 

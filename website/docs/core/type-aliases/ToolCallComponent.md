@@ -2,13 +2,13 @@
 
 > **ToolCallComponent**: `object`
 
-Defined in: [packages/core/src/types.ts:6](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/types.ts#L6)
+Defined in: [packages/core/src/types.ts:14](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/types.ts#L14)
 
 ## Type declaration
 
 ### component?
 
-> `optional` **component**: `React.ElementType` \| `ReactNode`
+> `optional` **component**: `unknown`
 
 ### toolName
 

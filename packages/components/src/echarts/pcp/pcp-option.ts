@@ -1,7 +1,7 @@
 import { EChartsOption } from 'echarts';
-import { numericFormatter } from '@openassistant/common';
 import * as echarts from 'echarts';
 import { ParallelCoordinateDataProps } from '@openassistant/echarts';
+import { numericFormatter } from '../../utils';
 
 /**
  * Configuration properties for the Parallel Coordinates Plot (PCP) chart.

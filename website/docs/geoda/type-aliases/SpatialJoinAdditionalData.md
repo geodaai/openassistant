@@ -2,38 +2,30 @@
 
 > **SpatialJoinAdditionalData**: `object`
 
-Defined in: [packages/geoda/src/spatial\_join/tool.ts:38](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/geoda/src/spatial_join/tool.ts#L38)
+Defined in: [packages/geoda/src/spatial\_join/tool.ts:39](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/spatial_join/tool.ts#L39)
 
 ## Type declaration
 
-### firstDatasetName
+## Index Signature
 
-> **firstDatasetName**: `string`
+\[`datasetName`: `string`\]: `unknown`
 
-### joinedDataset?
+### datasetName
 
-> `optional` **joinedDataset**: `GeoJSON.FeatureCollection` \| `unknown`[]
-
-### joinedDatasetId?
-
-> `optional` **joinedDatasetId**: `string`
+> **datasetName**: `string`
 
 ### joinOperators?
 
 > `optional` **joinOperators**: `string`[]
 
-### joinResult
-
-> **joinResult**: `number`[][]
-
-### joinValues
-
-> **joinValues**: `Record`\<`string`, `number`[]\>
-
 ### joinVariableNames?
 
 > `optional` **joinVariableNames**: `string`[]
 
-### secondDatasetName
+### leftDatasetName
 
-> **secondDatasetName**: `string`
+> **leftDatasetName**: `string`
+
+### rightDatasetName
+
+> **rightDatasetName**: `string`

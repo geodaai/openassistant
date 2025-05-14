@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { ExpandableContainer, useDraggable } from '@openassistant/common';
 import { generateId } from '@openassistant/utils';
+
+import { ExpandableContainer } from '../../common/expandable-container';
+import { useDraggable } from '../../hooks/use-draggable';
 import { BubbleChartOutputData, BubbleChart } from './bubble-chart';
 
 /**

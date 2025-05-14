@@ -8,7 +8,7 @@ import {
 } from '@openassistant/geoda';
 import { getOsmTool, OsmToolNames } from '@openassistant/osm';
 import { getMapTool, MapToolNames } from '@openassistant/map';
-import { getCachedData, cacheData } from '@openassistant/utils';
+import { getCachedData } from '@openassistant/utils';
 import { createDataStreamResponse, streamText } from 'ai';
 
 export async function POST(req: Request) {
@@ -57,21 +57,9 @@ You can use the following datasets:
 
   const onToolCompleted = (toolCallId: string, toolOutput?: unknown) => {
     if (toolOutput) {
-      // pass the tool output to client for tool rendering in browser (if needed)
+      // pass the server-side tool output to client for tool rendering in browser (if needed)
       toolAdditionalData[toolCallId] = toolOutput;
       console.log('toolAdditionalData', toolAdditionalData);
-      // get cached data by cacheId and pass it to client
-      if (typeof toolOutput === 'object' && 'cacheId' in toolOutput) {
-        const cacheId = toolOutput.cacheId as string;
-        const cachedData = getCachedData(cacheId);
-        console.log('cachedData', cachedData);
-        if (cachedData) {
-          toolAdditionalData[toolCallId] = {
-            ...toolOutput,
-            [cacheId]: cachedData,
-          };
-        }
-      }
     }
   };
 

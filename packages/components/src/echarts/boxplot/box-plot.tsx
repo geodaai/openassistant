@@ -12,7 +12,6 @@ import {
   DataZoomInsideComponent,
 } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
-import { useBrushLink } from '@openassistant/common';
 import {
   BoxplotDataProps,
   CreateBoxplotProps,
@@ -21,6 +20,7 @@ import {
 import { getBoxPlotChartOption } from './boxplot-option';
 import { ECHARTS_DARK_THEME } from '../echarts-theme';
 import { onBrushSelected } from '../echarts-updater';
+import { useBrushLink } from '../../hooks/use-brush-link';
 
 // Register the required components
 echarts.use([

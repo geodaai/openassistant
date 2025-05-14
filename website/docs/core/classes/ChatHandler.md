@@ -1,6 +1,6 @@
 # Class: ChatHandler
 
-Defined in: [packages/core/src/lib/chat-handler.ts:19](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/lib/chat-handler.ts#L19)
+Defined in: [packages/core/src/lib/chat-handler.ts:17](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/lib/chat-handler.ts#L17)
 
 Chat handler class to manage chat requests and responses
 
@@ -10,7 +10,7 @@ Chat handler class to manage chat requests and responses
 
 > **new ChatHandler**(`config`): [`ChatHandler`](ChatHandler.md)
 
-Defined in: [packages/core/src/lib/chat-handler.ts:37](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/lib/chat-handler.ts#L37)
+Defined in: [packages/core/src/lib/chat-handler.ts:34](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/lib/chat-handler.ts#L34)
 
 #### Parameters
 
@@ -50,7 +50,7 @@ Optional tools configuration
 
 > **addMessageToHistory**(`message`): `Promise`\<`void`\>
 
-Defined in: [packages/core/src/lib/chat-handler.ts:136](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/lib/chat-handler.ts#L136)
+Defined in: [packages/core/src/lib/chat-handler.ts:122](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/lib/chat-handler.ts#L122)
 
 #### Parameters
 
@@ -68,7 +68,7 @@ Defined in: [packages/core/src/lib/chat-handler.ts:136](https://github.com/GeoDa
 
 > **clearHistory**(): `void`
 
-Defined in: [packages/core/src/lib/chat-handler.ts:189](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/lib/chat-handler.ts#L189)
+Defined in: [packages/core/src/lib/chat-handler.ts:167](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/lib/chat-handler.ts#L167)
 
 #### Returns
 
@@ -78,19 +78,13 @@ Defined in: [packages/core/src/lib/chat-handler.ts:189](https://github.com/GeoDa
 
 ### handleToolCall()
 
-> **handleToolCall**(`__namedParameters`): `Promise`\<`null` \| `ToolInvocation`\>
+> **handleToolCall**(`toolCall`): `Promise`\<`null` \| `ToolInvocation`\>
 
-Defined in: [packages/core/src/lib/chat-handler.ts:141](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/lib/chat-handler.ts#L141)
+Defined in: [packages/core/src/lib/chat-handler.ts:127](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/lib/chat-handler.ts#L127)
 
 #### Parameters
 
-##### \_\_namedParameters
-
-###### previousOutput?
-
-[`CustomFunctionOutputProps`](../type-aliases/CustomFunctionOutputProps.md)\<`unknown`, `unknown`\>[]
-
-###### toolCall
+##### toolCall
 
 `ToolCall`\<`string`, `unknown`\>
 
@@ -104,7 +98,7 @@ Defined in: [packages/core/src/lib/chat-handler.ts:141](https://github.com/GeoDa
 
 > **processRequest**(`req`): `Promise`\<`Response`\>
 
-Defined in: [packages/core/src/lib/chat-handler.ts:59](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/lib/chat-handler.ts#L59)
+Defined in: [packages/core/src/lib/chat-handler.ts:56](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/lib/chat-handler.ts#L56)
 
 Processes chat requests, managing message history and token limits
 
@@ -128,7 +122,7 @@ Streaming response
 
 > **trimHistoryByTokenLimit**(): `Promise`\<`void`\>
 
-Defined in: [packages/core/src/lib/chat-handler.ts:171](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/lib/chat-handler.ts#L171)
+Defined in: [packages/core/src/lib/chat-handler.ts:149](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/lib/chat-handler.ts#L149)
 
 #### Returns
 

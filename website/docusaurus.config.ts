@@ -48,16 +48,6 @@ const config: Config = {
     [
       'docusaurus-plugin-typedoc',
       {
-        id: 'common',
-        entryPoints: ['../packages/common/src/index.ts'],
-        tsconfig: '../packages/common/tsconfig.json',
-        out: 'docs/common',
-        watch: false,
-      },
-    ],
-    [
-      'docusaurus-plugin-typedoc',
-      {
         id: 'core',
         entryPoints: ['../packages/core/src/index.ts'],
         tsconfig: '../packages/core/tsconfig.json',
@@ -123,6 +113,18 @@ const config: Config = {
         entryPoints: ['../packages/osm/src/index.ts'],
         tsconfig: '../packages/osm/tsconfig.json',
         out: 'docs/osm',
+        watch: false,
+        excludePrivate: true,
+        excludeInternal: true,
+      },
+    ],
+    [
+      'docusaurus-plugin-typedoc',
+      {
+        id: 'map',
+        entryPoints: ['../packages/map/src/index.ts'],
+        tsconfig: '../packages/map/tsconfig.json',
+        out: 'docs/map',
         watch: false,
         excludePrivate: true,
         excludeInternal: true,

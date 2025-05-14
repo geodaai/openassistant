@@ -18,7 +18,6 @@
     "baseUrl": ".",
     "paths": {
       "@openassistant/core": ["../../packages/core/src"],
-      "@openassistant/common": ["../../packages/common/src"],
       "@openassistant/ui": ["../../packages/ui/src"]
     }
   },

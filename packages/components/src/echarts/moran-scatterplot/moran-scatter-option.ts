@@ -1,6 +1,6 @@
-import { numericFormatter } from '@openassistant/common';
 import { EChartsOption } from 'echarts';
 import { SimpleLinearRegressionResult } from '@openassistant/echarts';
+import { numericFormatter } from '../../utils';
 
 export type MoranScatterChartOptionProps = {
   xVariableName: string;

@@ -1,7 +1,8 @@
-import { ExpandableContainer, useDraggable } from '@openassistant/common';
 import { generateId } from '@openassistant/utils';
-
 import { useState } from 'react';
+
+import { ExpandableContainer } from '../../common/expandable-container';
+import { useDraggable } from '../../hooks/use-draggable';
 import { HistogramOutputData, HistogramPlot } from './histogram-plot';
 
 // type guard for histogram output data

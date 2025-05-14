@@ -9,7 +9,6 @@ import {
   TableCell,
 } from '@nextui-org/react';
 import { Icon } from '@iconify/react';
-import { ExpandableContainer, useDraggable } from '@openassistant/common';
 import { generateId } from '@openassistant/utils';
 import {
   RegressionResults,
@@ -20,6 +19,8 @@ import {
 
 import { ScatterRegressionPlot } from './scatter-regression-plot';
 import { SimpleScatterPlot } from './simple-scatter-plots';
+import { ExpandableContainer } from '../../common/expandable-container';
+import { useDraggable } from '../../hooks/use-draggable';
 
 /**
  * The data of the scatterplot function.

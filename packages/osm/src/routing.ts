@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { FeatureCollection } from 'geojson';
-import { generateId, cacheData, tool } from '@openassistant/utils';
+import { generateId, tool } from '@openassistant/utils';
 import { isOsmToolContext, OsmToolContext } from './register-tools';
 
 type MapboxStep = {
@@ -54,28 +54,19 @@ export type RoutingFunctionArgs = z.ZodObject<{
 
 export type RoutingLlmResult = {
   success: boolean;
-  result?: {
-    datasetName: string;
-    distance: number;
-    duration: number;
-    geojson: GeoJSON.FeatureCollection;
-    origin: GeoJSON.FeatureCollection;
-    destination: GeoJSON.FeatureCollection;
-    steps?: Array<{
-      distance: number;
-      duration: number;
-      geometry: GeoJSON.LineString;
-      name: string;
-      mode: string;
-      maneuver: {
-        location: [number, number];
-        bearing_before: number;
-        bearing_after: number;
-        type: string;
-        modifier?: string;
-      };
-    }>;
+  result?: string;
+  datasetName?: string;
+  distance?: number;
+  duration?: number;
+  origin?: {
+    longitude: number;
+    latitude: number;
   };
+  destination?: {
+    longitude: number;
+    latitude: number;
+  };
+  mode?: string;
   error?: string;
 };
 
@@ -89,8 +80,8 @@ export type RoutingAdditionalData = {
     latitude: number;
   };
   mode: string;
-  route: MapboxRoute;
-  cacheId: string;
+  datasetName: string;
+  [datasetName: string]: unknown;
 };
 
 export type ExecuteRoutingResult = {
@@ -167,8 +158,6 @@ export const routing = tool<
       const { longitude: originLon, latitude: originLat } = origin;
       const { longitude: destLon, latitude: destLat } = destination;
 
-      // Generate cache key
-      const cacheKey = generateId();
       if (!options?.context || !isOsmToolContext(options.context)) {
         throw new Error(
           'Context is required and must implement OsmToolContext'
@@ -236,64 +225,36 @@ export const routing = tool<
         ],
       };
 
-      // Cache the route data
-      cacheData(cacheKey, geojson);
+      // Generate output dataset name
+      const outputDatasetName = `routing_${generateId()}`;
 
       return {
         llmResult: {
           success: true,
-          result: {
-            datasetName: cacheKey,
-            distance: route.distance,
-            duration: route.duration,
-            geojson,
-            origin: {
-              type: 'FeatureCollection',
-              features: [
-                {
-                  type: 'Feature',
-                  geometry: {
-                    type: 'Point',
-                    coordinates: [originLon, originLat],
-                  },
-                  properties: {},
-                },
-              ],
-            },
-            destination: {
-              type: 'FeatureCollection',
-              features: [
-                {
-                  type: 'Feature',
-                  geometry: {
-                    type: 'Point',
-                    coordinates: [destLon, destLat],
-                  },
-                  properties: {},
-                },
-              ],
-            },
-          },
+          datasetName: outputDatasetName,
+          result: `Successfully calculated the routing directions between the origin and destination points. The GeoJSON data has been saved with the dataset name: ${outputDatasetName}.`,
+          distance: route.distance,
+          duration: route.duration,
+          origin: { longitude: originLon, latitude: originLat },
+          destination: { longitude: destLon, latitude: destLat },
+          mode,
         },
         additionalData: {
           origin: origin,
           destination: destination,
-          route,
-          cacheId: cacheKey,
           mode,
+          datasetName: outputDatasetName,
+          [outputDatasetName]: geojson,
         },
       };
     } catch (error) {
       clearTimeout(timeoutId);
-      if (error instanceof Error && error.name === 'AbortError') {
-        return {
-          llmResult: {
-            success: false,
-            error: 'Routing request timeout',
-          },
-        };
-      }
-      throw error;
+      return {
+        llmResult: {
+          success: false,
+          error: `Failed to calculate the routing directions between the origin and destination points: ${error}`,
+        },
+      };
     }
   },
   context: {

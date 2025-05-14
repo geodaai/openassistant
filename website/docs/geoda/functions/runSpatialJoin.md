@@ -1,16 +1,12 @@
 # Function: runSpatialJoin()
 
-> **runSpatialJoin**(`__namedParameters`): `Promise`\<\{ `additionalData`: \{ `firstDatasetName`: `string`; `joinedDataset`: `unknown`[] \| `FeatureCollection`\<`Geometry`, `GeoJsonProperties`\>; `joinedDatasetId`: `string`; `joinOperators`: `undefined` \| `string`[]; `joinResult`: `number`[][]; `joinValues`: `Record`\<`string`, `number`[]\>; `joinVariableNames`: `undefined` \| `string`[]; `secondDatasetName`: `string`; \}; `llmResult`: \{ `error`: `undefined`; `result`: \{ `details`: `string`; `firstDatasetName`: `string`; `firstTwoRows`: `object`[]; `joinedDatasetId`: `string`; `joinOperators`: `undefined` \| `string`[]; `joinVariableNames`: `undefined` \| `string`[]; `secondDatasetName`: `string`; \}; `success`: `boolean`; \}; \} \| \{ `additionalData`: `undefined`; `llmResult`: \{ `error`: `string`; `result`: `undefined`; `success`: `boolean`; \}; \}\>
+> **runSpatialJoin**(`__namedParameters`): `Promise`\<\{ `additionalData`: \{ `[key: string]`: `undefined` \| `string` \| `unknown`[] \| `FeatureCollection`\<`Geometry`, `GeoJsonProperties`\>;  `datasetName`: `string`; `joinOperators`: `undefined` \| `string`[]; `joinVariableNames`: `undefined` \| `string`[]; `leftDatasetName`: `string`; `rightDatasetName`: `string`; \}; `llmResult`: \{ `datasetName`: `string`; `error`: `undefined`; `firstTwoRows`: `object`[]; `joinStats`: \{ `averageCount`: `number`; `maxCount`: `number`; `minCount`: `number`; `totalCount`: `number`; \}; `result`: `string`; `success`: `boolean`; \}; \} \| \{ `additionalData`: `undefined`; `llmResult`: \{ `datasetName`: `undefined`; `error`: `string`; `firstTwoRows`: `undefined`; `joinStats`: `undefined`; `result`: `undefined`; `success`: `boolean`; \}; \}\>
 
-Defined in: [packages/geoda/src/spatial\_join/tool.ts:200](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/geoda/src/spatial_join/tool.ts#L200)
+Defined in: [packages/geoda/src/spatial\_join/tool.ts:199](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/spatial_join/tool.ts#L199)
 
 ## Parameters
 
 ### \_\_namedParameters
-
-#### firstDatasetName
-
-`string`
 
 #### getGeometries
 
@@ -28,6 +24,10 @@ Defined in: [packages/geoda/src/spatial\_join/tool.ts:200](https://github.com/Ge
 
 `string`[]
 
+#### leftDatasetName
+
+`string`
+
 #### previousExecutionOutput?
 
 \{ `data`: \{ `geojson`: `FeatureCollection`\<`Geometry`, `GeoJsonProperties`\>; \}; \}
@@ -40,10 +40,10 @@ Defined in: [packages/geoda/src/spatial\_join/tool.ts:200](https://github.com/Ge
 
 `FeatureCollection`\<`Geometry`, `GeoJsonProperties`\>
 
-#### secondDatasetName
+#### rightDatasetName
 
 `string`
 
 ## Returns
 
-`Promise`\<\{ `additionalData`: \{ `firstDatasetName`: `string`; `joinedDataset`: `unknown`[] \| `FeatureCollection`\<`Geometry`, `GeoJsonProperties`\>; `joinedDatasetId`: `string`; `joinOperators`: `undefined` \| `string`[]; `joinResult`: `number`[][]; `joinValues`: `Record`\<`string`, `number`[]\>; `joinVariableNames`: `undefined` \| `string`[]; `secondDatasetName`: `string`; \}; `llmResult`: \{ `error`: `undefined`; `result`: \{ `details`: `string`; `firstDatasetName`: `string`; `firstTwoRows`: `object`[]; `joinedDatasetId`: `string`; `joinOperators`: `undefined` \| `string`[]; `joinVariableNames`: `undefined` \| `string`[]; `secondDatasetName`: `string`; \}; `success`: `boolean`; \}; \} \| \{ `additionalData`: `undefined`; `llmResult`: \{ `error`: `string`; `result`: `undefined`; `success`: `boolean`; \}; \}\>
+`Promise`\<\{ `additionalData`: \{ `[key: string]`: `undefined` \| `string` \| `unknown`[] \| `FeatureCollection`\<`Geometry`, `GeoJsonProperties`\>;  `datasetName`: `string`; `joinOperators`: `undefined` \| `string`[]; `joinVariableNames`: `undefined` \| `string`[]; `leftDatasetName`: `string`; `rightDatasetName`: `string`; \}; `llmResult`: \{ `datasetName`: `string`; `error`: `undefined`; `firstTwoRows`: `object`[]; `joinStats`: \{ `averageCount`: `number`; `maxCount`: `number`; `minCount`: `number`; `totalCount`: `number`; \}; `result`: `string`; `success`: `boolean`; \}; \} \| \{ `additionalData`: `undefined`; `llmResult`: \{ `datasetName`: `undefined`; `error`: `string`; `firstTwoRows`: `undefined`; `joinStats`: `undefined`; `result`: `undefined`; `success`: `boolean`; \}; \}\>

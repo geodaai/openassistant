@@ -1,6 +1,6 @@
 # Interface: VercelAiClientConfigureProps
 
-Defined in: [packages/core/src/llm/vercelai-client.ts:33](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/llm/vercelai-client.ts#L33)
+Defined in: [packages/core/src/llm/vercelai-client.ts:25](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/llm/vercelai-client.ts#L25)
 
 Configuration properties for VercelAiClient
 
@@ -10,7 +10,7 @@ Configuration properties for VercelAiClient
 
 > `optional` **apiKey**: `string`
 
-Defined in: [packages/core/src/llm/vercelai-client.ts:35](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/llm/vercelai-client.ts#L35)
+Defined in: [packages/core/src/llm/vercelai-client.ts:27](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/llm/vercelai-client.ts#L27)
 
 API key for authentication
 
@@ -20,7 +20,7 @@ API key for authentication
 
 > `optional` **baseURL**: `string`
 
-Defined in: [packages/core/src/llm/vercelai-client.ts:51](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/llm/vercelai-client.ts#L51)
+Defined in: [packages/core/src/llm/vercelai-client.ts:43](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/llm/vercelai-client.ts#L43)
 
 Base URL for API requests
 
@@ -30,7 +30,7 @@ Base URL for API requests
 
 > `optional` **description**: `string`
 
-Defined in: [packages/core/src/llm/vercelai-client.ts:45](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/llm/vercelai-client.ts#L45)
+Defined in: [packages/core/src/llm/vercelai-client.ts:37](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/llm/vercelai-client.ts#L37)
 
 Description of the assistant
 
@@ -40,7 +40,7 @@ Description of the assistant
 
 > `optional` **instructions**: `string`
 
-Defined in: [packages/core/src/llm/vercelai-client.ts:39](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/llm/vercelai-client.ts#L39)
+Defined in: [packages/core/src/llm/vercelai-client.ts:31](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/llm/vercelai-client.ts#L31)
 
 System instructions for the model
 
@@ -50,7 +50,7 @@ System instructions for the model
 
 > `optional` **maxSteps**: `number`
 
-Defined in: [packages/core/src/llm/vercelai-client.ts:55](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/llm/vercelai-client.ts#L55)
+Defined in: [packages/core/src/llm/vercelai-client.ts:47](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/llm/vercelai-client.ts#L47)
 
 Maximum number of tool call steps
 
@@ -60,7 +60,7 @@ Maximum number of tool call steps
 
 > `optional` **maxTokens**: `number`
 
-Defined in: [packages/core/src/llm/vercelai-client.ts:49](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/llm/vercelai-client.ts#L49)
+Defined in: [packages/core/src/llm/vercelai-client.ts:41](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/llm/vercelai-client.ts#L41)
 
 Maximum tokens to generate
 
@@ -70,7 +70,7 @@ Maximum tokens to generate
 
 > `optional` **model**: `string`
 
-Defined in: [packages/core/src/llm/vercelai-client.ts:37](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/llm/vercelai-client.ts#L37)
+Defined in: [packages/core/src/llm/vercelai-client.ts:29](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/llm/vercelai-client.ts#L29)
 
 Model name to use
 
@@ -80,7 +80,7 @@ Model name to use
 
 > `optional` **temperature**: `number`
 
-Defined in: [packages/core/src/llm/vercelai-client.ts:41](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/llm/vercelai-client.ts#L41)
+Defined in: [packages/core/src/llm/vercelai-client.ts:33](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/llm/vercelai-client.ts#L33)
 
 Temperature for controlling randomness (0-1)
 
@@ -90,7 +90,7 @@ Temperature for controlling randomness (0-1)
 
 > `optional` **toolCallStreaming**: `boolean`
 
-Defined in: [packages/core/src/llm/vercelai-client.ts:57](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/llm/vercelai-client.ts#L57)
+Defined in: [packages/core/src/llm/vercelai-client.ts:49](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/llm/vercelai-client.ts#L49)
 
 Tool call streaming
 
@@ -100,7 +100,7 @@ Tool call streaming
 
 > `optional` **toolChoice**: `ToolChoice`\<`ToolSet`\>
 
-Defined in: [packages/core/src/llm/vercelai-client.ts:53](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/llm/vercelai-client.ts#L53)
+Defined in: [packages/core/src/llm/vercelai-client.ts:45](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/llm/vercelai-client.ts#L45)
 
 Tool choice configuration
 
@@ -110,7 +110,7 @@ Tool choice configuration
 
 > `optional` **topP**: `number`
 
-Defined in: [packages/core/src/llm/vercelai-client.ts:43](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/llm/vercelai-client.ts#L43)
+Defined in: [packages/core/src/llm/vercelai-client.ts:35](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/llm/vercelai-client.ts#L35)
 
 Top P sampling parameter (0-1)
 
@@ -120,6 +120,6 @@ Top P sampling parameter (0-1)
 
 > `optional` **version**: `string`
 
-Defined in: [packages/core/src/llm/vercelai-client.ts:47](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/llm/vercelai-client.ts#L47)
+Defined in: [packages/core/src/llm/vercelai-client.ts:39](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/llm/vercelai-client.ts#L39)
 
 Version of the model

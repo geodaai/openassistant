@@ -6,7 +6,7 @@ export * from './spatial_join/tool';
 export * from './spatial_join/spatial-filter';
 export * from './weights/tool';
 
-export * from './moran-scatterplot/tool';
+export * from './global-moran/tool';
 
 export * from './regression/tool';
 export * from './regression/utils';

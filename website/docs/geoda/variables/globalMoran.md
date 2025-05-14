@@ -2,43 +2,58 @@
 
 > `const` **globalMoran**: `ExtendedTool`\<[`MoranScatterPlotFunctionArgs`](../type-aliases/MoranScatterPlotFunctionArgs.md), [`MoranScatterPlotLlmResult`](../type-aliases/MoranScatterPlotLlmResult.md), [`MoranScatterPlotAdditionalData`](../type-aliases/MoranScatterPlotAdditionalData.md), [`MoranScatterPlotFunctionContext`](../type-aliases/MoranScatterPlotFunctionContext.md)\>
 
-Defined in: [packages/geoda/src/moran-scatterplot/tool.ts:103](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/geoda/src/moran-scatterplot/tool.ts#L103)
+Defined in: packages/geoda/src/global-moran/tool.ts:104
 
-The Moran scatterplot tool is used to create a scatterplot of spatial data and calculate Global Moran's I.
+The Global Moran's I tool is used to calculate Global Moran's I for a given variable to check if the variable is spatially clustered or dispersed.
 
-The tool creates a scatterplot where:
-- X-axis represents the original variable values
-- Y-axis represents the spatial lag values
-- The slope of the regression line represents Global Moran's I
+**Example user prompts:**
+- "Is the population data spatially clustered or dispersed?"
+- "Is there a spatial autocorrelation in the population data?"
+- "What is the Global Moran's I for the population data?"
 
-When user prompts e.g. *can you create a Moran scatterplot for the population data?*
+:::note
+The global Moran's I tool should always be used with the spatialWeights tool. The LLM models know how to use the spatialWeights tool for the Moran scatterplot analysis.
+:::
 
-1. The LLM will execute the callback function of moranScatterPlotFunctionDefinition, and create the scatterplot using the data retrieved from `getValues` function.
-2. The result will include the Global Moran's I value and a scatterplot visualization.
-3. The LLM will respond with the analysis results to the user.
+## Example
 
-### For example
-```
-User: can you create a Moran scatterplot for the population data?
-LLM: I've created a Moran scatterplot for the population data. The Global Moran's I is 0.75, indicating strong positive spatial autocorrelation...
-```
-
-### Code example
 ```typescript
-import { getVercelAiTool } from '@openassistant/geoda';
-import { generateText } from 'ai';
+import { getGeoDaTool, GeoDaToolNames } from "@openassistant/geoda";
 
-const toolContext = {
-  getValues: (datasetName, variableName) => {
-    return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+const spatialWeightsTool = getGeoDaTool(GeoDaToolNames.spatialWeights, {
+  toolContext: {
+    getGeometries: (datasetName) => {
+      return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+    },
   },
-};
-
-const moranTool = getVercelAiTool('globalMoran', toolContext, onToolCompleted);
-
-generateText({
-  model: openai('gpt-4o-mini', { apiKey: key }),
-  prompt: 'Can you create a Moran scatterplot for the population data?',
-  tools: {globalMoran: moranTool},
+  onToolCompleted: (toolCallId, additionalData) => {
+    console.log(toolCallId, additionalData);
+  },
 });
+
+const moranTool = getGeoDaTool(GeoDaToolNames.globalMoran, {
+  toolContext: {
+    getValues: async (datasetName, variableName) => {
+      return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+    },
+  },
+  onToolCompleted: (toolCallId, additionalData) => {
+    console.log(toolCallId, additionalData);
+  },
+});
+
+const result = await generateText({
+  model: openai('gpt-4o-mini', { apiKey: key }),
+  prompt: 'Can you calculate the Global Moran\'s I for the population data?',
+  tools: {globalMoran: moranTool, spatialWeights: spatialWeightsTool},
+});
+
+console.log(result);
 ```
+
+:::tip
+You can use the `MoranScatterPlotToolComponent` React component from the `@openassistant/components` package to visualize the Moran scatterplot using
+the `additionalData` object returned by the tool.
+:::
+
+For a more complete example, see the [Geoda Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_geoda_example).

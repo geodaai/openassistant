@@ -7423,30 +7423,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openassistant/common@workspace:*, @openassistant/common@workspace:packages/common":
-  version: 0.0.0-use.local
-  resolution: "@openassistant/common@workspace:packages/common"
-  dependencies:
-    "@iconify/react": "npm:^5.1.0"
-    "@nextui-org/react": "npm:^2.6.10"
-    framer-motion: "npm:^11.15.0"
-    re-resizable: "npm:^6.10.3"
-  peerDependencies:
-    react: ">=18.2"
-    react-dom: ">=18.2"
-  languageName: unknown
-  linkType: soft
-
 "@openassistant/components@workspace:*, @openassistant/components@workspace:packages/components":
   version: 0.0.0-use.local
   resolution: "@openassistant/components@workspace:packages/components"
   dependencies:
     "@iconify/react": "npm:^5.1.0"
     "@nextui-org/react": "npm:^2.6.10"
-    "@openassistant/common": "workspace:*"
     echarts: "npm:^5.5.1"
     echarts-for-react: "npm:^3.0.2"
+    framer-motion: "npm:^11.15.0"
     jstat: "npm:^1.9.6"
+    re-resizable: "npm:^6.10.3"
     simple-statistics: "npm:^7.8.7"
     tailwindcss: "npm:^3.4.17"
   peerDependencies:
@@ -7549,7 +7536,7 @@ __metadata:
     "@kepler.gl/utils": "npm:3.0.0"
     "@loaders.gl/core": "npm:4.3.3"
     "@loaders.gl/schema": "npm:4.3.3"
-    "@openassistant/common": "workspace:*"
+    "@openassistant/components": "workspace:*"
     "@openassistant/utils": "workspace:*"
     "@types/redux-logger": "npm:^3"
     esbuild-plugin-polyfill-node: "npm:^0.3.0"
@@ -25751,7 +25738,7 @@ __metadata:
     "@lexical/react": "npm:^0.23.1"
     "@next/eslint-plugin-next": "npm:^15.1.5"
     "@nextui-org/theme": "npm:^2.4.4"
-    "@openassistant/common": "workspace:*"
+    "@openassistant/components": "workspace:*"
     "@openassistant/core": "workspace:*"
     "@openassistant/duckdb": "workspace:*"
     "@openassistant/echarts": "workspace:*"

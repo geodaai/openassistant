@@ -2,40 +2,46 @@
 
 > `const` **dataClassify**: `ExtendedTool`\<[`DataClassifyFunctionArgs`](../type-aliases/DataClassifyFunctionArgs.md), [`DataClassifyLlmResult`](../type-aliases/DataClassifyLlmResult.md), [`DataClassifyAdditionalData`](../type-aliases/DataClassifyAdditionalData.md), [`DataClassifyFunctionContext`](../type-aliases/DataClassifyFunctionContext.md)\>
 
-Defined in: [packages/geoda/src/data-classify/tool.ts:96](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/geoda/src/data-classify/tool.ts#L96)
+Defined in: [packages/geoda/src/data-classify/tool.ts:102](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/data-classify/tool.ts#L102)
 
 The data classify tool is used to classify the data into k bins or classes.
 
-The classification method can be one of the following types: quantile, natural breaks, equal interval, percentile, box, standard deviation, unique values.
+The classification method can be one of the following types:
+- quantile
+- natural breaks
+- equal interval
+- percentile
+- box
+- standard deviation
+- unique values.
 
-When user prompts e.g. *can you classify the data of population into 5 classes?*
+**Example user prompts:**
+- "Can you classify the data of population into 5 classes?"
 
-1. The LLM will execute the callback function of dataClassifyFunctionDefinition, and apply data classification using the data retrived from `getValues` function.
-2. The result will be an array of break points, which can be used to classify the data into k bins or classes.
-3. The LLM will respond with the break points to the user.
+## Example
 
-### For example
-```
-User: can you classify the data of population into 5 classes?
-LLM:  Yes, I've used the quantile method to classify the data of population into 5 classes. The break points are [10000, 20000, 30000, 40000, 50000].
-```
-
-### Code example
 ```typescript
-import { getVercelAiTool } from '@openassistant/geoda';
-import { generateText } from 'ai';
+import { getGeoDaTool, GeoDaToolNames } from "@openassistant/geoda";
 
-const toolContext = {
-  getValues: async (datasetName: string, variableName: string) => {
-    return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+const classifyTool = getGeoDaTool(GeoDaToolNames.dataClassify, {
+  toolContext: {
+    getValues: async (datasetName: string, variableName: string) => {
+      return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+    },
   },
-};
+  onToolCompleted: (toolCallId, additionalData) => {
+    console.log(toolCallId, additionalData);
+  },
+  isExecutable: true,
+});
 
-const classifyTool = getVercelAiTool('dataClassify', toolContext, onToolCompleted);
-
-generateText({
+const result = await generateText({
   model: openai('gpt-4o-mini', { apiKey: key }),
   prompt: 'Can you classify the data of population into 5 classes?',
   tools: {dataClassify: classifyTool},
 });
+
+console.log(result);
 ```
+
+For a more complete example, see the [Geoda Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_geoda_example).

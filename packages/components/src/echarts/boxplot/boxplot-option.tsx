@@ -1,8 +1,8 @@
-import { numericFormatter } from '@openassistant/common';
 import { BoxplotDataProps } from '@openassistant/echarts';
 import { EChartsOption } from 'echarts';
 import { YAXisOption, XAXisOption } from 'echarts/types/dist/shared';
 import * as echarts from 'echarts';
+import { numericFormatter } from '../../utils';
 
 export type BoxPlotChartOptionProps = {
   rawData: { [key: string]: number[] };

@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { createWeights, WeightsMeta, CreateWeightsProps } from '@geoda/core';
 import { WeightsProps, GetGeometries } from '../types';
 
-// global variable to store the created weights, which will be shared across tool calls e.g. lisa, spatial regression 
+// global variable to store the created weights, which will be shared across tool calls e.g. lisa, spatial regression
 /**
  * @internal
  */
@@ -148,19 +148,14 @@ export type GetWeights = (
 export type ExecuteSpatialWeightsResult = {
   llmResult: {
     success: boolean;
-    result?: {
-      datasetName: string;
-      weightsId: string;
-      weightsMeta: WeightsMeta;
-      mapBounds?: number[];
-      details?: string;
-    };
+    weightsId?: string;
+    weightsMeta?: WeightsMeta;
+    result?: string;
     error?: string;
   };
   additionalData?: {
-    datasetName: string;
-    weights: number[][];
-    weightsMeta: WeightsMeta;
+    [id: string]: unknown;
+    weightsId: string;
   };
 };
 
@@ -268,7 +263,7 @@ async function executeSpatialWeights(
   // set the id to the weights meta
   w.weightsMeta.id = id;
 
-  // save the weights to the global variable
+  // cache the weights to the global variable, so that it can be reused across tool calls e.g. lisa, spatial regression
   globalWeightsData[id] = {
     datasetId: datasetName,
     ...w,
@@ -277,18 +272,16 @@ async function executeSpatialWeights(
   return {
     llmResult: {
       success: true,
-      result: {
-        datasetName,
-        weightsId: id,
-        weightsMeta: w.weightsMeta,
-        ...(mapBounds ? { mapBounds } : {}),
-        details: `Weights created successfully.`,
-      },
+      weightsId: id,
+      weightsMeta: w.weightsMeta,
+      result: `Weights created successfully and the weights are saved using weightsId: ${id}.`,
     },
     additionalData: {
-      datasetName,
-      weights: w.weights,
-      weightsMeta: w.weightsMeta,
+      weightsId: id,
+      [id]: {
+        weights: w.weights,
+        weightsMeta: w.weightsMeta,
+      },
     },
   };
 }

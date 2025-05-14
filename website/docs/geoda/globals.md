@@ -1,5 +1,9 @@
 # @openassistant/geoda
 
+## Enumerations
+
+- [GeoDaToolNames](enumerations/GeoDaToolNames.md)
+
 ## Type Aliases
 
 - [AreaAdditionalData](type-aliases/AreaAdditionalData.md)
@@ -28,6 +32,7 @@
 - [GetGeometries](type-aliases/GetGeometries.md)
 - [GetValues](type-aliases/GetValues.md)
 - [GetWeights](type-aliases/GetWeights.md)
+- [GlobalMoranFunctionContext](type-aliases/GlobalMoranFunctionContext.md)
 - [GlobalMoranTool](type-aliases/GlobalMoranTool.md)
 - [LengthAdditionalData](type-aliases/LengthAdditionalData.md)
 - [LengthFunctionArgs](type-aliases/LengthFunctionArgs.md)
@@ -37,8 +42,6 @@
 - [LisaFunctionContext](type-aliases/LisaFunctionContext.md)
 - [LisaLlmResult](type-aliases/LisaLlmResult.md)
 - [LisaTool](type-aliases/LisaTool.md)
-- [MoranScatterChartOptionProps](type-aliases/MoranScatterChartOptionProps.md)
-- [MoranScatterOutputData](type-aliases/MoranScatterOutputData.md)
 - [MoranScatterPlotAdditionalData](type-aliases/MoranScatterPlotAdditionalData.md)
 - [MoranScatterPlotFunctionArgs](type-aliases/MoranScatterPlotFunctionArgs.md)
 - [MoranScatterPlotFunctionContext](type-aliases/MoranScatterPlotFunctionContext.md)
@@ -49,7 +52,6 @@
 - [PreviousExecutionOutput](type-aliases/PreviousExecutionOutput.md)
 - [RegressionDataProps](type-aliases/RegressionDataProps.md)
 - [RunRegressionProps](type-aliases/RunRegressionProps.md)
-- [SpatialCountComponentProps](type-aliases/SpatialCountComponentProps.md)
 - [SpatialJoinAdditionalData](type-aliases/SpatialJoinAdditionalData.md)
 - [SpatialJoinFunctionArgs](type-aliases/SpatialJoinFunctionArgs.md)
 - [SpatialJoinFunctionContext](type-aliases/SpatialJoinFunctionContext.md)
@@ -67,7 +69,6 @@
 - [SpatialWeightsFunctionArgs](type-aliases/SpatialWeightsFunctionArgs.md)
 - [SpatialWeightsFunctionContext](type-aliases/SpatialWeightsFunctionContext.md)
 - [SpatialWeightsLlmResult](type-aliases/SpatialWeightsLlmResult.md)
-- [SpatialWeightsMetaTableProps](type-aliases/SpatialWeightsMetaTableProps.md)
 - [SpatialWeightsTool](type-aliases/SpatialWeightsTool.md)
 - [WeightsProps](type-aliases/WeightsProps.md)
 
@@ -82,40 +83,29 @@
 - [length](variables/length.md)
 - [lisa](variables/lisa.md)
 - [perimeter](variables/perimeter.md)
+- [spatialFilter](variables/spatialFilter.md)
 - [spatialJoin](variables/spatialJoin.md)
 - [spatialRegression](variables/spatialRegression.md)
 - [spatialWeights](variables/spatialWeights.md)
 
 ## Functions
 
-- [cacheData](functions/cacheData.md)
-- [generateId](functions/generateId.md)
 - [getBasicStatistics](functions/getBasicStatistics.md)
 - [getCachedWeights](functions/getCachedWeights.md)
 - [getCachedWeightsById](functions/getCachedWeightsById.md)
-- [getGeoDaCachedData](functions/getGeoDaCachedData.md)
-- [getMoranScatterChartOption](functions/getMoranScatterChartOption.md)
-- [getVercelAiTool](functions/getVercelAiTool.md)
-- [getVercelTools](functions/getVercelTools.md)
+- [getGeoDaTool](functions/getGeoDaTool.md)
+- [getGeoDaTools](functions/getGeoDaTools.md)
 - [getWeights](functions/getWeights.md)
 - [getWeightsId](functions/getWeightsId.md)
+- [isGlobalMoranArgs](functions/isGlobalMoranArgs.md)
 - [isLinearRegressionResult](functions/isLinearRegressionResult.md)
-- [isMoranScatterOutputData](functions/isMoranScatterOutputData.md)
-- [isMoranScatterPlotArgs](functions/isMoranScatterPlotArgs.md)
 - [isSpatialErrorResult](functions/isSpatialErrorResult.md)
 - [isSpatialLagResult](functions/isSpatialLagResult.md)
 - [isSpatialRegressionArgs](functions/isSpatialRegressionArgs.md)
 - [isSpatialToolContext](functions/isSpatialToolContext.md)
 - [isWeightsOutputData](functions/isWeightsOutputData.md)
-- [MoranScatterComponent](functions/MoranScatterComponent.md)
-- [MoranScatterPlotToolComponent](functions/MoranScatterPlotToolComponent.md)
 - [printRegressionResult](functions/printRegressionResult.md)
 - [registerTools](functions/registerTools.md)
-- [removeCachedData](functions/removeCachedData.md)
 - [runDataClassify](functions/runDataClassify.md)
 - [runRegression](functions/runRegression.md)
 - [runSpatialJoin](functions/runSpatialJoin.md)
-- [SpatialCountComponent](functions/SpatialCountComponent.md)
-- [SpatialJoinToolComponent](functions/SpatialJoinToolComponent.md)
-- [SpatialWeightsMetaTable](functions/SpatialWeightsMetaTable.md)
-- [SpatialWeightsToolComponent](functions/SpatialWeightsToolComponent.md)

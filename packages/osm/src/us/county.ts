@@ -13,14 +13,14 @@ export type GetUsCountyGeojsonFunctionArgs = z.ZodObject<{
 export type GetUsCountyGeojsonLlmResult = {
   success: boolean;
   result?: string;
-  datasetId?: string;
+  datasetName?: string;
   error?: string;
 };
 
 export type GetUsCountyGeojsonAdditionalData = {
   fipsCodes: string[];
-  geojson: GeoJSON.FeatureCollection;
-  datasetId: string;
+  datasetName: string;
+  [datasetName: string]: unknown;
 };
 
 export type ExecuteGetUsCountyGeojsonResult = {
@@ -40,7 +40,7 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
  * to avoid overloading the Github API, we only fetch the GeoJSON data every 1 second.
  * :::
  *
- * Example user prompts:
+ * **Example user prompts:**
  * - "Get all counties in California"
  * - "Show me the county boundaries of New York state"
  * - "What are the counties in Texas?"
@@ -90,9 +90,10 @@ export const getUsCountyGeojson = tool<
       const features: GeoJSON.Feature[] = [];
 
       for (const fips of fipsCodes) {
+        // get cached county geojson if exists
         let geojson = getCachedData(fips);
         if (!geojson) {
-          // Add a delay between requests (1000ms) to avoid rate limiting
+          // Add a delay between requests (1000ms) to avoid overloading the Github API
           await delay(1000);
 
           const stateCode = fips.substring(0, 2);
@@ -104,6 +105,7 @@ export const getUsCountyGeojson = tool<
           geojson = await response.json();
         }
         if (geojson) {
+          // cache the county geojson to avoid overloading the Github API
           cacheData(fips, geojson);
           features.push(geojson as unknown as GeoJSON.Feature);
         }
@@ -114,20 +116,18 @@ export const getUsCountyGeojson = tool<
         features,
       };
 
-      const datasetId = `county_${generateId()}`;
-
-      cacheData(datasetId, finalGeojson);
+      const outputDatasetName = `counties_${generateId()}`;
 
       return {
         llmResult: {
           success: true,
-          datasetId,
-          result: `Successfully fetched the GeoJSON data of the counties. The GeoJSON data has been cached with the id ${datasetId}.`,
+          datasetName: outputDatasetName,
+          result: `Successfully fetched the GeoJSON data of the counties. The GeoJSON data has been cached with the dataset name: ${outputDatasetName}.`,
         },
         additionalData: {
           fipsCodes,
-          geojson: finalGeojson,
-          datasetId,
+          datasetName: outputDatasetName,
+          [outputDatasetName]: finalGeojson,
         },
       };
     } catch (error) {

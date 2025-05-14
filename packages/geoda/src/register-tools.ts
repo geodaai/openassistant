@@ -3,7 +3,7 @@ import { SpatialToolContext } from './types';
 
 import { dataClassify } from './data-classify/tool';
 import { lisa } from './lisa/tool';
-import { globalMoran } from './moran-scatterplot/tool';
+import { globalMoran } from './global-moran/tool';
 import { spatialRegression } from './regression/tool';
 import { spatialJoin } from './spatial_join/tool';
 import { spatialFilter } from './spatial_join/spatial-filter';
@@ -50,11 +50,15 @@ export function registerTools() {
   };
 }
 
+/**
+ * Get a single GeoDa tool.
+ *
+ */
 export function getGeoDaTool(
   toolName: string,
-  options: {
-    toolContext: SpatialToolContext;
-    onToolCompleted: OnToolCompleted;
+  options?: {
+    toolContext?: SpatialToolContext;
+    onToolCompleted?: OnToolCompleted;
     isExecutable?: boolean;
   }
 ) {
@@ -66,7 +70,7 @@ export function getGeoDaTool(
     tool,
     options: {
       ...options,
-      isExecutable: options.isExecutable ?? true,
+      isExecutable: options?.isExecutable ?? true,
     },
   });
 }

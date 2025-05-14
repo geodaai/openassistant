@@ -1,5 +1,9 @@
 # @openassistant/osm
 
+## Enumerations
+
+- [OsmToolNames](enumerations/OsmToolNames.md)
+
 ## Type Aliases
 
 - [ExecuteGeocodingResult](type-aliases/ExecuteGeocodingResult.md)
@@ -31,6 +35,7 @@
 - [IsochroneLlmResult](type-aliases/IsochroneLlmResult.md)
 - [IsochroneTool](type-aliases/IsochroneTool.md)
 - [IsochroneToolContext](type-aliases/IsochroneToolContext.md)
+- [OsmToolContext](type-aliases/OsmToolContext.md)
 - [QueryUSZipcodesTool](type-aliases/QueryUSZipcodesTool.md)
 - [QueryZipcodeAdditionalData](type-aliases/QueryZipcodeAdditionalData.md)
 - [QueryZipcodeFunctionArgs](type-aliases/QueryZipcodeFunctionArgs.md)
@@ -53,7 +58,7 @@
 
 ## Functions
 
-- [cacheData](functions/cacheData.md)
-- [generateId](functions/generateId.md)
-- [getCachedData](functions/getCachedData.md)
-- [removeCachedData](functions/removeCachedData.md)
+- [getOsmTool](functions/getOsmTool.md)
+- [getOsmTools](functions/getOsmTools.md)
+- [isOsmToolContext](functions/isOsmToolContext.md)
+- [registerTools](functions/registerTools.md)

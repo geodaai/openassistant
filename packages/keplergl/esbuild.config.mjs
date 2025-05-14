@@ -36,7 +36,6 @@ const baseConfig = createBaseConfig({
     'styled-components',
     'use-sync-external-store',
     'hoist-non-react-statics',
-    '@openassistant/common',
     '@openassistant/utils',
     '@kepler.gl/actions',
     '@kepler.gl/components',

@@ -9,9 +9,9 @@ import { LineChart, ScatterChart } from 'echarts/charts';
 import ReactEChartsCore from 'echarts-for-react';
 import { CanvasRenderer } from 'echarts/renderers';
 import { useMemo, useRef, useState } from 'react';
-import { useBrushLink } from '@openassistant/common';
 import { OnSelected } from '@openassistant/echarts';
 
+import { useBrushLink } from '../../hooks/use-brush-link';
 import { getSimpleScatterChartOption } from './simple-chart-option';
 import { handleBrushSelection } from '../echarts-updater';
 

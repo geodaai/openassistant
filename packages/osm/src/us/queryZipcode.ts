@@ -88,16 +88,17 @@ export const queryUSZipcodes = tool<
     try {
       const { mapBounds } = args;
       const { northwest, southeast } = mapBounds;
-      const cacheKey = 'us_zipcodes_centroids';
+      const zipcodeCentroidsDatasetName = 'us_zipcodes_centroids';
 
-      let geojson = getCachedData(cacheKey);
+      // get cached zipcode centroids geojson if exists
+      let geojson = getCachedData(zipcodeCentroidsDatasetName);
       if (!geojson) {
         const response = await fetch(
           'https://raw.githubusercontent.com/GeoDaCenter/data-and-lab/refs/heads/gh-pages/data/us_zipcodes_centroids.geojson'
         );
         geojson = await response.json();
         if (geojson) {
-          cacheData(cacheKey, geojson);
+          cacheData(zipcodeCentroidsDatasetName, geojson);
         }
       }
 

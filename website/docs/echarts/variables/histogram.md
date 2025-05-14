@@ -2,7 +2,7 @@
 
 > `const` **histogram**: `ExtendedTool`\<[`HistogramToolArgs`](../type-aliases/HistogramToolArgs.md), [`HistogramLlmResult`](../type-aliases/HistogramLlmResult.md), [`HistogramAdditionalData`](../type-aliases/HistogramAdditionalData.md), [`EChartsToolContext`](../type-aliases/EChartsToolContext.md)\>
 
-Defined in: [histogram/tool.ts:49](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/echarts/src/histogram/tool.ts#L49)
+Defined in: [packages/echarts/src/histogram/tool.ts:47](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/echarts/src/histogram/tool.ts#L47)
 
 The histogram tool is used to create a histogram chart.
 

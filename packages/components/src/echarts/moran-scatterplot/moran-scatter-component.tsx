@@ -1,10 +1,13 @@
-import { ExpandableContainer, generateId } from '@openassistant/common';
+import { useState } from 'react';
+import { generateId } from '@openassistant/utils';
+
+import { ExpandableContainer } from '../../common/expandable-container';
+import { useDraggable } from '../../hooks/use-draggable';
+
 import {
   MoranScatterComponent,
   MoranScatterOutputData,
 } from './moran-scatter-plot';
-import { useState } from 'react';
-import { useDraggable } from '@openassistant/common';
 
 export function MoranScatterPlotToolComponent(props: MoranScatterOutputData) {
   const [isExpanded, setIsExpanded] = useState(props.isExpanded);

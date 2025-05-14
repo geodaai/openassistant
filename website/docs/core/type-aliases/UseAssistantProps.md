@@ -2,7 +2,7 @@
 
 > **UseAssistantProps**: `object`
 
-Defined in: [packages/core/src/hooks/use-assistant.ts:16](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/hooks/use-assistant.ts#L16)
+Defined in: [packages/core/src/hooks/use-assistant.ts:13](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/hooks/use-assistant.ts#L13)
 
 Props for configuring the AI Assistant and useAssistant hook.
 
@@ -37,15 +37,6 @@ The server endpoint for handling chat requests (e.g. '/api/chat'). Required for 
 > `optional` **description**: `string`
 
 Optional description of the assistant's purpose.
-
-### ~~functions?~~
-
-> `optional` **functions**: [`RegisterFunctionCallingProps`](RegisterFunctionCallingProps.md)[] \| `Record`\<`string`, [`ExtendedTool`](ExtendedTool.md)\<`any`\>\>
-
-#### Deprecated
-
-Use tools instead.
-Custom functions/tools the assistant can use, either as an array or record object.
 
 ### historyMessages?
 
@@ -117,7 +108,7 @@ Controls how the assistant selects tools to use.
 
 ### tools?
 
-> `optional` **tools**: `Record`\<`string`, [`ExtendedTool`](ExtendedTool.md)\<`any`\>\>
+> `optional` **tools**: `Record`\<`string`, `ExtendedTool`\<`any`, `any`, `any`, `any`\>\>
 
 Custom tools the assistant can use. E.g. `{ localQuery: localQueryTool }`
 

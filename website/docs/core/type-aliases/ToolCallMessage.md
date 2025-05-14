@@ -2,17 +2,11 @@
 
 > **ToolCallMessage**: `object`
 
-Defined in: [packages/core/src/types.ts:60](https://github.com/GeoDaCenter/openassistant/blob/2cb8f20a901f3385efeb40778248119c5e49db78/packages/core/src/types.ts#L60)
-
-Type of ToolCallMessage
+Defined in: [packages/core/src/types.ts:26](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/types.ts#L26)
 
 The tool call message is used to store the tool call information.
 
 ## Type declaration
-
-### additionalData?
-
-> `optional` **additionalData**: `unknown`
 
 ### args
 
@@ -21,10 +15,6 @@ The tool call message is used to store the tool call information.
 ### isCompleted
 
 > **isCompleted**: `boolean`
-
-### llmResult?
-
-> `optional` **llmResult**: `unknown`
 
 ### text?
 
@@ -38,33 +28,6 @@ The tool call message is used to store the tool call information.
 
 > **toolName**: `string`
 
-## Param
+### toolOutput
 
-The id of the tool call
-
-## Param
-
-The name of the tool
-
-## Param
-
-The arguments of the tool
-
-## Param
-
-The result from the execution of the tool, which will be sent back to the LLM as response.
-
-## Param
-
-The additional data of the tool, which can be used to pass the output of the tool to next tool call or the component for rendering.
-
-## Param
-
-The streaming text of the tool
-
-## Param
-
-The flag indicating if the tool call is completed. Note: there are three stages of the tool call:
-1. The tool call is requested by the LLM with the tool name and arguments.
-2. The tool call is executing and `{llmResult, additionalData}` will be updated.
-3. The tool call is completed and `{llmResult}` will be sent back to the LLM as response.
+> **toolOutput**: `unknown`

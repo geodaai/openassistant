@@ -12,7 +12,7 @@ const packageJson = JSON.parse(
 
 // update version in examples/lisa/package.json
 function updateExamplesPackageJson(projectName) {
-  // replace dependencies of "@openassistant/core", "@openassistant/ui", or "@openassistant/common" with the new version
+  // replace dependencies of "@openassistant/core", "@openassistant/ui", or "@openassistant/components" with the new version
   const examplesDir = join(__dirname, `../../examples/${projectName}`);
   const examplesPackageJson = JSON.parse(readFileSync(join(examplesDir, 'package.json'), 'utf-8'));
   // check if dependencies exist
@@ -22,8 +22,8 @@ function updateExamplesPackageJson(projectName) {
   if (examplesPackageJson.dependencies['@openassistant/ui']) {
     examplesPackageJson.dependencies['@openassistant/ui'] = `${packageJson.version}`;
   }
-  if (examplesPackageJson.dependencies['@openassistant/common']) {
-    examplesPackageJson.dependencies['@openassistant/common'] = `${packageJson.version}`;
+  if (examplesPackageJson.dependencies['@openassistant/components']) {
+    examplesPackageJson.dependencies['@openassistant/components'] = `${packageJson.version}`;
   }
   if (examplesPackageJson.dependencies['@openassistant/duckdb']) {
     examplesPackageJson.dependencies['@openassistant/duckdb'] = `${packageJson.version}`;
@@ -36,6 +36,15 @@ function updateExamplesPackageJson(projectName) {
   }
   if (examplesPackageJson.dependencies['@openassistant/keplergl']) {
     examplesPackageJson.dependencies['@openassistant/keplergl'] = `${packageJson.version}`;
+  }
+  if (examplesPackageJson.dependencies['@openassistant/osm']) {
+    examplesPackageJson.dependencies['@openassistant/osm'] = `${packageJson.version}`;
+  }
+  if (examplesPackageJson.dependencies['@openassistant/utils']) {
+    examplesPackageJson.dependencies['@openassistant/utils'] = `${packageJson.version}`;
+  }
+  if (examplesPackageJson.dependencies['@openassistant/map']) {
+    examplesPackageJson.dependencies['@openassistant/map'] = `${packageJson.version}`;
   }
   writeFileSync(join(examplesDir, 'package.json'), JSON.stringify(examplesPackageJson, null, 2));
 }

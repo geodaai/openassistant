@@ -1,4 +1,3 @@
-import { useBrushLink } from '@openassistant/common';
 import { useMemo, useRef, useState } from 'react';
 import { CanvasRenderer } from 'echarts/renderers';
 import { ScatterChart } from 'echarts/charts';
@@ -10,11 +9,12 @@ import {
 } from 'echarts/components';
 import * as echarts from 'echarts/core';
 import ReactEChartsCore from 'echarts-for-react';
-
 import { OnSelected } from '@openassistant/echarts';
+
 import { ECHARTS_DARK_THEME } from '../echarts-theme';
 import { handleBrushSelection } from '../echarts-updater';
 import { createBubbleChartOption } from './bubble-chart-option';
+import { useBrushLink } from '../../hooks/use-brush-link';
 
 // Register the required components
 echarts.use([

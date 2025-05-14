@@ -16,15 +16,15 @@ export type GetUsZipcodeGeojsonFunctionArgs = z.ZodObject<{
 
 export type GetUsZipcodeGeojsonLlmResult = {
   success: boolean;
-  datasetId?: string;
+  datasetName?: string;
   result?: string;
   error?: string;
 };
 
 export type GetUsZipcodeGeojsonAdditionalData = {
   zipcodes: string[];
-  datasetId: string;
-  geojson: GeoJSON.FeatureCollection;
+  datasetName: string;
+  [datasetName: string]: unknown;
 };
 
 export type ExecuteGetUsZipcodeGeojsonResult = {
@@ -117,20 +117,18 @@ export const getUsZipcodeGeojson = tool<
         features,
       };
 
-      const datasetId = `zipcode_${generateId()}`;
-
-      cacheData(datasetId, finalGeojson);
+      const outputDatasetName = `zipcodes_${generateId()}`;
 
       return {
         llmResult: {
           success: true,
-          datasetId,
-          result: `Successfully fetched the GeoJSON data of the zipcodes. The GeoJSON data has been cached with the id ${datasetId}.`,
+          datasetName: outputDatasetName,
+          result: `Successfully fetched the GeoJSON data of the zipcodes. The GeoJSON data has been cached with the dataset name: ${outputDatasetName}.`,
         },
         additionalData: {
           zipcodes,
-          geojson: finalGeojson,
-          datasetId,
+          datasetName: outputDatasetName,
+          [outputDatasetName]: finalGeojson,
         },
       };
     } catch (error) {

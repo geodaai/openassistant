@@ -52,7 +52,7 @@ export default function Home() {
   };
 
   const getGeometries = async (datasetName: string): Promise<SpatialGeometry | null> => {
-    // get cached geometries from other tools
+    // get cached geometries from other tools using datasetName as cacheId
     const toolData = Object.values(toolAdditionalData.current);
 
     for (const data of toolData) {
@@ -117,9 +117,9 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center p-24">
       <div className="w-full max-w-2xl">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-4">ECharts Chat Example</h1>
+          <h1 className="text-4xl font-bold mb-4">Map Tool Example</h1>
           <p className="text-gray-600">
-            Try asking for geocoding, routing, or isochrone!
+            Try asking for mapping with geocoding, routing, or isochrone!
           </p>
         </div>
 
