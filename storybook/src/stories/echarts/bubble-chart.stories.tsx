@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import {
   BubbleChartComponent,
   BubbleChartCallbackMessage,
-} from '@openassistant/echarts';
+} from '@openassistant/plots';
 import { ResizableThemeWrapper, SimpleThemeWrapper } from './common';
 
 const meta: Meta<typeof BubbleChartComponent> = {

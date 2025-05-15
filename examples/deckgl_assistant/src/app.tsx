@@ -7,7 +7,7 @@ import '@deck.gl/widgets/stylesheet.css';
 import { SAMPLE_DATASETS } from './dataset';
 import { AiAssistantWidget } from './ai-assistant-widgets';
 
-import { histogram } from '@openassistant/echarts';
+import { histogram } from '@openassistant/plots';
 import { localQuery } from '@openassistant/duckdb';
 import { z } from 'zod';
 

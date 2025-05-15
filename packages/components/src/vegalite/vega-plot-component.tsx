@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { VegaLitePlotAdditionalData } from '@openassistant/echarts';
+import { VegaLitePlotAdditionalData } from '@openassistant/plots';
 import { ExpandableContainer } from '../common/expandable-container';
 import { useDraggable } from '../hooks/use-draggable';
 import { generateId } from '@openassistant/utils';

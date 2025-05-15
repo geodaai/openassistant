@@ -65,13 +65,13 @@ Check out the following examples using OpenAssistant in action:
 For example, install the echarts tool:
 
 ```bash
-npm install @openassistant/echarts
+npm install @openassistant/plots
 ```
 
 Add all echarts tools (histogram, box plot, etc.) to your application:
 
 ```ts
-import { getVercelAiTools } from '@openassistant/echarts';
+import { getVercelAiTools } from '@openassistant/plots';
 import { generateText } from 'ai';
 
 const context = {

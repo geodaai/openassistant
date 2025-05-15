@@ -4,14 +4,14 @@ import {
   ParallelCoordinateDataProps,
   processParallelCoordinateData,
 } from './utils';
-import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../types';
+import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../types';
 
 /**
  * The PCP tool is used to create a parallel coordinates plot.
  *
  * @example
  * ```typescript
- * import { getVercelAiTool } from '@openassistant/echarts';
+ * import { getVercelAiTool } from '@openassistant/plots';
  * import { generateText } from 'ai';
  *
  * const toolContext = {

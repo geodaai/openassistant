@@ -25,7 +25,7 @@ The eCharts tools allow you to create the following plots using LLM in your AI A
 ## Installation
 
 ```bash
-npm install @openassistant/echarts
+npm install @openassistant/plots
 ```
 
 ## Quick Start
@@ -64,7 +64,7 @@ import {
   HistogramTool,
   scatterplot,
   ScatterplotTool,
-} from '@openassistant/echarts';
+} from '@openassistant/plots';
 
 // use HistogramTool for type safety
 const histogramTool: HistogramTool = {
@@ -117,7 +117,7 @@ module.exports = {
   content: [
     './src/**/*.{js,ts,jsx,tsx}',
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
-    './node_modules/@openassistant/echarts/dist/**/*.{js,ts,jsx,tsx}',
+    './node_modules/@openassistant/plots/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {},

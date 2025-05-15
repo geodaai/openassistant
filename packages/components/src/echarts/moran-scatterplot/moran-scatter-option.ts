@@ -1,5 +1,5 @@
 import { EChartsOption } from 'echarts';
-import { SimpleLinearRegressionResult } from '@openassistant/echarts';
+import { SimpleLinearRegressionResult } from '@openassistant/plots';
 import { numericFormatter } from '../../utils';
 
 export type MoranScatterChartOptionProps = {

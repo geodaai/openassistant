@@ -9,7 +9,7 @@ import {
 } from 'echarts/components';
 import * as echarts from 'echarts/core';
 import ReactEChartsCore from 'echarts-for-react';
-import { OnSelected } from '@openassistant/echarts';
+import { OnSelected } from '@openassistant/plots';
 
 import { ECHARTS_DARK_THEME } from '../echarts-theme';
 import { handleBrushSelection } from '../echarts-updater';

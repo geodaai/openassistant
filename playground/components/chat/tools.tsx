@@ -43,7 +43,7 @@ import {
   BoxplotTool,
   BubbleChartTool,
   boxplot,
-} from '@openassistant/echarts';
+} from '@openassistant/plots';
 import { localQuery } from '@openassistant/duckdb';
 import { KeplerglTool } from '@openassistant/keplergl';
 import { keplergl } from '@openassistant/keplergl';

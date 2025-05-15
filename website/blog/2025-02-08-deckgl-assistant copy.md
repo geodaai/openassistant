@@ -620,12 +620,12 @@ OpenAssistant also provides plugins, which are easily to use and extend the func
 
 For more details about the plugins, please refer to the [OpenAssistant Plugins documentation](https://openassistant-doc.vercel.app/docs/category/plugins-for-ai-assistant).
 
-For example, using @openassistant/echarts plugin, you can extend the AI Assistant with the ability to visualize data using ECharts.
+For example, using @openassistant/plots plugin, you can extend the AI Assistant with the ability to visualize data using ECharts.
 
 Here is how to add histogram visualization to the AI Assistant:
 
 ```tsx
-import { histogramFunctionDefinition } from '@openassistant/echarts';
+import { histogramFunctionDefinition } from '@openassistant/plots';
 
 ...
 <AiAssistant

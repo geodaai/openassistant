@@ -53,7 +53,7 @@ const sidebars: SidebarsConfig = {
   apiSidebar: [
     {
       type: 'category',
-      label: '@openassistant/echarts',
+      label: '@openassistant/plots',
       items: [
         {
           type: 'doc',

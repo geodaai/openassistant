@@ -9,7 +9,7 @@ The PCP tool is used to create a parallel coordinates plot.
 ## Example
 
 ```typescript
-import { getVercelAiTool } from '@openassistant/echarts';
+import { getVercelAiTool } from '@openassistant/plots';
 import { generateText } from 'ai';
 
 const toolContext = {

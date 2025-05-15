@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { generateText } from 'ai';
 import { openai } from '@ai-sdk/openai';
-import { getVercelAiTools } from '@openassistant/echarts';
+import { getVercelAiTools } from '@openassistant/plots';
 
 // Load environment variables
 dotenv.config();

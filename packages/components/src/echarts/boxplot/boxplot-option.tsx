@@ -1,4 +1,4 @@
-import { BoxplotDataProps } from '@openassistant/echarts';
+import { BoxplotDataProps } from '@openassistant/plots';
 import { EChartsOption } from 'echarts';
 import { YAXisOption, XAXisOption } from 'echarts/types/dist/shared';
 import * as echarts from 'echarts';

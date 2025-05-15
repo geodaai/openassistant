@@ -9,7 +9,7 @@ import {
   ScatterplotOutputData,
   HistogramOutputData,
   BoxplotOutputData,
-} from '@openassistant/echarts';
+} from '@openassistant/plots';
 import { CreateMapOutputData } from '@openassistant/keplergl';
 import { QueryDuckDBOutputData } from '@openassistant/duckdb';
 

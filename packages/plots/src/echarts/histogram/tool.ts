@@ -1,14 +1,14 @@
 import { z } from 'zod';
 import { tool, generateId } from '@openassistant/utils';
 import { createHistogramBins } from './utils';
-import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../types';
+import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../types';
 
 /**
  * The histogram tool is used to create a histogram chart.
  *
  * @example
  * ```typescript
- * import { getVercelAiTool } from '@openassistant/echarts';
+ * import { getVercelAiTool } from '@openassistant/plots';
  * import { generateText } from 'ai';
  *
  * const toolContext = {

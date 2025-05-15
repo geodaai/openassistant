@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import {
   HistogramComponent,
   HistogramCallbackMessage,
-} from '@openassistant/echarts';
+} from '@openassistant/plots';
 import { ResizableThemeWrapper } from './common';
 
 const meta: Meta<typeof HistogramComponent> = {

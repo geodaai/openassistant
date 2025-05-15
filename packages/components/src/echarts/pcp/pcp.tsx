@@ -6,7 +6,7 @@ import { useMemo, useRef, useState } from 'react';
 import {
   ParallelCoordinateDataProps,
   OnSelected,
-} from '@openassistant/echarts';
+} from '@openassistant/plots';
 
 import { createParallelCoordinateOption } from './pcp-option';
 import { handleBrushSelection } from '../echarts-updater';

@@ -15,7 +15,7 @@ import {
   computeRegression,
   ComputeRegressionResult,
   OnSelected,
-} from '@openassistant/echarts';
+} from '@openassistant/plots';
 
 import { ScatterRegressionPlot } from './scatter-regression-plot';
 import { SimpleScatterPlot } from './simple-scatter-plots';

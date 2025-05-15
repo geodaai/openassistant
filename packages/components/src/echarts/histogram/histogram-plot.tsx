@@ -13,7 +13,7 @@ import {
   ToolboxComponent,
 } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
-import { HistogramDataProps } from '@openassistant/echarts';
+import { HistogramDataProps } from '@openassistant/plots';
 
 import { ECHARTS_DARK_THEME } from '../echarts-theme';
 import { getHistogramChartOption } from './histogram-option';

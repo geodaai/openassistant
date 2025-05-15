@@ -13,7 +13,7 @@ import {
   calculateLoessRegression,
   computeRegression,
   ComputeRegressionResult,
-} from '@openassistant/echarts';
+} from '@openassistant/plots';
 import { getScatterplotChartOption } from './scatter-option';
 
 // Register the required ECharts components

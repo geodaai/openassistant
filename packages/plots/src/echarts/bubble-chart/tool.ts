@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { tool, generateId } from '@openassistant/utils';
-import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../types';
+import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../types';
 
 /**
  * The bubble chart tool.
@@ -9,7 +9,7 @@ import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../types';
  *
  * @example
  * ```ts
- * import { getVercelAiTool } from '@openassistant/echarts';
+ * import { getVercelAiTool } from '@openassistant/plots';
  * import { generateText } from 'ai';
  *
  * const toolContext = {

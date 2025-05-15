@@ -28,8 +28,8 @@ function updateExamplesPackageJson(projectName) {
   if (examplesPackageJson.dependencies['@openassistant/duckdb']) {
     examplesPackageJson.dependencies['@openassistant/duckdb'] = `${packageJson.version}`;
   }
-  if (examplesPackageJson.dependencies['@openassistant/echarts']) {
-    examplesPackageJson.dependencies['@openassistant/echarts'] = `${packageJson.version}`;
+  if (examplesPackageJson.dependencies['@openassistant/plots']) {
+    examplesPackageJson.dependencies['@openassistant/plots'] = `${packageJson.version}`;
   }
   if (examplesPackageJson.dependencies['@openassistant/geoda']) {
     examplesPackageJson.dependencies['@openassistant/geoda'] = `${packageJson.version}`;

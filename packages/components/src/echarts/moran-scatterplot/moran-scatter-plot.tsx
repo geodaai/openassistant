@@ -10,7 +10,7 @@ import {
 import * as echarts from 'echarts/core';
 import { ScatterChart, LineChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
-import { SimpleLinearRegressionResult } from '@openassistant/echarts';
+import { SimpleLinearRegressionResult } from '@openassistant/plots';
 import { handleBrushSelection } from '../echarts-updater';
 import { getMoranScatterChartOption } from './moran-scatter-option';
 import { useBrushLink } from '../../hooks/use-brush-link';

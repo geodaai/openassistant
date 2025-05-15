@@ -17,7 +17,7 @@
     "@nextui-org/react": "^2.6.10",
     "@openassistant/core": "workspace:*",
     "@openassistant/duckdb": "workspace:*",
-    "@openassistant/echarts": "workspace:*",
+    "@openassistant/plots": "workspace:*",
     "@openassistant/ui": "workspace:*",
     "ollama-ai-provider": "^1.2.0",
     "preact": "^10.25.4",

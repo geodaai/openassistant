@@ -1,5 +1,5 @@
 import { getTool, OnToolCompleted } from '@openassistant/utils';
-import { keplergl, KeplerglToolContext } from './keplergl';
+import { keplergl, KeplerglToolContext } from './keplergl/tool';
 
 export enum MapToolNames {
   keplergl = 'keplergl',

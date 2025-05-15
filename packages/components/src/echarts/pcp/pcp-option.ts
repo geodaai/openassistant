@@ -1,6 +1,6 @@
 import { EChartsOption } from 'echarts';
 import * as echarts from 'echarts';
-import { ParallelCoordinateDataProps } from '@openassistant/echarts';
+import { ParallelCoordinateDataProps } from '@openassistant/plots';
 import { numericFormatter } from '../../utils';
 
 /**

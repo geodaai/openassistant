@@ -6,7 +6,7 @@ import {
 import {
   HistogramDataProps,
   NumericHistogramDataProps,
-} from '@openassistant/echarts';
+} from '@openassistant/plots';
 import { numericFormatter } from '../../utils';
 
 const defaultBarColors = [

@@ -11,7 +11,7 @@ To use it, you need to provide the implementation of the `getValues` function.
 ## Example
 
 ```ts
-import { getVercelAiTool } from '@openassistant/echarts';
+import { getVercelAiTool } from '@openassistant/plots';
 import { generateText } from 'ai';
 
 const toolContext = {

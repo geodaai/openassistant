@@ -5,7 +5,7 @@ import { spatialLag } from '@geoda/lisa';
 import {
   simpleLinearRegression,
   SimpleLinearRegressionResult,
-} from '@openassistant/echarts';
+} from '@openassistant/plots';
 
 import { GetValues } from '../types';
 import { getCachedWeightsById } from '../weights/tool';

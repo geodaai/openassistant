@@ -324,7 +324,7 @@ export function App() {
 `;
 
 export const codeHistogram = `import { AiAssistant } from '@openassistant/ui';
-import { histogramFunctionDefinition } from '@openassistant/echarts';
+import { histogramFunctionDefinition } from '@openassistant/plots';
 import { testData } from './my-datasets';
 
 export function App() {

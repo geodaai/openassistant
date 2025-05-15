@@ -1,4 +1,4 @@
-import { LoessResult, RegressionResults } from '@openassistant/echarts';
+import { LoessResult, RegressionResults } from '@openassistant/plots';
 import { numericFormatter } from '../../utils';
 
 /**

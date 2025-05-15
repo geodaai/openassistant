@@ -6,8 +6,8 @@ import {
   ProcessFileDataContent,
 } from '@kepler.gl/processors';
 import * as arrow from 'apache-arrow';
-import { arrowSchemaToFields } from './utils';
-import { GetDataset, GetGeometries } from './types';
+import { arrowSchemaToFields } from '../utils';
+import { GetDataset, GetGeometries } from '../types';
 
 export type KeplerGlToolArgs = z.ZodObject<{
   datasetName: z.ZodString;

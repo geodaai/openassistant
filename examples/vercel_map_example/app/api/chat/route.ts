@@ -1,6 +1,6 @@
 import { openai } from '@ai-sdk/openai';
 import { getDuckDBTool } from '@openassistant/duckdb';
-import { getEChartsTool } from '@openassistant/echarts';
+import { getPlotsTool } from '@openassistant/plots';
 import {
   getGeoDaTool,
   GeoDaToolNames,
@@ -8,7 +8,6 @@ import {
 } from '@openassistant/geoda';
 import { getOsmTool, OsmToolNames } from '@openassistant/osm';
 import { getMapTool, MapToolNames } from '@openassistant/map';
-import { getCachedData } from '@openassistant/utils';
 import { createDataStreamResponse, streamText } from 'ai';
 
 export async function POST(req: Request) {
@@ -122,7 +121,7 @@ You can use the following datasets:
   });
 
   // create a server-side tool for histogram
-  const histogramTool = getEChartsTool('histogram', {
+  const histogramTool = getPlotsTool('histogram', {
     toolContext: { getValues },
     onToolCompleted,
     isExecutable: true,

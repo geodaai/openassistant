@@ -9,7 +9,7 @@ The scatterplot tool is used to create a scatterplot chart.
 ## Example
 
 ```typescript
-import { getVercelAiTool } from '@openassistant/echarts';
+import { getVercelAiTool } from '@openassistant/plots';
 import { generateText } from 'ai';
 
 const toolContext = {

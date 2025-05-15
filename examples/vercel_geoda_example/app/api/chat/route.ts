@@ -1,6 +1,6 @@
 import { openai } from '@ai-sdk/openai';
 import { getDuckDBTool } from '@openassistant/duckdb';
-import { getEChartsTool } from '@openassistant/echarts';
+import { getPlotsTool } from '@openassistant/plots';
 import {
   getGeoDaTool,
   GeoDaToolNames,
@@ -85,7 +85,7 @@ You can use the following datasets:
   });
 
   // create a server-side tool for histogram
-  const histogramTool = getEChartsTool('histogram', {
+  const histogramTool = getPlotsTool('histogram', {
     toolContext: { getValues },
     onToolCompleted,
     isExecutable: true,

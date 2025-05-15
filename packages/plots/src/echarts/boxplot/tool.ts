@@ -2,14 +2,14 @@ import { tool, generateId } from '@openassistant/utils';
 import { z } from 'zod';
 
 import { BoxplotDataProps, createBoxplot } from './utils';
-import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../types';
+import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../types';
 
 /**
  * The boxplot tool is used to create a box plot for a given dataset and variable.
  *
  * @example
  * ```typescript
- * import { getVercelAiTool } from '@openassistant/echarts';
+ * import { getVercelAiTool } from '@openassistant/plots';
  * import { generateText } from 'ai';
  *
  * const toolContext = {

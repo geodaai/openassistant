@@ -4,7 +4,7 @@ import {
   ParallelCoordinateCallbackMessage,
   createParallelCoordinateOption,
   processParallelCoordinateData,
-} from '@openassistant/echarts';
+} from '@openassistant/plots';
 import { ResizableThemeWrapper } from './common';
 
 const meta: Meta<typeof ParallelCoordinateComponent> = {

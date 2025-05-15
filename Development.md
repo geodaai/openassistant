@@ -7,8 +7,8 @@ This project is a monorepo managed by yarn. The packages are located in the `pac
 - `@openassistant/cli`: The CLI package.
 - `@openassistant/geoda`: The Geoda addon.
 - `@openassistant/duckdb`: The DuckDB addon.
-- `@openassistant/echarts`: The ECharts addon.
-- `@openassistant/keplergl`: The Kepler.gl addon.
+- `@openassistant/plots`: The plot tools.
+- `@openassistant/maps`: The maps addon.
 
 ## Quick Start
 

@@ -1,14 +1,14 @@
-import { boxplot } from './boxplot/tool';
-import { bubbleChart } from './bubble-chart/tool';
-import { histogram } from './histogram/tool';
-import { pcp } from './pcp/tool';
-import { scatterplot } from './scatterplot/tool';
+import { boxplot } from './echarts/boxplot/tool';
+import { bubbleChart } from './echarts/bubble-chart/tool';
+import { histogram } from './echarts/histogram/tool';
+import { pcp } from './echarts/pcp/tool';
+import { scatterplot } from './echarts/scatterplot/tool';
 import { vegaLitePlot } from './vegalite/tool';
 import { getTool, OnToolCompleted } from '@openassistant/utils';
 import { GetValues, OnSelected } from './types';
 
 // export the enum of tool names, so users can use it to check if a tool is available
-export enum EChartsToolNames {
+export enum PlotsToolNames {
   boxplot = 'boxplot',
   bubbleChart = 'bubbleChart',
   histogram = 'histogram',
@@ -33,7 +33,7 @@ export function registerTools() {
   };
 }
 
-export function getEChartsTool(
+export function getPlotsTool(
   toolName: string,
   options: {
     toolContext?: ToolContext;
@@ -54,7 +54,7 @@ export function getEChartsTool(
   });
 }
 
-export function getEChartsTools(
+export function getPlotsTools(
   toolContext: ToolContext,
   onToolCompleted: OnToolCompleted,
   isExecutable: boolean = true
@@ -66,7 +66,7 @@ export function getEChartsTools(
     Object.keys(tools).map((key) => {
       return [
         key,
-        getEChartsTool(key, { toolContext, onToolCompleted, isExecutable }),
+        getPlotsTool(key, { toolContext, onToolCompleted, isExecutable }),
       ];
     })
   );

@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.3.21",
-    "@openassistant/echarts": "workspace:*",
+    "@openassistant/plots": "workspace:*",
     "ai": "^4.3.13",
     "dotenv": "^16.4.5",
     "readline-sync": "^1.4.10",

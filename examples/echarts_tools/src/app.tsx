@@ -12,7 +12,7 @@ import {
   PCPTool,
   scatterplot,
   ScatterplotTool,
-} from '@openassistant/echarts';
+} from '@openassistant/plots';
 import { AiAssistant } from '@openassistant/ui';
 import { tool } from '@openassistant/utils';
 import { z } from 'zod';

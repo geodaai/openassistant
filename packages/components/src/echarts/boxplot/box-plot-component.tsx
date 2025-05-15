@@ -8,7 +8,7 @@ import {
   TableCell,
 } from '@nextui-org/react';
 import { Boxplot, BoxplotOutputData } from './box-plot';
-import { BoxplotDataProps } from '@openassistant/echarts';
+import { BoxplotDataProps } from '@openassistant/plots';
 import { ExpandableContainer } from '../../common/expandable-container';
 import { useDraggable } from '../../hooks/use-draggable';
 

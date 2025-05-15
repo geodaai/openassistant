@@ -1,6 +1,6 @@
 import { EChartsType } from 'echarts';
 import debounce from 'lodash/debounce';
-import { OnSelected } from '@openassistant/echarts';
+import { OnSelected } from '@openassistant/plots';
 
 import { OnBrushedCallback } from '../hooks/use-brush-link';
 

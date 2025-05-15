@@ -6,7 +6,7 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
     '../node_modules/@openassistant/ui/dist/**/*.{js,ts,jsx,tsx}',
-    '../node_modules/@openassistant/echarts/dist/**/*.{js,ts,jsx,tsx}',
+    '../node_modules/@openassistant/plots/dist/**/*.{js,ts,jsx,tsx}',
     '../node_modules/@openassistant/duckdb/dist/**/*.{js,ts,jsx,tsx}',
     '../node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],

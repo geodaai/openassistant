@@ -3,7 +3,7 @@ import {
   ScatterplotComponent,
   ScatterplotCallbackComponent,
   computeRegression,
-} from '@openassistant/echarts';
+} from '@openassistant/plots';
 import { ResizableThemeWrapper, SimpleThemeWrapper } from './common';
 
 const meta: Meta<typeof ScatterplotComponent> = {

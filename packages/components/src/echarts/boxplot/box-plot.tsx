@@ -16,7 +16,7 @@ import {
   BoxplotDataProps,
   CreateBoxplotProps,
   OnSelected,
-} from '@openassistant/echarts';
+} from '@openassistant/plots';
 import { getBoxPlotChartOption } from './boxplot-option';
 import { ECHARTS_DARK_THEME } from '../echarts-theme';
 import { onBrushSelected } from '../echarts-updater';

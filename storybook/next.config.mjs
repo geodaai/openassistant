@@ -13,9 +13,9 @@ const nextConfig = {
         __dirname,
         '../packages/components/src/index.ts'
       ),
-      '@openassistant/echarts': path.resolve(
+      '@openassistant/plots': path.resolve(
         __dirname,
-        '../packages/echarts/src/index.ts'
+        '../packages/plots/src/index.ts'
       ),
       '@openassistant/core': path.resolve(
         __dirname,

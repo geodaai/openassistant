@@ -1,14 +1,14 @@
 import { z } from 'zod';
 import { tool, generateId } from '@openassistant/utils';
 import { computeRegression } from './utils';
-import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../types';
+import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../types';
 
 /**
  * The scatterplot tool is used to create a scatterplot chart.
  *
  * @example
  * ```typescript
- * import { getVercelAiTool } from '@openassistant/echarts';
+ * import { getVercelAiTool } from '@openassistant/plots';
  * import { generateText } from 'ai';
  *
  * const toolContext = {

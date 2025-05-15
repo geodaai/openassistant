@@ -1,5 +1,5 @@
 import { openai } from '@ai-sdk/openai';
-import { getEChartsTool, EChartsToolNames } from '@openassistant/echarts';
+import { getPlotsTool, EChartsToolNames } from '@openassistant/plots';
 import { createDataStreamResponse, streamText } from 'ai';
 
 export async function POST(req: Request) {
@@ -12,7 +12,7 @@ You can use the following datasets:
   let toolAdditionalData: Record<string, unknown> = {};
 
   // create a tool for histogram
-  const vegaLitePlotTool = getEChartsTool(EChartsToolNames.vegaLitePlot, {
+  const vegaLitePlotTool = getPlotsTool(EChartsToolNames.vegaLitePlot, {
     toolContext: {
       getValues: async (datasetName: string, variableName: string) => {
         // simulate values

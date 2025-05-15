@@ -7,7 +7,7 @@ import {
   ScatterplotComponent,
   HistogramComponent,
   HistogramOutputData,
-} from '@openassistant/echarts';
+} from '@openassistant/plots';
 import {
   KeplerGlComponentWithProvider,
   CreateMapOutputData,

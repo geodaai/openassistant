@@ -23,8 +23,8 @@
       "@openassistant/components": [
         "../packages/components/src"
       ],
-      "@openassistant/echarts": [
-        "../packages/echarts/src"
+      "@openassistant/plots": [
+        "../packages/plots/src"
       ],
       "@openassistant/core": [
         "../packages/core/src"

@@ -9,7 +9,7 @@ The boxplot tool is used to create a box plot for a given dataset and variable.
 ## Example
 
 ```typescript
-import { getVercelAiTool } from '@openassistant/echarts';
+import { getVercelAiTool } from '@openassistant/plots';
 import { generateText } from 'ai';
 
 const toolContext = {

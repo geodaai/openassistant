@@ -3,7 +3,7 @@ import {
   BoxplotComponent,
   BoxplotCallbackMessage,
   createBoxplot,
-} from '@openassistant/echarts';
+} from '@openassistant/plots';
 import { SimpleThemeWrapper } from './common';
 
 const meta: Meta<typeof BoxplotComponent> = {

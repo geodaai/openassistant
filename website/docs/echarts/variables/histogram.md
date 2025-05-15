@@ -9,7 +9,7 @@ The histogram tool is used to create a histogram chart.
 ## Example
 
 ```typescript
-import { getVercelAiTool } from '@openassistant/echarts';
+import { getVercelAiTool } from '@openassistant/plots';
 import { generateText } from 'ai';
 
 const toolContext = {

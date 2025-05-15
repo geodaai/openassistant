@@ -7492,20 +7492,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@openassistant/echarts@workspace:*, @openassistant/echarts@workspace:packages/echarts":
-  version: 0.0.0-use.local
-  resolution: "@openassistant/echarts@workspace:packages/echarts"
-  dependencies:
-    "@openassistant/utils": "workspace:*"
-    jstat: "npm:^1.9.6"
-    simple-statistics: "npm:^7.8.7"
-    zod: "npm:^3.24.4"
-  peerDependencies:
-    react: ">=18.2"
-    react-dom: ">=18.2"
-  languageName: unknown
-  linkType: soft
-
 "@openassistant/geoda@workspace:*, @openassistant/geoda@workspace:packages/geoda":
   version: 0.0.0-use.local
   resolution: "@openassistant/geoda@workspace:packages/geoda"
@@ -7578,6 +7564,20 @@ __metadata:
     "@openassistant/utils": "workspace:*"
     zip3: "npm:^1.0.4"
     zod: "npm:^3.24.4"
+  languageName: unknown
+  linkType: soft
+
+"@openassistant/plots@workspace:*, @openassistant/plots@workspace:packages/plots":
+  version: 0.0.0-use.local
+  resolution: "@openassistant/plots@workspace:packages/plots"
+  dependencies:
+    "@openassistant/utils": "workspace:*"
+    jstat: "npm:^1.9.6"
+    simple-statistics: "npm:^7.8.7"
+    zod: "npm:^3.24.4"
+  peerDependencies:
+    react: ">=18.2"
+    react-dom: ">=18.2"
   languageName: unknown
   linkType: soft
 
@@ -16181,7 +16181,7 @@ __metadata:
     "@nextui-org/react": "npm:^2.6.10"
     "@openassistant/core": "workspace:*"
     "@openassistant/duckdb": "workspace:*"
-    "@openassistant/echarts": "workspace:*"
+    "@openassistant/plots": "workspace:*"
     "@openassistant/ui": "workspace:*"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
@@ -16861,7 +16861,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "echarts-tools-example@workspace:examples/echarts_tools"
   dependencies:
-    "@openassistant/echarts": "workspace:*"
+    "@openassistant/plots": "workspace:*"
     "@openassistant/ui": "workspace:*"
     "@openassistant/utils": "workspace:*"
     "@types/react": "npm:^18.3.1"
@@ -25972,10 +25972,10 @@ __metadata:
     "@openassistant/components": "workspace:*"
     "@openassistant/core": "workspace:*"
     "@openassistant/duckdb": "workspace:*"
-    "@openassistant/echarts": "workspace:*"
     "@openassistant/geoda": "workspace:*"
     "@openassistant/keplergl": "workspace:*"
     "@openassistant/osm": "workspace:*"
+    "@openassistant/plots": "workspace:*"
     "@openassistant/ui": "workspace:*"
     "@openassistant/utils": "workspace:*"
     "@types/react": "npm:^18.3.1"
@@ -27954,7 +27954,7 @@ __metadata:
   resolution: "react-tailwind-example@workspace:examples/react_tailwind"
   dependencies:
     "@nextui-org/react": "npm:^2.6.10"
-    "@openassistant/echarts": "workspace:*"
+    "@openassistant/plots": "workspace:*"
     "@openassistant/ui": "workspace:*"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
@@ -32598,7 +32598,7 @@ __metadata:
     "@next/bundle-analyzer": "npm:^15.3.2"
     "@openassistant/components": "workspace:*"
     "@openassistant/duckdb": "workspace:*"
-    "@openassistant/echarts": "workspace:*"
+    "@openassistant/plots": "workspace:*"
     "@types/node": "npm:^20.0.0"
     "@types/react": "npm:^18.2.0"
     "@types/react-dom": "npm:^18.2.0"
@@ -32624,8 +32624,8 @@ __metadata:
     "@next/bundle-analyzer": "npm:^15.3.2"
     "@openassistant/components": "workspace:*"
     "@openassistant/duckdb": "workspace:*"
-    "@openassistant/echarts": "workspace:*"
     "@openassistant/geoda": "workspace:*"
+    "@openassistant/plots": "workspace:*"
     "@types/node": "npm:^20.0.0"
     "@types/react": "npm:^18.2.0"
     "@types/react-dom": "npm:^18.2.0"
@@ -32651,10 +32651,10 @@ __metadata:
     "@next/bundle-analyzer": "npm:^15.3.2"
     "@openassistant/components": "workspace:*"
     "@openassistant/duckdb": "workspace:*"
-    "@openassistant/echarts": "workspace:*"
     "@openassistant/geoda": "workspace:*"
     "@openassistant/map": "workspace:*"
     "@openassistant/osm": "workspace:*"
+    "@openassistant/plots": "workspace:*"
     "@types/node": "npm:^20.0.0"
     "@types/react": "npm:^18.2.0"
     "@types/react-dom": "npm:^18.2.0"
@@ -32680,9 +32680,9 @@ __metadata:
     "@next/bundle-analyzer": "npm:^15.3.2"
     "@openassistant/components": "workspace:*"
     "@openassistant/duckdb": "workspace:*"
-    "@openassistant/echarts": "workspace:*"
     "@openassistant/geoda": "workspace:*"
     "@openassistant/osm": "workspace:*"
+    "@openassistant/plots": "workspace:*"
     "@types/node": "npm:^20.0.0"
     "@types/react": "npm:^18.2.0"
     "@types/react-dom": "npm:^18.2.0"
@@ -32732,8 +32732,7 @@ __metadata:
     "@ai-sdk/openai": "npm:^1.3.21"
     "@next/bundle-analyzer": "npm:^15.3.2"
     "@openassistant/components": "workspace:*"
-    "@openassistant/duckdb": "workspace:*"
-    "@openassistant/echarts": "workspace:*"
+    "@openassistant/plots": "workspace:*"
     "@types/node": "npm:^20.0.0"
     "@types/react": "npm:^18.2.0"
     "@types/react-dom": "npm:^18.2.0"
@@ -32756,7 +32755,7 @@ __metadata:
   resolution: "vercel_example@workspace:examples/vercel_example"
   dependencies:
     "@ai-sdk/openai": "npm:^1.3.21"
-    "@openassistant/echarts": "workspace:*"
+    "@openassistant/plots": "workspace:*"
     ai: "npm:^4.3.13"
     dotenv: "npm:^16.4.5"
     readline-sync: "npm:^1.4.10"
