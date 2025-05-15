@@ -11,13 +11,12 @@ const baseConfig = createBaseConfig({
   entryPoints: ['src/index.ts'],
   plugins: [dtsPlugin()],
   external: [
-    '@openassistant/core',
-    '@kepler.gl/processors',
-    '@kepler.gl/constants',
-    '@kepler.gl/utils',
-    '@kepler.gl/types',
     '@geoda/core',
+    '@kepler.gl/processors',
+    '@openassistant/utils',
     '@dnd-kit/core',
+    'apache-arrow',
+    'type-analyzer',
     'zod',
   ],
 });

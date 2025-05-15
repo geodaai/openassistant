@@ -29,12 +29,10 @@
   ],
   "dependencies": {
     "@geoda/core": "0.0.9",
-    "@kepler.gl/constants": "3.0.0",
     "@kepler.gl/processors": "3.0.0",
-    "@kepler.gl/types": "3.0.0",
-    "@kepler.gl/utils": "3.0.0",
     "@openassistant/utils": "workspace:*",
     "apache-arrow": "^17.0.0",
+    "type-analyzer": "^0.4.0",
     "zod": "^3.24.4"
   },
   "publishConfig": {

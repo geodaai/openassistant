@@ -6,8 +6,8 @@ import {
   ProcessFileDataContent,
 } from '@kepler.gl/processors';
 import * as arrow from 'apache-arrow';
-import { arrowSchemaToFields } from '../utils';
-import { GetDataset, GetGeometries } from '../types';
+import { arrowSchemaToFields } from './utils';
+import { MapToolContext, isMapToolContext } from '../register-tools';
 
 export type KeplerGlToolArgs = z.ZodObject<{
   datasetName: z.ZodString;
@@ -61,7 +61,7 @@ export const keplergl = tool<
   KeplerGlToolArgs,
   KeplerGlToolLlmResult,
   KeplerGlToolAdditionalData,
-  KeplerglToolContext
+  MapToolContext
 >({
   description: 'create a map',
   parameters: z.object({
@@ -108,12 +108,6 @@ export const keplergl = tool<
  */
 export type KeplerglTool = typeof keplergl;
 
-export type KeplerglToolContext = {
-  getDataset?: GetDataset;
-  getGeometries?: GetGeometries;
-  config?: { isDraggable?: boolean; theme?: string };
-};
-
 export type KeplerGlToolLlmResult = {
   success: boolean;
   datasetName?: string;
@@ -144,12 +138,6 @@ export type ExecuteCreateMapResult = {
   additionalData?: KeplerGlToolAdditionalData;
 };
 
-export function isKeplerglToolContext(
-  context: unknown
-): context is KeplerglToolContext {
-  return typeof context === 'object' && context !== null;
-}
-
 export type KeplerglToolArgs = {
   datasetName: string;
   geometryColumn?: string;
@@ -168,7 +156,7 @@ async function executeCreateMap(
   options
 ): Promise<ExecuteCreateMapResult> {
   try {
-    if (!isKeplerglToolContext(options.context)) {
+    if (!isMapToolContext(options.context)) {
       throw new Error('Invalid createMap function context.');
     }
     if (!isKeplerglToolArgs(args)) {

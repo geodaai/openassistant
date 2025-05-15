@@ -6,14 +6,21 @@ const withBundleAnalyzer = bundleAnalyzer({
 /** @type {import('next').NextConfig} */
 module.exports = withBundleAnalyzer({
   reactStrictMode: true,
-  swcMinify: true,
   productionBrowserSourceMaps: true,
-  // for some reason, the dnd-kit (used by kepler.gl) is included in the bundle?!
-  transpilePackages: ['@dnd-kit/core', '@dnd-kit/sortable'],
+  transpilePackages: [
+    '@dnd-kit/core',
+    '@dnd-kit/sortable',
+    '@dnd-kit/utilities',
+    'd3-color',
+    '@kepler.gl/components',
+    '@kepler.gl/utils',
+    'leaflet',
+    'react-leaflet',
+  ],
   env: {
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   },
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, dev }) => {
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -23,19 +30,18 @@ module.exports = withBundleAnalyzer({
       };
     }
 
-    // Make @dnd-kit and @kepler.gl/components client-side only by liasing them to a dummy module on the server side
-    // Make vega-canvas client-side only by aliasing it to a dummy module on the server side
+    // Make @dnd-kit and @kepler.gl/components client-side only
     if (isServer) {
       config.resolve.alias = {
         ...config.resolve.alias,
-        '@dnd-kit/core':
-          'next/dist/server/future/route-modules/app-page/vendored/contexts/amp-context',
-        '@dnd-kit/sortable':
-          'next/dist/server/future/route-modules/app-page/vendored/contexts/amp-context',
-        '@kepler.gl/components':
-          'next/dist/server/future/route-modules/app-page/vendored/contexts/amp-context',
-        'vega':
-          'next/dist/server/future/route-modules/app-page/vendored/contexts/amp-context',
+        '@dnd-kit/core': false,
+        '@dnd-kit/sortable': false,
+        '@dnd-kit/utilities': false,
+        '@kepler.gl/components': false,
+        vega: false,
+        'react-leaflet': false,
+        leaflet: false,
+        'd3-color': false,
       };
     }
 

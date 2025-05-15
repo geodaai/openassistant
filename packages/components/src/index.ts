@@ -1,5 +1,7 @@
 export * from './queryTable';
 
+export * from './leaflet/leaflet-map';
+
 export * from './vegalite/vega-plot-component';
 
 export * from './echarts/boxplot/box-plot-component';

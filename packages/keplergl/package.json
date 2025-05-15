@@ -40,7 +40,6 @@
     "@kepler.gl/utils": "3.0.0",
     "@loaders.gl/core": "4.3.3",
     "@loaders.gl/schema": "4.3.3",
-    "@openassistant/components": "workspace:*",
     "@openassistant/utils": "workspace:*",
     "react-intl": "^6.3.0",
     "react-palm": "^3.3.8",

@@ -1,14 +1,28 @@
 import { getTool, OnToolCompleted } from '@openassistant/utils';
-import { keplergl, KeplerglToolContext } from './keplergl/tool';
+import { keplergl } from './keplergl/tool';
+import { leaflet } from './leaflet/tool';
+import { GetDataset, GetGeometries } from './types';
 
 export enum MapToolNames {
   keplergl = 'keplergl',
+  leaflet = 'leaflet',
 }
 
 export function registerTools() {
   return {
     [MapToolNames.keplergl]: keplergl,
+    [MapToolNames.leaflet]: leaflet,
   };
+}
+
+export type MapToolContext = {
+  getDataset?: GetDataset;
+  getGeometries?: GetGeometries;
+  config?: { isDraggable?: boolean; theme?: string };
+};
+
+export function isMapToolContext(context: unknown): context is MapToolContext {
+  return typeof context === 'object' && context !== null;
 }
 
 /**
@@ -108,7 +122,7 @@ export function registerTools() {
 export function getMapTool(
   toolName: string,
   options: {
-    toolContext: KeplerglToolContext;
+    toolContext: MapToolContext;
     onToolCompleted?: OnToolCompleted;
     isExecutable?: boolean;
   }
@@ -135,7 +149,7 @@ export function getMapTool(
  * @returns The tools
  */
 export function getMapTools(
-  toolContext: KeplerglToolContext,
+  toolContext: MapToolContext,
   onToolCompleted: OnToolCompleted,
   isExecutable: boolean = true
 ) {

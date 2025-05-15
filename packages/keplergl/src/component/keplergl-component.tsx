@@ -11,10 +11,9 @@ import { Layer } from '@kepler.gl/layers';
 import { messages } from '@kepler.gl/localization';
 import { FileCacheItem } from '@kepler.gl/processors';
 import { theme as keplerTheme } from '@kepler.gl/styles';
-
-import { ExpandableContainer } from '@openassistant/components';
 import { generateId } from '@openassistant/utils';
 
+import { ResizablePlotContainer } from './resizable-container';
 import { KeplerMiniMap } from './keplergl-mini-map';
 import { KeplerState, MAP_ID, store } from './keplergl-provider';
 
@@ -41,26 +40,10 @@ export function isCreateMapOutputData(
 export function KeplerGlToolComponent(props: CreateMapOutputData) {
   const id = props.id || generateId();
 
-  const onDragStart = (e: React.DragEvent<HTMLButtonElement>) => {
-    e.dataTransfer.setData(
-      'text/plain',
-      JSON.stringify({
-        id: `map-${id}`,
-        type: 'map',
-        data: props,
-      })
-    );
-  };
-
   return (
-    <ExpandableContainer
-      defaultWidth={300}
-      defaultHeight={350}
-      draggable={props.isDraggable || false}
-      onDragStart={onDragStart}
-    >
+    <ResizablePlotContainer defaultHeight={350} key={id}>
       <KeplerGlComponentWithProvider {...props} />
-    </ExpandableContainer>
+    </ResizablePlotContainer>
   );
 }
 

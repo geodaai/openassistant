@@ -26,6 +26,7 @@ const baseConfig = createBaseConfig({
     'vega',
     'vega-lite',
     'react-vega',
+    'leaflet',
   ],
   loader: {
     '.js': 'jsx',

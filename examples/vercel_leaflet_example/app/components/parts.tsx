@@ -1,3 +1,5 @@
+'use client';
+
 import {
   TextUIPart,
   ReasoningUIPart,
@@ -11,6 +13,7 @@ import { ToolInvocation } from './tools';
 export function MessageParts({
   parts,
   toolAdditionalData,
+  getValues,
 }: {
   parts: Array<
     | TextUIPart
@@ -21,6 +24,7 @@ export function MessageParts({
     | StepStartUIPart
   >;
   toolAdditionalData: Record<string, unknown>;
+  getValues: (datasetName: string, variableName: string) => Promise<number[]>;
 }) {
   return (
     <div className="whitespace-pre-wrap">
@@ -38,6 +42,7 @@ export function MessageParts({
                 state={state}
                 toolName={toolName}
                 additionalData={additionalData}
+                getValues={getValues}
               />
             );
           }

@@ -24,6 +24,14 @@ export type VegaLitePlotAdditionalData = {
   plotType: string;
 };
 
+/**
+ * Tool to create a Vega plot from a dataset and variables.
+ *
+ * :::note
+ * This tool is a browser-side tool.
+ * :::
+ *
+ */
 export const vegaLitePlot = tool<
   VegaLitePlotToolArgs,
   VegaLitePlotLlmResult,
