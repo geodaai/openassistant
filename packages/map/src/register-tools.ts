@@ -2,16 +2,18 @@ import { getTool, OnToolCompleted } from '@openassistant/utils';
 import { keplergl } from './keplergl/tool';
 import { leaflet } from './leaflet/tool';
 import { GetDataset, GetGeometries } from './types';
-
+import { downloadMapData } from './data/tool';
 export enum MapToolNames {
   keplergl = 'keplergl',
   leaflet = 'leaflet',
+  downloadMapData = 'downloadMapData',
 }
 
 export function registerTools() {
   return {
     [MapToolNames.keplergl]: keplergl,
     [MapToolNames.leaflet]: leaflet,
+    [MapToolNames.downloadMapData]: downloadMapData,
   };
 }
 

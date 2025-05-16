@@ -12,6 +12,11 @@ import 'leaflet/dist/leaflet.css';
 export type LeafletOutputData = {
   geoJsonData: FeatureCollection;
   mapBounds: [[number, number], [number, number]];
+  colorBy?: string;
+  colorType?: 'breaks' | 'unique';
+  breaks?: number[];
+  colors?: string[];
+  valueColorMap?: Record<string | number, string>;
   id?: string;
   theme?: string;
   showMore?: boolean;
@@ -58,7 +63,15 @@ export function LeafletMapComponent(props: LeafletOutputData) {
 
 export function LeafletMap(props: LeafletOutputData) {
   const [isMounted, setIsMounted] = useState(false);
-  const { geoJsonData, mapBounds } = props;
+  const {
+    geoJsonData,
+    mapBounds,
+    colorBy,
+    colorType,
+    breaks,
+    colors,
+    valueColorMap,
+  } = props;
 
   // get center from mapBounds
   const center: [number, number] = [
@@ -70,18 +83,43 @@ export function LeafletMap(props: LeafletOutputData) {
     setIsMounted(true);
   }, []);
 
+  // create a function to get color by colorBy and colorType
+  const getColor = (f: Feature) => {
+    try {
+      if (
+        colorBy &&
+        colors &&
+        f.properties &&
+        colorBy in f.properties
+      ) {
+        if (colorType === 'breaks' && breaks) {
+          const breakIndex = breaks.findIndex(
+            (breakValue) => f.properties![colorBy] <= breakValue
+          );
+          return colors[breakIndex];
+        } else if (colorType === 'unique' && valueColorMap) {
+          const color = valueColorMap[f.properties![colorBy]];
+          return color;
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    return '#3388ff';
+  };
+
   const style = (feature: Feature | undefined) => {
     if (!feature) {
       return {};
     }
 
     const geometryType = feature.geometry.type;
-    
+
     switch (geometryType) {
       case 'Point':
         return {
           radius: 6,
-          fillColor: '#3388ff',
+          fillColor: getColor(feature),
           color: '#3388ff',
           weight: 2,
           opacity: 1,
@@ -92,7 +130,7 @@ export function LeafletMap(props: LeafletOutputData) {
         return {
           weight: 3,
           opacity: 1,
-          color: '#3388ff',
+          color: getColor(feature),
           dashArray: '3',
         };
       case 'Polygon':
@@ -100,7 +138,7 @@ export function LeafletMap(props: LeafletOutputData) {
         return {
           weight: 2,
           opacity: 1,
-          color: '#3388ff',
+          color: getColor(feature),
           dashArray: '3',
           fillOpacity: 0.7,
         };
@@ -118,7 +156,7 @@ export function LeafletMap(props: LeafletOutputData) {
   const pointToLayer = (feature: Feature, latlng: L.LatLng) => {
     return L.circleMarker(latlng, {
       radius: 6,
-      fillColor: '#3388ff',
+      fillColor: getColor(feature),
       color: '#3388ff',
       weight: 1,
       opacity: 1,

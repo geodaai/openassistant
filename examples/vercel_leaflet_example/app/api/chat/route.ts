@@ -62,6 +62,12 @@ You can use the following datasets:
     }
   };
 
+  // create a client-side tool for downloadMapData
+  const downloadMapDataTool = getMapTool(MapToolNames.downloadMapData, {
+    toolContext: {},
+    isExecutable: false,
+  });
+
   // create a client-side tool for leaflet
   const leafletTool = getMapTool(MapToolNames.leaflet, {
     toolContext: {
@@ -136,6 +142,7 @@ You can use the following datasets:
         messages: messages,
         system: systemPrompt,
         tools: {
+          downloadMapData: downloadMapDataTool,
           leaflet: leafletTool,
           geocoding: geocodingTool,
           routing: routingTool,

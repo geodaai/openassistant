@@ -99,6 +99,14 @@ export default function Home() {
         return leafletTool.execute?.(args as Record<string, unknown>, {
           toolCallId,
         });
+      } else if (toolName === MapToolNames.downloadMapData) {
+        const downloadMapDataTool = getMapTool(MapToolNames.downloadMapData, {
+          toolContext: {},
+          onToolCompleted,
+        });
+        return downloadMapDataTool.execute?.(args as Record<string, unknown>, {
+          toolCallId,
+        });
       }
     },
     onFinish: (message) => {
