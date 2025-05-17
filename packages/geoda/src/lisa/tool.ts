@@ -8,9 +8,10 @@ import {
   quantileLisa,
   LocalMoranResult,
 } from '@geoda/lisa';
-import { GetValues } from '../types';
+import { GetGeometries, GetValues } from '../types';
 import { getWeights } from '../utils';
 import { generateId } from '@openassistant/utils';
+import { appendJoinValuesToGeometries } from '../spatial_join/tool';
 
 export type LisaFunctionArgs = z.ZodObject<{
   method: z.ZodEnum<
@@ -46,16 +47,18 @@ export type LisaLlmResult = {
   };
   error?: string;
   instructions?: string;
+  datasetName?: string;
 };
 
-export type LisaAdditionalData = LocalMoranResult & {
+export type LisaAdditionalData = Partial<LocalMoranResult> & {
   datasetName: string;
+  originalDatasetName: string;
   significanceThreshold: number;
-  lisaDatasetName: string;
 };
 
 export type LisaFunctionContext = {
   getValues: GetValues;
+  getGeometries?: GetGeometries;
 };
 
 /**
@@ -238,7 +241,7 @@ async function executeLisa(
       quantile,
       mapBounds,
     } = args;
-    const { getValues } = options.context;
+    const { getValues, getGeometries } = options.context;
 
     // Get weights if needed
     const { weights } = getWeights(weightsID, options.previousExecutionOutput);
@@ -293,7 +296,28 @@ async function executeLisa(
     });
 
     // create a lisa dataset name
-    const lisaDatasetName = `${datasetName}_${method}_${variableName}_${generateId()}`;
+    const lisaDatasetName = `${method}_${generateId()}`;
+    let lisaGeoJson: GeoJSON.FeatureCollection | null = null;
+
+    // no need to create a new dataset if getGeometries() is not provided
+    if (getGeometries) {
+      // create lisa result by appending lm to geometries
+      const geometries = await getGeometries(datasetName);
+      // create Record<string, number[]> from lm
+      const featureValues = {
+        [variableName]: values,
+        lisa: lm.lisaValues,
+        sigCategories: lm.sigCategories,
+        clusters: lm.clusters,
+        pValues: lm.pValues,
+        lagValues: lm.lagValues,
+        nn: lm.nn,
+      };
+      lisaGeoJson = appendJoinValuesToGeometries(
+        geometries,
+        featureValues
+      ) as GeoJSON.FeatureCollection;
+    }
 
     const result = {
       lisaMethod: method,
@@ -310,16 +334,22 @@ async function executeLisa(
         success: true,
         ...(mapBounds ? { mapBounds } : {}),
         result,
-        instructions: `Important: When performing LISA analysis, visualization is handled manually. Do not ask about visualization - the map should be created manually after the analysis.`,
+        datasetName: lisaDatasetName,
+        instructions: `When creating a unique value map for LISA analysis:
+- Please use 'clusters' as the color field
+- Please use the colors from result.clusters.colors
+IMPORTANT: please use dataClassify tool to get unique values for the color field
+`,
       },
       additionalData: {
-        ...lm,
-        datasetName,
+        originalDatasetName: datasetName,
         significanceThreshold,
-        lisaDatasetName,
+        datasetName: lisaDatasetName,
+        ...(lisaGeoJson ? { [lisaDatasetName]: lisaGeoJson } : lm),
       },
     };
   } catch (error) {
+    console.error('Error in lisa tool', error);
     return {
       llmResult: {
         success: false,

@@ -5,13 +5,13 @@
       "name": "Next.js: debug server-side",
       "type": "node-terminal",
       "request": "launch",
-      "command": "cd examples/vercel_usechat_example && yarn dev"
+      "command": "cd examples/vercel_leaflet_example && yarn dev"
     },
     {
       "name": "Next.js: debug full stack",
       "type": "node-terminal",
       "request": "launch",
-      "command": "cd examples/vercel_usechat_example && yarn dev",
+      "command": "cd examples/vercel_leaflet_example && yarn dev",
       "serverReadyAction": {
         "pattern": "started server on .+, url: (https?://.+)",
         "uriFormat": "%s",

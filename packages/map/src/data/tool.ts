@@ -2,7 +2,7 @@ import { tool, generateId } from '@openassistant/utils';
 import { z } from 'zod';
 
 export const downloadMapData = tool({
-  description: 'Download map data',
+  description: 'Download map data from a url',
   parameters: z.object({
     url: z.string(),
   }),
@@ -23,16 +23,10 @@ export const downloadMapData = tool({
         data = await rawData.json();
         // get the fields from the geojson file
         fields = Object.keys(data.features[0].properties);
-      } else if (contentType?.includes('csv')) {
-        data = await rawData.text();
-        // parse the csv data into an array of objects, first line is the header
-        const rows = data.split('\n');
-        fields = rows[0].split(',');
-        data = rows.slice(1).map((row) => row.split(','));
       }
 
       if (!data) {
-        throw new Error('Unsupported file type');
+        throw new Error('Unsupported file type, only geojson is supported.');
       }
 
       // create a unique datasetName
@@ -44,6 +38,7 @@ export const downloadMapData = tool({
           datasetName,
           fields,
           result: `Successfully downloaded map data from ${url} as datasetName: ${datasetName}`,
+          instructions: `Please remember this datasetName ${datasetName} and its fields for later use.`,
         },
         additionalData: {
           datasetName,
@@ -51,6 +46,7 @@ export const downloadMapData = tool({
         },
       };
     } catch (error) {
+      console.error(error);
       return {
         llmResult: {
           success: false,

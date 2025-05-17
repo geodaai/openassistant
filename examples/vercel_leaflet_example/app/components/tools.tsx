@@ -26,7 +26,7 @@ interface ToolInvocationProps {
   state: string;
   toolName: string;
   additionalData: unknown;
-  getValues: (datasetName: string, variableName: string) => Promise<number[]>;
+  getValues: (datasetName: string, variableName: string) => Promise<unknown[]>;
 }
 
 export function ToolInvocation({

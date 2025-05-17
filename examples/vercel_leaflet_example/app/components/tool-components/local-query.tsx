@@ -7,7 +7,7 @@ import { getDuckDB } from '@openassistant/duckdb';
 interface LocalQueryToolProps {
   toolCallId: string;
   additionalData: unknown;
-  getValues: (datasetName: string, variableName: string) => Promise<number[]>;
+  getValues: (datasetName: string, variableName: string) => Promise<unknown[]>;
 }
 
 export function LocalQueryTool({

@@ -230,32 +230,38 @@ export async function runDataClassify({
   try {
     const values = await getValues(datasetName, variableName);
 
-    let breaks;
+    console.log('🔍 values', values);
 
+    let breaks;
+    let uniqueValues;
     switch (method) {
       case 'quantile':
-        breaks = await quantileBreaks(k, values);
+        breaks = await quantileBreaks(k, values as number[]);
         break;
       case 'natural breaks':
-        breaks = await naturalBreaks(k, values);
+        breaks = await naturalBreaks(k, values as number[]);
         break;
       case 'equal interval':
-        breaks = await equalIntervalBreaks(k, values);
+        breaks = await equalIntervalBreaks(k, values as number[]);
         break;
       case 'percentile':
-        breaks = await percentileBreaks(values);
+        breaks = await percentileBreaks(values as number[]);
         break;
       case 'box':
         breaks =
           hinge === 1.5
-            ? await hinge15Breaks(values)
-            : await hinge30Breaks(values);
+            ? await hinge15Breaks(values as number[])
+            : await hinge30Breaks(values as number[]);
         break;
       case 'standard deviation':
-        breaks = await standardDeviationBreaks(values);
+        breaks = await standardDeviationBreaks(values as number[]);
+        break;
+      case 'unique values':
+        // get unique values
+        uniqueValues = [...new Set(values)];
         break;
       default:
-        breaks = await quantileBreaks(k, values);
+        breaks = await quantileBreaks(k, values as number[]);
         break;
     }
 
@@ -265,8 +271,10 @@ export async function runDataClassify({
       method,
       k,
       ...(hinge && { hinge }),
-      breaks,
+      ...(breaks && { breaks }),
+      ...(uniqueValues && { uniqueValues }),
     };
+
     return {
       llmResult: {
         success: true,

@@ -252,7 +252,10 @@ export async function runSpatialJoin({
         joinVariableNames.map(async (variableName, index) => {
           try {
             const operator = joinOperators[index];
-            const values = await getValues(rightDatasetName, variableName);
+            const values = (await getValues(
+              rightDatasetName,
+              variableName
+            )) as number[];
             try {
               // apply join to values in each row
               const joinedValues = result.map((row) =>
@@ -335,7 +338,7 @@ export function getBasicStatistics(result: number[][]) {
   };
 }
 
-function appendJoinValuesToGeometries(
+export function appendJoinValuesToGeometries(
   geometries: SpatialGeometry,
   joinValues: Record<string, number[]>
 ): GeoJSON.FeatureCollection | unknown[] {

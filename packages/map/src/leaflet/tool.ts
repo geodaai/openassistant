@@ -2,6 +2,7 @@ import { tool } from '@openassistant/utils';
 import { z } from 'zod';
 
 import { isMapToolContext, MapToolContext } from '../register-tools';
+import { getBoundsFromGeoJSON } from '../utils';
 
 export type LeafletToolLlmResult = {
   success: boolean;
@@ -18,6 +19,7 @@ export type LeafletToolAdditionalData = {
   valueColorMap?: Record<string | number, string>;
   geoJsonData: GeoJSON.FeatureCollection;
   mapBounds: [[number, number], [number, number]];
+  zoom: number;
 };
 
 export type LeafletToolArgs = z.ZodObject<{
@@ -25,76 +27,11 @@ export type LeafletToolArgs = z.ZodObject<{
   colorBy: z.ZodOptional<z.ZodString>;
   colorType: z.ZodOptional<z.ZodEnum<['breaks', 'unique']>>;
   breaks: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
+  uniqueValues: z.ZodOptional<
+    z.ZodArray<z.ZodUnion<[z.ZodString, z.ZodNumber]>>
+  >;
   colors: z.ZodOptional<z.ZodArray<z.ZodString>>;
-  valueColorMap: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
 }>;
-
-/**
- * Get bounds from GeoJSON data that encompasses all geometries
- * @param geoJsonData GeoJSON FeatureCollection or Feature
- * @returns [[minLat, minLng], [maxLat, maxLng]] bounds that encompasses all geometries
- */
-function getBoundsFromGeoJSON(
-  geoJsonData: GeoJSON.FeatureCollection | GeoJSON.Feature
-): [[number, number], [number, number]] {
-  let minLat = 90;
-  let minLng = 180;
-  let maxLat = -90;
-  let maxLng = -180;
-
-  const processCoordinates = (coordinates: number[][]) => {
-    coordinates.forEach(([lng, lat]) => {
-      minLat = Math.min(minLat, lat);
-      minLng = Math.min(minLng, lng);
-      maxLat = Math.max(maxLat, lat);
-      maxLng = Math.max(maxLng, lng);
-    });
-  };
-
-  const processGeometry = (geometry: GeoJSON.Geometry) => {
-    switch (geometry.type) {
-      case 'Point':
-        const [lng, lat] = geometry.coordinates;
-        minLat = Math.min(minLat, lat);
-        minLng = Math.min(minLng, lng);
-        maxLat = Math.max(maxLat, lat);
-        maxLng = Math.max(maxLng, lng);
-        break;
-      case 'MultiPoint':
-        processCoordinates(geometry.coordinates);
-        break;
-      case 'LineString':
-        processCoordinates(geometry.coordinates);
-        break;
-      case 'MultiLineString':
-        geometry.coordinates.forEach(processCoordinates);
-        break;
-      case 'Polygon':
-        geometry.coordinates.forEach(processCoordinates);
-        break;
-      case 'MultiPolygon':
-        geometry.coordinates.forEach((polygon) => {
-          polygon.forEach(processCoordinates);
-        });
-        break;
-    }
-  };
-
-  if ('features' in geoJsonData) {
-    // FeatureCollection
-    geoJsonData.features.forEach((feature) => {
-      processGeometry(feature.geometry);
-    });
-  } else {
-    // Single Feature
-    processGeometry(geoJsonData.geometry);
-  }
-
-  return [
-    [minLat, minLng],
-    [maxLat, maxLng],
-  ];
-}
 
 export const leaflet = tool<
   LeafletToolArgs,
@@ -102,22 +39,23 @@ export const leaflet = tool<
   LeafletToolAdditionalData,
   MapToolContext
 >({
-  description: `Create a leaflet map from GeoJSON data. For basic map visualization, you can omit color related parameters.`,
+  description: `Create a leaflet map from GeoJSON data. For basic map visualization, you can omit color related parameters.
+- When creating a map for a variable, please use dataClassify tool to classify the data into bins or unique values first.
+- Colors are required when colorBy is provided (e.g. ['#f7fcb9', '#addd8e', '#31a354'].
+- For colorType 'breaks', the number of colors must equal to the number of breaks + 1.
+- For colorType 'unique', the number of colors must equal to the number of unique values. Please try to use colorbrewer divergent colors (e.g. BrBG).
+- Please use colorBrewer colors (e.g. YlGn) if user does not provide colors.
+`,
   parameters: z.object({
     datasetName: z.string(),
     colorBy: z.string().optional(),
     colorType: z.enum(['breaks', 'unique']).optional(),
     breaks: z.array(z.number()).optional(),
+    uniqueValues: z.array(z.union([z.string(), z.number()])).optional(),
     colors: z.array(z.string()).optional(),
-    valueColorMap: z
-      .record(z.string(), z.string())
-      .optional()
-      .describe(
-        'Explicit mapping of values to colors for unique value coloring (e.g. {"high": "#1a9850", "medium": "#fee08b", "low": "#d73027"}) when colorBy is provided.'
-      ),
   }),
   execute: async (
-    { datasetName, colorBy, colorType, breaks, colors, valueColorMap },
+    { datasetName, colorBy, colorType, breaks, uniqueValues, colors },
     options
   ) => {
     try {
@@ -166,7 +104,7 @@ export const leaflet = tool<
       const geoJsonData = dataContent as GeoJSON.FeatureCollection;
 
       // get mapBounds (LatLngTuple for southWest and northEast) from geoJsonData
-      const mapBounds = getBoundsFromGeoJSON(geoJsonData);
+      const { bounds, zoom } = getBoundsFromGeoJSON(geoJsonData);
 
       // TODO: Add GeoJSON layer with styling based on getColor function
 
@@ -181,9 +119,10 @@ export const leaflet = tool<
           colorType,
           breaks,
           colors,
-          valueColorMap,
+          uniqueValues,
           geoJsonData,
-          mapBounds,
+          mapBounds: bounds,
+          zoom,
         },
       };
     } catch (error) {

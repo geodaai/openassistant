@@ -24,7 +24,7 @@ export function MessageParts({
     | StepStartUIPart
   >;
   toolAdditionalData: Record<string, unknown>;
-  getValues: (datasetName: string, variableName: string) => Promise<number[]>;
+  getValues: (datasetName: string, variableName: string) => Promise<unknown[]>;
 }) {
   return (
     <div className="whitespace-pre-wrap">
