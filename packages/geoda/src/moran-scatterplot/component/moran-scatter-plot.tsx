@@ -65,7 +65,7 @@ export function MoranScatterComponent(props: MoranScatterOutputData) {
       yData: props.lagValues,
       regression: props.regression,
     });
-  }, [props]);
+  }, [props.variableName, props.values, props.lagValues, props.regression]);
 
   const eChartsRef = useRef<ReactEChartsCore>(null);
   // track if the chart has been rendered, so we can update the chart later

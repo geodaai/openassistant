@@ -12,6 +12,7 @@ type PromptInputWithBottomActionsProps = {
     context?: string;
     callback?: () => void;
   }[];
+  onRefreshIdeas?: () => void;
   onSendMessage: (message: string) => void;
   onVoiceMessage: (voice: Blob) => Promise<string>;
   enableVoice?: boolean;
@@ -42,6 +43,7 @@ export default function Component({
   onStopChat,
   onRestartChat,
   fontSize,
+  onRefreshIdeas,
 }: PromptInputWithBottomActionsProps) {
   const [prompt, setPrompt] = useState<string>('');
 
@@ -71,13 +73,8 @@ export default function Component({
   const onClickIdea = (index: number) => {
     const idea = ideas?.[index];
     if (idea) {
-      if (idea.context && idea.context.length > 0) {
-        const content = `${idea.context}`;
-        onSendMessage(content);
-      } else {
-        const content = `${idea.title}\n${idea.description}`;
-        setPrompt(content);
-      }
+      const content = `${idea.description}`;
+      setPrompt(content);
       if (idea.callback) {
         idea.callback();
       }
@@ -100,7 +97,13 @@ export default function Component({
       onSendMessage(defaultPromptText);
       onRemoveScreenshot?.();
     }
-  }, [screenCaptured, defaultPromptText, onSendClick, onSendMessage, onRemoveScreenshot]);
+  }, [
+    screenCaptured,
+    defaultPromptText,
+    onSendClick,
+    onSendMessage,
+    onRemoveScreenshot,
+  ]);
 
   return (
     <div className="flex w-full flex-col gap-2">
@@ -109,26 +112,45 @@ export default function Component({
         className="flex flex-nowrap gap-2"
         orientation="horizontal"
       >
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
           {ideas?.map(({ title, description, icon, context }, index) => (
-            <Button
-              onPress={() => onClickIdea(index)}
-              key={index}
-              className="flex h-14 flex-col items-start gap-0 max-w-60"
-            >
-              <div className="flex items-center gap-2 flex-row">
-                {icon && (
-                  <Icon
-                    icon={icon}
-                    width={12}
-                    className={`${context} ? 'animate-ping':''`}
-                  />
-                )}
-                <p>{title}</p>
-              </div>
-              <p className="text-gray-500 dark:text-gray-400">{description}</p>
-            </Button>
+            <Tooltip content={description} key={index} size="sm" radius="none">
+              <Button
+                onPress={() => onClickIdea(index)}
+                className="flex h-14 flex-col items-start gap-0 max-w-60"
+              >
+                <div className="flex items-center gap-2 flex-row">
+                  {icon && (
+                    <Icon
+                      icon={icon}
+                      width={12}
+                      className={`${context} ? 'animate-ping':''`}
+                    />
+                  )}
+                  <p>{title}</p>
+                </div>
+                <p className="text-gray-500 dark:text-gray-400">
+                  {description}
+                </p>
+              </Button>
+            </Tooltip>
           ))}
+          {ideas && ideas.length > 0 && (
+            <Tooltip content="Refresh ideas" size="sm" radius="none">
+              <Button
+                onPress={() => onRefreshIdeas?.()}
+                isIconOnly
+                variant="light"
+                size="sm"
+              >
+                <Icon
+                  icon="mingcute:refresh-4-ai-line"
+                  width="18"
+                  height="18"
+                />
+              </Button>
+            </Tooltip>
+          )}
         </div>
       </ScrollShadow>
       <form className="flex w-full flex-col items-start rounded-medium bg-default-100 transition-colors hover:bg-default-200/70">
@@ -218,7 +240,7 @@ export default function Component({
                 size="sm"
                 startContent={
                   <Icon
-                    className="text-gray-500 dark:text-gray-400"
+                    className="text-gray-500 dark:text-gray-400 min-w-4"
                     icon="solar:gallery-minimalistic-linear"
                     width={18}
                   />

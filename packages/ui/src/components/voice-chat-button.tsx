@@ -41,7 +41,7 @@ export default function VoiceChatButton({
       size="sm"
       startContent={
         <Icon
-          className="text-gray-500 dark:text-gray-400"
+          className="text-gray-500 dark:text-gray-400 min-w-4"
           icon="solar:soundwave-linear"
           width={18}
         />

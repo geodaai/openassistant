@@ -249,6 +249,11 @@ export function useAssistant(props: UseAssistantProps) {
     await assistant?.addAdditionalContext({ context });
   };
 
+  const temporaryPrompt = async ({ prompt }: { prompt: string }) => {
+    await checkLLMInstance();
+    return await assistant?.temporaryPrompt({ prompt });
+  };
+
   return {
     /**
      * Initializes the AI assistant with the configured settings.
@@ -309,5 +314,12 @@ export function useAssistant(props: UseAssistantProps) {
      * Returns the components for the assistant.
      */
     getComponents,
+
+    /**
+     * Sends a one-time prompt to the assistant and returns the response. The prompt and response will not be saved.
+     * @param {Object} params - The text message to send to the assistant.
+     * @returns {Promise<string>} The response from the assistant.
+     */
+    temporaryPrompt,
   };
 }

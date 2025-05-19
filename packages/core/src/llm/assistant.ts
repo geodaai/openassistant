@@ -103,4 +103,11 @@ export abstract class AbstractAssistant {
   ): Promise<boolean> {
     throw new Error('Method not implemented.');
   }
+
+  /**
+   * One time prompt
+   */
+  public async temporaryPrompt(props: { prompt: string }): Promise<string> {
+    throw new Error('Method not implemented.');
+  }
 }

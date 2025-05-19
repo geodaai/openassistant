@@ -22,6 +22,8 @@ export type AiAssistantProps = UseAssistantProps & {
   welcomeMessage: string;
   /** The ideas of the assistant, which will be shown above the prompt input box. */
   ideas?: { title: string; description: string }[];
+  /** The callback function to handle the refresh ideas. */
+  onRefreshIdeas?: () => void;
   /** Set the avatar of the user. */
   userAvatar?: ReactNode | string;
   /** Set the avatar of the assistant. */
@@ -329,6 +331,7 @@ export function AiAssistant(props: AiAssistantProps) {
         <div className="flex flex-col gap-2 mt-4">
           <PromptInputWithBottomActions
             ideas={props.ideas}
+            onRefreshIdeas={props.onRefreshIdeas}
             onSendMessage={onSendMessage}
             onVoiceMessage={onVoiceMessage}
             enableVoice={props.enableVoice}
