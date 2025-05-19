@@ -17,7 +17,11 @@ import {
   StepResult,
   CoreMessage,
 } from 'ai';
-import { Message, extractMaxToolInvocationStep } from '@ai-sdk/ui-utils';
+import {
+  Message,
+  extractMaxToolInvocationStep,
+  generateId,
+} from '@ai-sdk/ui-utils';
 import {
   shouldTriggerNextRequest,
   TriggerRequestOutput,
@@ -234,6 +238,19 @@ export abstract class VercelAiClient extends VercelAi {
     ) => Promise<void> | void
   ) {
     const { toolCalls, response, usage } = event;
+    if (response.messages.length === 0) {
+      this.streamMessage.parts?.push({
+        type: 'text',
+        text: 'Sorry, there is no response from LLM.',
+      });
+      return {
+        id: generateId(),
+        role: 'assistant',
+        content: 'Sorry, there is no response from LLM.',
+        toolInvocations: [],
+      } as Message;
+    }
+
     const responseMsg = response.messages[response.messages.length - 1];
     const toolCallMessages: ToolCallMessage[] = [];
 
