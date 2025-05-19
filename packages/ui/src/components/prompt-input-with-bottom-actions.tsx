@@ -12,6 +12,9 @@ type PromptInputWithBottomActionsProps = {
     context?: string;
     callback?: () => void;
   }[];
+  /**
+   * Callback function triggered to refresh the list of ideas.
+   */
   onRefreshIdeas?: () => void;
   onSendMessage: (message: string) => void;
   onVoiceMessage: (voice: Blob) => Promise<string>;
