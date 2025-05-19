@@ -249,9 +249,9 @@ export function useAssistant(props: UseAssistantProps) {
     await assistant?.addAdditionalContext({ context });
   };
 
-  const temporaryPrompt = async ({ prompt }: { prompt: string }) => {
+  const temporaryPrompt = async ({ prompt, temperature }: { prompt: string; temperature?: number }) => {
     await checkLLMInstance();
-    return await assistant?.temporaryPrompt({ prompt });
+    return await assistant?.temporaryPrompt({ prompt, temperature });
   };
 
   return {
