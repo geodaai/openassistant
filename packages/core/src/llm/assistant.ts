@@ -105,9 +105,12 @@ export abstract class AbstractAssistant {
   }
 
   /**
-   * One time prompt
+   * One time prompt without saving the conversation
    */
-  public async temporaryPrompt(props: { prompt: string }): Promise<string> {
+  public async temporaryPrompt(props: {
+    prompt: string;
+    temperature?: number;
+  }): Promise<string> {
     throw new Error('Method not implemented.');
   }
 }
