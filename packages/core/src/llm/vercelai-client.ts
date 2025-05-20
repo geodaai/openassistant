@@ -436,4 +436,27 @@ export abstract class VercelAiClient extends VercelAi {
 
     return response.text;
   }
+
+  public override async temporaryPrompt({
+    prompt,
+    temperature,
+  }: {
+    prompt: string;
+    temperature?: number;
+  }): Promise<string> {
+    if (!this.llm) {
+      return 'LLM is not configured. Please call configure() first.';
+    }
+    const response = await generateText({
+      model: this.llm,
+      prompt,
+      tools: VercelAiClient.tools,
+      system: VercelAiClient.instructions,
+      temperature: temperature || VercelAiClient.temperature,
+      ...(VercelAiClient.topP !== undefined && { topP: VercelAiClient.topP }),
+      abortSignal: this.abortController?.signal,
+    });
+
+    return response.text;
+  }
 }

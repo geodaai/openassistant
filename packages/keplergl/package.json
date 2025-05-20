@@ -1,6 +1,6 @@
 {
   "name": "@openassistant/keplergl",
-  "version": "0.4.0",
+  "version": "0.4.3",
   "author": "Xun Li<lixun910@gmail.com>",
   "description": "The mapping addon with Kepler.gl for OpenAssistant",
   "main": "dist/index.cjs.js",

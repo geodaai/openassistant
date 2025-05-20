@@ -69,9 +69,10 @@ export class OllamaAssistant extends VercelAiClient {
   }
 
   private initializeProvider(module: Module) {
-    if (!OllamaAssistant.model) {
+    if (OllamaAssistant.model) {
       const options = {
         baseURL: OllamaAssistant.baseURL,
+        simulateStreaming: true
       };
 
       this.providerInstance = module.createOllama(options);

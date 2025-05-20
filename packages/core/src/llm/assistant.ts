@@ -85,4 +85,14 @@ export abstract class AbstractAssistant {
   ): Promise<boolean> {
     throw new Error('Method not implemented.');
   }
+
+  /**
+   * One time prompt without saving the conversation
+   */
+  public async temporaryPrompt(props: {
+    prompt: string;
+    temperature?: number;
+  }): Promise<string> {
+    throw new Error('Method not implemented.');
+  }
 }
