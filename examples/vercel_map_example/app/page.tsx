@@ -2,7 +2,11 @@
 
 import { useChat } from '@ai-sdk/react';
 import { getDuckDBTool, DuckDBToolNames } from '@openassistant/duckdb';
-import { getMapTool, MapToolNames } from '@openassistant/map';
+import {
+  getMapTool,
+  getValuesFromGeoJSON,
+  MapToolNames,
+} from '@openassistant/map';
 import { useRef } from 'react';
 import { MessageParts } from './components/parts';
 import { SpatialGeometry } from '@geoda/core';
@@ -12,58 +16,54 @@ export default function Home() {
   const toolAdditionalData = useRef<Record<string, unknown>>({});
 
   // context for local tools
-  const getValues = async (datasetName: string, variableName: string) => {
-    // simulate a local tool that returns a list of values
-    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  };
-
-  const getDataset = async (datasetName: string) => {
-    // simulate a local tool that returns a list of geometries
-    if (datasetName === 'natregimes') {
-      const points = [
-        [111.96625, 33.30202],
-        [111.97234, 33.29876],
-        [111.96018, 33.30543],
-      ];
-      return points.map((point, index) => ({
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: point,
-        },
-        properties: { id: index + 1 },
-      }));
-    } else if (datasetName === 'world_countries') {
-      const points = [
-        [101.96625, 33.30202],
-        [101.97234, 33.29876],
-        [101.96018, 33.30543],
-      ];
-      return points.map((point, index) => ({
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: point,
-        },
-        properties: { id: index + 1 },
-      }));
-    }
-    return null;
-  };
-
-  const getGeometries = async (datasetName: string): Promise<SpatialGeometry | null> => {
-    // get cached geometries from other tools using datasetName as cacheId
+  const getCachedData = async (
+    datasetName: string
+  ): Promise<unknown | null> => {
+    // get cached data from other tools using datasetName as cacheId
     const toolData = Object.values(toolAdditionalData.current);
-
     for (const data of toolData) {
       if (data && typeof data === 'object' && datasetName in data) {
         const cache = (data as Record<string, unknown>)[datasetName];
         if (cache) {
-          return cache as SpatialGeometry;
+          return cache;
         }
       }
     }
+    return null;
+  };
 
+  // context for local tools
+  const getValues = async (datasetName: string, variableName: string) => {
+    // get cached data from e.g. downloadMapData tool
+    const cachedData = await getCachedData(datasetName);
+    if (cachedData) {
+      return getValuesFromGeoJSON(
+        cachedData as GeoJSON.FeatureCollection,
+        variableName
+      );
+    }
+    throw new Error(
+      `Can't get values for datasetName: ${datasetName} and variableName: ${variableName}`
+    );
+  };
+
+  const getDataset = async (datasetName: string) => {
+    // get cached data from e.g. downloadMapData tool
+    const cachedData = await getCachedData(datasetName);
+    if (cachedData) {
+      return cachedData;
+    }
+    return null;
+  };
+
+  const getGeometries = async (
+    datasetName: string
+  ): Promise<SpatialGeometry | null> => {
+    // get cached geometries from other tools using datasetName as cacheId
+    const cachedData = await getCachedData(datasetName);
+    if (cachedData) {
+      return cachedData as SpatialGeometry;
+    }
     return null;
   };
 
@@ -103,11 +103,17 @@ export default function Home() {
       // save the message.annotations from server-side tools for rendering tools
       message.annotations?.forEach((annotation) => {
         if (typeof annotation === 'object' && annotation !== null) {
-          Object.entries(annotation).forEach(([key, value]) => {
-            if (toolAdditionalData.current[key] === undefined) {
-              toolAdditionalData.current[key] = value;
+          // annotation is a record of toolCallId and data from server-side tools
+          // save the data for tool rendering
+          if ('toolCallId' in annotation && 'data' in annotation) {
+            const { toolCallId, data } = annotation as {
+              toolCallId: string;
+              data: unknown;
+            };
+            if (toolAdditionalData.current[toolCallId] === undefined) {
+              toolAdditionalData.current[toolCallId] = data;
             }
-          });
+          }
         }
       });
     },

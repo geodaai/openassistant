@@ -1,4 +1,4 @@
-import { tool } from '@openassistant/utils';
+import { generateId, tool } from '@openassistant/utils';
 import { z } from 'zod';
 import {
   FileCacheItem,
@@ -15,7 +15,17 @@ export type KeplerGlToolArgs = z.ZodObject<{
   latitudeColumn: z.ZodOptional<z.ZodString>;
   longitudeColumn: z.ZodOptional<z.ZodString>;
   mapType: z.ZodOptional<
-    z.ZodEnum<['point', 'line', 'arc', 'polygon', 'heatmap', 'hexbin', 'h3']>
+    z.ZodEnum<['point', 'line', 'arc', 'geojson', 'heatmap', 'hexbin', 'h3']>
+  >;
+  colorBy: z.ZodOptional<z.ZodString>;
+  colorType: z.ZodOptional<z.ZodEnum<['breaks', 'unique']>>;
+  colorMap: z.ZodOptional<
+    z.ZodArray<
+      z.ZodObject<{
+        value: z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodNull]>;
+        color: z.ZodString;
+      }>
+    >
   >;
 }>;
 
@@ -63,31 +73,32 @@ export const keplergl = tool<
   KeplerGlToolAdditionalData,
   MapToolContext
 >({
-  description: 'create a map',
+  description: `Create a map using kepler.gl. For basic map visualization, you can omit color related parameters.
+- When creating a map for a variable, please use dataClassify tool to classify the data into bins or unique values first.
+- Please generate colorBrewer colors if user does not provide colors.
+- For colorType 'breaks', the colorMap should be format like: [{value: 3, color: '#f7fcb9'}, {value: 10, color: '#addd8e'}, {value: null, color: '#31a354'}]
+- For colorType 'unique', the colorMap should be format like: [{value: 'a', color: '#f7fcb9'}, {value: 'b', color: '#addd8e'}, {value: 'c', color: '#31a354'}]
+- Don't use geometryColumn for geojson dataset.
+`,
   parameters: z.object({
-    datasetName: z.string().describe('The name of the dataset for mapping.'),
-    geometryColumn: z
-      .string()
-      .optional()
-      .describe('The name of the geometry column.'),
-    latitudeColumn: z
-      .string()
-      .optional()
-      .describe('The name of the latitude column.'),
-    longitudeColumn: z
-      .string()
-      .optional()
-      .describe('The name of the longitude column.'),
+    datasetName: z.string(),
+    geometryColumn: z.string().optional(),
+    latitudeColumn: z.string().optional(),
+    longitudeColumn: z.string().optional(),
     mapType: z
-      .enum(['point', 'line', 'arc', 'polygon', 'heatmap', 'hexbin', 'h3'])
+      .enum(['point', 'line', 'arc', 'geojson', 'heatmap', 'hexbin', 'h3'])
       .optional()
       .describe('The type of the map. The default is "point".'),
-    config: z
-      .string()
-      .optional()
-      .describe(
-        `The Kepler.gl layer configuration JSON object to style the map based on user prompt. Please follow the kepler.gl layer configuration schema.`
-      ),
+    colorBy: z.string().optional(),
+    colorType: z.enum(['breaks', 'unique']).optional(),
+    colorMap: z
+      .array(
+        z.object({
+          value: z.union([z.string(), z.number(), z.null()]),
+          color: z.string(),
+        })
+      )
+      .optional(),
   }),
   execute: executeCreateMap,
   context: {
@@ -110,27 +121,28 @@ export type KeplerglTool = typeof keplergl;
 
 export type KeplerGlToolLlmResult = {
   success: boolean;
-  datasetName?: string;
+  datasetId?: string;
   geometryColumn?: string;
   latitudeColumn?: string;
   longitudeColumn?: string;
   mapType?: string;
-  fields?: string;
-  layerConfig?: string;
+  layerConfig?: Record<string, unknown>;
+  layerId?: string;
   details?: string;
   error?: string;
   instruction?: string;
 };
 
 export type KeplerGlToolAdditionalData = {
-  datasetName: string;
+  datasetId: string;
+  layerId: string;
   geometryColumn?: string;
   latitudeColumn?: string;
   longitudeColumn?: string;
   mapType?: string;
   datasetForKepler: FileCacheItem[];
   isDraggable: boolean;
-  layerConfig?: string;
+  layerConfig?: Record<string, unknown>;
 };
 
 export type ExecuteCreateMapResult = {
@@ -144,7 +156,9 @@ export type KeplerglToolArgs = {
   latitudeColumn?: string;
   longitudeColumn?: string;
   mapType?: string;
-  config?: string;
+  colorBy?: string;
+  colorType?: 'breaks' | 'unique';
+  colorMap?: { value: string | number; color: string }[];
 };
 
 export function isKeplerglToolArgs(args: unknown): args is KeplerglToolArgs {
@@ -168,7 +182,9 @@ async function executeCreateMap(
       latitudeColumn,
       longitudeColumn,
       mapType,
-      config: layerConfig,
+      colorBy,
+      colorType,
+      colorMap,
     } = args;
     const { getDataset, getGeometries, config } = options.context;
 
@@ -185,7 +201,7 @@ async function executeCreateMap(
 
     if (!dataContent) {
       throw new Error(
-        'getDataset() or getGeometries() of CreateMapTool is not implemented'
+        `getDataset() or getGeometries() of keplergl tool is not implemented, and failed to get data from ${datasetName}`
       );
     }
 
@@ -237,26 +253,97 @@ async function executeCreateMap(
     // get fields from the dataset
     const fields = datasetForKepler[0].data.fields;
 
-    // update dataId with datasetName
-    datasetForKepler[0].info.id = datasetName;
+    const colorField = fields.find((field) => field.name === colorBy);
+
+    // create a dataset id
+    const datasetId = `${datasetName}`;
+
+    // update dataId that will be created as kepler.gl's dataset
+    datasetForKepler[0].info.id = datasetId;
+
+    const format = datasetForKepler[0].info.format;
+
+    console.log('format', format);
+    // create a layer id
+    const layerId = `layer_${generateId()}`;
+
+    // layerConfig is a JSON object
+    const layerConfig = {
+      version: 'v1',
+      config: {
+        visState: {
+          layers: [
+            {
+              id: layerId,
+              type: mapType,
+              config: {
+                dataId: datasetId,
+                label: datasetName,
+                color: [211, 211, 211],
+                columns: {
+                  ...(latitudeColumn ? { lat: latitudeColumn } : {}),
+                  ...(longitudeColumn ? { lng: longitudeColumn } : {}),
+                  ...(geometryColumn ? { geometry: geometryColumn } : {}),
+                  ...(format === 'geojson' ? { geojson: '_geojson' } : {}),
+                },
+                isVisible: true,
+                visConfig: {
+                  radius: 10,
+                  opacity: 0.8,
+                  filled: true,
+                },
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    if (colorBy) {
+      // create kepler.gl's colorMap from uniqueValues and breaks
+      const colorScale = colorType === 'breaks' ? 'custom' : 'customOrdinal';
+      const colors = colorMap?.map((color) => color.color);
+      const keplerColorMap = colorMap?.map((color) => [
+        color.value,
+        color.color,
+      ]);
+
+      layerConfig.config.visState.layers[0].config.visConfig['colorRange'] = {
+        name: 'color.customPalette',
+        type: 'custom',
+        category: 'Custom',
+        colors,
+        colorMap: keplerColorMap,
+      };
+      layerConfig.config.visState.layers[0]['visualChannels'] = {
+        colorField: {
+          name: colorBy,
+          type: colorField?.type,
+        },
+        colorScale,
+      };
+    }
+
+    console.log('layerConfig', layerConfig);
 
     return {
       llmResult: {
         success: true,
-        datasetName,
+        datasetId,
         geometryColumn,
         latitudeColumn,
         longitudeColumn,
         mapType,
-        fields: JSON.stringify(fields),
-        details: 'Map created successfully.',
+        layerId,
+        details: 'Map layer created successfully.',
       },
       additionalData: {
-        datasetName,
+        datasetId,
         geometryColumn,
         latitudeColumn,
         longitudeColumn,
         mapType,
+        layerId,
         datasetForKepler,
         layerConfig,
         isDraggable: Boolean(config?.isDraggable),

@@ -78,7 +78,7 @@ export const leaflet = tool<
 
       if (!dataContent) {
         throw new Error(
-          'getDataset() or getGeometries() of CreateMapTool is not implemented'
+          'getDataset() or getGeometries() of leaflet tool is not implemented'
         );
       }
 

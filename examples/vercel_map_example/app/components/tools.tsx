@@ -1,14 +1,32 @@
+'use client';
+
+import dynamic from 'next/dynamic';
+
 import { LocalQueryTool } from './tool-components/local-query';
-import { HistogramTool } from './tool-components/histogram';
-import { WeightsTool } from './tool-components/weights-info';
-import { KeplerGlTool } from './tool-components/keplergl';
+
+const HistogramTool = dynamic(() => import('./tool-components/histogram'), {
+  ssr: false,
+});
+
+const WeightsTool = dynamic(() => import('./tool-components/weights-info'), {
+  ssr: false,
+});
+
+const KeplerGlTool = dynamic(() => import('./tool-components/keplergl'), {
+  loading: () => (
+    <div className="w-full h-[500px] bg-gray-100 flex items-center justify-center">
+      Loading map...
+    </div>
+  ),
+  ssr: false,
+});
 
 interface ToolInvocationProps {
   toolCallId: string;
   state: string;
   toolName: string;
   additionalData: unknown;
-  getValues: (datasetName: string, variableName: string) => Promise<number[]>;
+  getValues: (datasetName: string, variableName: string) => Promise<unknown[]>;
 }
 
 export function ToolInvocation({

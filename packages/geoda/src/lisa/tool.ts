@@ -31,20 +31,13 @@ export type LisaFunctionArgs = z.ZodObject<{
 
 export type LisaLlmResult = {
   success: boolean;
-  result?: {
-    mapBounds?: number[];
-    lisaMethod: string;
-    datasetId: string;
-    significanceThreshold: number;
-    variableName: string;
-    permutations: number;
-    globalMoranI?: number;
-    clusters: Array<{
-      label: string;
-      color: string;
-      numberOfObservations: number;
-    }>;
-  };
+  globalMoranI?: number;
+  clusterColorAndLabels?: Array<{
+    value: number;
+    label: string;
+    color: string;
+    numberOfObservations: number;
+  }>;
   error?: string;
   instructions?: string;
   datasetName?: string;
@@ -286,9 +279,10 @@ async function executeLisa(
         lm.lisaValues.reduce((a, b) => a + b, 0) / lm.lisaValues.length;
     }
 
-    // get meta data for each cluster
-    const metaDataOfClusters = lm.labels.map((label, i) => {
+    // color and label for each cluster
+    const clusterColorAndLabels = lm.labels.map((label, i) => {
       return {
+        value: i,
         label,
         color: lm.colors[i],
         numberOfObservations: lm.clusters.filter((c) => c === i).length,
@@ -319,22 +313,13 @@ async function executeLisa(
       ) as GeoJSON.FeatureCollection;
     }
 
-    const result = {
-      lisaMethod: method,
-      datasetId: datasetName,
-      significanceThreshold,
-      variableName,
-      permutations: permutation,
-      clusters: metaDataOfClusters,
-      ...(globalMoranI ? { globalMoranI } : {}),
-    };
-
     return {
       llmResult: {
         success: true,
         ...(mapBounds ? { mapBounds } : {}),
-        result,
+        ...(globalMoranI ? { globalMoranI } : {}),
         datasetName: lisaDatasetName,
+        clusterColorAndLabels,
         instructions: `When creating a unique value map for LISA analysis:
 - Please use 'clusters' as the color field
 - Please use the colors from result.clusters.colors

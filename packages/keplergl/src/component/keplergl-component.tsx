@@ -19,7 +19,7 @@ import { KeplerState, MAP_ID, store } from './keplergl-provider';
 
 export type CreateMapOutputData = {
   id?: string;
-  datasetName: string;
+  datasetId: string;
   datasetForKepler: FileCacheItem[];
   theme?: string;
   isDraggable?: boolean;
@@ -32,7 +32,7 @@ export function isCreateMapOutputData(
   return (
     typeof data === 'object' &&
     data !== null &&
-    'datasetName' in data &&
+    'datasetId' in data &&
     'datasetForKepler' in data
   );
 }
@@ -74,9 +74,17 @@ export function KeplerGlComponent(
 
   const keplerMessages = messages['en'];
 
+  const keplerState = useSelector(
+    (state: KeplerState) => state?.keplerGl[MAP_ID]
+  );
+
   useEffect(() => {
     // parse layerConfig
-    const layerConfigObj = layerConfig ? JSON.parse(layerConfig) : {};
+    const layerConfigObj = layerConfig
+      ? typeof layerConfig === 'string'
+        ? JSON.parse(layerConfig)
+        : layerConfig
+      : {};
     // using Kepler.gl API to validate the layerConfig
     // const isValid = KeplerGlSchema.parseSavedConfig({
     //   version: 'v1',
@@ -86,6 +94,16 @@ export function KeplerGlComponent(
     //   throw new Error('Invalid layer config');
     // }
 
+    // check if layer already exists
+    const layerExists = keplerState?.visState?.layers.find(
+      (layer: Layer) =>
+        layer.config.dataId ===
+        layerConfigObj?.config?.visState?.layers?.[0]?.id
+    );
+    if (layerExists) {
+      return;
+    }
+
     dispatch(
       addDataToMap({
         datasets: datasetForKepler,
@@ -94,15 +112,14 @@ export function KeplerGlComponent(
           readOnly: false,
           autoCreateLayers: true,
           autoCreateTooltips: true,
+          keepExistingConfig:
+            Object.keys(keplerState?.visState?.datasets || {}).length > 0,
         },
         config: layerConfigObj,
       })
     );
-  }, [dispatch, datasetForKepler, layerConfig]);
-
-  const keplerState = useSelector(
-    (state: KeplerState) => state?.keplerGl[MAP_ID]
-  );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // {/* <KeplerGl
   //   id={MAP_ID}
@@ -114,8 +131,8 @@ export function KeplerGlComponent(
   // get layerId using datasetName
   const layerId = keplerState?.visState?.layers.find(
     (layer: Layer) =>
-      layer.config.label === props.datasetName ||
-      layer.config.dataId === props.datasetName
+      layer.config.label === props.datasetId ||
+      layer.config.dataId === props.datasetId
   )?.id;
 
   return (

@@ -1,13 +1,31 @@
 import { ToolInvocation } from './tools';
+import { memo } from 'react';
+import {
+  TextUIPart,
+  ReasoningUIPart,
+  ToolInvocationUIPart,
+  SourceUIPart,
+  FileUIPart,
+  StepStartUIPart,
+} from '@ai-sdk/ui-utils';
 
-export function MessageParts({
+const MemoizedToolInvocation = memo(ToolInvocation);
+
+export const MessageParts = memo(function MessageParts({
   parts,
   toolAdditionalData,
   getValues,
 }: {
-  parts: any[];
+  parts: Array<
+    | TextUIPart
+    | ReasoningUIPart
+    | ToolInvocationUIPart
+    | SourceUIPart
+    | FileUIPart
+    | StepStartUIPart
+  >;
   toolAdditionalData: Record<string, unknown>;
-  getValues: (datasetName: string, variableName: string) => Promise<number[]>;
+  getValues: (datasetName: string, variableName: string) => Promise<unknown[]>;
 }) {
   return (
     <div className="whitespace-pre-wrap">
@@ -19,7 +37,7 @@ export function MessageParts({
             const { toolCallId, state, toolName } = part.toolInvocation;
             const additionalData = toolAdditionalData[toolCallId];
             return (
-              <ToolInvocation
+              <MemoizedToolInvocation
                 key={toolCallId}
                 toolCallId={toolCallId}
                 state={state}
@@ -34,4 +52,4 @@ export function MessageParts({
       <br />
     </div>
   );
-}
+});

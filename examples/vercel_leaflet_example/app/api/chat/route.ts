@@ -5,7 +5,6 @@ import {
   getGeoDaTool,
   GeoDaToolNames,
   GetGeometries,
-  LisaAdditionalData,
 } from '@openassistant/geoda';
 import { getOsmTool, OsmToolNames } from '@openassistant/osm';
 import {

@@ -29,7 +29,7 @@
   ],
   "dependencies": {
     "@geoda/core": "0.0.9",
-    "@kepler.gl/processors": "3.0.0",
+    "@kepler.gl/processors": "3.1.7",
     "@openassistant/utils": "workspace:*",
     "apache-arrow": "^17.0.0",
     "type-analyzer": "^0.4.0",

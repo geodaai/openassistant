@@ -5,8 +5,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 /** @type {import('next').NextConfig} */
 module.exports = withBundleAnalyzer({
-  reactStrictMode: true,
-  swcMinify: true,
+  reactStrictMode: false,
   productionBrowserSourceMaps: true,
   // for some reason, the dnd-kit (used by kepler.gl) is included in the bundle?!
   transpilePackages: ['@dnd-kit/core', '@dnd-kit/sortable'],
@@ -28,14 +27,27 @@ module.exports = withBundleAnalyzer({
     if (isServer) {
       config.resolve.alias = {
         ...config.resolve.alias,
-        '@dnd-kit/core':
-          'next/dist/server/future/route-modules/app-page/vendored/contexts/amp-context',
-        '@dnd-kit/sortable':
-          'next/dist/server/future/route-modules/app-page/vendored/contexts/amp-context',
-        '@kepler.gl/components':
-          'next/dist/server/future/route-modules/app-page/vendored/contexts/amp-context',
-        'vega':
-          'next/dist/server/future/route-modules/app-page/vendored/contexts/amp-context',
+        '@dnd-kit/core': false,
+        '@dnd-kit/sortable': false,
+        '@dnd-kit/utilities': false,
+        '@kepler.gl/components': false,
+        '@kepler.gl/processors': false,
+        '@kepler.gl/constants': false,
+        '@kepler.gl/utils': false,
+        '@kepler.gl/layers': false,
+        '@kepler.gl/effects': false,
+        '@kepler.gl/table': false,
+        '@kepler.gl/deckgl-layers': false,
+        '@kepler.gl/reducers': false,
+        '@kepler.gl/styles': false,
+        '@kepler.gl/types': false,
+        '@kepler.gl/actions': false,
+        vega: false,
+        'react-leaflet': false,
+        leaflet: false,
+        'd3-color': false,
+        'd3-interpolate': false,
+        'd3-scale-chromatic': false,
       };
     }
 

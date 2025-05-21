@@ -9,8 +9,11 @@ import {
   StepStartUIPart,
 } from '@ai-sdk/ui-utils';
 import { ToolInvocation } from './tools';
+import { memo } from 'react';
 
-export function MessageParts({
+const MemoizedToolInvocation = memo(ToolInvocation);
+
+export const MessageParts = memo(function MessageParts({
   parts,
   toolAdditionalData,
   getValues,
@@ -36,7 +39,7 @@ export function MessageParts({
             const { toolCallId, state, toolName } = part.toolInvocation;
             const additionalData = toolAdditionalData[toolCallId];
             return (
-              <ToolInvocation
+              <MemoizedToolInvocation
                 key={toolCallId}
                 toolCallId={toolCallId}
                 state={state}
@@ -51,4 +54,4 @@ export function MessageParts({
       <br />
     </div>
   );
-}
+});
