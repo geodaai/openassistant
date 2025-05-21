@@ -42,7 +42,7 @@ export type HistogramOutputData = {
   isDraggable?: boolean;
 };
 
-export function HistogramPlot({
+export function HistogramPlotComponent({
   datasetName,
   histogramData,
   barDataIndexes,

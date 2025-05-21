@@ -218,8 +218,8 @@ export async function runSpatialJoin({
 }) {
   try {
     // Get geometries from both datasets
-    let rightGeometries = await getGeometries(rightDatasetName);
-    let leftGeometries = await getGeometries(leftDatasetName);
+    const rightGeometries = await getGeometries(rightDatasetName);
+    const leftGeometries = await getGeometries(leftDatasetName);
 
     if (!rightGeometries || rightGeometries.length === 0) {
       throw new Error('First dataset geometries not found');

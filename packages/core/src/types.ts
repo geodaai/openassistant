@@ -6,8 +6,7 @@ import {
   TextUIPart,
   ToolInvocationUIPart,
 } from '@ai-sdk/ui-utils';
-import { CoreMessage, Message, Tool, ToolSet } from 'ai';
-import { StepResult } from 'ai';
+import { CoreMessage, Message, StepResult, Tool, ToolSet } from 'ai';
 import { ReactNode } from 'react';
 import { z } from 'zod';
 
@@ -182,16 +181,7 @@ export type ProcessMessageProps = {
   imageMessage?: string;
   userActions?: UserActionProps[];
   streamMessageCallback: StreamMessageCallback;
-  /**
-   * The callback function to handle the step finish.
-   *
-   * @param event The step result returned from Vercel AI SDK
-   * @param toolCallMessages The tool call messages, that can be used to update the UI, see {@link ToolCallMessage}
-   */
-  onStepFinish?: (
-    event: StepResult<ToolSet>,
-    toolCallMessages: ToolCallMessage[]
-  ) => Promise<void> | void;
+  onToolFinished?: (toolCallId: string, additionalData: unknown) => void;
   useTool?: boolean;
   message?: string;
 };

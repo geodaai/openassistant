@@ -12,6 +12,7 @@ export type SendTextMessageHandlerProps = {
   setTypingIndicator: (value: React.SetStateAction<boolean>) => void;
   sendTextMessage: (props: SendTextMessageProps) => Promise<void>;
   onMessagesUpdated?: (messages: MessageModel[]) => void;
+  onToolFinished?: (toolCallId: string, additionalData: unknown) => void;
 };
 
 export async function sendTextMessageHandler({
@@ -21,6 +22,7 @@ export async function sendTextMessageHandler({
   setTypingIndicator,
   sendTextMessage,
   onMessagesUpdated,
+  onToolFinished,
 }: SendTextMessageHandlerProps) {
   // set prompting to true, to show typing indicator
   setTypingIndicator(true);
@@ -58,6 +60,7 @@ export async function sendTextMessageHandler({
     // send message to AI model
     await sendTextMessage({
       message: newMessage,
+      onToolFinished,
       streamMessageCallback: ({ customMessage, isCompleted, message }) => {
         // update the last message with the response
         lastMessage = {

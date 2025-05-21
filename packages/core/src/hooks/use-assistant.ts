@@ -79,15 +79,12 @@ export type UseAssistantProps = {
  *
  * @param message - The text message to send to the assistant.
  * @param streamMessageCallback - Callback function to handle streaming response chunks.
- * @param onStepFinish - Optional callback triggered when a conversation step completes.
+ * @param onToolFinished - Optional callback triggered when a tool call completes.
  */
 export type SendTextMessageProps = {
   message: string;
   streamMessageCallback: StreamMessageCallback;
-  onStepFinish?: (
-    event: StepResult<ToolSet>,
-    toolCallMessages: ToolCallMessage[]
-  ) => Promise<void> | void;
+  onToolFinished?: (toolCallId: string, additionalData: unknown) => void;
 };
 
 /**
@@ -198,13 +195,13 @@ export function useAssistant(props: UseAssistantProps) {
   const sendTextMessage = async ({
     message,
     streamMessageCallback,
-    onStepFinish,
+    onToolFinished,
   }: SendTextMessageProps) => {
     await checkLLMInstance();
     await assistant?.processTextMessage({
       textMessage: message,
       streamMessageCallback,
-      onStepFinish,
+      onToolFinished,
     });
   };
 

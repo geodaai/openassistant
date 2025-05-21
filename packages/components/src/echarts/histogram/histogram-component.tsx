@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import { ExpandableContainer } from '../../common/expandable-container';
 import { useDraggable } from '../../hooks/use-draggable';
-import { HistogramOutputData, HistogramPlot } from './histogram-plot';
+import { HistogramOutputData, HistogramPlotComponent } from './histogram-plot';
 
 // type guard for histogram output data
 export function isHistogramOutputData(
@@ -19,7 +19,7 @@ export function isHistogramOutputData(
   );
 }
 
-export function HistogramComponent(
+export function HistogramComponentContainer(
   props: HistogramOutputData
 ): JSX.Element | null {
   const [isExpanded, setIsExpanded] = useState(props.isExpanded);
@@ -42,7 +42,7 @@ export function HistogramComponent(
       onDragStart={onDragStart}
       onExpanded={onExpanded}
     >
-      <HistogramComponent {...props} />
+      <HistogramPlotComponent {...props} />
     </ExpandableContainer>
   );
 }

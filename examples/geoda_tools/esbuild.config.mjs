@@ -37,9 +37,7 @@ const config = {
     'process.env.OPENAI_API_KEY': JSON.stringify(
       process.env.OPENAI_API_KEY || ''
     ),
-    'process.env.GRAPHHOPPER_API_KEY': JSON.stringify(
-      process.env.GRAPHHOPPER_API_KEY || ''
-    ),
+    'process.env.MAPBOX_TOKEN': JSON.stringify(process.env.MAPBOX_TOKEN || ''),
   },
 };
 

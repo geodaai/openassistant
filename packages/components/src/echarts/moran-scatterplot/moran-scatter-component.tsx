@@ -9,7 +9,7 @@ import {
   MoranScatterOutputData,
 } from './moran-scatter-plot';
 
-export function MoranScatterPlotToolComponent(props: MoranScatterOutputData) {
+export function MoranScatterPlotContainer(props: MoranScatterOutputData) {
   const [isExpanded, setIsExpanded] = useState(props.isExpanded);
 
   const onDragStart = useDraggable({

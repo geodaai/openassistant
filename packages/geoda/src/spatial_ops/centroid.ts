@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { getCentroids, SpatialGeometry } from '@geoda/core';
 import { isSpatialToolContext } from '../utils';
 import { Feature, Geometry } from 'geojson';
-import { cacheData, generateId } from '@openassistant/utils';
+import { generateId } from '@openassistant/utils';
 import { SpatialToolContext } from '../types';
 
 export type CentroidFunctionArgs = z.ZodObject<{
@@ -19,8 +19,7 @@ export type CentroidLlmResult = {
 
 export type CentroidAdditionalData = {
   datasetName?: string;
-  geojson?: string;
-  centroids: Array<number[] | null>;
+  [outputDatasetName: string]: unknown;
 };
 
 /**
@@ -108,8 +107,8 @@ export const centroid = tool<
     const centroids: Array<number[] | null> = await getCentroids(geometries);
 
     // create a unique id for the centroid result
-    const centroidId = generateId();
-    cacheData(centroidId, {
+    const outputDatasetName = `centroid_${generateId()}`;
+    const outputGeojson = {
       type: 'FeatureCollection',
       features: centroids
         .filter((centroid) => centroid !== null)
@@ -124,20 +123,17 @@ export const centroid = tool<
               properties: {},
             }) as Feature<Geometry, GeoJSON.GeoJsonProperties>
         ),
-    });
+    };
 
     return {
       llmResult: {
         success: true,
-        datasetName: centroidId,
-        result:
-          'Centroids calculated successfully, and it can be used as a dataset for mapping. The dataset name is: ' +
-          centroidId,
+        datasetName: outputDatasetName,
+        result: `Centroids calculated successfully, and it can be used as a dataset for mapping. The dataset name is: ${outputDatasetName}`,
       },
       additionalData: {
         datasetName,
-        geojson,
-        centroids,
+        [outputDatasetName]: outputGeojson,
       },
     };
   },

@@ -26,6 +26,9 @@ export * from './echarts/scatterplot/scatter-regression-plot';
 export * from './echarts/scatterplot/simple-chart-option';
 export * from './echarts/scatterplot/simple-scatter-plots';
 
+export * from './echarts/moran-scatterplot/moran-scatter-component';
+export * from './echarts/moran-scatterplot/moran-scatter-plot';
+
 export * from './echarts/echarts-updater';
 
 export * from './geoda/weights-meta-table';

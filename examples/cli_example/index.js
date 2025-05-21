@@ -35,7 +35,7 @@ async function main() {
         textMessage: userInput,
         streamMessageCallback: ({ isCompleted, message }) => {
           if (isCompleted) {
-            process.stdout.write(message.text);
+            process.stdout.write(message.parts[0].text);
             process.stdout.write('\n\n');
           }
         },

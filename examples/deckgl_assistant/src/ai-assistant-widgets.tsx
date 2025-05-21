@@ -1,7 +1,6 @@
 import { Deck, Widget, WidgetPlacement } from '@deck.gl/core';
 import { MessageModel, UseAssistantProps } from '@openassistant/core';
 import { AiAssistant, AiAssistantConfig, ConfigPanel } from '@openassistant/ui';
-// import { ConfigPanel } from './config-panel';
 import { createRoot } from 'react-dom/client';
 
 /**
@@ -209,7 +208,12 @@ export class AiAssistantWidget implements Widget<AiAssistantWidgetProps> {
                   {
                     sender: 'assistant',
                     messageContent: {
-                      text: this.welcomeMessage,
+                      parts: [
+                        {
+                          type: 'text',
+                          text: this.welcomeMessage,
+                        },
+                      ],
                     },
                     direction: 'incoming',
                     position: 'single',
@@ -217,7 +221,12 @@ export class AiAssistantWidget implements Widget<AiAssistantWidgetProps> {
                   {
                     sender: 'assistant',
                     messageContent: {
-                      text: 'Please select your prefered LLM model and use your API key to start the chat.',
+                      parts: [
+                        {
+                          type: 'text',
+                          text: 'Please select your prefered LLM model and use your API key to start the chat.',
+                        },
+                      ],
                     },
                     direction: 'incoming',
                     position: 'single',

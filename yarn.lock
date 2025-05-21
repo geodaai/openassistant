@@ -2176,14 +2176,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@deck.gl/widgets@npm:9.1.1":
-  version: 9.1.1
-  resolution: "@deck.gl/widgets@npm:9.1.1"
+"@deck.gl/widgets@npm:9.1.12":
+  version: 9.1.12
+  resolution: "@deck.gl/widgets@npm:9.1.12"
   dependencies:
     preact: "npm:^10.17.0"
   peerDependencies:
     "@deck.gl/core": ^9.1.0
-  checksum: e6b4858f241dd169845ee2ea63782d910723c4c19eb30686ce0afa9469cfd94e9f55d7bceac7b5e5d1067067db74cfa1b0d4af0d857d97ab0e15e9e48f834581
+  checksum: e3cdffd482a89939da97f851524dc9eca4e250a0c79217b208e47693d209c5269bfc4ca89f952ed8e7893dc024bc7378c746af1433b292691233ca0bbb38c44d
   languageName: node
   linkType: hard
 
@@ -16566,10 +16566,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "deckgl-assistant-example@workspace:examples/deckgl_assistant"
   dependencies:
-    "@deck.gl/core": "npm:9.1.1"
-    "@deck.gl/layers": "npm:9.1.1"
-    "@deck.gl/react": "npm:9.1.1"
-    "@deck.gl/widgets": "npm:9.1.1"
+    "@deck.gl/core": "npm:9.1.12"
+    "@deck.gl/layers": "npm:9.1.12"
+    "@deck.gl/react": "npm:9.1.12"
+    "@deck.gl/widgets": "npm:9.1.12"
     "@nextui-org/react": "npm:^2.6.10"
     "@openassistant/core": "workspace:*"
     "@openassistant/duckdb": "workspace:*"
@@ -16578,6 +16578,7 @@ __metadata:
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
     autoprefixer: "npm:^10.4.20"
+    dotenv: "npm:^16.4.5"
     esbuild: "npm:^0.24.2"
     esbuild-plugin-tailwindcss: "npm:^1.2.1"
     esbuild-style-plugin: "npm:^1.6.3"
@@ -17222,6 +17223,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "echarts-tools-example@workspace:examples/echarts_tools"
   dependencies:
+    "@openassistant/components": "workspace:*"
     "@openassistant/plots": "workspace:*"
     "@openassistant/ui": "workspace:*"
     "@openassistant/utils": "workspace:*"
@@ -19318,9 +19320,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "geoda_tools@workspace:examples/geoda_tools"
   dependencies:
+    "@openassistant/components": "workspace:*"
     "@openassistant/core": "workspace:*"
     "@openassistant/geoda": "workspace:*"
     "@openassistant/keplergl": "workspace:*"
+    "@openassistant/map": "workspace:*"
     "@openassistant/osm": "workspace:*"
     "@openassistant/ui": "workspace:*"
     "@types/react": "npm:^18.2.0"

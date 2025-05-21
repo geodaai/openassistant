@@ -95,4 +95,8 @@ export abstract class AbstractAssistant {
   }): Promise<string> {
     throw new Error('Method not implemented.');
   }
+
+  public static getToolResults() {
+    throw new Error('Method not implemented.');
+  }
 }

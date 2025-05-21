@@ -46,6 +46,8 @@ export type AiAssistantProps = UseAssistantProps & {
   onFeedback?: (question: string) => void;
   /** The callback function to handle the messages updated. */
   onMessagesUpdated?: (messages: MessageModel[]) => void;
+  /** The callback function to handle the tool finished. */
+  onToolFinished?: (toolCallId: string, additionalData: unknown) => void;
   /** The callback function to handle the restart chat. */
   onRestartChat?: () => void;
   /** The font size of the assistant. */
@@ -181,6 +183,7 @@ export function AiAssistant(props: AiAssistantProps) {
       setMessages,
       setTypingIndicator: setIsPrompting,
       onMessagesUpdated: props.onMessagesUpdated,
+      onToolFinished: props.onToolFinished,
     };
 
     if (isScreenshotAvailable) {

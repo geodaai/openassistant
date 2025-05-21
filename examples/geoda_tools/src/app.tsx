@@ -1,14 +1,16 @@
 import { AiAssistant } from '@openassistant/ui';
 import {
+  SpatialWeightsComponentContainer,
+  MoranScatterPlotContainer,
+} from '@openassistant/components';
+import {
   dataClassify,
   DataClassifyTool,
   spatialWeights,
   SpatialWeightsTool,
   GetGeometries,
-  SpatialWeightsToolComponent,
   globalMoran,
   GlobalMoranTool,
-  MoranScatterPlotToolComponent,
   spatialRegression,
   SpatialRegressionTool,
   lisa,
@@ -16,6 +18,7 @@ import {
   spatialJoin,
   SpatialJoinTool,
   buffer,
+  BufferTool,
 } from '@openassistant/geoda';
 import {
   geocoding,
@@ -23,14 +26,31 @@ import {
   getUsStateGeojson,
   getUsZipcodeGeojson,
   getUsCountyGeojson,
-  getCachedData,
+  RoutingTool,
 } from '@openassistant/osm';
-import { keplergl, KeplerglTool } from '@openassistant/keplergl';
+import { KeplerGlToolComponent } from '@openassistant/keplergl';
+import { keplergl, KeplerglTool } from '@openassistant/map';
 
 import { PointLayerData } from '@geoda/core';
 import { SAMPLE_DATASETS } from './dataset';
+import { useToolCache } from '@openassistant/core';
+
+function isGeoJson(obj: unknown): obj is GeoJSON.FeatureCollection {
+  return (
+    typeof obj === 'object' &&
+    obj !== null &&
+    'type' in obj &&
+    obj.type === 'FeatureCollection'
+  );
+}
 
 export default function App() {
+  const { toolCache, updateToolCache } = useToolCache();
+
+  const onToolFinished = (toolCallId: string, additionalData: unknown) => {
+    updateToolCache(toolCallId, additionalData);
+  };
+
   const getValues = async (datasetName: string, variableName: string) => {
     return (SAMPLE_DATASETS[datasetName] as any[]).map(
       (item) => item[variableName]
@@ -38,6 +58,7 @@ export default function App() {
   };
 
   const getGeometries: GetGeometries = async (datasetName: string) => {
+    // user provided geometries
     if (datasetName === 'myVenues') {
       // get points in [longitude, latitude] array format from dataset
       const points: PointLayerData[] = SAMPLE_DATASETS[datasetName].map(
@@ -49,10 +70,14 @@ export default function App() {
       );
       return points;
     }
-    const geoms = getCachedData(datasetName);
-    if (geoms && 'features' in geoms && geoms.features.length > 0) {
-      return geoms.features;
+    // get cached geometries from other tools
+    if (toolCache[datasetName]) {
+      const data = toolCache[datasetName];
+      if (isGeoJson(data)) {
+        return data.features;
+      }
     }
+
     throw new Error(`Dataset ${datasetName} not found`);
   };
 
@@ -71,7 +96,7 @@ export default function App() {
       ...spatialWeights.context,
       getGeometries,
     },
-    component: SpatialWeightsToolComponent,
+    component: SpatialWeightsComponentContainer,
   };
 
   const globalMoranTool: GlobalMoranTool = {
@@ -80,7 +105,7 @@ export default function App() {
       ...globalMoran.context,
       getValues,
     },
-    component: MoranScatterPlotToolComponent,
+    component: MoranScatterPlotContainer,
   };
 
   const regressionTool: SpatialRegressionTool = {
@@ -112,30 +137,28 @@ export default function App() {
     ...getUsStateGeojson,
   };
 
-  const getMapData = async (datasetName: string) => {
-    let result;
-
-    const geoms = getCachedData(datasetName);
-    if (geoms) {
-      result = geoms;
-    }
-
-    return result;
-  };
-
-  const createMap: KeplerglTool = {
+  const keplerglTool: KeplerglTool = {
     ...keplergl,
     context: {
       ...keplergl.context,
-      getGeometries: getMapData,
+      getGeometries,
     },
+    component: KeplerGlToolComponent,
   };
 
-  const routingTool = {
+  const routingTool: RoutingTool = {
     ...routing,
     context: {
       ...routing.context,
-      getGraphHopperApiKey: () => process.env.GRAPHHOPPER_API_KEY || '',
+      getMapboxToken: () => process.env.MAPBOX_TOKEN || '',
+    },
+  };
+
+  const bufferTool: BufferTool = {
+    ...buffer,
+    context: {
+      ...buffer.context,
+      getGeometries,
     },
   };
 
@@ -150,8 +173,8 @@ export default function App() {
     getUsZipcodeGeojson,
     getUsCountyGeojson,
     geocoding,
-    buffer,
-    createMap,
+    buffer: bufferTool,
+    keplergl: keplerglTool,
     routing: routingTool,
   };
 
@@ -208,6 +231,7 @@ Note:
             welcomeMessage={welcomeMessage}
             instructions={instructions}
             theme="dark"
+            onToolFinished={onToolFinished}
           />
         </div>
       </div>

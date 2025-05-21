@@ -7,13 +7,11 @@ import {
   StreamMessage,
   StreamMessageCallback,
   ToolCallComponents,
-  ToolCallMessage,
 } from '../types';
 import {
   CoreMessage,
   CoreToolMessage,
   CoreUserMessage,
-  StepResult,
   ToolCall,
   ToolChoice,
   ToolSet,
@@ -254,7 +252,7 @@ export class VercelAi extends AbstractAssistant {
     textMessage,
     streamMessageCallback,
     imageMessage,
-    onStepFinish,
+    onToolFinished,
   }: ProcessMessageProps) {
     if (!this.abortController) {
       this.abortController = new AbortController();
@@ -292,8 +290,7 @@ export class VercelAi extends AbstractAssistant {
     // call LLM with the new message
     await this.triggerRequest({
       streamMessageCallback,
-      imageMessage,
-      onStepFinish,
+      onToolFinished,
     });
 
     // complete the stream message
@@ -312,13 +309,11 @@ export class VercelAi extends AbstractAssistant {
   protected async triggerRequest({
     streamMessageCallback,
     imageMessage,
+    onToolFinished,
   }: {
     streamMessageCallback: StreamMessageCallback;
     imageMessage?: string;
-    onStepFinish?: (
-      event: StepResult<ToolSet>,
-      toolCallMessages: ToolCallMessage[]
-    ) => Promise<void> | void;
+    onToolFinished?: (toolCallId: string, additionalData: unknown) => void;
   }) {
     /**
      * Maximum number of sequential LLM calls (steps), e.g. when you use tool calls. Must be at least 1.
@@ -394,7 +389,7 @@ export class VercelAi extends AbstractAssistant {
         this.toolSteps
       )
     ) {
-      await this.triggerRequest({ streamMessageCallback });
+      await this.triggerRequest({ streamMessageCallback, onToolFinished });
     }
 
     return {};

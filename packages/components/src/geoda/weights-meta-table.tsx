@@ -17,20 +17,20 @@ import '../index.css';
 
 export function isSpatialWeightsOutputData(
   data: unknown
-): data is SpatialWeightsMetaTableProps {
+): data is SpatialWeightsComponentProps {
   return typeof data === 'object' && data !== null && 'weightsMeta' in data;
 }
 
-export type SpatialWeightsMetaTableProps = {
+export type SpatialWeightsComponentProps = {
   id?: string;
   weightsMeta: WeightsMeta;
   isExpanded?: boolean;
   isDraggable?: boolean;
 };
 
-export function SpatialWeightsMetaTable({
+export function SpatialWeightsComponent({
   weightsMeta,
-}: SpatialWeightsMetaTableProps) {
+}: SpatialWeightsComponentProps) {
   // weightsMeta: mapping its key to descriptive label
   const WeightsMetaLabels = useMemo(
     () => ({
@@ -107,8 +107,8 @@ export function SpatialWeightsMetaTable({
   );
 }
 
-export function SpatialWeightsToolComponent(
-  props: SpatialWeightsMetaTableProps
+export function SpatialWeightsComponentContainer(
+  props: SpatialWeightsComponentProps
 ) {
   const [isExpanded, setIsExpanded] = useState(props.isExpanded);
 
@@ -130,7 +130,7 @@ export function SpatialWeightsToolComponent(
       onDragStart={onDragStart}
       onExpanded={onExpanded}
     >
-      <SpatialWeightsMetaTable {...props} />
+      <SpatialWeightsComponent {...props} />
     </ExpandableContainer>
   );
 }

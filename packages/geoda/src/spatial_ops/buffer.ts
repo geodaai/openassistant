@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { getBuffers } from '@geoda/core';
 import { isSpatialToolContext } from '../utils';
 import { Feature } from 'geojson';
-import { cacheData, generateId } from '@openassistant/utils';
+import { generateId } from '@openassistant/utils';
 import { SpatialToolContext } from '../types';
 
 export type BufferFunctionArgs = z.ZodObject<{
@@ -22,11 +22,10 @@ export type BufferLlmResult = {
 
 export type BufferAdditionalData = {
   datasetName?: string;
-  geojson?: string;
+  [outputDatasetName: string]: unknown;
   distance: number;
   distanceUnit: 'KM' | 'Mile';
   pointsPerCircle: number;
-  buffers: Feature[];
 };
 
 /**
@@ -133,27 +132,25 @@ export const buffer = tool<
     });
 
     // create a unique id for the buffer result
-    const bufferId = generateId();
-    cacheData(bufferId, {
+    const outputDatasetName = `buffer_${generateId()}`;
+
+    const outputGeojson = {
       type: 'FeatureCollection',
       features: buffers,
-    });
+    };
 
     return {
       llmResult: {
         success: true,
-        datasetName: bufferId,
-        result:
-          'Buffers created successfully, and it can be used as a dataset for mapping. The dataset name is: ' +
-          bufferId,
+        datasetName: outputDatasetName,
+        result: `Buffers created successfully, and it can be used as a dataset for mapping. The dataset name is: ${outputDatasetName}`,
       },
       additionalData: {
-        datasetName: datasetName || undefined,
-        geojson,
+        datasetName: outputDatasetName,
+        [outputDatasetName]: outputGeojson,
         distance,
         distanceUnit,
         pointsPerCircle,
-        buffers,
       },
     };
   },

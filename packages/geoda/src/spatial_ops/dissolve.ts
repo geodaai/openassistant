@@ -108,24 +108,21 @@ export const dissolve = tool<
     const dissolved = await spatialDissolve(geometries);
 
     // create a unique id for the dissolve result
-    const dissolveId = generateId();
-    cacheData(dissolveId, {
+    const outputDatasetName = `dissolve_${generateId()}`;
+    const outputGeojson = {
       type: 'FeatureCollection',
       features: [dissolved],
-    });
+    };
 
     return {
       llmResult: {
         success: true,
-        datasetName: dissolveId,
-        result:
-          'Geometries dissolved successfully, and it can be used as a dataset for mapping. The dataset name is: ' +
-          dissolveId,
+        datasetName: outputDatasetName,
+        result: `Geometries dissolved successfully, and it can be used as a dataset for mapping. The dataset name is: ${outputDatasetName}`,
       },
       additionalData: {
         datasetName,
-        geojson,
-        dissolved,
+        [outputDatasetName]: outputGeojson,
       },
     };
   },

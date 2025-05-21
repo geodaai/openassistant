@@ -34,7 +34,7 @@ export function isLeafletOutputData(data: unknown): data is LeafletOutputData {
   );
 }
 
-export function LeafletMapComponent(props: LeafletOutputData) {
+export function LeafletMapComponentContainer(props: LeafletOutputData) {
   const [isExpanded, setIsExpanded] = useState(props.isExpanded);
 
   const id = props.id || generateId();
@@ -57,19 +57,19 @@ export function LeafletMapComponent(props: LeafletOutputData) {
       onDragStart={onDragStart}
       onExpanded={onExpanded}
     >
-      <LeafletMap {...props} />
+      <LeafletMapComponent {...props} />
     </ExpandableContainer>
   );
 }
 
-function Legend({ 
-  breaks, 
-  colors, 
-  colorType, 
-  uniqueValues 
-}: { 
-  breaks?: number[]; 
-  colors: string[]; 
+function Legend({
+  breaks,
+  colors,
+  colorType,
+  uniqueValues,
+}: {
+  breaks?: number[];
+  colors: string[];
   colorType: 'breaks' | 'unique';
   uniqueValues?: (string | number)[];
 }) {
@@ -77,39 +77,39 @@ function Legend({
     <div className="absolute bottom-4 right-4 bg-white p-2 rounded shadow-md z-[1000]">
       <div className="text-sm font-semibold mb-2">Legend</div>
       <div className="space-y-1">
-        {colorType === 'breaks' && breaks ? (
-          breaks.map((breakValue, index) => (
-            <div key={index} className="flex items-center">
-              <div
-                className="w-4 h-4 mr-2"
-                style={{ backgroundColor: colors[index] }}
-              />
-              <span className="text-xs">
-                {index === 0
-                  ? `≤ ${breakValue}`
-                  : index === breaks.length - 1
-                    ? `> ${breaks[index - 1]}`
-                    : `${breaks[index - 1]} - ${breakValue}`}
-              </span>
-            </div>
-          ))
-        ) : colorType === 'unique' && uniqueValues ? (
-          uniqueValues.map((value, index) => (
-            <div key={index} className="flex items-center">
-              <div
-                className="w-4 h-4 mr-2"
-                style={{ backgroundColor: colors[index] }}
-              />
-              <span className="text-xs">{value}</span>
-            </div>
-          ))
-        ) : null}
+        {colorType === 'breaks' && breaks
+          ? breaks.map((breakValue, index) => (
+              <div key={index} className="flex items-center">
+                <div
+                  className="w-4 h-4 mr-2"
+                  style={{ backgroundColor: colors[index] }}
+                />
+                <span className="text-xs">
+                  {index === 0
+                    ? `≤ ${breakValue}`
+                    : index === breaks.length - 1
+                      ? `> ${breaks[index - 1]}`
+                      : `${breaks[index - 1]} - ${breakValue}`}
+                </span>
+              </div>
+            ))
+          : colorType === 'unique' && uniqueValues
+            ? uniqueValues.map((value, index) => (
+                <div key={index} className="flex items-center">
+                  <div
+                    className="w-4 h-4 mr-2"
+                    style={{ backgroundColor: colors[index] }}
+                  />
+                  <span className="text-xs">{value}</span>
+                </div>
+              ))
+            : null}
       </div>
     </div>
   );
 }
 
-export function LeafletMap(props: LeafletOutputData) {
+export function LeafletMapComponent(props: LeafletOutputData) {
   const [isMounted, setIsMounted] = useState(false);
   const {
     geoJsonData,
@@ -280,9 +280,9 @@ export function LeafletMap(props: LeafletOutputData) {
         />
       </MapContainer>
       {colorBy && colorType && colors && (
-        <Legend 
-          breaks={breaks} 
-          colors={colors} 
+        <Legend
+          breaks={breaks}
+          colors={colors}
           colorType={colorType}
           uniqueValues={uniqueValues}
         />

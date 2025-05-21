@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import DeckGL from '@deck.gl/react';
 import { ScatterplotLayer } from '@deck.gl/layers';
+import { FullscreenWidget } from '@deck.gl/widgets';
+
 import { Map } from 'react-map-gl/maplibre';
 import '@deck.gl/widgets/stylesheet.css';
 
@@ -190,10 +192,14 @@ Fields:
           layers={layers}
           style={{ position: 'relative' }}
           widgets={[
+            new FullscreenWidget({
+              placement: 'top-right',
+              opacity: 0.8, 
+            }),
             new AiAssistantWidget({
               modelProvider: 'openai',
               model: 'gpt-4o',
-              apiKey: process.env.OPENAI_TOKEN || '',
+              apiKey: process.env.OPENAI_API_KEY || '',
               welcomeMessage: 'Hello, how can I help you today?',
               instructions,
               tools: functionTools,

@@ -15,7 +15,7 @@ import { ExpandableContainer } from '../common/expandable-container';
 import { useDraggable } from '../hooks/use-draggable';
 import '../index.css';
 
-export type SpatialCountComponentProps = {
+export type SpatialJoinComponentProps = {
   id?: string;
   joinResult: number[][];
   joinValues?: Record<string, number[]>;
@@ -25,12 +25,12 @@ export type SpatialCountComponentProps = {
   isDraggable?: boolean;
 };
 
-export function SpatialCountComponent({
+export function SpatialJoinComponent({
   joinResult,
   joinValues,
   actionButtonLabel,
   actionButtonOnClick,
-}: SpatialCountComponentProps) {
+}: SpatialJoinComponentProps) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
@@ -110,7 +110,9 @@ export function SpatialCountComponent({
   );
 }
 
-export function SpatialJoinToolComponent(props: SpatialCountComponentProps) {
+export function SpatialJoinComponentContainer(
+  props: SpatialJoinComponentProps
+) {
   const [isExpanded, setIsExpanded] = useState(props.isExpanded);
 
   const onDragStart = useDraggable({
@@ -133,7 +135,7 @@ export function SpatialJoinToolComponent(props: SpatialCountComponentProps) {
       onDragStart={onDragStart}
       onExpanded={onExpanded}
     >
-      <SpatialCountComponent {...props} />
+      <SpatialJoinComponent {...props} />
     </ExpandableContainer>
   );
 }

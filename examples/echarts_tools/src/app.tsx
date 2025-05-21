@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import {
-  boxplot,
   BoxplotComponentContainer,
   BoxplotOutputData,
+  BubbleChartComponentContainer,
+  HistogramComponent,
+  ParallelCoordinateComponentContainer,
+  ScatterplotComponentContainer,
+} from '@openassistant/components';
+import {
+  boxplot,
   BoxplotTool,
   bubbleChart,
   BubbleChartTool,
@@ -16,6 +22,7 @@ import {
 import { AiAssistant } from '@openassistant/ui';
 import { tool } from '@openassistant/utils';
 import { z } from 'zod';
+
 import { SAMPLE_DATASETS } from './dataset';
 
 export default function App() {
@@ -65,6 +72,7 @@ export default function App() {
         theme,
       },
     },
+    component: BoxplotComponentContainer,
   };
 
   // Create the bubble chart tool with the getValues implementation
@@ -78,6 +86,7 @@ export default function App() {
         theme,
       },
     },
+    component: BubbleChartComponentContainer,
   };
 
   const histogramTool: HistogramTool = {
@@ -90,6 +99,7 @@ export default function App() {
         theme,
       },
     },
+    component: HistogramComponent,
   };
 
   const pcpTool: PCPTool = {
@@ -98,6 +108,7 @@ export default function App() {
       ...pcp.context,
       getValues: getValues,
     },
+    component: ParallelCoordinateComponentContainer,
   };
 
   const scatterplotTool: ScatterplotTool = {
@@ -106,6 +117,7 @@ export default function App() {
       ...scatterplot.context,
       getValues: getValues,
     },
+    component: ScatterplotComponentContainer,
   };
 
   const thinkTool = tool({

@@ -26,4 +26,6 @@ export * from './utils/create-assistant';
 
 export * from './utils/messages';
 
+export * from './hooks/use-toolcache';
+
 export type { TextUIPart } from '@ai-sdk/ui-utils';

@@ -28,7 +28,7 @@ export function isVegaLiteOutputData(
   );
 }
 
-export function VegaPlotComponent(props: VegaLiteOutputData) {
+export function VegaPlotComponentContainer(props: VegaLiteOutputData) {
   const [isExpanded, setIsExpanded] = useState(props.isExpanded);
 
   const id = props.id || generateId();
@@ -51,12 +51,12 @@ export function VegaPlotComponent(props: VegaLiteOutputData) {
       onDragStart={onDragStart}
       onExpanded={onExpanded}
     >
-      <VegaPlot {...props} />
+      <VegaPlotComponent {...props} />
     </ExpandableContainer>
   );
 }
 
-export function VegaPlot(props: VegaLiteOutputData) {
+export function VegaPlotComponent(props: VegaLiteOutputData) {
   const spec = props.vegaLiteSpec ? JSON.parse(props.vegaLiteSpec) : {};
 
   return (

@@ -186,7 +186,7 @@ export abstract class VercelAiClient extends VercelAi {
     return updatedMessages;
   }
 
-  protected async handleToolCallStreaming(
+  protected async handleToolCallStart(
     toolCallId: string,
     toolName: string,
     args: Record<string, unknown>,
@@ -216,7 +216,8 @@ export abstract class VercelAiClient extends VercelAi {
   protected async handleToolCallFinish(
     toolCallId: string,
     result: unknown,
-    streamMessageCallback: StreamMessageCallback
+    streamMessageCallback: StreamMessageCallback,
+    onToolFinished: (toolCallId: string, additionalData: unknown) => void
   ) {
     // find the tool invocation in the stream message
     const toolPart = this.streamMessage.parts?.findLast(
@@ -243,6 +244,9 @@ export abstract class VercelAiClient extends VercelAi {
       deltaMessage: '',
       message: this.streamMessage,
     });
+
+    // call the onToolFinished callback
+    onToolFinished(toolCallId, additionalData);
   }
 
   protected async handleTextStreaming(
@@ -274,23 +278,13 @@ export abstract class VercelAiClient extends VercelAi {
 
   /**
    * Triggers a request to the Vercel AI API using the local LLM instance
-   * @protected
-   * @param {Object} params - Request parameters
-   * @param {StreamMessageCallback} params.streamMessageCallback - Callback for streaming messages
-   * @param {string} [params.imageMessage] - Image message in base64 format
-   * @param {Function} [params.onStepFinish] - Optional callback for step completion
-   * @returns {Promise<TriggerRequestOutput>} Request output
-   * @throws {Error} If LLM is not initialized
    */
   protected async triggerRequest({
     streamMessageCallback,
-    onStepFinish,
+    onToolFinished,
   }: {
     streamMessageCallback: StreamMessageCallback;
-    onStepFinish?: (
-      event: StepResult<ToolSet>,
-      toolCallMessages: ToolCallMessage[]
-    ) => Promise<void> | void;
+    onToolFinished: (toolCallId: string, additionalData: unknown) => void;
   }) {
     if (!this.llm) {
       throw new Error(
@@ -326,9 +320,12 @@ export abstract class VercelAiClient extends VercelAi {
       abortSignal: this.abortController?.signal,
       onStepFinish: async (event: StepResult<ToolSet>) => {
         const { usage } = event;
+        // update the tokens used
         tokensUsed.promptTokens = usage?.promptTokens || 0;
         tokensUsed.completionTokens = usage?.completionTokens || 0;
         tokensUsed.totalTokens = usage?.totalTokens || 0;
+
+        // add the new messages to the local messages array
         localMessages.push(...event.response.messages);
       },
     });
@@ -344,7 +341,7 @@ export abstract class VercelAiClient extends VercelAi {
         // reset message content if tool call is started
         messageContent = '';
         this.toolSteps++;
-        await this.handleToolCallStreaming(
+        await this.handleToolCallStart(
           chunk.toolCallId,
           chunk.toolName,
           chunk.args,
@@ -356,7 +353,8 @@ export abstract class VercelAiClient extends VercelAi {
         await this.handleToolCallFinish(
           toolCallId,
           result,
-          streamMessageCallback
+          streamMessageCallback,
+          onToolFinished
         );
       } else if (chunk.type === 'reasoning') {
         messageContent = await this.handleTextStreaming(
@@ -382,11 +380,7 @@ export abstract class VercelAiClient extends VercelAi {
         this.toolSteps
       )
     ) {
-      console.log('trigger next request');
-      await this.triggerRequest({
-        streamMessageCallback,
-        onStepFinish,
-      });
+      await this.triggerRequest({ streamMessageCallback, onToolFinished });
     }
 
     return { tokensUsed };
