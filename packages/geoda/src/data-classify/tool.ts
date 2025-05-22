@@ -44,7 +44,7 @@ export type DataClassifyLlmResult = {
 };
 
 export type DataClassifyAdditionalData = {
-  datasetName: string;
+  originalDatasetName: string;
   variableName: string;
   method: string;
   k: number;
@@ -266,7 +266,7 @@ export async function runDataClassify({
     }
 
     const result = {
-      datasetName,
+      originalDatasetName: datasetName,
       variableName,
       method,
       k,

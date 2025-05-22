@@ -1,7 +1,8 @@
 import { z } from 'zod';
 import { FeatureCollection } from 'geojson';
 import { generateId, tool } from '@openassistant/utils';
-import { isOsmToolContext, OsmToolContext } from './register-tools';
+import { isMapboxToolContext, MapboxToolContext } from './register-tools';
+import { mapboxRateLimiter } from './utils/rateLimiter';
 
 type MapboxStep = {
   distance: number;
@@ -132,7 +133,7 @@ export const routing = tool<
   RoutingFunctionArgs,
   RoutingLlmResult,
   RoutingAdditionalData,
-  OsmToolContext
+  MapboxToolContext
 >({
   description:
     'Get routing directions between two coordinates using Mapbox Directions API',
@@ -158,12 +159,15 @@ export const routing = tool<
       const { longitude: originLon, latitude: originLat } = origin;
       const { longitude: destLon, latitude: destLat } = destination;
 
-      if (!options?.context || !isOsmToolContext(options.context)) {
+      if (!options?.context || !isMapboxToolContext(options.context)) {
         throw new Error(
           'Context is required and must implement OsmToolContext'
         );
       }
       const mapboxAccessToken = options.context.getMapboxToken();
+
+      // Use the global rate limiter before making the API call
+      await mapboxRateLimiter.waitForNextCall();
 
       // Using Mapbox Directions API
       const url = `https://api.mapbox.com/directions/v5/mapbox/${mode}/${originLon},${originLat};${destLon},${destLat}?geometries=geojson&access_token=${mapboxAccessToken}`;

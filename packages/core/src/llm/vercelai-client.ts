@@ -1,8 +1,4 @@
-import {
-  AudioToTextProps,
-  StreamMessageCallback,
-  ToolCallMessage,
-} from '../types';
+import { AudioToTextProps, StreamMessageCallback } from '../types';
 import {
   generateText,
   LanguageModel,

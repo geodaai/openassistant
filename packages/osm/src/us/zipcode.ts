@@ -6,6 +6,7 @@ import {
 } from '@openassistant/utils';
 import { z } from 'zod';
 import zips from 'zip3';
+import { githubRateLimiter } from '../utils/rateLimiter';
 
 // Add delay function to prevent rate limiting
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -88,8 +89,8 @@ export const getUsZipcodeGeojson = tool<
       for (const zipcode of zipcodes) {
         let geojson = getCachedData(zipcode);
         if (!geojson) {
-          // Add a delay between requests (1000ms) to avoid rate limiting
-          await delay(1000);
+          // Use the global rate limiter before making the API call
+          await githubRateLimiter.waitForNextCall();
 
           // get state code from zipcode
           const prefix = zipcode.slice(0, 3);

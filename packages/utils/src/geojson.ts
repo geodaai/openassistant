@@ -54,13 +54,14 @@ export function getBoundsFromGeoJSON(
 
   const processGeometry = (geometry: GeoJSON.Geometry) => {
     switch (geometry.type) {
-      case 'Point':
+      case 'Point': {
         const [lng, lat] = geometry.coordinates;
         minLat = Math.min(minLat, lat);
         minLng = Math.min(minLng, lng);
         maxLat = Math.max(maxLat, lat);
         maxLng = Math.max(maxLng, lng);
         break;
+      }
       case 'MultiPoint':
         processCoordinates(geometry.coordinates);
         break;

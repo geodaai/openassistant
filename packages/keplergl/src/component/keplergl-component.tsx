@@ -69,6 +69,7 @@ export function KeplerGlComponent(
   props: CreateMapOutputData & { width: number; height: number }
 ) {
   const dispatch = useDispatch();
+  const dataAddedRef = useRef(false);
 
   const { datasetForKepler, layerConfig } = props;
 
@@ -79,47 +80,53 @@ export function KeplerGlComponent(
   );
 
   useEffect(() => {
-    // parse layerConfig
-    const layerConfigObj = layerConfig
-      ? typeof layerConfig === 'string'
-        ? JSON.parse(layerConfig)
-        : layerConfig
-      : {};
-    // using Kepler.gl API to validate the layerConfig
-    // const isValid = KeplerGlSchema.parseSavedConfig({
-    //   version: 'v1',
-    //   config: layerConfigObj,
-    // });
-    // if (!isValid) {
-    //   throw new Error('Invalid layer config');
-    // }
+    let isMounted = true;
 
-    // check if layer already exists
-    const layerExists = keplerState?.visState?.layers.find(
-      (layer: Layer) =>
-        layer.config.dataId ===
-        layerConfigObj?.config?.visState?.layers?.[0]?.id
-    );
-    if (layerExists) {
-      return;
-    }
+    const addData = async () => {
+      if (dataAddedRef.current) {
+        return;
+      }
 
-    dispatch(
-      addDataToMap({
-        datasets: datasetForKepler,
-        options: {
-          centerMap: true,
-          readOnly: false,
-          autoCreateLayers: true,
-          autoCreateTooltips: true,
-          keepExistingConfig:
-            Object.keys(keplerState?.visState?.datasets || {}).length > 0,
-        },
-        config: layerConfigObj,
-      })
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+      // parse layerConfig
+      const layerConfigObj = layerConfig
+        ? typeof layerConfig === 'string'
+          ? JSON.parse(layerConfig)
+          : layerConfig
+        : {};
+
+      // check if layer already exists
+      const layerExists = keplerState?.visState?.layers.find(
+        (layer: Layer) =>
+          layer.config.dataId ===
+          layerConfigObj?.config?.visState?.layers?.[0]?.id
+      );
+      if (layerExists || !isMounted) {
+        return;
+      }
+
+      dispatch(
+        addDataToMap({
+          datasets: datasetForKepler,
+          options: {
+            centerMap: true,
+            readOnly: false,
+            autoCreateLayers: true,
+            autoCreateTooltips: true,
+            keepExistingConfig:
+              Object.keys(keplerState?.visState?.datasets || {}).length > 0,
+          },
+          config: layerConfigObj,
+        })
+      );
+      dataAddedRef.current = true;
+    };
+
+    addData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // {/* <KeplerGl
   //   id={MAP_ID}

@@ -78,7 +78,7 @@ export const keplergl = tool<
 - Please generate colorBrewer colors if user does not provide colors.
 - For colorType 'breaks', the colorMap should be format like: [{value: 3, color: '#f7fcb9'}, {value: 10, color: '#addd8e'}, {value: null, color: '#31a354'}]
 - For colorType 'unique', the colorMap should be format like: [{value: 'a', color: '#f7fcb9'}, {value: 'b', color: '#addd8e'}, {value: 'c', color: '#31a354'}]
-- Don't use geometryColumn for geojson dataset.
+- For geojson dataset, geometryColumn should be '_geojson'.
 `,
   parameters: z.object({
     datasetName: z.string(),
@@ -283,7 +283,9 @@ async function executeCreateMap(
                 columns: {
                   ...(latitudeColumn ? { lat: latitudeColumn } : {}),
                   ...(longitudeColumn ? { lng: longitudeColumn } : {}),
-                  ...(geometryColumn ? { geometry: geometryColumn } : {}),
+                  ...(geometryColumn && geometryColumn !== '_geojson'
+                    ? { geometry: geometryColumn }
+                    : {}),
                   ...(format === 'geojson' ? { geojson: '_geojson' } : {}),
                 },
                 isVisible: true,

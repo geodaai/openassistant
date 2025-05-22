@@ -1,5 +1,9 @@
 import { z } from 'zod';
 import { tool, generateId } from '@openassistant/utils';
+import { RateLimiter } from './utils/rateLimiter';
+
+// Create a single instance to be shared across all calls
+const nominatimRateLimiter = new RateLimiter(1000);
 
 export type GeocodingFunctionArgs = z.ZodObject<{
   address: z.ZodString;
@@ -65,8 +69,12 @@ export const geocoding = tool<
   }> => {
     try {
       const { address } = args;
+
+      // Use the global rate limiter before making the API call
+      await nominatimRateLimiter.waitForNextCall();
+
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${address}&format=json`
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json`
       );
       const data = await response.json();
 

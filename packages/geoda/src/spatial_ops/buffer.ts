@@ -77,7 +77,8 @@ export const buffer = tool<
   BufferAdditionalData,
   SpatialToolContext
 >({
-  description: 'Buffer geometries',
+  description:
+    'Buffer geometries. Please convert the distance to the unit of the distanceUnit. For example, if user provides distance is 1 meter and the distanceUnit is KM, the distance should be converted to 0.001.',
   parameters: z.object({
     geojson: z
       .string()
@@ -136,7 +137,14 @@ export const buffer = tool<
 
     const outputGeojson = {
       type: 'FeatureCollection',
-      features: buffers,
+      // append original properties to the buffer features
+      features: buffers.map((feature, index) => ({
+        ...feature,
+        properties: {
+          ...feature.properties,
+          ...(geometries[index]?.properties || {}),
+        },
+      })),
     };
 
     return {

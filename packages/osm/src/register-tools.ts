@@ -6,6 +6,7 @@ import { queryUSZipcodes } from './us/queryZipcode';
 import { geocoding } from './geocoding';
 import { routing } from './routing';
 import { isochrone } from './isochrone';
+import { roads } from './roads';
 
 // export the enum of tool names, so users can use it to check if a tool is available
 export enum OsmToolNames {
@@ -16,13 +17,28 @@ export enum OsmToolNames {
   geocoding = 'geocoding',
   routing = 'routing',
   isochrone = 'isochrone',
+  roads = 'roads',
 }
 
 export type OsmToolContext = {
-  getMapboxToken: () => string;
+  getGeometries: (datasetName: string) => Promise<unknown>;
 };
 
 export function isOsmToolContext(context: unknown): context is OsmToolContext {
+  return (
+    typeof context === 'object' &&
+    context !== null &&
+    'getGeometries' in context
+  );
+}
+
+export type MapboxToolContext = {
+  getMapboxToken: () => string;
+};
+
+export function isMapboxToolContext(
+  context: unknown
+): context is MapboxToolContext {
   return (
     typeof context === 'object' &&
     context !== null &&
@@ -39,6 +55,7 @@ export function registerTools() {
     geocoding,
     routing,
     isochrone,
+    roads,
   };
 }
 
@@ -85,7 +102,7 @@ export function getOsmTool(
   /** The options for the tool */
   options?: {
     /** The tool context, which is required for some tools e.g. routing, isochrone, etc. */
-    toolContext?: OsmToolContext;
+    toolContext?: MapboxToolContext;
     /** The callback function to handle the tool completion and get the output data from the tool call */
     onToolCompleted?: OnToolCompleted;
     /** Whether the too is executable e.g. on the server side, default to true. If false, you need to execute the tool on the client side. */
@@ -114,7 +131,7 @@ export function getOsmTool(
  * @returns The tools
  */
 export function getOsmTools(
-  toolContext: OsmToolContext,
+  toolContext: MapboxToolContext,
   onToolCompleted: OnToolCompleted,
   isExecutable: boolean = true
 ) {

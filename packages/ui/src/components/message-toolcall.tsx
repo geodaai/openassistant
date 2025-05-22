@@ -1,6 +1,6 @@
 import { ToolCallComponents, StreamMessagePart } from '@openassistant/core';
 import { ToolInvocation } from 'ai';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, memo } from 'react';
 import remarkGfm from 'remark-gfm';
 import Markdown from 'react-markdown';
 import {
@@ -94,6 +94,38 @@ class ToolCallErrorBoundary extends React.Component<
     return this.props.children;
   }
 }
+
+const ToolCallComponentRenderer = memo(
+  function ToolCallComponentRenderer({
+    Component,
+    additionalData,
+  }: {
+    Component:
+      | React.ComponentType<Record<string, unknown>>
+      | React.ReactElement
+      | null;
+    additionalData: unknown;
+  }) {
+    if (!Component) return null;
+
+    return (
+      <ToolCallErrorBoundary>
+        {typeof Component === 'function' ? (
+          <Component {...(additionalData as Record<string, unknown>)} />
+        ) : (
+          Component
+        )}
+      </ToolCallErrorBoundary>
+    );
+  },
+  (prevProps, nextProps) => {
+    // Deep comparison of additionalData
+    return (
+      JSON.stringify(prevProps.additionalData) ===
+      JSON.stringify(nextProps.additionalData)
+    );
+  }
+);
 
 export function PartComponent({
   part,
@@ -234,13 +266,10 @@ export function ToolCallComponent({
         </CardBody>
       </Card>
       {Component && isCompleted && toolSuccess && (
-        <ToolCallErrorBoundary>
-          {typeof Component === 'function' || typeof Component === 'object' ? (
-            <Component {...(additionalData as Record<string, unknown>)} />
-          ) : (
-            Component
-          )}
-        </ToolCallErrorBoundary>
+        <ToolCallComponentRenderer
+          Component={Component}
+          additionalData={additionalData}
+        />
       )}
     </div>
   );

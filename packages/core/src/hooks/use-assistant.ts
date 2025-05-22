@@ -1,16 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { StreamMessageCallback, ToolCallMessage } from '../types';
+import { StreamMessageCallback } from '../types';
 import { VercelAi } from '../llm/vercelai';
 import { createAssistant } from '../utils/create-assistant';
-import {
-  convertToCoreMessages,
-  Message,
-  StepResult,
-  ToolChoice,
-  ToolSet,
-} from 'ai';
+import { convertToCoreMessages, Message, ToolChoice, ToolSet } from 'ai';
 import { ExtendedTool } from '@openassistant/utils';
 
 /**

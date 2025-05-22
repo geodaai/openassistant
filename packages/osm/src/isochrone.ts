@@ -1,7 +1,8 @@
 import { z } from 'zod';
 import { generateId, tool } from '@openassistant/utils';
 import { FeatureCollection } from 'geojson';
-import { isOsmToolContext, OsmToolContext } from './register-tools';
+import { isMapboxToolContext, MapboxToolContext } from './register-tools';
+import { mapboxRateLimiter } from './utils/rateLimiter';
 
 interface MapboxIsochroneResponse {
   type: 'FeatureCollection';
@@ -108,7 +109,7 @@ export const isochrone = tool<
   IsochroneFunctionArgs,
   IsochroneLlmResult,
   IsochroneAdditionalData,
-  OsmToolContext
+  MapboxToolContext
 >({
   description:
     'Get isochrone polygons showing reachable areas within a given time limit from a starting point using Mapbox Isochrone API',
@@ -153,12 +154,15 @@ export const isochrone = tool<
       // Generate output dataset name
       const outputDatasetName = `isochrone_${generateId()}`;
 
-      if (!options?.context || !isOsmToolContext(options.context)) {
+      if (!options?.context || !isMapboxToolContext(options.context)) {
         throw new Error(
           'Context is required and must implement OsmToolContext'
         );
       }
       const mapboxAccessToken = options.context.getMapboxToken();
+
+      // Use the global rate limiter before making the API call
+      await mapboxRateLimiter.waitForNextCall();
 
       // Build Mapbox API URL
       let url = `https://api.mapbox.com/isochrone/v1/mapbox/${profile}/${originLon},${originLat}?`;

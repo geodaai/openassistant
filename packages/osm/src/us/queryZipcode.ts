@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { cacheData, getCachedData, tool } from '@openassistant/utils';
+import { githubRateLimiter } from '../utils/rateLimiter';
 
 export type QueryZipcodeFunctionArgs = z.ZodObject<{
   mapBounds: z.ZodObject<{
@@ -93,6 +94,9 @@ export const queryUSZipcodes = tool<
       // get cached zipcode centroids geojson if exists
       let geojson = getCachedData(zipcodeCentroidsDatasetName);
       if (!geojson) {
+        // Use the global rate limiter before making the API call
+        await githubRateLimiter.waitForNextCall();
+
         const response = await fetch(
           'https://raw.githubusercontent.com/GeoDaCenter/data-and-lab/refs/heads/gh-pages/data/us_zipcodes_centroids.geojson'
         );

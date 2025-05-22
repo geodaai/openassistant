@@ -1,6 +1,7 @@
 export * from './geocoding';
 export * from './routing';
 export * from './isochrone';
+export * from './roads';
 
 export * from './us/county';
 export * from './us/queryZipcode';

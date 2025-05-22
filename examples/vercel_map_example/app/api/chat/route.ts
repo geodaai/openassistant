@@ -7,11 +7,8 @@ import {
   GetGeometries,
 } from '@openassistant/geoda';
 import { getOsmTool, OsmToolNames } from '@openassistant/osm';
-import {
-  getMapTool,
-  getValuesFromGeoJSON,
-  MapToolNames,
-} from '@openassistant/map';
+import { getMapTool, MapToolNames } from '@openassistant/map';
+import { getValuesFromGeoJSON } from '@openassistant/utils';
 import { createDataStreamResponse, streamText } from 'ai';
 
 // Move toolAdditionalData outside the POST function to persist across requests

@@ -5,6 +5,7 @@ import {
   getCachedData,
   tool,
 } from '@openassistant/utils';
+import { githubRateLimiter } from '../utils/rateLimiter';
 
 export type GetUsCountyGeojsonFunctionArgs = z.ZodObject<{
   fipsCodes: z.ZodArray<z.ZodString>;
@@ -27,9 +28,6 @@ export type ExecuteGetUsCountyGeojsonResult = {
   llmResult: GetUsCountyGeojsonLlmResult;
   additionalData?: GetUsCountyGeojsonAdditionalData;
 };
-
-// Add delay function to prevent rate limiting
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * Get US County GeoJSON Tool
@@ -93,8 +91,8 @@ export const getUsCountyGeojson = tool<
         // get cached county geojson if exists
         let geojson = getCachedData(fips);
         if (!geojson) {
-          // Add a delay between requests (1000ms) to avoid overloading the Github API
-          await delay(1000);
+          // Use the global rate limiter before making the API call
+          await githubRateLimiter.waitForNextCall();
 
           const stateCode = fips.substring(0, 2);
           const response = await fetch(

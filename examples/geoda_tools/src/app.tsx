@@ -27,13 +27,16 @@ import {
   getUsZipcodeGeojson,
   getUsCountyGeojson,
   RoutingTool,
+  roads,
+  RoadsTool,
 } from '@openassistant/osm';
 import { KeplerGlToolComponent } from '@openassistant/keplergl';
-import { keplergl, KeplerglTool } from '@openassistant/map';
+import { GetDataset, keplergl, KeplerglTool } from '@openassistant/map';
 
 import { PointLayerData } from '@geoda/core';
 import { SAMPLE_DATASETS } from './dataset';
 import { useToolCache } from '@openassistant/core';
+import { getValuesFromGeoJSON } from '@openassistant/utils';
 
 function isGeoJson(obj: unknown): obj is GeoJSON.FeatureCollection {
   return (
@@ -52,9 +55,19 @@ export default function App() {
   };
 
   const getValues = async (datasetName: string, variableName: string) => {
-    return (SAMPLE_DATASETS[datasetName] as any[]).map(
-      (item) => item[variableName]
-    );
+    if (datasetName === 'myVenues') {
+      return (SAMPLE_DATASETS[datasetName] as any[]).map(
+        (item) => item[variableName]
+      );
+    }
+    // get cached values from other tools
+    if (toolCache[datasetName]) {
+      const data = toolCache[datasetName];
+      if (isGeoJson(data)) {
+        return getValuesFromGeoJSON(data, variableName) as any[];
+      }
+    }
+    throw new Error(`Dataset ${datasetName} not found`);
   };
 
   const getGeometries: GetGeometries = async (datasetName: string) => {
@@ -78,6 +91,20 @@ export default function App() {
       }
     }
 
+    throw new Error(`Dataset ${datasetName} not found`);
+  };
+
+  const getDataset: GetDataset = async (datasetName: string) => {
+    if (datasetName === 'myVenues') {
+      return SAMPLE_DATASETS[datasetName];
+    }
+    // get cached geometries from other tools
+    if (toolCache[datasetName]) {
+      const data = toolCache[datasetName];
+      if (data) {
+        return data;
+      }
+    }
     throw new Error(`Dataset ${datasetName} not found`);
   };
 
@@ -121,6 +148,7 @@ export default function App() {
     context: {
       ...lisa.context,
       getValues,
+      getGeometries,
     },
   };
 
@@ -141,7 +169,7 @@ export default function App() {
     ...keplergl,
     context: {
       ...keplergl.context,
-      getGeometries,
+      getDataset,
     },
     component: KeplerGlToolComponent,
   };
@@ -162,6 +190,14 @@ export default function App() {
     },
   };
 
+  const roadsTool: RoadsTool = {
+    ...roads,
+    context: {
+      ...roads.context,
+      getGeometries,
+    },
+  };
+
   const tools = {
     dataClassify: classifyTool,
     spatialWeights: weightsTool,
@@ -176,6 +212,7 @@ export default function App() {
     buffer: bufferTool,
     keplergl: keplerglTool,
     routing: routingTool,
+    roads: roadsTool,
   };
 
   const welcomeMessage = `
@@ -192,6 +229,7 @@ Hi! I'm your GeoDa assistant. Here are some example queries you can try:
 9. How can I geocode the address "123 Main St, San Francisco, CA"?
 10. How can I buffer the address "123 Main St, San Francisco, CA" by 10 KM?
 11. How can I get the routing directions between "123 Main St, San Francisco, CA" and "450 10th St, San Francisco, CA 94103"?
+12. Can I get the road network in zipcode 85248?
 `;
 
   const instructions = `

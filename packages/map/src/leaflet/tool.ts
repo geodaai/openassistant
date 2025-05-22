@@ -2,7 +2,7 @@ import { tool } from '@openassistant/utils';
 import { z } from 'zod';
 
 import { isMapToolContext, MapToolContext } from '../register-tools';
-import { getBoundsFromGeoJSON } from '../utils';
+import { getBoundsFromGeoJSON } from '@openassistant/utils';
 
 export type LeafletToolLlmResult = {
   success: boolean;

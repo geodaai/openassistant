@@ -293,6 +293,12 @@ async function executeLisa(
     const lisaDatasetName = `${method}_${generateId()}`;
     let lisaGeoJson: GeoJSON.FeatureCollection | null = null;
 
+    const additionalData: LisaAdditionalData = {
+      originalDatasetName: datasetName,
+      significanceThreshold,
+      datasetName: lisaDatasetName,
+    };
+
     // no need to create a new dataset if getGeometries() is not provided
     if (getGeometries) {
       // create lisa result by appending lm to geometries
@@ -311,6 +317,8 @@ async function executeLisa(
         geometries,
         featureValues
       ) as GeoJSON.FeatureCollection;
+      // append lisaGeoJson to additionalData
+      additionalData[lisaDatasetName] = lisaGeoJson;
     }
 
     return {
@@ -326,12 +334,7 @@ async function executeLisa(
 IMPORTANT: please use dataClassify tool to get unique values for the color field
 `,
       },
-      additionalData: {
-        originalDatasetName: datasetName,
-        significanceThreshold,
-        datasetName: lisaDatasetName,
-        ...(lisaGeoJson ? { [lisaDatasetName]: lisaGeoJson } : lm),
-      },
+      additionalData,
     };
   } catch (error) {
     console.error('Error in lisa tool', error);

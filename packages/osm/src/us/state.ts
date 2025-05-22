@@ -5,6 +5,7 @@ import {
   getCachedData,
   tool,
 } from '@openassistant/utils';
+import { githubRateLimiter } from '../utils/rateLimiter';
 
 export type GetUsStateGeojsonFunctionArgs = z.ZodObject<{
   stateNames: z.ZodArray<z.ZodString>;
@@ -27,9 +28,6 @@ export type ExecuteGetUsStateGeojsonResult = {
   llmResult: GetUsStateGeojsonLlmResult;
   additionalData?: GetUsStateGeojsonAdditionalData;
 };
-
-// Add delay function to prevent rate limiting
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * Get US State GeoJSON Tool
@@ -91,8 +89,8 @@ export const getUsStateGeojson = tool<
       for (const stateName of stateNames) {
         let geojson = getCachedData(stateName);
         if (!geojson) {
-          // Add a delay between requests (1000ms) to avoid rate limiting
-          await delay(1000);
+          // Use the global rate limiter before making the API call
+          await githubRateLimiter.waitForNextCall();
 
           // get the Geojson file from the following url:
           // https://raw.githubusercontent.com/glynnbird/usstatesgeojson/master/arizona.geojson
