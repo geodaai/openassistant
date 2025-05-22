@@ -103,8 +103,8 @@ export const spatialJoin = tool<
   SpatialJoinFunctionContext
 >({
   description: `Spatial join geometries from the right dataset with geometries from the left dataset. For example:
-1. if you want to get the number of (or average value of) points in each polygon, the right dataset should contains the points and the left dataset should contains the polygons.
-2. if you want to check which point belongs to which polygon, the right dataset should contains the points and the left dataset should contains the polygons.
+1. for spatial count (points in polygon), the left dataset is the polygons and the right dataset is the points.
+2. if you want to check which point belongs to which polygon, the left dataset is the points and the right dataset is the polygons.
 Please Note:
 1. joinOperators can NOT be empty and should have the same length as joinVariableNames.
 2. IMPORTANT:joinVariables should comes from the right dataset.`,
@@ -340,12 +340,22 @@ export async function runSpatialJoin({
  */
 export function getBasicStatistics(result: number[][]) {
   const totalCount = result.length;
+  let minCount = Infinity;
+  let maxCount = -Infinity;
+  let sumCount = 0;
+
+  for (let i = 0; i < result.length; i++) {
+    const rowLength = result[i].length;
+    minCount = Math.min(minCount, rowLength);
+    maxCount = Math.max(maxCount, rowLength);
+    sumCount += rowLength;
+  }
+
   return {
     totalCount,
-    minCount: Math.min(...result.map((row) => row.length)),
-    maxCount: Math.max(...result.map((row) => row.length)),
-    averageCount:
-      result.reduce((sum, row) => sum + row.length, 0) / result.length,
+    minCount,
+    maxCount,
+    averageCount: sumCount / totalCount,
   };
 }
 

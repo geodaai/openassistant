@@ -22,11 +22,10 @@ export type BufferLlmResult = {
 
 export type BufferAdditionalData = {
   datasetName?: string;
-  geojson?: string;
   distance: number;
   distanceUnit: 'KM' | 'Mile';
   pointsPerCircle: number;
-  buffers: Feature[];
+  buffers: GeoJSON.FeatureCollection;
 };
 
 /**
@@ -78,7 +77,8 @@ export const buffer = tool<
   BufferAdditionalData,
   SpatialToolContext
 >({
-  description: 'Buffer geometries',
+  description:
+    'Buffer geometries. Please convert the distance to the unit of the distanceUnit. For example, if user provides distance is 1 meter and the distanceUnit is KM, the distance should be converted to 0.001.',
   parameters: z.object({
     geojson: z
       .string()
@@ -134,10 +134,18 @@ export const buffer = tool<
 
     // create a unique id for the buffer result
     const bufferId = generateId();
-    cacheData(bufferId, {
+    const bufferGeojson: GeoJSON.FeatureCollection = {
       type: 'FeatureCollection',
-      features: buffers,
-    });
+      // append original properties to the buffer features
+      features: buffers.map((feature, index) => ({
+        ...feature,
+        properties: {
+          ...feature.properties,
+          ...(geometries[index]?.properties || {}),
+        },
+      })),
+    };
+    cacheData(bufferId, bufferGeojson);
 
     return {
       llmResult: {
@@ -149,11 +157,10 @@ export const buffer = tool<
       },
       additionalData: {
         datasetName: datasetName || undefined,
-        geojson,
         distance,
         distanceUnit,
         pointsPerCircle,
-        buffers,
+        geojson: bufferGeojson,
       },
     };
   },
