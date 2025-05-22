@@ -1,6 +1,6 @@
 {
   "name": "@openassistant/common",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Common utilities for OpenAssistant",
   "author": "Xun Li<lixun910@gmail.com>",
   "license": "MIT",
