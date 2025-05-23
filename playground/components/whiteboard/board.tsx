@@ -9,9 +9,9 @@ import {
   ScatterplotOutputData,
   HistogramOutputData,
   BoxplotOutputData,
-} from '@openassistant/plots';
-import { CreateMapOutputData } from '@openassistant/keplergl';
-import { QueryDuckDBOutputData } from '@openassistant/duckdb';
+} from 'packages/tools/plots/dist';
+import { CreateMapOutputData } from 'packages/components/keplergl/dist';
+import { QueryDuckDBOutputData } from 'packages/tools/duckdb/dist';
 
 const ReactGridLayout = WidthProvider(RGL) as any;
 

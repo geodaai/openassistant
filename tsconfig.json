@@ -19,7 +19,6 @@
   },
   "exclude": [
     "node_modules",
-    "../../node_modules",
     "**/node_modules/**",
     "**/dist/**",
     "**/*.d.ts",
@@ -28,11 +27,5 @@
     "**/*.test.tsx",
     "**/*.stories.tsx"
   ],
-  "references": [
-    { "path": "./packages/duckdb" },
-    { "path": "./packages/ui" },
-    { "path": "./packages/core" },
-    { "path": "./packages/geoda" },
-    { "path": "./packages/common" }
-  ]
+  "references": []
 }

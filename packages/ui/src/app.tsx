@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { ThemeProvider, useTheme } from 'next-themes';
+
 import { AiAssistant } from './components/assistant';
 import { ScreenshotWrapper } from './components/screenshot-wrapper';
-import { ThemeProvider, useTheme } from 'next-themes';
 
 // Add ThemeToggle component
 function ThemeToggle() {

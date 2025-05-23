@@ -1,7 +1,7 @@
 import {
   isSpatialWeightsOutputData,
   SpatialWeightsToolComponent,
-} from '@openassistant/components';
+} from 'packages/components/echarts/dist';
 
 interface WeightsToolProps {
   additionalData: unknown;

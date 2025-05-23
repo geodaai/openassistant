@@ -11,5 +11,5 @@
       "ignore": ["examples/*", "playground"]
     }
   },
-  "packages": ["packages/*"]
+  "packages": ["packages/*", "packages/tools/*", "packages/components/*"]
 }

@@ -1,7 +1,7 @@
 import {
   isSpatialWeightsOutputData,
   SpatialWeightsToolComponent,
-} from '@openassistant/components';
+} from 'packages/components/echarts/dist';
 import { useMemo } from 'react';
 
 interface WeightsToolProps {

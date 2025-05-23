@@ -1,5 +1,3 @@
-'use client';
-
 import {
   forwardRef,
   HTMLAttributes,
@@ -8,13 +6,14 @@ import {
   useRef,
   useState,
 } from 'react';
-import { cn } from '@nextui-org/react';
-import { useClipboard } from '@nextui-org/use-clipboard';
+import { cn } from '@heroui/react';
+import { useClipboard } from '@heroui/use-clipboard';
 import {
   MessagePayload,
   StreamMessage,
   ToolCallComponents,
 } from '@openassistant/core';
+
 import { AvatarBadge } from './avatar-badge';
 import { MessageContent } from './message-content';
 import { MessageActions } from './message-action';

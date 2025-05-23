@@ -1,0 +1,55 @@
+{
+  "name": "@openassistant/tables",
+  "version": "0.4.0",
+  "author": "Xun Li<lixun910@gmail.com>",
+  "description": "The Tables components for OpenAssistant",
+  "main": "./dist/index.cjs.js",
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.esm.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs.js"
+    },
+    "./dist/index.css": "./dist/index.esm.css",
+    "./dist/index.cjs.js": "./dist/index.cjs.js",
+    "./dist/index.esm.js": "./dist/index.esm.js"
+  },
+  "scripts": {
+    "build": "node esbuild.config.mjs",
+    "watch": "node esbuild.config.mjs --watch",
+    "prepublishOnly": "yarn build",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "package.json"
+  ],
+  "dependencies": {
+    "@duckdb/duckdb-wasm": "1.29.0",
+    "@heroui/button": "^2.2.19",
+    "@heroui/checkbox": "^2.3.18",
+    "@heroui/pagination": "^2.2.17",
+    "@heroui/select": "^2.4.19",
+    "@heroui/system": "^2.4.15",
+    "@heroui/table": "^2.2.18",
+    "@heroui/theme": "^2.4.15",
+    "@iconify/react": "^5.1.0",
+    "apache-arrow": "^17.0.0",
+    "framer-motion": "^12.12.1",
+    "tailwindcss": "^3.4.17"
+  },
+  "peerDependencies": {
+    "react": ">=18.2",
+    "react-dom": ">=18.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "232930873ca397af1dbaa234a00c5d27dba29a26"
+}

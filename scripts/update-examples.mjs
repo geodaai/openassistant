@@ -12,7 +12,7 @@ const packageJson = JSON.parse(
 
 // update version in examples/lisa/package.json
 function updateExamplesPackageJson(projectName) {
-  // replace dependencies of "@openassistant/core", "@openassistant/ui", or "@openassistant/components" with the new version
+  // replace dependencies of "@openassistant/core", "@openassistant/ui", "@openassistant/echarts" with the new version
   const examplesDir = join(__dirname, `../../examples/${projectName}`);
   const examplesPackageJson = JSON.parse(readFileSync(join(examplesDir, 'package.json'), 'utf-8'));
   // check if dependencies exist
@@ -22,8 +22,8 @@ function updateExamplesPackageJson(projectName) {
   if (examplesPackageJson.dependencies['@openassistant/ui']) {
     examplesPackageJson.dependencies['@openassistant/ui'] = `${packageJson.version}`;
   }
-  if (examplesPackageJson.dependencies['@openassistant/components']) {
-    examplesPackageJson.dependencies['@openassistant/components'] = `${packageJson.version}`;
+  if (examplesPackageJson.dependencies['@openassistant/echarts']) {
+    examplesPackageJson.dependencies['@openassistant/echarts'] = `${packageJson.version}`;
   }
   if (examplesPackageJson.dependencies['@openassistant/duckdb']) {
     examplesPackageJson.dependencies['@openassistant/duckdb'] = `${packageJson.version}`;

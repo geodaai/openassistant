@@ -1,23 +1,41 @@
 import { AiAssistant } from '@openassistant/ui';
-import { localQuery, LocalQueryTool } from '@openassistant/duckdb';
+import { localQuery, LocalQueryTool, getDuckDB } from '@openassistant/duckdb';
+import {
+  QueryDuckDBComponent,
+  QueryDuckDBOutputData,
+} from '@openassistant/tables';
 import { SAMPLE_DATASETS } from './dataset';
 
 import '@openassistant/ui/dist/index.css';
-import '@openassistant/duckdb/dist/index.css';
+import '@openassistant/tables/dist/index.css';
+
+import './styles.css';
+
+function getValues(datasetName: string, variableName: string) {
+  return Promise.resolve(
+    SAMPLE_DATASETS[datasetName as keyof typeof SAMPLE_DATASETS].map(
+      (item) => item[variableName as keyof typeof item]
+    )
+  );
+}
+
+function QueryToolComponent(props: QueryDuckDBOutputData) {
+  return (
+    <QueryDuckDBComponent
+      {...props}
+      getDuckDB={getDuckDB}
+      getValues={getValues}
+    />
+  );
+}
 
 const localQueryTool: LocalQueryTool = {
   ...localQuery,
   context: {
     ...localQuery.context,
-    getValues: (
-      datasetName: keyof typeof SAMPLE_DATASETS,
-      variableName: string
-    ) => {
-      return (SAMPLE_DATASETS[datasetName] as any[]).map(
-        (item) => item[variableName]
-      );
-    },
+    getValues,
   },
+  component: QueryToolComponent,
 };
 
 const instructions = `
@@ -35,10 +53,10 @@ Here is dataset available for you to use:
 `;
 export function App() {
   return (
-    <div className="min-h-screen">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">DuckDB Tools Example</h1>
-        <div className="rounded-lg shadow-lg p-6 h-[800px]">
+    <div className="app-container">
+      <div className="content-container">
+        <h1 className="title">DuckDB Tools Example</h1>
+        <div className="chat-container">
           <AiAssistant
             name="DuckDB Assistant"
             apiKey={process.env.OPENAI_API_KEY || ''}

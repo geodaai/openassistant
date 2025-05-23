@@ -1,5 +1,5 @@
 import { openai } from '@ai-sdk/openai';
-import { getPlotsTool, PlotsToolNames } from '@openassistant/plots';
+import { getPlotsTool, PlotsToolNames } from 'packages/tools/plots/dist';
 import { createDataStreamResponse, streamText } from 'ai';
 
 export async function POST(req: Request) {

@@ -7,15 +7,15 @@ import {
   ScatterplotComponent,
   HistogramComponent,
   HistogramOutputData,
-} from '@openassistant/plots';
+} from 'packages/tools/plots/dist';
 import {
   KeplerGlComponentWithProvider,
   CreateMapOutputData,
-} from '@openassistant/keplergl';
+} from 'packages/components/keplergl/dist';
 import {
   QueryDuckDBComponent,
   QueryDuckDBOutputData,
-} from '@openassistant/duckdb';
+} from 'packages/tools/duckdb/dist';
 
 export type BoardItemProps = {
   id: string;

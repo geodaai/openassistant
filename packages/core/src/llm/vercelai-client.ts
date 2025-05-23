@@ -242,7 +242,9 @@ export abstract class VercelAiClient extends VercelAi {
     });
 
     // call the onToolFinished callback
-    onToolFinished(toolCallId, additionalData);
+    if (onToolFinished) {
+      onToolFinished(toolCallId, additionalData);
+    }
   }
 
   protected async handleTextStreaming(

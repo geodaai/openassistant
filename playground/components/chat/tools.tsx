@@ -19,7 +19,7 @@ import {
   length,
   area,
   perimeter,
-} from '@openassistant/geoda';
+} from 'packages/tools/geoda/dist';
 import {
   getUsStateGeojson,
   getUsCountyGeojson,
@@ -29,7 +29,7 @@ import {
   routing,
   isochrone,
   getCachedData,
-} from '@openassistant/osm';
+} from 'packages/tools/osm/dist';
 import { PointLayerData } from '@geoda/core';
 import { SAMPLE_DATASETS } from './dataset';
 import {
@@ -43,10 +43,10 @@ import {
   BoxplotTool,
   BubbleChartTool,
   boxplot,
-} from '@openassistant/plots';
-import { localQuery } from '@openassistant/duckdb';
-import { KeplerglTool } from '@openassistant/keplergl';
-import { keplergl } from '@openassistant/keplergl';
+} from 'packages/tools/plots/dist';
+import { localQuery } from 'packages/tools/duckdb/dist';
+import { KeplerglTool } from 'packages/components/keplergl/dist';
+import { keplergl } from 'packages/components/keplergl/dist';
 
 const theme = 'light';
 const isDraggable = true;

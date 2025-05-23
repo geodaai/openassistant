@@ -4,6 +4,8 @@
   "private": true,
   "workspaces": [
     "packages/*",
+    "packages/tools/*",
+    "packages/components/*",
     "examples/*",
     "playground"
   ],
@@ -73,6 +75,8 @@
     "@deck.gl/layers": "8.9.36",
     "@deck.gl/react": "8.9.36",
     "@deck.gl/mesh-layers": "8.9.36",
+    "@duckdb/duckdb-wasm": "1.29.0",
+    "apache-arrow": "^17.0.0",
     "typescript": "5.0.4",
     "zod": "3.24.4"
   },

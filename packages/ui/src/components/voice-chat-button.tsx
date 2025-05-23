@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Button } from '@nextui-org/react';
+import { useEffect, useState } from 'react';
+import { Button } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { useAudioRecorder } from 'react-audio-voice-recorder';
 

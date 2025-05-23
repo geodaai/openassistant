@@ -1,13 +1,13 @@
 import { openai } from '@ai-sdk/openai';
-import { getDuckDBTool } from '@openassistant/duckdb';
-import { getPlotsTool } from '@openassistant/plots';
+import { getDuckDBTool } from 'packages/tools/duckdb/dist';
+import { getPlotsTool } from 'packages/tools/plots/dist';
 import {
   getGeoDaTool,
   GeoDaToolNames,
   GetGeometries,
-} from '@openassistant/geoda';
-import { getOsmTool, OsmToolNames } from '@openassistant/osm';
-import { getMapTool, MapToolNames } from '@openassistant/map';
+} from 'packages/tools/geoda/dist';
+import { getOsmTool, OsmToolNames } from 'packages/tools/osm/dist';
+import { getMapTool, MapToolNames } from 'packages/tools/map/dist';
 import { getValuesFromGeoJSON } from '@openassistant/utils';
 import { createDataStreamResponse, streamText } from 'ai';
 

@@ -10,7 +10,7 @@ const isWatch = process.argv.includes('--watch');
 const baseConfig = createBaseConfig({
   entryPoints: ['src/index.ts'],
   plugins: [dtsPlugin()],
-  external: ['zod'],
+  external: ['zod', 'react', 'react-dom'],
 });
 
 if (isWatch) {

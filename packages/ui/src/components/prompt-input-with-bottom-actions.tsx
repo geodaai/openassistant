@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Button, Tooltip, ScrollShadow, Badge } from '@nextui-org/react';
+import { Button, Tooltip, ScrollShadow, Badge } from '@heroui/react';
 import { Icon } from '@iconify/react';
+
 import PromptInput from './prompt-input';
 import VoiceChatButton from './voice-chat-button';
 

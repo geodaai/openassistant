@@ -17,9 +17,6 @@
   "dependencies": {
     "zod": "^3.24.4"
   },
-  "peerDependencies": {
-    "react": ">=18.2"
-  },
   "publishConfig": {
     "access": "public"
   },

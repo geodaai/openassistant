@@ -6,7 +6,7 @@ import {
   HistogramComponent,
   ParallelCoordinateComponentContainer,
   ScatterplotComponentContainer,
-} from '@openassistant/components';
+} from 'packages/components/echarts/dist';
 import {
   boxplot,
   BoxplotTool,
@@ -18,7 +18,7 @@ import {
   PCPTool,
   scatterplot,
   ScatterplotTool,
-} from '@openassistant/plots';
+} from 'packages/tools/plots/dist';
 import { AiAssistant } from '@openassistant/ui';
 import { tool } from '@openassistant/utils';
 import { z } from 'zod';

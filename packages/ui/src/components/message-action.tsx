@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { Button, Tooltip } from '@nextui-org/react';
+import { Button, Tooltip } from '@heroui/react';
 import { StreamMessage, TextUIPart } from '@openassistant/core';
 
 export const MessageActions = ({

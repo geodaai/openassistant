@@ -1,12 +1,12 @@
 'use client';
 
 import { useChat } from '@ai-sdk/react';
-import { getDuckDBTool, DuckDBToolNames } from '@openassistant/duckdb';
+import { getDuckDBTool, DuckDBToolNames } from 'packages/tools/duckdb/dist';
 import {
   getMapTool,
   getValuesFromGeoJSON,
   MapToolNames,
-} from '@openassistant/map';
+} from 'packages/tools/map/dist';
 import { useRef } from 'react';
 import { MessageParts } from './components/parts';
 import { SpatialGeometry } from '@geoda/core';

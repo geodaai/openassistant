@@ -16,7 +16,6 @@ import {
   CardBody,
 } from '@nextui-org/react';
 import { Icon } from '@iconify/react';
-import '../index.css';
 
 export const MarkdownContent = ({
   text,

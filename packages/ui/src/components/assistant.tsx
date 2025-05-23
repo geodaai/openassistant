@@ -6,6 +6,7 @@ import {
 } from '@openassistant/core';
 import { generateId } from '@openassistant/utils';
 import { Message } from '@ai-sdk/ui-utils';
+
 import MessageCard from './message-card';
 import PromptInputWithBottomActions from './prompt-input-with-bottom-actions';
 import { ChatContainer } from './chat-container';
@@ -183,7 +184,7 @@ export function AiAssistant(props: AiAssistantProps) {
       setMessages,
       setTypingIndicator: setIsPrompting,
       onMessagesUpdated: props.onMessagesUpdated,
-      onToolFinished: props.onToolFinished,
+      onToolFinished: props.onToolFinished ?? (() => {}),
     };
 
     if (isScreenshotAvailable) {

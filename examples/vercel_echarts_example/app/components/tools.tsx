@@ -3,8 +3,8 @@ import {
   QueryDuckDBComponent,
   isHistogramOutputData,
   HistogramComponent,
-} from '@openassistant/components';
-import { getDuckDB } from '@openassistant/duckdb';
+} from 'packages/components/echarts/dist';
+import { getDuckDB } from 'packages/tools/duckdb/dist';
 import { useMemo } from 'react';
 
 interface ToolInvocationProps {

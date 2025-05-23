@@ -1,5 +1,5 @@
 import { openai } from '@ai-sdk/openai';
-import { getDuckDBTool } from '@openassistant/duckdb';
+import { getDuckDBTool } from 'packages/tools/duckdb/dist';
 import { streamText } from 'ai';
 
 // create a tool for local query (runs in browser)

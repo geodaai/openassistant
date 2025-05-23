@@ -1,7 +1,7 @@
 'use client';
 
 import { useChat } from '@ai-sdk/react';
-import { getDuckDBTool } from '@openassistant/duckdb';
+import { getDuckDBTool } from 'packages/tools/duckdb/dist';
 import { useState } from 'react';
 import { MessageParts } from './components/parts';
 

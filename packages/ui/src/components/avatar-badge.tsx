@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { Avatar, Badge } from "@nextui-org/react";
+import { Avatar, Badge } from "@heroui/react";
 import { ReactNode } from "react";
 
 export const AvatarBadge = ({

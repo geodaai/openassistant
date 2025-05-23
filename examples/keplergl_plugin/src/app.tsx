@@ -1,7 +1,7 @@
 import React from 'react';
 import { AiAssistant } from '@openassistant/ui';
-import { keplergl, KeplerglTool } from '@openassistant/keplergl';
-import { dataClassify } from '@openassistant/geoda';
+import { keplergl, KeplerglTool } from 'packages/components/keplergl/dist';
+import { dataClassify } from 'packages/tools/geoda/dist';
 
 import '@openassistant/ui/dist/index.css';
 import { SAMPLE_DATASETS } from './dataset';

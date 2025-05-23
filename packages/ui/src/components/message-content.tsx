@@ -1,10 +1,11 @@
 import React from 'react';
-import { Spinner, Link } from '@nextui-org/react';
+import { Spinner, Link } from '@heroui/react';
 import {
   MessagePayload,
   StreamMessage,
   ToolCallComponents,
 } from '@openassistant/core';
+
 import { PartComponent } from './message-toolcall';
 
 const FailedMessage = ({ githubIssueLink }: { githubIssueLink?: string }) => (
@@ -66,7 +67,6 @@ export function MessageContent({
             showTools={showTools}
           />
         ))}
-
 
         {/* show React payload e.g. LLM Model Configure Panel when it is a valid React element */}
         {customMessage && React.isValidElement(customMessage) && (

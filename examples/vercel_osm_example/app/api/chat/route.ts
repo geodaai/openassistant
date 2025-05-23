@@ -1,12 +1,12 @@
 import { openai } from '@ai-sdk/openai';
-import { getDuckDBTool } from '@openassistant/duckdb';
-import { getPlotsTool } from '@openassistant/plots';
+import { getDuckDBTool } from 'packages/tools/duckdb/dist';
+import { getPlotsTool } from 'packages/tools/plots/dist';
 import {
   getGeoDaTool,
   GeoDaToolNames,
   GetGeometries,
-} from '@openassistant/geoda';
-import { getOsmTool, OsmToolNames } from '@openassistant/osm';
+} from 'packages/tools/geoda/dist';
+import { getOsmTool, OsmToolNames } from 'packages/tools/osm/dist';
 import { createDataStreamResponse, streamText } from 'ai';
 
 export async function POST(req: Request) {

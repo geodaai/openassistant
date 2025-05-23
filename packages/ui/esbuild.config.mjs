@@ -17,14 +17,22 @@ const baseConfig = createBaseConfig({
   jsx: 'automatic',
   plugins: [dtsPlugin()],
   external: [
-    'react',
-    'react-dom',
-    '@ai-sdk',
-    'html2canvas',
+    '@ai-sdk/ui-utils',
+    '@heroui/react',
+    '@heroui/use-clipboard',
+    '@iconify/react',
     '@openassistant/core',
-    '@nextui-org',
+    '@openassistant/utils',
+    'ai',
+    'framer-motion',
+    'html2canvas',
+    'next-themes',
+    'react-audio-voice-recorder',
     'react-markdown',
     'remark-gfm',
+    'tailwindcss',
+    'react',
+    'react-dom',
   ],
 });
 
@@ -44,13 +52,6 @@ const fullBundleConfig = {
       tailwindConfig: path.join(__dirname, 'tailwind.config.js'),
     }),
     dtsPlugin(),
-  ],
-  external: [
-    'react',
-    'react-dom',
-    '@ai-sdk',
-    'html2canvas',
-    '@openassistant/core',
   ],
 };
 

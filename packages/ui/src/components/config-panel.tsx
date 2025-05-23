@@ -1,15 +1,16 @@
 import {
   Button,
   Input,
+  Select,
   SelectItem,
   SelectSection,
   Slider,
-} from '@nextui-org/react';
-import { Select } from '@nextui-org/react';
+} from '@heroui/react';
 import { GetAssistantModelByProvider } from '@openassistant/core';
-import { ChangeEvent, useState } from 'react';
-import { MODEL_PROVIDERS } from '../config/constants';
 import { Icon } from '@iconify/react';
+import { ChangeEvent, useState } from 'react';
+
+import { MODEL_PROVIDERS } from '../config/constants';
 
 // Add a type for valid providers
 type Provider = keyof typeof MODEL_PROVIDERS;

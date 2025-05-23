@@ -1,7 +1,7 @@
 import {
   isHistogramOutputData,
   HistogramComponent,
-} from '@openassistant/components';
+} from 'packages/components/echarts/dist';
 import { useMemo } from 'react';
 
 interface HistogramToolProps {

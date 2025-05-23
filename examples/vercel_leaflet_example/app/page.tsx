@@ -5,12 +5,12 @@ import { FeatureCollection } from 'geojson';
 
 import { useChat } from '@ai-sdk/react';
 import { SpatialGeometry } from '@geoda/core';
-import { getDuckDBTool, DuckDBToolNames } from '@openassistant/duckdb';
+import { getDuckDBTool, DuckDBToolNames } from 'packages/tools/duckdb/dist';
 import {
   getMapTool,
   MapToolNames,
   getValuesFromGeoJSON,
-} from '@openassistant/map';
+} from 'packages/tools/map/dist';
 
 import { MessageParts } from './components/parts';
 

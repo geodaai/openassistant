@@ -2,7 +2,7 @@ import { AiAssistant } from '@openassistant/ui';
 import {
   SpatialWeightsComponentContainer,
   MoranScatterPlotContainer,
-} from '@openassistant/components';
+} from 'packages/components/echarts/dist';
 import {
   dataClassify,
   DataClassifyTool,
@@ -19,7 +19,7 @@ import {
   SpatialJoinTool,
   buffer,
   BufferTool,
-} from '@openassistant/geoda';
+} from 'packages/tools/geoda/dist';
 import {
   geocoding,
   routing,
@@ -29,9 +29,9 @@ import {
   RoutingTool,
   roads,
   RoadsTool,
-} from '@openassistant/osm';
-import { KeplerGlToolComponent } from '@openassistant/keplergl';
-import { GetDataset, keplergl, KeplerglTool } from '@openassistant/map';
+} from 'packages/tools/osm/dist';
+import { KeplerGlToolComponent } from 'packages/components/keplergl/dist';
+import { GetDataset, keplergl, KeplerglTool } from 'packages/tools/map/dist';
 
 import { PointLayerData } from '@geoda/core';
 import { SAMPLE_DATASETS } from './dataset';
