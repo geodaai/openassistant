@@ -1,8 +1,6 @@
 import { AiAssistant } from '@openassistant/ui';
-import {
-  SpatialWeightsComponentContainer,
-  MoranScatterPlotContainer,
-} from 'packages/components/echarts/dist';
+import { MoranScatterComponent } from '@openassistant/echarts';
+import { SpatialWeightsComponent } from '@openassistant/tables';
 import {
   dataClassify,
   DataClassifyTool,
@@ -19,7 +17,7 @@ import {
   SpatialJoinTool,
   buffer,
   BufferTool,
-} from 'packages/tools/geoda/dist';
+} from '@openassistant/geoda';
 import {
   geocoding,
   routing,
@@ -29,14 +27,14 @@ import {
   RoutingTool,
   roads,
   RoadsTool,
-} from 'packages/tools/osm/dist';
-import { KeplerGlToolComponent } from 'packages/components/keplergl/dist';
-import { GetDataset, keplergl, KeplerglTool } from 'packages/tools/map/dist';
+} from '@openassistant/osm';
+import { KeplerGlComponent } from '@openassistant/keplergl';
+import { GetDataset, keplergl, KeplerglTool } from '@openassistant/map';
+import { useToolCache } from '@openassistant/core';
+import { getValuesFromGeoJSON } from '@openassistant/utils';
 
 import { PointLayerData } from '@geoda/core';
 import { SAMPLE_DATASETS } from './dataset';
-import { useToolCache } from '@openassistant/core';
-import { getValuesFromGeoJSON } from '@openassistant/utils';
 
 function isGeoJson(obj: unknown): obj is GeoJSON.FeatureCollection {
   return (
@@ -50,7 +48,9 @@ function isGeoJson(obj: unknown): obj is GeoJSON.FeatureCollection {
 export default function App() {
   const { toolCache, updateToolCache } = useToolCache();
 
-  const onToolFinished = (toolCallId: string, additionalData: unknown) => {
+  // use onToolCompleted to cache results from some tools
+  const onToolCompleted = (toolCallId: string, additionalData: unknown) => {
+    // find the dataset from the tool results and cache it
     updateToolCache(toolCallId, additionalData);
   };
 
@@ -123,7 +123,7 @@ export default function App() {
       ...spatialWeights.context,
       getGeometries,
     },
-    component: SpatialWeightsComponentContainer,
+    component: SpatialWeightsComponent,
   };
 
   const globalMoranTool: GlobalMoranTool = {
@@ -132,7 +132,7 @@ export default function App() {
       ...globalMoran.context,
       getValues,
     },
-    component: MoranScatterPlotContainer,
+    component: MoranScatterComponent,
   };
 
   const regressionTool: SpatialRegressionTool = {
@@ -150,6 +150,7 @@ export default function App() {
       getValues,
       getGeometries,
     },
+    onToolCompleted,
   };
 
   const spatialJoinTool: SpatialJoinTool = {
@@ -159,10 +160,12 @@ export default function App() {
       getValues,
       getGeometries,
     },
+    onToolCompleted,
   };
 
   const getUsStateGeojsonTool = {
     ...getUsStateGeojson,
+    onToolCompleted,
   };
 
   const keplerglTool: KeplerglTool = {
@@ -171,7 +174,7 @@ export default function App() {
       ...keplergl.context,
       getDataset,
     },
-    component: KeplerGlToolComponent,
+    component: KeplerGlComponent,
   };
 
   const routingTool: RoutingTool = {
@@ -180,6 +183,7 @@ export default function App() {
       ...routing.context,
       getMapboxToken: () => process.env.MAPBOX_TOKEN || '',
     },
+    onToolCompleted,
   };
 
   const bufferTool: BufferTool = {
@@ -188,6 +192,7 @@ export default function App() {
       ...buffer.context,
       getGeometries,
     },
+    onToolCompleted,
   };
 
   const roadsTool: RoadsTool = {
@@ -196,6 +201,7 @@ export default function App() {
       ...roads.context,
       getGeometries,
     },
+    onToolCompleted,
   };
 
   const tools = {
@@ -269,7 +275,6 @@ Note:
             welcomeMessage={welcomeMessage}
             instructions={instructions}
             theme="dark"
-            onToolFinished={onToolFinished}
           />
         </div>
       </div>

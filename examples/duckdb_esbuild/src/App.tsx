@@ -67,6 +67,7 @@ export function App() {
             instructions={instructions}
             tools={{ localQuery: localQueryTool }}
             useMarkdown={true}
+            theme="dark"
           />
         </div>
       </div>

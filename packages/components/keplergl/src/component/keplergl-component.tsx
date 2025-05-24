@@ -45,7 +45,7 @@ export function isCreateMapOutputData(
 //   );
 // }
 
-export function KeplerGlComponentWithProvider(props: CreateMapOutputData) {
+export function KeplerGlComponent(props: CreateMapOutputData) {
   const rootNode = useRef<HTMLDivElement>(null);
 
   return (
@@ -54,7 +54,7 @@ export function KeplerGlComponentWithProvider(props: CreateMapOutputData) {
         <RootContext.Provider value={rootNode}>
           <Provider store={store}>
             <ThemeProvider theme={keplerTheme}>
-              <KeplerGlComponent {...props} width={width} height={height} />
+              <KeplerGlMiniComponent {...props} width={width} height={height} />
             </ThemeProvider>
           </Provider>
         </RootContext.Provider>
@@ -63,7 +63,7 @@ export function KeplerGlComponentWithProvider(props: CreateMapOutputData) {
   );
 }
 
-export function KeplerGlComponent(
+export function KeplerGlMiniComponent(
   props: CreateMapOutputData & { width: number; height: number }
 ) {
   const dispatch = useDispatch();

@@ -1,43 +1,55 @@
 'use client';
 
-import { useChat } from '@ai-sdk/react';
-import { getDuckDBTool } from 'packages/tools/duckdb/dist';
 import { useState } from 'react';
+import { useChat } from '@ai-sdk/react';
+import {
+  localQuery,
+  LocalQueryArgs,
+  LocalQueryTool,
+} from '@openassistant/duckdb';
+import { convertToVercelAiTool } from '@openassistant/utils';
 import { MessageParts } from './components/parts';
 
 export default function Home() {
   const [toolAdditionalData, setToolAdditionalData] = useState<
     Record<string, unknown>
   >({});
-  const context = {
-    getValues: async (datasetName: string, variableName: string) => {
-      console.log('getValues', datasetName, variableName);
-      return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    },
-  };
 
   const onToolCompleted = (toolCallId: string, additionalData: unknown) => {
-    // save {toolCallId: additionalData} for rendering
+    console.log('onToolCompleted', toolCallId, additionalData);
     setToolAdditionalData((prev) => ({
       ...prev,
       [toolCallId]: additionalData,
     }));
   };
 
+  const getValues = async (datasetName: string, variableName: string) => {
+    console.log('getValues', datasetName, variableName);
+    // simulate return values
+    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  };
+
+  const myLocalQuery: LocalQueryTool = {
+    ...localQuery,
+    context: {
+      ...localQuery.context,
+      getValues,
+    },
+    onToolCompleted,
+  };
+
+  const localQueryTool = convertToVercelAiTool(myLocalQuery);
+
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     maxSteps: 20,
     // local tools are handled by the client
     onToolCall: async ({ toolCall }) => {
-      const { toolName, args, toolCallId } = toolCall;
-      if (toolName === 'localQuery') {
-        const localQueryTool = getDuckDBTool('localQuery', {
-          toolContext: context,
-          onToolCompleted,
+      const args = toolCall.args as Record<string, unknown>;
+      if (toolCall.toolName === 'localQuery') {
+        const result = await localQueryTool.execute?.(args, {
+          toolCallId: toolCall.toolCallId,
         });
-        const result = await localQueryTool.execute?.(
-          args as Record<string, unknown>,
-          { toolCallId }
-        );
+        console.log('result', result);
         return result;
       }
     },
@@ -47,9 +59,9 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center p-24">
       <div className="w-full max-w-2xl">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-4">ECharts Chat Example</h1>
+          <h1 className="text-4xl font-bold mb-4">Basic Chat Example</h1>
           <p className="text-gray-600">
-            Try asking for a histogram or other chart visualization!
+            Try asking `what are the top 4 values of HR60?`
           </p>
         </div>
 
@@ -67,7 +79,7 @@ export default function Home() {
               <MessageParts
                 parts={message.parts}
                 toolAdditionalData={toolAdditionalData}
-                getValues={context.getValues}
+                getValues={getValues}
               />
             </div>
           ))}

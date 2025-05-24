@@ -1,5 +1,6 @@
 import { MessageModel } from '@openassistant/core';
 import { AiAssistant } from '@openassistant/ui';
+import { extendedTool } from '@openassistant/utils';
 import { z } from 'zod';
 import { SAVED_MESSAGES } from './messages';
 
@@ -27,51 +28,74 @@ function WeatherStation({
 }
 
 export function App() {
-  const tools = {
-    weather: tool({
-      description: 'Get the weather in a city from a weather station',
-      parameters: z.object({ cityName: z.string(), reason: z.string() }),
-      execute: async ({ cityName, reason }, options) => {
-        const getStation = options.context?.getStation;
-        const station = getStation ? await getStation(cityName) : null;
-        const getTemperature = options.context?.getTemperature;
-        const temperature = getTemperature
-          ? await getTemperature(cityName)
-          : null;
-        return {
-          llmResult: {
-            success: true,
-            message: `The temperature in ${cityName} is ${temperature} degrees from weather station ${station}.`,
-          },
-          additionalData: {
-            cityName,
-            temperature,
-            station,
-            reason,
-          },
+  const weather = extendedTool<
+    // args
+    z.ZodObject<{
+      cityName: z.ZodString;
+      reason: z.ZodString;
+    }>,
+    // LLM result
+    {
+      success: boolean;
+      message: string;
+    },
+    // additional data
+    {
+      cityName: string;
+      temperature: number | null;
+      station: string | null;
+      reason: string;
+    },
+    // context
+    {
+      getStation: (cityName: string) => Promise<string>;
+      getTemperature: (cityName: string) => Promise<number>;
+    }
+  >({
+    description: 'Get the weather in a city from a weather station',
+    parameters: z.object({ cityName: z.string(), reason: z.string() }),
+    execute: async ({ cityName, reason }, options) => {
+      const context = options?.context;
+
+      const station = context?.getStation
+        ? await context.getStation(cityName)
+        : null;
+      const temperature = context?.getTemperature
+        ? await context.getTemperature(cityName)
+        : null;
+      return {
+        llmResult: {
+          success: true,
+          message: `The temperature in ${cityName} is ${temperature} degrees from weather station ${station}.`,
+        },
+        additionalData: {
+          cityName,
+          temperature,
+          station,
+          reason,
+        },
+      };
+    },
+    context: {
+      getStation: async (cityName: string) => {
+        const stations = {
+          'New York': '123',
+          'Los Angeles': '456',
+          Chicago: '789',
         };
+        return stations[cityName];
       },
-      context: {
-        getStation: async (cityName: string) => {
-          const stations = {
-            'New York': '123',
-            'Los Angeles': '456',
-            Chicago: '789',
-          };
-          return stations[cityName];
-        },
-        getTemperature: async (cityName: string) => {
-          const temperatures = {
-            'New York': 70,
-            'Los Angeles': 80,
-            Chicago: 60,
-          };
-          return temperatures[cityName];
-        },
+      getTemperature: async (cityName: string) => {
+        const temperatures = {
+          'New York': 70,
+          'Los Angeles': 80,
+          Chicago: 60,
+        };
+        return temperatures[cityName];
       },
-      component: WeatherStation,
-    }),
-  };
+    },
+    component: WeatherStation,
+  });
 
   const onMessagesUpdated = (messages: MessageModel[]) => {
     // you can persist the messages to your redux store or local storage
@@ -93,7 +117,7 @@ export function App() {
             model="gpt-4o"
             welcomeMessage="Hello, how can I help you today?"
             instructions="You are a helpful assistant."
-            tools={tools}
+            tools={{ weather }}
             useMarkdown={true}
             onMessagesUpdated={onMessagesUpdated}
             initialMessages={SAVED_MESSAGES}

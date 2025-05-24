@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "@openassistant/core": "workspace:*",
+    "@openassistant/duckdb": "workspace:*",
+    "@openassistant/utils": "workspace:*",
     "dotenv": "^16.4.5",
     "readline-sync": "^1.4.10"
   }

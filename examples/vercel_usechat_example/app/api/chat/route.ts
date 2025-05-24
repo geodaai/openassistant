@@ -1,9 +1,10 @@
 import { openai } from '@ai-sdk/openai';
-import { getDuckDBTool } from 'packages/tools/duckdb/dist';
+import { localQuery } from '@openassistant/duckdb';
+import { convertToVercelAiTool } from '@openassistant/utils';
 import { streamText } from 'ai';
 
 // create a tool for local query (runs in browser)
-const localQueryTool = getDuckDBTool('localQuery', {
+const localQueryTool = convertToVercelAiTool(localQuery, {
   isExecutable: false,
 });
 

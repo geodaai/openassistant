@@ -16,7 +16,9 @@
     "@openassistant/keplergl": "workspace:*",
     "@openassistant/map": "workspace:*",
     "@openassistant/osm": "workspace:*",
+    "@openassistant/tables": "workspace:*",
     "@openassistant/ui": "workspace:*",
+    "@openassistant/utils": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

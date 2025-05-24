@@ -1,19 +1,18 @@
-export interface ToolExecutionOptions {
-  toolCallId: string;
-  abortSignal?: AbortSignal;
-}
+import { ExtendedTool, OnToolCompleted, ToolExecutionOptions, Parameters } from './tool';
+import { z } from 'zod';
 
-export interface Tool<TContext = unknown> {
-  description: string;
-  parameters: Record<string, unknown>;
-  execute: (
-    args: Record<string, unknown>,
-    options: ToolExecutionOptions & { context?: TContext }
-  ) => Promise<{
-    llmResult: unknown;
-    additionalData?: unknown;
-  }>;
-}
+// export interface Tool<TContext = unknown> {
+//   description: string;
+//   parameters: Record<string, unknown>;
+//   execute: (
+//     args: Record<string, unknown>,
+//     options: ToolExecutionOptions & { context?: TContext }
+//   ) => Promise<{
+//     llmResult: unknown;
+//     additionalData?: unknown;
+//   }>;
+//   context?: TContext;
+// }
 
 export interface ToolResult {
   description: string;
@@ -24,18 +23,13 @@ export interface ToolResult {
   ) => Promise<unknown>;
 }
 
-export type OnToolCompleted = (
-  toolCallId: string,
-  additionalData?: unknown
-) => void;
-
-export function getTool<TContext = unknown>({
+export function getTool({
   tool,
   options: toolOptions,
 }: {
-  tool: Tool<TContext>;
+  tool: ExtendedTool;
   options?: {
-    toolContext?: TContext;
+    toolContext?: unknown;
     onToolCompleted?: OnToolCompleted;
     isExecutable?: boolean;
   };
@@ -46,7 +40,7 @@ export function getTool<TContext = unknown>({
     options: ToolExecutionOptions
   ) => {
     // add context to options
-    const result = await tool.execute(args, {
+    const result = await tool.execute(args as never, {
       ...options,
       context: toolOptions?.toolContext,
     });
@@ -62,5 +56,39 @@ export function getTool<TContext = unknown>({
     description: tool.description,
     parameters: tool.parameters,
     ...(toolOptions?.isExecutable ? { execute } : {}),
+  };
+}
+
+export function convertToVercelAiTool<
+  PARAMETERS extends Parameters = never,
+  RETURN_TYPE = never,
+  ADDITIONAL_DATA = never,
+  CONTEXT = unknown
+>(
+  extendedTool: ExtendedTool<PARAMETERS, RETURN_TYPE, ADDITIONAL_DATA, CONTEXT>,
+  { isExecutable = true }: { isExecutable?: boolean } = {}
+) {
+  // create a vercel ai tool.execute function
+  const execute = async (
+    args: Record<string, unknown>,
+    options: ToolExecutionOptions
+  ) => {
+    // add context to options
+    const result = await extendedTool.execute(args as z.infer<PARAMETERS>, {
+      ...options,
+      context: extendedTool.context,
+    });
+
+    if (options.toolCallId && extendedTool.onToolCompleted) {
+      extendedTool.onToolCompleted(options.toolCallId, result.additionalData);
+    }
+
+    return result.llmResult;
+  };
+
+  return {
+    description: extendedTool.description,
+    parameters: extendedTool.parameters,
+    ...(isExecutable ? { execute } : {}),
   };
 }

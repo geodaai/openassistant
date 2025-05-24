@@ -9634,7 +9634,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@openassistant/tables@workspace:packages/components/tables":
+"@openassistant/tables@workspace:*, @openassistant/tables@workspace:packages/components/tables":
   version: 0.0.0-use.local
   resolution: "@openassistant/tables@workspace:packages/components/tables"
   dependencies:
@@ -18418,6 +18418,8 @@ __metadata:
   resolution: "cli_example@workspace:examples/cli_example"
   dependencies:
     "@openassistant/core": "workspace:*"
+    "@openassistant/duckdb": "workspace:*"
+    "@openassistant/utils": "workspace:*"
     dotenv: "npm:^16.4.5"
     readline-sync: "npm:^1.4.10"
   languageName: unknown
@@ -22984,7 +22986,9 @@ __metadata:
     "@openassistant/keplergl": "workspace:*"
     "@openassistant/map": "workspace:*"
     "@openassistant/osm": "workspace:*"
+    "@openassistant/tables": "workspace:*"
     "@openassistant/ui": "workspace:*"
+    "@openassistant/utils": "workspace:*"
     "@types/react": "npm:^18.2.0"
     "@types/react-dom": "npm:^18.2.0"
     autoprefixer: "npm:^10.4.20"
@@ -36885,6 +36889,7 @@ __metadata:
     "@next/bundle-analyzer": "npm:^15.3.2"
     "@openassistant/duckdb": "workspace:*"
     "@openassistant/echarts": "workspace:*"
+    "@openassistant/utils": "workspace:*"
     "@types/node": "npm:^20.0.0"
     "@types/react": "npm:^18.2.0"
     "@types/react-dom": "npm:^18.2.0"

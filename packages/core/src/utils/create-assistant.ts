@@ -63,7 +63,8 @@ export async function createAssistant(props: UseAssistantProps) {
   if (tools) {
     Object.keys(tools).forEach((functionName) => {
       const extendedTool = tools![functionName];
-      const { execute, context, component, ...rest } = extendedTool;
+      const { execute, context, component, onToolCompleted, ...rest } =
+        extendedTool;
 
       const vercelTool: Tool = {
         ...rest,
@@ -76,6 +77,9 @@ export async function createAssistant(props: UseAssistantProps) {
 
             if (additionalData && toolCallId) {
               AssistantModel.addToolResult(toolCallId, additionalData);
+              if (onToolCompleted) {
+                onToolCompleted(toolCallId, additionalData);
+              }
             }
 
             return llmResult;
@@ -84,7 +88,7 @@ export async function createAssistant(props: UseAssistantProps) {
             return {
               success: false,
               error: `Execute tool ${functionName} failed: ${error}`,
-            }
+            };
           }
         },
       };

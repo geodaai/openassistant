@@ -1,8 +1,8 @@
 import {
   isQueryDuckDBOutputData,
   QueryDuckDBComponent,
-} from 'packages/components/echarts/dist';
-import { getDuckDB } from 'packages/tools/duckdb/dist';
+} from '@openassistant/tables';
+import { getDuckDB } from '@openassistant/duckdb';
 
 interface ToolInvocationProps {
   toolCallId: string;
