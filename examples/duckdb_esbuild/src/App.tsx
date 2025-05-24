@@ -51,6 +51,7 @@ Here is dataset available for you to use:
   - revenue: float
   - population: int
 `;
+
 export function App() {
   return (
     <div className="app-container">

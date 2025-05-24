@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { tool, generateId } from '@openassistant/utils';
+import { extendedTool, generateId } from '@openassistant/utils';
 import { createHistogramBins } from './utils';
 import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../types';
 
@@ -44,7 +44,7 @@ import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../type
  *
  * A duckdb table will be created using the values returned from `getValues()`, and LLM will generate a sql query to query the table to answer the user's prompt.
  */
-export const histogram = tool<
+export const histogram = extendedTool<
   HistogramToolArgs,
   HistogramLlmResult,
   HistogramAdditionalData,

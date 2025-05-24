@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { tool, generateId } from '@openassistant/utils';
+import { extendedTool, generateId } from '@openassistant/utils';
 import {
   ParallelCoordinateDataProps,
   processParallelCoordinateData,
@@ -45,7 +45,7 @@ import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../type
  * - get the values of **revenue** from dataset: getValues('myVenues', 'revenue')
  * - get the values of **population** from dataset: getValues('myVenues', 'population')
  */
-export const pcp = tool<
+export const pcp = extendedTool<
   PCPFunctionArgs,
   PCPLlmResult,
   PCPAdditionalData,

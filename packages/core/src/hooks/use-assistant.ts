@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { StreamMessageCallback } from '../types';
 import { VercelAi } from '../llm/vercelai';
 import { createAssistant } from '../utils/create-assistant';
-import { convertToCoreMessages, Message, ToolChoice, ToolSet } from 'ai';
+import { convertToCoreMessages, Message, Tool, ToolChoice, ToolSet } from 'ai';
 import { ExtendedTool } from '@openassistant/utils';
 
 /**
@@ -57,7 +57,7 @@ export type UseAssistantProps = {
   historyMessages?: Message[];
   /** Custom tools the assistant can use. E.g. `{ localQuery: localQueryTool }` */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  tools?: Record<string, ExtendedTool<any, any, any, any>>;
+  tools?: Record<string, ExtendedTool<any, any, any, any> | Tool>;
   /** Controls how the assistant selects tools to use. */
   toolChoice?: ToolChoice<ToolSet>;
   /** Maximum number of steps/iterations in a conversation. */

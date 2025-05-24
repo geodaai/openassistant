@@ -1,6 +1,11 @@
 import { GetAssistantModelByProvider } from '../lib/model-utils';
 import { UseAssistantProps } from '../hooks/use-assistant';
 import { Tool, convertToCoreMessages } from 'ai';
+import { ExtendedTool } from '@openassistant/utils';
+
+function isExtendedTool(tool: Tool | ExtendedTool): tool is ExtendedTool {
+  return 'context' in tool;
+}
 
 /**
  * Creates an AI assistant instance with the specified configuration
@@ -62,42 +67,49 @@ export async function createAssistant(props: UseAssistantProps) {
 
   if (tools) {
     Object.keys(tools).forEach((functionName) => {
-      const extendedTool = tools![functionName];
-      const { execute, context, component, onToolCompleted, ...rest } =
-        extendedTool;
+      const toolObject = tools![functionName];
+      if (isExtendedTool(toolObject)) {
+        const { execute, context, component, onToolCompleted, ...rest } =
+          toolObject;
 
-      const vercelTool: Tool = {
-        ...rest,
-        execute: async (args, options) => {
-          const { toolCallId } = options;
-          try {
-            const result = await execute(args, { ...options, context });
+        const vercelTool: Tool = {
+          ...rest,
+          execute: async (args, options) => {
+            const { toolCallId } = options;
+            try {
+              const result = await execute(args as never, { ...options, context });
 
-            const { additionalData, llmResult } = result;
+              const { additionalData, llmResult } = result;
 
-            if (additionalData && toolCallId) {
-              AssistantModel.addToolResult(toolCallId, additionalData);
-              if (onToolCompleted) {
-                onToolCompleted(toolCallId, additionalData);
+              if (additionalData && toolCallId) {
+                AssistantModel.addToolResult(toolCallId, additionalData);
+                if (onToolCompleted) {
+                  onToolCompleted(toolCallId, additionalData);
+                }
               }
+
+              return llmResult;
+            } catch (error) {
+              console.error(error);
+              return {
+                success: false,
+                error: `Execute tool ${functionName} failed: ${error}`,
+              };
             }
+          },
+        };
 
-            return llmResult;
-          } catch (error) {
-            console.error(error);
-            return {
-              success: false,
-              error: `Execute tool ${functionName} failed: ${error}`,
-            };
-          }
-        },
-      };
-
-      AssistantModel.registerTool({
-        name: functionName,
-        tool: vercelTool,
-        component: component,
-      });
+        AssistantModel.registerTool({
+          name: functionName,
+          tool: vercelTool,
+          component: component,
+        });
+      } else {
+       AssistantModel.registerTool({
+         name: functionName,
+         tool: toolObject,
+       }); 
+      }
     });
   }
 

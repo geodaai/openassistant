@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { tool, generateId } from '@openassistant/utils';
+import { extendedTool, generateId } from '@openassistant/utils';
 import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../types';
 
 /**
@@ -37,7 +37,7 @@ import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../type
  * See {@link BubbleChartFunctionContext} for detailed usage.
  *
  */
-export const bubbleChart = tool<
+export const bubbleChart = extendedTool<
   BubbleChartToolArgs,
   BubbleChartLlmResult,
   BubbleChartAdditionalData,

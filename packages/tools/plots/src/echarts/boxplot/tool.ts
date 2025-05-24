@@ -1,4 +1,4 @@
-import { tool, generateId } from '@openassistant/utils';
+import { extendedTool, generateId } from '@openassistant/utils';
 import { z } from 'zod';
 
 import { BoxplotDataProps, createBoxplot } from './utils';
@@ -46,7 +46,7 @@ import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../type
  * A duckdb table will be created using the values returned from `getValues()`, and LLM will generate a sql query to query the table to answer the user's prompt.
  *
  */
-export const boxplot = tool<
+export const boxplot = extendedTool<
   // parameters of the tool
   BoxplotToolArgs,
   // return type of the tool

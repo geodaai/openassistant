@@ -1,4 +1,4 @@
-import { tool } from '@openassistant/utils';
+import { extendedTool } from '@openassistant/utils';
 import { z } from 'zod';
 
 import { EChartsToolContext } from '../types';
@@ -32,7 +32,7 @@ export type VegaLitePlotAdditionalData = {
  * :::
  *
  */
-export const vegaLitePlot = tool<
+export const vegaLitePlot = extendedTool<
   VegaLitePlotToolArgs,
   VegaLitePlotLlmResult,
   VegaLitePlotAdditionalData,

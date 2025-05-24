@@ -1,5 +1,11 @@
-import { ExtendedTool, OnToolCompleted, ToolExecutionOptions, Parameters } from './tool';
 import { z } from 'zod';
+import { Tool } from 'ai';
+import {
+  ExtendedTool,
+  OnToolCompleted,
+  ToolExecutionOptions,
+  Parameters,
+} from './tool';
 
 // export interface Tool<TContext = unknown> {
 //   description: string;
@@ -63,7 +69,7 @@ export function convertToVercelAiTool<
   PARAMETERS extends Parameters = never,
   RETURN_TYPE = never,
   ADDITIONAL_DATA = never,
-  CONTEXT = unknown
+  CONTEXT = unknown,
 >(
   extendedTool: ExtendedTool<PARAMETERS, RETURN_TYPE, ADDITIONAL_DATA, CONTEXT>,
   { isExecutable = true }: { isExecutable?: boolean } = {}
@@ -91,4 +97,26 @@ export function convertToVercelAiTool<
     parameters: extendedTool.parameters,
     ...(isExecutable ? { execute } : {}),
   };
+}
+
+export function convertFromVercelAiTool(
+  vercelAiTool: Tool
+): ExtendedTool<Parameters, unknown, unknown, unknown> {
+  const { description, parameters, execute } = vercelAiTool;
+
+  return {
+    description: description || '',
+    parameters,
+    ...(execute
+      ? {
+          execute: async (args, options) => {
+            const result = await execute(args, {
+              toolCallId: options?.toolCallId || '',
+              messages: [],
+            });
+            return { llmResult: result };
+          },
+        }
+      : {}),
+  } as ExtendedTool<Parameters, unknown, unknown, unknown>;
 }

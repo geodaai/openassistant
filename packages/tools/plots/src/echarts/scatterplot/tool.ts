@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { tool, generateId } from '@openassistant/utils';
+import { extendedTool, generateId } from '@openassistant/utils';
 import { computeRegression } from './utils';
 import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../types';
 
@@ -46,7 +46,7 @@ import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../type
  * - get the values of **population** from dataset: getValues('myVenues', 'population')
  * - get the values of **income** from dataset: getValues('myVenues', 'income')
  */
-export const scatterplot = tool<
+export const scatterplot = extendedTool<
   ScatterplotFunctionArgs,
   ScatterplotLlmResult,
   ScatterplotAdditionalData,
