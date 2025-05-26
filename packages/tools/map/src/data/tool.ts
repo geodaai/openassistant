@@ -1,7 +1,7 @@
-import { tool, generateId } from '@openassistant/utils';
+import { extendedTool, generateId } from '@openassistant/utils';
 import { z } from 'zod';
 
-export const downloadMapData = tool({
+export const downloadMapData = extendedTool({
   description: 'Download map data from a url',
   parameters: z.object({
     url: z.string(),

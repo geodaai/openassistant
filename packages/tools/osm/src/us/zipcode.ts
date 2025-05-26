@@ -2,14 +2,11 @@ import {
   cacheData,
   generateId,
   getCachedData,
-  tool,
+  extendedTool,
 } from '@openassistant/utils';
 import { z } from 'zod';
 import zips from 'zip3';
 import { githubRateLimiter } from '../utils/rateLimiter';
-
-// Add delay function to prevent rate limiting
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export type GetUsZipcodeGeojsonFunctionArgs = z.ZodObject<{
   zipcodes: z.ZodArray<z.ZodString>;
@@ -69,7 +66,7 @@ export type ExecuteGetUsZipcodeGeojsonResult = {
  *
  * For a more complete example, see the [OSM Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_osm_example).
  */
-export const getUsZipcodeGeojson = tool<
+export const getUsZipcodeGeojson = extendedTool<
   GetUsZipcodeGeojsonFunctionArgs,
   GetUsZipcodeGeojsonLlmResult,
   GetUsZipcodeGeojsonAdditionalData,

@@ -1,4 +1,4 @@
-import { tool, generateId } from '@openassistant/utils';
+import { extendedTool, generateId } from '@openassistant/utils';
 import { z } from 'zod';
 import { spatialDissolve } from '@geoda/core';
 import { Feature, Geometry } from 'geojson';
@@ -64,7 +64,7 @@ export type DissolveAdditionalData = {
  * };
  * ```
  */
-export const dissolve = tool<
+export const dissolve = extendedTool<
   DissolveFunctionArgs,
   DissolveLlmResult,
   DissolveAdditionalData,

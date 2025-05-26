@@ -1,4 +1,4 @@
-import { tool } from '@openassistant/utils';
+import { extendedTool } from '@openassistant/utils';
 import { z } from 'zod';
 import { getArea } from '@geoda/core';
 import { SpatialToolContext } from '../types';
@@ -58,7 +58,7 @@ export type AreaAdditionalData = {
  * The geometries from geocoding tool will be used as the input for this tool.
  * ```
  */
-export const area = tool<
+export const area = extendedTool<
   AreaFunctionArgs,
   AreaLlmResult,
   AreaAdditionalData,

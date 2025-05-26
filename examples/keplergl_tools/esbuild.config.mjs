@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const isDev = process.argv.includes('--start');
-const port = 3003;
+const port = 3000;
 
 const config = {
   entryPoints: ['src/main.tsx'],

@@ -16,6 +16,7 @@ import {
   CardBody,
 } from '@nextui-org/react';
 import { Icon } from '@iconify/react';
+import { ResizablePlotContainer } from '../containers/resizable-container';
 
 export const MarkdownContent = ({
   text,
@@ -108,13 +109,17 @@ const ToolCallComponentRenderer = memo(
     if (!Component) return null;
 
     return (
-      <ToolCallErrorBoundary>
-        {typeof Component === 'function' ? (
-          <Component {...(additionalData as Record<string, unknown>)} />
-        ) : (
-          Component
-        )}
-      </ToolCallErrorBoundary>
+      <div className="w-full">
+        <ResizablePlotContainer defaultHeight={320} isHovered={true}>
+          <ToolCallErrorBoundary>
+            {typeof Component === 'function' ? (
+              <Component {...(additionalData as Record<string, unknown>)} />
+            ) : (
+              Component
+            )}
+          </ToolCallErrorBoundary>
+        </ResizablePlotContainer>
+      </div>
     );
   },
   (prevProps, nextProps) => {

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { generateId, tool } from '@openassistant/utils';
+import { generateId, extendedTool } from '@openassistant/utils';
 import { FeatureCollection } from 'geojson';
 import { isMapboxToolContext, MapboxToolContext } from './register-tools';
 import { mapboxRateLimiter } from './utils/rateLimiter';
@@ -105,7 +105,7 @@ export type ExecuteIsochroneResult = {
  *
  * For a more complete example, see the [OSM Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_osm_example).
  */
-export const isochrone = tool<
+export const isochrone = extendedTool<
   IsochroneFunctionArgs,
   IsochroneLlmResult,
   IsochroneAdditionalData,

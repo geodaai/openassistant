@@ -1,4 +1,5 @@
 import { ThemeProvider } from 'next-themes';
+import { HeroUIProvider } from '@heroui/react';
 
 /**
  * Type of ChatContainerProps.
@@ -14,7 +15,7 @@ type ChatContainerProps = {
 export function ChatContainer({ children, theme }: ChatContainerProps) {
   return (
     <ThemeProvider attribute="class" forcedTheme={theme}>
-      {children}
+      <HeroUIProvider className="h-full">{children}</HeroUIProvider>
     </ThemeProvider>
   );
 }

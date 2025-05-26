@@ -48,7 +48,7 @@ function isGeoJson(obj: unknown): obj is GeoJSON.FeatureCollection {
 export default function App() {
   const { toolCache, updateToolCache } = useToolCache();
 
-  // use onToolCompleted to cache results from some tools
+  // use onToolCompleted to cache datasets from some tools
   const onToolCompleted = (toolCallId: string, additionalData: unknown) => {
     // find the dataset from the tool results and cache it
     updateToolCache(toolCallId, additionalData);

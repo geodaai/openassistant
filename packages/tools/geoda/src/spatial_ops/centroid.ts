@@ -1,4 +1,4 @@
-import { tool, generateId } from '@openassistant/utils';
+import { extendedTool, generateId } from '@openassistant/utils';
 import { z } from 'zod';
 import { getCentroids, SpatialGeometry } from '@geoda/core';
 import { Feature, Geometry } from 'geojson';
@@ -61,7 +61,7 @@ export type CentroidAdditionalData = {
  * });
  * ```
  */
-export const centroid = tool<
+export const centroid = extendedTool<
   CentroidFunctionArgs,
   CentroidLlmResult,
   CentroidAdditionalData,

@@ -1,4 +1,4 @@
-import { tool, generateId } from '@openassistant/utils';
+import { extendedTool, generateId } from '@openassistant/utils';
 import {
   CheckGeometryType,
   SpatialGeometry,
@@ -96,7 +96,7 @@ export type SpatialJoinFunctionContext = {
  * });
  * ```
  */
-export const spatialJoin = tool<
+export const spatialJoin = extendedTool<
   SpatialJoinFunctionArgs,
   SpatialJoinLlmResult,
   SpatialJoinAdditionalData,

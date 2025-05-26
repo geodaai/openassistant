@@ -1,4 +1,4 @@
-import { tool } from '@openassistant/utils';
+import { extendedTool } from '@openassistant/utils';
 import { z } from 'zod';
 import { getLength } from '@geoda/core';
 import { isSpatialToolContext } from '../utils';
@@ -54,7 +54,7 @@ export type LengthAdditionalData = {
  * });
  * ```
  */
-export const length = tool({
+export const length = extendedTool({
   description: 'Calculate length of geometries',
   parameters: z.object({
     geojson: z

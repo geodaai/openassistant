@@ -1,4 +1,4 @@
-import { tool, generateId } from '@openassistant/utils';
+import { extendedTool, generateId } from '@openassistant/utils';
 import { z } from 'zod';
 import { getBuffers } from '@geoda/core';
 import { Feature } from 'geojson';
@@ -71,7 +71,7 @@ export type BufferAdditionalData = {
  * You can also use this tool with other tools, e.g. geocoding, so you don't need to provide the `getGeometries` function.
  * The geometries from geocoding tool will be used as the input for this tool.
  */
-export const buffer = tool<
+export const buffer = extendedTool<
   BufferFunctionArgs,
   BufferLlmResult,
   BufferAdditionalData,

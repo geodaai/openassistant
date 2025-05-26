@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { tool, generateId } from '@openassistant/utils';
+import { extendedTool, generateId } from '@openassistant/utils';
 import { RateLimiter } from './utils/rateLimiter';
 
 // Create a single instance to be shared across all calls
@@ -50,7 +50,7 @@ export type GeocodingAdditionalData = {
  *
  * For a more complete example, see the [OSM Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_osm_example).
  */
-export const geocoding = tool<
+export const geocoding = extendedTool<
   GeocodingFunctionArgs,
   GeocodingLlmResult,
   GeocodingAdditionalData,

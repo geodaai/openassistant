@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { FeatureCollection } from 'geojson';
-import { generateId, tool } from '@openassistant/utils';
+import { generateId, extendedTool } from '@openassistant/utils';
 import { isMapboxToolContext, MapboxToolContext } from './register-tools';
 import { mapboxRateLimiter } from './utils/rateLimiter';
 
@@ -129,7 +129,7 @@ export type ExecuteRoutingResult = {
  *
  * For a more complete example, see the [OSM Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_osm_example).
  */
-export const routing = tool<
+export const routing = extendedTool<
   RoutingFunctionArgs,
   RoutingLlmResult,
   RoutingAdditionalData,

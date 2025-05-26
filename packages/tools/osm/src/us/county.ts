@@ -3,7 +3,7 @@ import {
   cacheData,
   generateId,
   getCachedData,
-  tool,
+  extendedTool,
 } from '@openassistant/utils';
 import { githubRateLimiter } from '../utils/rateLimiter';
 
@@ -65,7 +65,7 @@ export type ExecuteGetUsCountyGeojsonResult = {
  *
  * For a more complete example, see the [OSM Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_osm_example).
  */
-export const getUsCountyGeojson = tool<
+export const getUsCountyGeojson = extendedTool<
   GetUsCountyGeojsonFunctionArgs,
   GetUsCountyGeojsonLlmResult,
   GetUsCountyGeojsonAdditionalData,

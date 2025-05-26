@@ -14,6 +14,7 @@ import {
   sendImageMessageHandler,
   sendTextMessageHandler,
 } from './assistant-utils';
+
 /**
  * Type of AiAssistantProps.
  */

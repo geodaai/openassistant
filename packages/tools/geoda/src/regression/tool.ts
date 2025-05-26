@@ -1,4 +1,4 @@
-import { tool } from '@openassistant/utils';
+import { extendedTool } from '@openassistant/utils';
 import { z } from 'zod';
 import {
   LinearRegressionResult,
@@ -76,7 +76,7 @@ export type SpatialRegressionFunctionContext = {
  * });
  * ```
  */
-export const spatialRegression = tool<
+export const spatialRegression = extendedTool<
   SpatialRegressionFunctionArgs,
   SpatialRegressionLlmResult,
   SpatialRegressionAdditionalData,

@@ -1,7 +1,8 @@
 import React from 'react';
 import { AiAssistant } from '@openassistant/ui';
-import { keplergl, KeplerglTool } from 'packages/components/keplergl/dist';
-import { dataClassify } from 'packages/tools/geoda/dist';
+import { keplergl, KeplerglTool } from '@openassistant/map';
+import { dataClassify, DataClassifyTool } from '@openassistant/geoda';
+import { KeplerGlComponent } from '@openassistant/keplergl';
 
 import '@openassistant/ui/dist/index.css';
 import { SAMPLE_DATASETS } from './dataset';
@@ -18,21 +19,21 @@ export function App() {
     context: {
       ...keplergl.context,
       getDataset: async (datasetName) => SAMPLE_DATASETS[datasetName],
-      config: {
-        isDraggable: false,
-      },
+    },
+    component: KeplerGlComponent,
+  };
+
+  const dataClassifyTool: DataClassifyTool = {
+    ...dataClassify,
+    context: {
+      ...dataClassify.context,
+      getValues,
     },
   };
 
   const tools = {
     keplergl: keplerglTool,
-    dataClassify: {
-      ...dataClassify,
-      context: {
-        ...dataClassify.context,
-        getValues,
-      },
-    },
+    dataClassify: dataClassifyTool,
   };
 
   const instructions = `You are a helpful assistant. 

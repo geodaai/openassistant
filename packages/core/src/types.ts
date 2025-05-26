@@ -6,7 +6,7 @@ import {
   TextUIPart,
   ToolInvocationUIPart,
 } from '@ai-sdk/ui-utils';
-import { CoreMessage, Message, StepResult, Tool, ToolSet } from 'ai';
+import { CoreMessage, Message, Tool } from 'ai';
 import { ReactNode } from 'react';
 import { z } from 'zod';
 

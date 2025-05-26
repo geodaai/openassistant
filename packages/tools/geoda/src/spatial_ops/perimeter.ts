@@ -1,4 +1,4 @@
-import { tool } from '@openassistant/utils';
+import { extendedTool } from '@openassistant/utils';
 import { z } from 'zod';
 import { getPerimeter } from '@geoda/core';
 import { SpatialToolContext } from '../types';
@@ -55,7 +55,7 @@ export type PerimeterAdditionalData = {
  * });
  * ```
  */
-export const perimeter = tool<
+export const perimeter = extendedTool<
   PerimeterFunctionArgs,
   PerimeterLlmResult,
   PerimeterAdditionalData,

@@ -1,4 +1,4 @@
-import { generateId, tool } from '@openassistant/utils';
+import { generateId, extendedTool } from '@openassistant/utils';
 import { z } from 'zod';
 import {
   FileCacheItem,
@@ -14,9 +14,7 @@ export type KeplerGlToolArgs = z.ZodObject<{
   geometryColumn: z.ZodOptional<z.ZodString>;
   latitudeColumn: z.ZodOptional<z.ZodString>;
   longitudeColumn: z.ZodOptional<z.ZodString>;
-  mapType: z.ZodOptional<
-    z.ZodEnum<['point', 'line', 'arc', 'geojson', 'heatmap', 'hexbin', 'h3']>
-  >;
+  mapType: z.ZodEnum<['point', 'line', 'arc', 'geojson']>;
   colorBy: z.ZodOptional<z.ZodString>;
   colorType: z.ZodOptional<z.ZodEnum<['breaks', 'unique']>>;
   colorMap: z.ZodOptional<
@@ -67,7 +65,7 @@ export type KeplerGlToolArgs = z.ZodObject<{
  * - isDraggable: Whether the map is draggable
  * - theme: The theme of the map
  */
-export const keplergl = tool<
+export const keplergl = extendedTool<
   KeplerGlToolArgs,
   KeplerGlToolLlmResult,
   KeplerGlToolAdditionalData,
@@ -86,9 +84,10 @@ export const keplergl = tool<
     latitudeColumn: z.string().optional(),
     longitudeColumn: z.string().optional(),
     mapType: z
-      .enum(['point', 'line', 'arc', 'geojson', 'heatmap', 'hexbin', 'h3'])
-      .optional()
-      .describe('The type of the map. The default is "point".'),
+      .enum(['point', 'line', 'arc', 'geojson'])
+      .describe(
+        'The kepler.gl map type. Other map types like heatmap, hexbin, h3 are not supported yet.'
+      ),
     colorBy: z.string().optional(),
     colorType: z.enum(['breaks', 'unique']).optional(),
     colorMap: z
@@ -263,7 +262,6 @@ async function executeCreateMap(
 
     const format = datasetForKepler[0].info.format;
 
-    console.log('format', format);
     // create a layer id
     const layerId = `layer_${generateId()}`;
 

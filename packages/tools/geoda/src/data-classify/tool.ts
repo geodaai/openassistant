@@ -1,4 +1,4 @@
-import { tool } from '@openassistant/utils';
+import { extendedTool } from '@openassistant/utils';
 import { z } from 'zod';
 import {
   equalIntervalBreaks,
@@ -99,7 +99,7 @@ export type DataClassifyFunctionContext = {
  *
  * For a more complete example, see the [Geoda Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_geoda_example).
  */
-export const dataClassify = tool<
+export const dataClassify = extendedTool<
   DataClassifyFunctionArgs,
   DataClassifyLlmResult,
   DataClassifyAdditionalData,

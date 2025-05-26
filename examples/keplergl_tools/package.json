@@ -1,8 +1,8 @@
 {
-  "name": "keplergl-plugin",
+  "name": "keplergl-tools",
   "private": true,
   "version": "1.0.0",
-  "description": "OpenAssistant using Kepler.gl plugin for map visualization",
+  "description": "OpenAssistant using Kepler.gl tools for map visualization",
   "scripts": {
     "start": "node esbuild.config.mjs --start",
     "build": "node esbuild.config.mjs"
@@ -10,7 +10,9 @@
   "author": "Xun Li <lixun910@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "@openassistant/geoda": "workspace:*",
     "@openassistant/keplergl": "workspace:*",
+    "@openassistant/map": "workspace:*",
     "@openassistant/ui": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"

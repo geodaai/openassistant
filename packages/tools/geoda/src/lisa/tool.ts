@@ -1,4 +1,4 @@
-import { tool, generateId } from '@openassistant/utils';
+import { extendedTool, generateId } from '@openassistant/utils';
 import { z } from 'zod';
 import {
   localMoran,
@@ -109,7 +109,7 @@ export type LisaFunctionContext = {
  *
  * For a more complete example, see the [Geoda Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_geoda_example).
  */
-export const lisa = tool<
+export const lisa = extendedTool<
   LisaFunctionArgs,
   LisaLlmResult,
   LisaAdditionalData,

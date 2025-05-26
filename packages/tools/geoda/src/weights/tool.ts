@@ -1,4 +1,4 @@
-import { tool } from '@openassistant/utils';
+import { extendedTool } from '@openassistant/utils';
 import { z } from 'zod';
 import { createWeights, WeightsMeta, CreateWeightsProps } from '@geoda/core';
 import { WeightsProps, GetGeometries } from '../types';
@@ -75,7 +75,7 @@ export type SpatialWeightsAdditionalData = {
  * });
  * ```
  */
-export const spatialWeights = tool<
+export const spatialWeights = extendedTool<
   SpatialWeightsFunctionArgs,
   SpatialWeightsLlmResult,
   SpatialWeightsAdditionalData,

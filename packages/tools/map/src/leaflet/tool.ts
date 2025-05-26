@@ -1,4 +1,4 @@
-import { tool, getBoundsFromGeoJSON } from '@openassistant/utils';
+import { extendedTool, getBoundsFromGeoJSON } from '@openassistant/utils';
 import { z } from 'zod';
 
 import { isMapToolContext, MapToolContext } from '../register-tools';
@@ -32,7 +32,7 @@ export type LeafletToolArgs = z.ZodObject<{
   colors: z.ZodOptional<z.ZodArray<z.ZodString>>;
 }>;
 
-export const leaflet = tool<
+export const leaflet = extendedTool<
   LeafletToolArgs,
   LeafletToolLlmResult,
   LeafletToolAdditionalData,

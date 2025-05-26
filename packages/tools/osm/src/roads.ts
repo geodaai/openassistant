@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { tool, generateId, getBoundsFromGeoJSON } from '@openassistant/utils';
+import { extendedTool, generateId, getBoundsFromGeoJSON } from '@openassistant/utils';
 import { RateLimiter } from './utils/rateLimiter';
 import { isOsmToolContext, OsmToolContext } from './register-tools';
 
@@ -87,7 +87,7 @@ export type RoadsAdditionalData = {
  * });
  * ```
  */
-export const roads = tool<
+export const roads = extendedTool<
   RoadsFunctionArgs,
   RoadsLlmResult,
   RoadsAdditionalData,

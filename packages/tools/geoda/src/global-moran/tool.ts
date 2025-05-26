@@ -1,4 +1,4 @@
-import { tool } from '@openassistant/utils';
+import { extendedTool } from '@openassistant/utils';
 import { z } from 'zod';
 import { WeightsMeta } from '@geoda/core';
 import { spatialLag } from '@geoda/lisa';
@@ -101,7 +101,7 @@ export type MoranScatterPlotFunctionContext = {
  *
  * For a more complete example, see the [Geoda Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_geoda_example).
  */
-export const globalMoran = tool<
+export const globalMoran = extendedTool<
   MoranScatterPlotFunctionArgs,
   MoranScatterPlotLlmResult,
   MoranScatterPlotAdditionalData,

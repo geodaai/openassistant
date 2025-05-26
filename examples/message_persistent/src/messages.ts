@@ -2,31 +2,33 @@ import { MessageModel } from '@openassistant/core';
 
 export const SAVED_MESSAGES: MessageModel[] = [
   {
-    message: 'Hello, how can I help you today?',
     sentTime: 'just now',
     sender: 'assistant',
     direction: 'incoming',
     position: 'first',
     messageContent: {
-      reasoning: '',
-      toolCallMessages: [],
-      text: 'Hello, how can I help you today?',
+      parts: [
+        {
+          type: 'text',
+          text: 'Hello, how can I help you today?',
+        },
+      ],
     },
   },
   {
-    message: 'which city is warmer: chicago or new york?',
     direction: 'outgoing',
     sender: 'user',
     position: 'normal',
     messageContent: {
-      reasoning: '',
-      toolCallMessages: [],
-      text: 'which city is warmer: chicago or new york?',
+      parts: [
+        {
+          type: 'text',
+          text: 'which city is warmer: chicago or new york?',
+        },
+      ],
     },
   },
   {
-    message:
-      'New York is currently warmer than Chicago. The temperature in New York is 70 degrees, while in Chicago it is 60 degrees.',
     direction: 'incoming',
     sender: 'assistant',
     position: 'normal',
@@ -34,56 +36,52 @@ export const SAVED_MESSAGES: MessageModel[] = [
     messageContent: {
       parts: [
         {
-          type: 'tool',
-          toolCallMessages: [
-            {
-              toolCallId: 'call_yi7lgm4vipDula2ROYV7sXMw',
-              toolName: 'weather',
-              isCompleted: true,
-              args: {
-                cityName: 'Chicago',
-                reason: 'to compare its current temperature with New York',
-              },
-              text: '',
-              llmResult: {
-                success: true,
-                llmResult:
-                  'The temperature in Chicago is 60 degrees from weather station 789.',
-              },
-              additionalData: {
-                cityName: 'Chicago',
-                temperature: 60,
-                station: '789',
-                reason: 'to compare its current temperature with New York',
-              },
+          type: 'tool-invocation',
+          toolInvocation: {
+            toolCallId: 'call_yi7lgm4vipDula2ROYV7sXMw',
+            toolName: 'weather',
+            state: 'result',
+            args: {
+              cityName: 'Chicago',
+              reason: 'to compare its current temperature with New York',
             },
-          ],
+            result: {
+              success: true,
+              result:
+                'The temperature in Chicago is 60 degrees from weather station 789.',
+            },
+          },
+          additionalData: {
+            cityName: 'Chicago',
+            temperature: 60,
+            station: '789',
+            reason: 'to compare its current temperature with New York',
+          },
+          isCompleted: true,
         },
         {
-          type: 'tool',
-          toolCallMessages: [
-            {
-              toolCallId: 'call_WEv07ZJ03w5VFL1d9ODZVAE9',
-              toolName: 'weather',
-              isCompleted: true,
-              args: {
-                cityName: 'New York',
-                reason: 'to compare its current temperature with Chicago',
-              },
-              text: '',
-              llmResult: {
-                success: true,
-                llmResult:
-                  'The temperature in New York is 70 degrees from weather station 123.',
-              },
-              additionalData: {
-                cityName: 'New York',
-                temperature: 70,
-                station: '123',
-                reason: 'to compare its current temperature with Chicago',
-              },
+          type: 'tool-invocation',
+          toolInvocation: {
+            toolCallId: 'call_WEv07ZJ03w5VFL1d9ODZVAE9',
+            toolName: 'weather',
+            state: 'result',
+            args: {
+              cityName: 'New York',
+              reason: 'to compare its current temperature with Chicago',
             },
-          ],
+            result: {
+              success: true,
+              llmResult:
+                'The temperature in New York is 70 degrees from weather station 123.',
+            },
+          },
+          isCompleted: true,
+          additionalData: {
+            cityName: 'New York',
+            temperature: 70,
+            station: '123',
+            reason: 'to compare its current temperature with Chicago',
+          },
         },
         {
           type: 'text',

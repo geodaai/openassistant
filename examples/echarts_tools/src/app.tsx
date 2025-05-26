@@ -20,7 +20,6 @@ import {
   ScatterplotTool,
 } from '@openassistant/plots';
 import { AiAssistant } from '@openassistant/ui';
-import { convertFromVercelAiTool } from '@openassistant/utils';
 import { z } from 'zod';
 import { tool } from 'ai';
 
