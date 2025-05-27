@@ -1,11 +1,14 @@
 import {
+  HistogramPlotComponent,
+  isHistogramOutputData,
+  HistogramOutputData,
+} from '@openassistant/echarts';
+import { getDuckDB } from '@openassistant/duckdb';
+import {
   isQueryDuckDBOutputData,
   QueryDuckDBComponent,
-  isHistogramOutputData,
-  HistogramComponent,
-} from 'packages/components/echarts/dist';
-import { getDuckDB } from 'packages/tools/duckdb/dist';
-import { useMemo } from 'react';
+  QueryDuckDBOutputData,
+} from '@openassistant/tables';
 
 interface ToolInvocationProps {
   toolCallId: string;
@@ -57,7 +60,7 @@ export function LocalQueryTool({
     return (
       <QueryDuckDBComponent
         key={toolCallId}
-        {...additionalData}
+        {...(additionalData as QueryDuckDBOutputData)}
         getDuckDB={getDuckDB}
         getValues={getValues}
       />
@@ -68,9 +71,8 @@ export function LocalQueryTool({
 
 export function HistogramTool({ additionalData }: { additionalData: unknown }) {
   if (isHistogramOutputData(additionalData)) {
-    return useMemo(
-      () => <HistogramComponent {...additionalData} />,
-      [additionalData]
+    return (
+      <HistogramPlotComponent {...(additionalData as HistogramOutputData)} />
     );
   }
   return null;

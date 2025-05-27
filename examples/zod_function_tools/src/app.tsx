@@ -1,4 +1,4 @@
-import { tool } from '@openassistant/utils';
+import { extendedTool } from '@openassistant/utils';
 import { AiAssistant } from '@openassistant/ui';
 import { z } from 'zod';
 
@@ -18,8 +18,8 @@ function WeatherStation({
 }
 
 export function App() {
-  const tools= {
-    weather: tool({
+  const tools = {
+    weather: extendedTool({
       description: 'Get the weather in a city from a weather station',
       parameters: z
         .object({ cityName: z.string() })

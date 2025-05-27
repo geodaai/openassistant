@@ -5,7 +5,7 @@ import {
   TableColumn,
   TableRow,
   TableCell,
-} from '@nextui-org/react';
+} from '@heroui/react';
 import { BoxplotDataProps } from '@openassistant/plots';
 
 import { Boxplot, BoxplotOutputData } from './box-plot';

@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { Card, CardBody, Image } from '@nextui-org/react';
+import { Card, CardBody, Image } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { useColorMode } from '@docusaurus/theme-common';
 import { CodeBlock } from './code-block';

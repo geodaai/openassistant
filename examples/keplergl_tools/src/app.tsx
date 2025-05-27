@@ -8,9 +8,7 @@ import '@openassistant/ui/dist/index.css';
 import { SAMPLE_DATASETS } from './dataset';
 
 const getValues = async (datasetName: string, variableName: string) => {
-  return (SAMPLE_DATASETS[datasetName] as any[]).map(
-    (item) => item[variableName]
-  );
+  return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
 };
 
 export function App() {
@@ -62,7 +60,6 @@ Note:
 
   1. create a map of the myVenues dataset
   2. create a map of the myVenues dataset with the revenue as the color
-  3. create a map of the myVenues dataset with the population as the size
   `;
 
   return (

@@ -22,6 +22,8 @@ export type CreateMapOutputData = {
   theme?: string;
   isDraggable?: boolean;
   layerConfig?: string;
+  width?: number;
+  height?: number;
 };
 
 export function isCreateMapOutputData(
@@ -50,22 +52,26 @@ export function KeplerGlComponent(props: CreateMapOutputData) {
 
   return (
     <AutoSizer>
-      {({ width = 480, height = 480 }) => (
-        <RootContext.Provider value={rootNode}>
-          <Provider store={store}>
-            <ThemeProvider theme={keplerTheme}>
-              <KeplerGlMiniComponent {...props} width={width} height={height} />
-            </ThemeProvider>
-          </Provider>
-        </RootContext.Provider>
-      )}
+      {({ width, height }) => {
+        return (
+          <RootContext.Provider value={rootNode}>
+            <Provider store={store}>
+              <ThemeProvider theme={keplerTheme}>
+                <KeplerGlMiniComponent
+                  {...props}
+                  width={width}
+                  height={height}
+                />
+              </ThemeProvider>
+            </Provider>
+          </RootContext.Provider>
+        );
+      }}
     </AutoSizer>
   );
 }
 
-export function KeplerGlMiniComponent(
-  props: CreateMapOutputData & { width: number; height: number }
-) {
+export function KeplerGlMiniComponent(props: CreateMapOutputData) {
   const dispatch = useDispatch();
   const dataAddedRef = useRef(false);
 

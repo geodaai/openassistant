@@ -7,7 +7,7 @@ import Layout from '@theme/Layout';
 import HomepageFeatures from '@site/src/components/HomepageFeatures';
 
 import styles from './index.module.css';
-import { Link } from '@nextui-org/react';
+import { Link } from '@heroui/react';
 
 function HomepageHeader() {
   // const { siteConfig } = useDocusaurusContext();

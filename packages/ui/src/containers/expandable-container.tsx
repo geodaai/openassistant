@@ -19,8 +19,8 @@ export const ExpandableContainer = ({
   onDragStart?: DragEventHandler<HTMLButtonElement>;
   onExpanded?: (isExpanded: boolean) => void;
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
   const targetRef = useRef(null);
+  const [isExpanded, setIsExpanded] = useState(false);
   const { moveProps } = useDraggable({ targetRef, isDisabled: !isExpanded });
 
   const onExpandComponent = () => {

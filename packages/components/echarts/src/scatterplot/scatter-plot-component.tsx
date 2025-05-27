@@ -7,7 +7,7 @@ import {
   TableColumn,
   TableRow,
   TableCell,
-} from '@nextui-org/react';
+} from '@heroui/react';
 import { Icon } from '@iconify/react';
 import {
   RegressionResults,

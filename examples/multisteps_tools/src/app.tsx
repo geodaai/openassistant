@@ -1,4 +1,4 @@
-import { tool } from '@openassistant/utils';
+import { extendedTool } from '@openassistant/utils';
 import { AiAssistant } from '@openassistant/ui';
 import { z } from 'zod';
 
@@ -41,7 +41,7 @@ function WeatherStation({
 
 export function App() {
   const tools = {
-    temperature: tool<z.ZodTypeAny, any, any, WeatherContext>({
+    temperature: extendedTool({
       description: 'Get the temperature in a city from a weather station',
       parameters: z.object({ cityName: z.string(), reason: z.string() }),
       execute: async ({ cityName, reason }, options) => {
@@ -59,7 +59,7 @@ export function App() {
             success: true,
             text: `The temperature in ${cityName} is ${temperature} degrees from weather station ${station}.`,
           },
-          output: {
+          additionalData: {
             cityName,
             temperature,
             station,
@@ -99,7 +99,10 @@ export function App() {
           version="v1"
           modelProvider="openai"
           model="gpt-4o"
-          welcomeMessage="Hello, how can I help you today?"
+          welcomeMessage={`Hello, how can I help you today? Try to ask:
+- What is the temperature in New York?
+- Is New York hotter than Chicago?
+`}
           instructions="You are a helpful assistant. Explain the steps you are taking to solve the user's problem."
           tools={tools}
           useMarkdown={true}

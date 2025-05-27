@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@nextui-org/react';
+import { cn } from '@heroui/react';
 import dynamic from 'next/dynamic';
 
 const Assistant = dynamic(() => import('../chat/assistant'), {

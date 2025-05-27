@@ -14,7 +14,6 @@
     "@deck.gl/layers": "9.1.12",
     "@deck.gl/react": "9.1.12",
     "@deck.gl/widgets": "9.1.12",
-    "@nextui-org/react": "^2.6.10",
     "@openassistant/core": "workspace:*",
     "@openassistant/duckdb": "workspace:*",
     "@openassistant/plots": "workspace:*",

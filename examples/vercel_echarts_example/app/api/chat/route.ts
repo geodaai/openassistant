@@ -1,6 +1,7 @@
 import { openai } from '@ai-sdk/openai';
-import { getDuckDBTool } from 'packages/tools/duckdb/dist';
-import { getPlotsTool } from 'packages/tools/plots/dist';
+import { localQuery } from '@openassistant/duckdb';
+import { histogram, HistogramTool } from '@openassistant/plots';
+import { convertToVercelAiTool } from '@openassistant/utils';
 import { createDataStreamResponse, streamText } from 'ai';
 
 export async function POST(req: Request) {
@@ -12,14 +13,10 @@ You can use the following datasets:
 
   let toolAdditionalData: Record<string, unknown> = {};
 
-  // create a tool for local query (runs in browser)
-  const localQueryTool = getDuckDBTool('localQuery', {
-    isExecutable: false,
-  });
-
-  // create a tool for histogram
-  const histogramTool = getPlotsTool('histogram', {
-    toolContext: {
+  // custom histogram tool
+  const histogramTool: HistogramTool = {
+    ...histogram,
+    context: {
       getValues: async (datasetName: string, variableName: string) => {
         console.log('getValues', datasetName, variableName);
         return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -32,8 +29,7 @@ You can use the following datasets:
         toolAdditionalData[toolCallId] = additionalData;
       }
     },
-    isExecutable: true,
-  });
+  };
 
   const { messages } = await req.json();
 
@@ -44,8 +40,10 @@ You can use the following datasets:
         messages: messages,
         system: systemPrompt,
         tools: {
-          localQuery: localQueryTool,
-          histogram: histogramTool,
+          localQuery: convertToVercelAiTool(localQuery, {
+            isExecutable: false,
+          }),
+          histogram: convertToVercelAiTool(histogramTool),
         },
         onFinish() {
           if (Object.keys(toolAdditionalData).length > 0) {

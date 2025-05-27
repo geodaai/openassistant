@@ -14,7 +14,7 @@ import {
   TableColumn,
   Card,
   CardBody,
-} from '@nextui-org/react';
+} from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { ResizablePlotContainer } from '../containers/resizable-container';
 
@@ -110,7 +110,7 @@ const ToolCallComponentRenderer = memo(
 
     return (
       <div className="w-full">
-        <ResizablePlotContainer defaultHeight={320} isHovered={true}>
+        <ResizablePlotContainer isHovered={true}>
           <ToolCallErrorBoundary>
             {typeof Component === 'function' ? (
               <Component {...(additionalData as Record<string, unknown>)} />

@@ -25,9 +25,9 @@ type Field = {
   format: string;
   type: string;
   fieldIdx: number;
-  valueAccessor(v: { index: number }): any;
-  filterProps?: any;
-  metadata?: any;
+  valueAccessor(v: { index: number }): unknown;
+  filterProps?: unknown;
+  metadata?: unknown;
   displayFormat?: string;
 };
 
