@@ -159,21 +159,12 @@ export const roads = extendedTool<
       const query = `
         [out:json][timeout:25];
         (
-          way["highway"](${south},${west},${north},${east});
+          way[highway~"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|service|living_street|path|track|road)$"](${south},${west},${north},${east});
         );
         out body;
         >;
         out skel qt;
       `;
-
-      console.log('Query coordinates:', { south, west, north, east });
-      console.log('Full query:', query);
-      console.log('Area being queried:', {
-        southwest: [south, west],
-        northeast: [north, east],
-        width: Math.abs(east - west),
-        height: Math.abs(north - south)
-      });
 
       // Use the global rate limiter before making the API call
       await overpassRateLimiter.waitForNextCall();
@@ -189,24 +180,40 @@ export const roads = extendedTool<
 
       const data = (await response.json()) as OsmResponse;
 
-      console.log('data', data);
+      // Create a node lookup map and collect ways in a single pass
+      const nodeMap = new Map<number, OsmNode>();
+      const ways: OsmWay[] = [];
+      
+      data.elements.forEach((element) => {
+        if (element.type === 'node') {
+          nodeMap.set(element.id, element);
+        } else if (element.type === 'way') {
+          ways.push(element);
+        }
+      });
 
       // Convert OSM data to GeoJSON
-      const features: GeoJSON.Feature[] = data.elements
-        .filter((element): element is OsmWay => element.type === 'way')
-        .map((way) => {
+      const features: GeoJSON.Feature[] = [];
+      
+      // Process ways in chunks to avoid memory issues
+      const CHUNK_SIZE = 1000;
+      
+      for (let i = 0; i < ways.length; i += CHUNK_SIZE) {
+        const end = Math.min(i + CHUNK_SIZE, ways.length);
+        const chunkFeatures: GeoJSON.Feature[] = [];
+        
+        for (let j = i; j < end; j++) {
+          const way = ways[j];
           const coordinates = way.nodes.map((nodeId) => {
-            const node = data.elements.find(
-              (e): e is OsmNode => e.type === 'node' && e.id === nodeId
-            );
+            const node = nodeMap.get(nodeId);
             if (!node) throw new Error(`Node ${nodeId} not found`);
             return [node.lon, node.lat];
           });
 
-          return {
-            type: 'Feature',
+          chunkFeatures.push({
+            type: 'Feature' as const,
             geometry: {
-              type: 'LineString',
+              type: 'LineString' as const,
               coordinates,
             },
             properties: {
@@ -214,8 +221,10 @@ export const roads = extendedTool<
               highway: way.tags.highway,
               name: way.tags.name || 'Unnamed Road',
             },
-          };
-        });
+          });
+        }
+        features.push(...chunkFeatures);
+      }
 
       const geojson: GeoJSON.FeatureCollection = {
         type: 'FeatureCollection',

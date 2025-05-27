@@ -329,12 +329,22 @@ export async function runSpatialJoin({
  */
 export function getBasicStatistics(result: number[][]) {
   const totalCount = result.length;
+  let minCount = Infinity;
+  let maxCount = -Infinity;
+  let sumCount = 0;
+
+  for (let i = 0; i < result.length; i++) {
+    const rowLength = result[i].length;
+    minCount = Math.min(minCount, rowLength);
+    maxCount = Math.max(maxCount, rowLength);
+    sumCount += rowLength;
+  }
+
   return {
     totalCount,
-    minCount: Math.min(...result.map((row) => row.length)),
-    maxCount: Math.max(...result.map((row) => row.length)),
-    averageCount:
-      result.reduce((sum, row) => sum + row.length, 0) / result.length,
+    minCount,
+    maxCount,
+    averageCount: sumCount / totalCount,
   };
 }
 
