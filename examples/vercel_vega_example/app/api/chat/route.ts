@@ -34,7 +34,6 @@ You can use the following datasets:
         toolAdditionalData[toolCallId] = additionalData;
       }
     },
-    isExecutable: true,
   };
 
   const { messages } = await req.json();
