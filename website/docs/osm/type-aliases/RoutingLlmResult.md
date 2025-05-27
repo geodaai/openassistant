@@ -2,7 +2,7 @@
 
 > **RoutingLlmResult**: `object`
 
-Defined in: [packages/osm/src/routing.ts:55](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/osm/src/routing.ts#L55)
+Defined in: [packages/tools/osm/src/routing.ts:56](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/routing.ts#L56)
 
 ## Type declaration
 

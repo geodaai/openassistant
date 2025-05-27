@@ -2,7 +2,7 @@
 
 > **isAssistantMessageWithCompletedToolCalls**(`message`): `boolean`
 
-Defined in: [packages/core/src/llm/vercelai.ts:44](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/llm/vercelai.ts#L44)
+Defined in: [packages/core/src/llm/vercelai.ts:42](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/core/src/llm/vercelai.ts#L42)
 
 Check if the message is an assistant message with completed tool calls.
 The message must have at least one tool invocation and all tool invocations

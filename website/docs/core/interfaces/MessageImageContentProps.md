@@ -1,6 +1,6 @@
 # Interface: MessageImageContentProps
 
-Defined in: [packages/core/src/types.ts:47](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/types.ts#L47)
+Defined in: [packages/core/src/types.ts:46](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/core/src/types.ts#L46)
 
 Type of image message content
 
@@ -10,7 +10,7 @@ Type of image message content
 
 > `optional` **alt**: `string`
 
-Defined in: [packages/core/src/types.ts:51](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/types.ts#L51)
+Defined in: [packages/core/src/types.ts:50](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/core/src/types.ts#L50)
 
 ***
 
@@ -18,7 +18,7 @@ Defined in: [packages/core/src/types.ts:51](https://github.com/GeoDaCenter/opena
 
 > `optional` **height**: `string` \| `number`
 
-Defined in: [packages/core/src/types.ts:50](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/types.ts#L50)
+Defined in: [packages/core/src/types.ts:49](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/core/src/types.ts#L49)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [packages/core/src/types.ts:50](https://github.com/GeoDaCenter/opena
 
 > `optional` **src**: `string`
 
-Defined in: [packages/core/src/types.ts:48](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/types.ts#L48)
+Defined in: [packages/core/src/types.ts:47](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/core/src/types.ts#L47)
 
 ***
 
@@ -34,4 +34,4 @@ Defined in: [packages/core/src/types.ts:48](https://github.com/GeoDaCenter/opena
 
 > `optional` **width**: `string` \| `number`
 
-Defined in: [packages/core/src/types.ts:49](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/types.ts#L49)
+Defined in: [packages/core/src/types.ts:48](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/core/src/types.ts#L48)

@@ -5,12 +5,12 @@ import { FeatureCollection } from 'geojson';
 
 import { useChat } from '@ai-sdk/react';
 import { SpatialGeometry } from '@geoda/core';
-import { getDuckDBTool, DuckDBToolNames } from 'packages/tools/duckdb/dist';
 import {
-  getMapTool,
-  MapToolNames,
+  convertToVercelAiTool,
   getValuesFromGeoJSON,
-} from 'packages/tools/map/dist';
+} from '@openassistant/utils';
+import { localQuery } from '@openassistant/duckdb';
+import { leaflet } from '@openassistant/map';
 
 import { MessageParts } from './components/parts';
 
@@ -82,8 +82,9 @@ export default function Home() {
     onToolCall: async ({ toolCall }) => {
       const { toolName, args, toolCallId } = toolCall;
       if (toolName === 'localQuery') {
-        const localQueryTool = getDuckDBTool(DuckDBToolNames.localQuery, {
-          toolContext: { getValues },
+        const localQueryTool = convertToVercelAiTool({
+          ...localQuery,
+          context: { getValues },
           onToolCompleted,
         });
         const result = await localQueryTool.execute?.(
@@ -91,9 +92,10 @@ export default function Home() {
           { toolCallId }
         );
         return result;
-      } else if (toolName === MapToolNames.leaflet) {
-        const leafletTool = getMapTool(MapToolNames.leaflet, {
-          toolContext: { getGeometries, getDataset },
+      } else if (toolName === 'leaflet') {
+        const leafletTool = convertToVercelAiTool({
+          ...leaflet,
+          context: { getGeometries, getDataset },
           onToolCompleted,
         });
         return leafletTool.execute?.(args as Record<string, unknown>, {

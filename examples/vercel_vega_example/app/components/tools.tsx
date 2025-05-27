@@ -1,7 +1,7 @@
 import {
   VegaPlotComponent,
   isVegaLiteOutputData,
-} from 'packages/components/echarts/dist';
+} from '@openassistant/vegalite';
 
 interface ToolInvocationProps {
   toolCallId: string;

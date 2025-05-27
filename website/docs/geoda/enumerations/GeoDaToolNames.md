@@ -1,6 +1,6 @@
 # Enumeration: GeoDaToolNames
 
-Defined in: [packages/geoda/src/register-tools.ts:19](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/register-tools.ts#L19)
+Defined in: [packages/tools/geoda/src/register-tools.ts:19](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/register-tools.ts#L19)
 
 ## Enumeration Members
 
@@ -8,7 +8,7 @@ Defined in: [packages/geoda/src/register-tools.ts:19](https://github.com/GeoDaCe
 
 > **area**: `"area"`
 
-Defined in: [packages/geoda/src/register-tools.ts:27](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/register-tools.ts#L27)
+Defined in: [packages/tools/geoda/src/register-tools.ts:27](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/register-tools.ts#L27)
 
 ***
 
@@ -16,7 +16,7 @@ Defined in: [packages/geoda/src/register-tools.ts:27](https://github.com/GeoDaCe
 
 > **buffer**: `"buffer"`
 
-Defined in: [packages/geoda/src/register-tools.ts:28](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/register-tools.ts#L28)
+Defined in: [packages/tools/geoda/src/register-tools.ts:28](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/register-tools.ts#L28)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [packages/geoda/src/register-tools.ts:28](https://github.com/GeoDaCe
 
 > **centroid**: `"centroid"`
 
-Defined in: [packages/geoda/src/register-tools.ts:29](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/register-tools.ts#L29)
+Defined in: [packages/tools/geoda/src/register-tools.ts:29](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/register-tools.ts#L29)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [packages/geoda/src/register-tools.ts:29](https://github.com/GeoDaCe
 
 > **dataClassify**: `"dataClassify"`
 
-Defined in: [packages/geoda/src/register-tools.ts:20](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/register-tools.ts#L20)
+Defined in: [packages/tools/geoda/src/register-tools.ts:20](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/register-tools.ts#L20)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [packages/geoda/src/register-tools.ts:20](https://github.com/GeoDaCe
 
 > **dissolve**: `"dissolve"`
 
-Defined in: [packages/geoda/src/register-tools.ts:30](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/register-tools.ts#L30)
+Defined in: [packages/tools/geoda/src/register-tools.ts:30](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/register-tools.ts#L30)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [packages/geoda/src/register-tools.ts:30](https://github.com/GeoDaCe
 
 > **globalMoran**: `"globalMoran"`
 
-Defined in: [packages/geoda/src/register-tools.ts:22](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/register-tools.ts#L22)
+Defined in: [packages/tools/geoda/src/register-tools.ts:22](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/register-tools.ts#L22)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [packages/geoda/src/register-tools.ts:22](https://github.com/GeoDaCe
 
 > **length**: `"length"`
 
-Defined in: [packages/geoda/src/register-tools.ts:31](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/register-tools.ts#L31)
+Defined in: [packages/tools/geoda/src/register-tools.ts:31](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/register-tools.ts#L31)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [packages/geoda/src/register-tools.ts:31](https://github.com/GeoDaCe
 
 > **lisa**: `"lisa"`
 
-Defined in: [packages/geoda/src/register-tools.ts:21](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/register-tools.ts#L21)
+Defined in: [packages/tools/geoda/src/register-tools.ts:21](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/register-tools.ts#L21)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [packages/geoda/src/register-tools.ts:21](https://github.com/GeoDaCe
 
 > **perimeter**: `"perimeter"`
 
-Defined in: [packages/geoda/src/register-tools.ts:32](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/register-tools.ts#L32)
+Defined in: [packages/tools/geoda/src/register-tools.ts:32](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/register-tools.ts#L32)
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: [packages/geoda/src/register-tools.ts:32](https://github.com/GeoDaCe
 
 > **spatialFilter**: `"spatialFilter"`
 
-Defined in: [packages/geoda/src/register-tools.ts:25](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/register-tools.ts#L25)
+Defined in: [packages/tools/geoda/src/register-tools.ts:25](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/register-tools.ts#L25)
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: [packages/geoda/src/register-tools.ts:25](https://github.com/GeoDaCe
 
 > **spatialJoin**: `"spatialJoin"`
 
-Defined in: [packages/geoda/src/register-tools.ts:24](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/register-tools.ts#L24)
+Defined in: [packages/tools/geoda/src/register-tools.ts:24](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/register-tools.ts#L24)
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: [packages/geoda/src/register-tools.ts:24](https://github.com/GeoDaCe
 
 > **spatialRegression**: `"spatialRegression"`
 
-Defined in: [packages/geoda/src/register-tools.ts:23](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/register-tools.ts#L23)
+Defined in: [packages/tools/geoda/src/register-tools.ts:23](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/register-tools.ts#L23)
 
 ***
 
@@ -104,4 +104,4 @@ Defined in: [packages/geoda/src/register-tools.ts:23](https://github.com/GeoDaCe
 
 > **spatialWeights**: `"spatialWeights"`
 
-Defined in: [packages/geoda/src/register-tools.ts:26](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/register-tools.ts#L26)
+Defined in: [packages/tools/geoda/src/register-tools.ts:26](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/register-tools.ts#L26)

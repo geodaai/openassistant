@@ -90,6 +90,7 @@
 
 ## Functions
 
+- [appendJoinValuesToGeometries](functions/appendJoinValuesToGeometries.md)
 - [getBasicStatistics](functions/getBasicStatistics.md)
 - [getCachedWeights](functions/getCachedWeights.md)
 - [getCachedWeightsById](functions/getCachedWeightsById.md)

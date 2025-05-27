@@ -2,7 +2,7 @@
 
 > **getMapTool**(`toolName`, `options`): `ToolResult`
 
-Defined in: [packages/map/src/register-tools.ts:108](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/map/src/register-tools.ts#L108)
+Defined in: [packages/tools/map/src/register-tools.ts:126](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/map/src/register-tools.ts#L126)
 
 Get a map tool (client-side tool)
 
@@ -35,7 +35,7 @@ The options for the tool
 
 #### toolContext
 
-[`KeplerglToolContext`](../type-aliases/KeplerglToolContext.md)
+[`MapToolContext`](../type-aliases/MapToolContext.md)
 
 ## Returns
 

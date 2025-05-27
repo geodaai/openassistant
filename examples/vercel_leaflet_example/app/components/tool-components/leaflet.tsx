@@ -2,7 +2,7 @@ import React from 'react';
 import {
   isLeafletOutputData,
   LeafletMapComponent,
-} from 'packages/components/echarts/dist';
+} from '@openassistant/leaflet';
 
 export function LeafletTool({ additionalData }: { additionalData: unknown }) {
   if (!isLeafletOutputData(additionalData)) {

@@ -2,11 +2,7 @@
 
 import { useState } from 'react';
 import { useChat } from '@ai-sdk/react';
-import {
-  localQuery,
-  LocalQueryArgs,
-  LocalQueryTool,
-} from '@openassistant/duckdb';
+import { localQuery, LocalQueryTool } from '@openassistant/duckdb';
 import { convertToVercelAiTool } from '@openassistant/utils';
 import { MessageParts } from './components/parts';
 

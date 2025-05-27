@@ -60,10 +60,10 @@ const config: Config = {
     [
       'docusaurus-plugin-typedoc',
       {
-        id: 'echarts',
-        entryPoints: ['../packages/echarts/src/index.ts'],
-        tsconfig: '../packages/echarts/tsconfig.json',
-        out: 'docs/echarts',
+        id: 'plots',
+        entryPoints: ['../packages/tools/plots/src/index.ts'],
+        tsconfig: '../packages/tools/plots/tsconfig.json',
+        out: 'docs/plots',
         watch: false,
         excludePrivate: true,
         excludeInternal: true,
@@ -74,8 +74,8 @@ const config: Config = {
       'docusaurus-plugin-typedoc',
       {
         id: 'geoda',
-        entryPoints: ['../packages/geoda/src/index.ts'],
-        tsconfig: '../packages/geoda/tsconfig.json',
+        entryPoints: ['../packages/tools/geoda/src/index.ts'],
+        tsconfig: '../packages/tools/geoda/tsconfig.json',
         out: 'docs/geoda',
         watch: false,
         excludePrivate: true,
@@ -98,8 +98,8 @@ const config: Config = {
       'docusaurus-plugin-typedoc',
       {
         id: 'duckdb',
-        entryPoints: ['../packages/duckdb/src/index.ts'],
-        tsconfig: '../packages/duckdb/tsconfig.json',
+        entryPoints: ['../packages/tools/duckdb/src/index.ts'],
+        tsconfig: '../packages/tools/duckdb/tsconfig.json',
         out: 'docs/duckdb',
         watch: false,
         excludePrivate: true,
@@ -110,8 +110,8 @@ const config: Config = {
       'docusaurus-plugin-typedoc',
       {
         id: 'osm',
-        entryPoints: ['../packages/osm/src/index.ts'],
-        tsconfig: '../packages/osm/tsconfig.json',
+        entryPoints: ['../packages/tools/osm/src/index.ts'],
+        tsconfig: '../packages/tools/osm/tsconfig.json',
         out: 'docs/osm',
         watch: false,
         excludePrivate: true,
@@ -122,8 +122,8 @@ const config: Config = {
       'docusaurus-plugin-typedoc',
       {
         id: 'map',
-        entryPoints: ['../packages/map/src/index.ts'],
-        tsconfig: '../packages/map/tsconfig.json',
+        entryPoints: ['../packages/tools/map/src/index.ts'],
+        tsconfig: '../packages/tools/map/tsconfig.json',
         out: 'docs/map',
         watch: false,
         excludePrivate: true,

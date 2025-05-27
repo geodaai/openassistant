@@ -1,7 +1,8 @@
 import dotenv from 'dotenv';
 import { generateText } from 'ai';
 import { openai } from '@ai-sdk/openai';
-import { getVercelAiTools } from '@openassistant/plots';
+import { histogram } from '@openassistant/plots';
+import { convertToVercelAiTool } from '@openassistant/utils';
 
 // Load environment variables
 dotenv.config();
@@ -21,8 +22,11 @@ async function main() {
     console.log('additionalData', additionalData);
   };
 
-  // const histogram = getVercelAiTool('histogram', context, onToolCompleted);
-  const echartsTools = getVercelAiTools(context, onToolCompleted);
+  const histogramTool = {
+    ...histogram,
+    context,
+    onToolCompleted,
+  };
 
   // use tool in vercel ai
   const model = openai('gpt-4o', { apiKey: key });
@@ -33,7 +37,7 @@ async function main() {
       'You are a helpful assistant that can use tools to get information. Please make a plan before using tools.',
     prompt: 'create a histogram of HR60 in dataset Natregimes',
     tools: {
-      ...echartsTools,
+      histogram: convertToVercelAiTool(histogramTool),
     },
   });
 

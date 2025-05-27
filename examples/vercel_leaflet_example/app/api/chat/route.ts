@@ -1,18 +1,18 @@
 import { openai } from '@ai-sdk/openai';
-import { getDuckDBTool } from 'packages/tools/duckdb/dist';
-import { getPlotsTool } from 'packages/tools/plots/dist';
-import {
-  getGeoDaTool,
-  GeoDaToolNames,
-  GetGeometries,
-} from 'packages/tools/geoda/dist';
-import { getOsmTool, OsmToolNames } from 'packages/tools/osm/dist';
-import {
-  getMapTool,
-  getValuesFromGeoJSON,
-  MapToolNames,
-} from 'packages/tools/map/dist';
 import { createDataStreamResponse, streamText } from 'ai';
+import {
+  convertToVercelAiTool,
+  getValuesFromGeoJSON,
+} from '@openassistant/utils';
+import {
+  dataClassify,
+  GetGeometries,
+  lisa,
+  spatialWeights,
+} from '@openassistant/geoda';
+import { leaflet, downloadMapData } from '@openassistant/map';
+import { isochrone, geocoding, routing } from '@openassistant/osm';
+import { localQuery } from '@openassistant/duckdb';
 
 // Move toolAdditionalData outside the POST function to persist across requests
 const toolAdditionalData: { toolCallId: string; data: unknown }[] = [];
@@ -79,74 +79,60 @@ const onToolCompleted = (toolCallId: string, toolOutput?: unknown) => {
   }
 };
 
-// create a client-side tool for downloadMapData
-const downloadMapDataTool = getMapTool(MapToolNames.downloadMapData, {
-  toolContext: {},
-  onToolCompleted,
-  isExecutable: true,
+// client-side tools
+const leafletTool = convertToVercelAiTool(leaflet, {
+  isExecutable: false,
 });
-
-// create a client-side tool for leaflet
-const leafletTool = getMapTool(MapToolNames.leaflet, {
-  toolContext: {},
+const localQueryTool = convertToVercelAiTool(localQuery, {
   isExecutable: false,
 });
 
-// create a server-side tool for geocoding: no context needed (runs in server)
-const geocodingTool = getOsmTool(OsmToolNames.geocoding, {
+// server-side tools
+const downloadMapDataTool = convertToVercelAiTool({
+  ...downloadMapData,
   onToolCompleted,
-  isExecutable: true,
 });
-
-// create a server-side tool for routing: you need to provide a tool context (runs in server)
-const routingTool = getOsmTool(OsmToolNames.routing, {
-  toolContext: {
+const geocodingTool = convertToVercelAiTool({
+  ...geocoding,
+  onToolCompleted,
+});
+const routingTool = convertToVercelAiTool({
+  ...routing,
+  context: {
     getMapboxToken: () => process.env.MAPBOX_TOKEN!,
   },
   onToolCompleted,
-  isExecutable: true,
 });
-
-// create a server-side tool for isochrone: you need to provide a tool context (runs in server)
-const isochroneTool = getOsmTool(OsmToolNames.isochrone, {
-  toolContext: {
+const isochroneTool = convertToVercelAiTool({
+  ...isochrone,
+  context: {
     getMapboxToken: () => process.env.MAPBOX_TOKEN!,
   },
   onToolCompleted,
-  isExecutable: true,
 });
 
-// create a server-side tool for classifyData (runs in server)
-const dataClassifyTool = getGeoDaTool(GeoDaToolNames.dataClassify, {
-  toolContext: { getValues },
+const dataClassifyTool = convertToVercelAiTool({
+  ...dataClassify,
+  context: { getValues },
   onToolCompleted,
-  isExecutable: true,
 });
 
-// create a server-side tool for spatialWeights (runs in server)
-const spatialWeightsTool = getGeoDaTool(GeoDaToolNames.spatialWeights, {
-  toolContext: { getGeometries },
+const spatialWeightsTool = convertToVercelAiTool({
+  ...spatialWeights,
+  context: { getGeometries },
   onToolCompleted,
-  isExecutable: true,
 });
 
-// create a server-side tool for lisa (runs in server)
-const lisaTool = getGeoDaTool(GeoDaToolNames.lisa, {
-  toolContext: { getValues, getGeometries },
+const lisaTool = convertToVercelAiTool({
+  ...lisa,
+  context: { getValues, getGeometries },
   onToolCompleted,
-  isExecutable: true,
 });
 
-// create a client-side tool for local query (runs in browser)
-const localQueryTool = getDuckDBTool('localQuery', {
-  isExecutable: false,
-});
-
-// create a server-side tool for histogram
-const histogramTool = getPlotsTool('histogram', {
-  toolContext: { getValues },
+const histogramTool = convertToVercelAiTool({
+  ...histogram,
+  context: { getValues },
   onToolCompleted,
-  isExecutable: true,
 });
 
 export async function POST(req: Request) {

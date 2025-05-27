@@ -2,18 +2,14 @@
 
 > **CentroidAdditionalData**: `object`
 
-Defined in: [packages/geoda/src/spatial\_ops/centroid.ts:20](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/spatial_ops/centroid.ts#L20)
+Defined in: [packages/tools/geoda/src/spatial\_ops/centroid.ts:20](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/spatial_ops/centroid.ts#L20)
 
 ## Type declaration
 
-### centroids
+## Index Signature
 
-> **centroids**: (`number`[] \| `null`)[]
+\[`outputDatasetName`: `string`\]: `unknown`
 
 ### datasetName?
 
 > `optional` **datasetName**: `string`
-
-### geojson?
-
-> `optional` **geojson**: `string`

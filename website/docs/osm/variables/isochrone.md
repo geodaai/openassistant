@@ -1,8 +1,8 @@
 # Variable: isochrone
 
-> `const` **isochrone**: `ExtendedTool`\<[`IsochroneFunctionArgs`](../type-aliases/IsochroneFunctionArgs.md), [`IsochroneLlmResult`](../type-aliases/IsochroneLlmResult.md), [`IsochroneAdditionalData`](../type-aliases/IsochroneAdditionalData.md), [`OsmToolContext`](../type-aliases/OsmToolContext.md)\>
+> `const` **isochrone**: `ExtendedTool`\<[`IsochroneFunctionArgs`](../type-aliases/IsochroneFunctionArgs.md), [`IsochroneLlmResult`](../type-aliases/IsochroneLlmResult.md), [`IsochroneAdditionalData`](../type-aliases/IsochroneAdditionalData.md), [`MapboxToolContext`](../type-aliases/MapboxToolContext.md)\>
 
-Defined in: [packages/osm/src/isochrone.ts:107](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/osm/src/isochrone.ts#L107)
+Defined in: [packages/tools/osm/src/isochrone.ts:108](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/isochrone.ts#L108)
 
 Isochrone Tool
 

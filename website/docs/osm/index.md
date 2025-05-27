@@ -392,10 +392,10 @@ Check out our example projects:
 - [Custom Function Example](_media/README-1.md)
 - [Multiple Step Tools](_media/README-2.md)
 - [Message Persistence Example](examples/message_persistence/README.md)
-- [Simple React Example](_media/README-3.md)
-- [React with TailwindCSS Example](_media/README-4.md)
+- [Simple React Example](examples/simple_react/README.md)
+- [React with TailwindCSS Example](_media/README-3.md)
 - [Tool Example: ECharts](examples/echarts_plugin/README.md)
-- [Tool Example: DuckDB](_media/README-5.md)
+- [Tool Example: DuckDB](_media/README-4.md)
 - [Tool Example: KeplerGl](examples/keplergl_plugin/README.md)
 - [Tool Example: DeckGl](examples/deckgl_assistant/README.md)
 

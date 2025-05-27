@@ -2,13 +2,21 @@
 
 > **KeplerglToolArgs**: `object`
 
-Defined in: [packages/map/src/keplergl.ts:153](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/map/src/keplergl.ts#L153)
+Defined in: [packages/tools/map/src/keplergl/tool.ts:152](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/map/src/keplergl/tool.ts#L152)
 
 ## Type declaration
 
-### config?
+### colorBy?
 
-> `optional` **config**: `string`
+> `optional` **colorBy**: `string`
+
+### colorMap?
+
+> `optional` **colorMap**: `object`[]
+
+### colorType?
+
+> `optional` **colorType**: `"breaks"` \| `"unique"`
 
 ### datasetName
 

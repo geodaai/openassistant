@@ -2,7 +2,7 @@
 
 > `const` **buffer**: `ExtendedTool`\<[`BufferFunctionArgs`](../type-aliases/BufferFunctionArgs.md), [`BufferLlmResult`](../type-aliases/BufferLlmResult.md), [`BufferAdditionalData`](../type-aliases/BufferAdditionalData.md), [`SpatialToolContext`](../type-aliases/SpatialToolContext.md)\>
 
-Defined in: [packages/geoda/src/spatial\_ops/buffer.ts:75](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/spatial_ops/buffer.ts#L75)
+Defined in: [packages/tools/geoda/src/spatial\_ops/buffer.ts:74](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/spatial_ops/buffer.ts#L74)
 
 The buffer tool is used to create buffer zones around geometries.
 

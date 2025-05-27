@@ -2,7 +2,7 @@ import {
   CreateMapOutputData,
   isCreateMapOutputData,
   KeplerGlToolComponent,
-} from 'packages/components/keplergl/dist';
+} from '@openassistant/keplergl';
 import { memo } from 'react';
 
 export const KeplerGlTool = memo(

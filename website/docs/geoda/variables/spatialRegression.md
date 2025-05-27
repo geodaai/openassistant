@@ -2,7 +2,7 @@
 
 > `const` **spatialRegression**: `ExtendedTool`\<[`SpatialRegressionFunctionArgs`](../type-aliases/SpatialRegressionFunctionArgs.md), [`SpatialRegressionLlmResult`](../type-aliases/SpatialRegressionLlmResult.md), [`SpatialRegressionAdditionalData`](../type-aliases/SpatialRegressionAdditionalData.md), [`SpatialRegressionFunctionContext`](../type-aliases/SpatialRegressionFunctionContext.md)\>
 
-Defined in: [packages/geoda/src/regression/tool.ts:79](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/regression/tool.ts#L79)
+Defined in: [packages/tools/geoda/src/regression/tool.ts:79](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/regression/tool.ts#L79)
 
 The spatial regression tool is used to perform regression analysis with spatial data.
 

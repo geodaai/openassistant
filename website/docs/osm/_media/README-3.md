@@ -1,38 +1,46 @@
-# Getting Started with OpenAssistant in React Project
+# Getting Started with OpenAssistant in React with TailwindCSS
 
-The repository [simple_react_app](https://github.com/openassistant/simple_react_app) is a minimal example of how to use OpenAssistant in a React project.
-
-The basic structure is as follows:
-
-```
-src/
-├── App.js
-├── index.js
-public/
-├── index.html
-├── package.json
-```
+This tutorial shows how to use **OpenAssistant** in a React project that includes **TailwindCSS** for styling.
 
 ## Instructions
 
-### 1. Install dependencies:
+### 1. Install Dependencies
 
-To use OpenAssistant in your React project, you need to install the following packages:
+To use OpenAssistant in your React project, install the required packages:
 
 ```bash
 yarn add @openassistant/ui
 ```
 
-### 2. Add chat component to your app:
+If you haven't already set up TailwindCSS in your React project, follow these steps to install and configure it:
+
+```javascript
+import { nextui } from '@nextui-org/react';
+
+module.exports = {
+  content: [
+    // your content here
+    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
+    './node_modules/@openassistant/ui/dist/**/*.{js,ts,jsx,tsx}',
+  ],
+  theme: {
+    extend: {},
+  },
+  darkMode: 'class',
+  plugins: [nextui()],
+};
+```
+
+### 2. Add the OpenAssistant Chat Component to Your App
+
+Here’s how to use the `Assistant` component from OpenAssistant:
 
 ```jsx
 import { Assistant } from '@openassistant/ui';
-// for project not using tailwind, you need to import the css file
-import '@openassistant/ui/dist/index.css';
 
 function App() {
   return (
-    <div style={{ width: '400px', height: '800px', margin: '20px' }}>
+    <div className="w-[400px] h-[800px] m-5">
       <Assistant
         name="My Assistant"
         apiKey=""
@@ -47,69 +55,18 @@ function App() {
     </div>
   );
 }
+
+export default App;
 ```
 
-You can see the UI interface in browser if you run `yarn start`.
+### 3. Run the Project
 
-<img width="300" alt="" src="https://github.com/user-attachments/assets/394a9bb6-6022-477d-a98d-f85db043ce71" />
-
-### 3. Set up the local ollama server
-
-Download the Ollama desktop app from [https://ollama.com/download](https://ollama.com/download) and run it.
-
-To run a model e.g. llama3.2, type in terminal:
-
-```bash
-ollama run llama3.2
-```
-
-If you want to download a model e.g. llama3.2, type in terminal:
-
-```bash
-ollama pull llama3.2
-```
-
-More information about ollama can be found in the [ollama documentation](https://github.com/ollama/ollama).
-
-**Note:**
-
-If you need to access your local ollama from your published React app, you need to start the ollama server with the following command:
-
-```bash
-OLLAMA_ORIGINS=* ollama serve
-```
-
-### 4. Run the project
+Start your React project with:
 
 ```bash
 yarn start
 ```
 
-### 5. Theme 
+You should now see the OpenAssistant UI rendered in your React app styled with TailwindCSS.
 
-You can use the `theme` prop to switch the theme of the assistant.
-
-```jsx
-import { Assistant } from '@openassistant/ui';
-// for project not using tailwind, you need to import the css file
-import '@openassistant/ui/dist/index.css';
-
-function App() {
-  return (
-    <div style={{ width: '400px', height: '800px', margin: '20px' }}>
-      <AiAssistant
-        name="My Assistant"
-        apiKey=""
-        version="v1"
-        modelProvider="ollama"
-        model="llama3.1"
-        baseUrl="http://127.0.0.1:11434"
-        welcomeMessage="Hello, how can I help you today?"
-        instructions="You are a helpful assistant."
-        functions={{}}
-        theme="dark"
-      />
-    </div>
-  );
-}
-```
+<img width="300" alt="" src="https://github.com/user-attachments/assets/9875ac6f-f903-482b-a9ab-0a366fffec0a" />

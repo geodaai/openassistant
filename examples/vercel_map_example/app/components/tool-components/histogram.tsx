@@ -1,7 +1,4 @@
-import {
-  isHistogramOutputData,
-  HistogramComponent,
-} from 'packages/components/echarts/dist';
+import { isHistogramOutputData, HistogramComponent } from '@openassistant/echarts';
 
 export function HistogramTool({ additionalData }: { additionalData: unknown }) {
   if (isHistogramOutputData(additionalData)) {

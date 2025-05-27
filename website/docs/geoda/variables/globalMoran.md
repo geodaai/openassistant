@@ -2,7 +2,7 @@
 
 > `const` **globalMoran**: `ExtendedTool`\<[`MoranScatterPlotFunctionArgs`](../type-aliases/MoranScatterPlotFunctionArgs.md), [`MoranScatterPlotLlmResult`](../type-aliases/MoranScatterPlotLlmResult.md), [`MoranScatterPlotAdditionalData`](../type-aliases/MoranScatterPlotAdditionalData.md), [`MoranScatterPlotFunctionContext`](../type-aliases/MoranScatterPlotFunctionContext.md)\>
 
-Defined in: packages/geoda/src/global-moran/tool.ts:104
+Defined in: [packages/tools/geoda/src/global-moran/tool.ts:104](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/global-moran/tool.ts#L104)
 
 The Global Moran's I tool is used to calculate Global Moran's I for a given variable to check if the variable is spatially clustered or dispersed.
 

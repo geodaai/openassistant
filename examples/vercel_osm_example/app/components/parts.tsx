@@ -1,3 +1,11 @@
+import {
+  TextUIPart,
+  ReasoningUIPart,
+  ToolInvocationUIPart,
+  SourceUIPart,
+  FileUIPart,
+  StepStartUIPart,
+} from '@ai-sdk/ui-utils';
 import { ToolInvocation } from './tools';
 
 export function MessageParts({
@@ -5,7 +13,14 @@ export function MessageParts({
   toolAdditionalData,
   getValues,
 }: {
-  parts: any[];
+  parts: Array<
+    | TextUIPart
+    | ReasoningUIPart
+    | ToolInvocationUIPart
+    | SourceUIPart
+    | FileUIPart
+    | StepStartUIPart
+  >;
   toolAdditionalData: Record<string, unknown>;
   getValues: (datasetName: string, variableName: string) => Promise<number[]>;
 }) {

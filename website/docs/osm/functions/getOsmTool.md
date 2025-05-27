@@ -2,7 +2,7 @@
 
 > **getOsmTool**(`toolName`, `options`?): `ToolResult`
 
-Defined in: [packages/osm/src/register-tools.ts:82](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/osm/src/register-tools.ts#L82)
+Defined in: [packages/tools/osm/src/register-tools.ts:99](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/register-tools.ts#L99)
 
 Get a single OSM tool.
 
@@ -32,7 +32,7 @@ The callback function to handle the tool completion and get the output data from
 
 #### toolContext?
 
-[`OsmToolContext`](../type-aliases/OsmToolContext.md)
+[`MapboxToolContext`](../type-aliases/MapboxToolContext.md)
 
 The tool context, which is required for some tools e.g. routing, isochrone, etc.
 

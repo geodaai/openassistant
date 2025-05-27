@@ -2,7 +2,7 @@
 
 > **KeplerGlToolAdditionalData**: `object`
 
-Defined in: [packages/map/src/keplergl.ts:131](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/map/src/keplergl.ts#L131)
+Defined in: [packages/tools/map/src/keplergl/tool.ts:135](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/map/src/keplergl/tool.ts#L135)
 
 ## Type declaration
 
@@ -10,9 +10,9 @@ Defined in: [packages/map/src/keplergl.ts:131](https://github.com/GeoDaCenter/op
 
 > **datasetForKepler**: `FileCacheItem`[]
 
-### datasetName
+### datasetId
 
-> **datasetName**: `string`
+> **datasetId**: `string`
 
 ### geometryColumn?
 
@@ -28,7 +28,11 @@ Defined in: [packages/map/src/keplergl.ts:131](https://github.com/GeoDaCenter/op
 
 ### layerConfig?
 
-> `optional` **layerConfig**: `string`
+> `optional` **layerConfig**: `Record`\<`string`, `unknown`\>
+
+### layerId
+
+> **layerId**: `string`
 
 ### longitudeColumn?
 

@@ -2,7 +2,7 @@
 
 > **UseAssistantProps**: `object`
 
-Defined in: [packages/core/src/hooks/use-assistant.ts:13](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/hooks/use-assistant.ts#L13)
+Defined in: [packages/core/src/hooks/use-assistant.ts:13](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/core/src/hooks/use-assistant.ts#L13)
 
 Props for configuring the AI Assistant and useAssistant hook.
 
@@ -108,7 +108,7 @@ Controls how the assistant selects tools to use.
 
 ### tools?
 
-> `optional` **tools**: `Record`\<`string`, `ExtendedTool`\<`any`, `any`, `any`, `any`\>\>
+> `optional` **tools**: `Record`\<`string`, `ExtendedTool`\<`any`, `any`, `any`, `any`\> \| `Tool`\>
 
 Custom tools the assistant can use. E.g. `{ localQuery: localQueryTool }`
 

@@ -2,7 +2,7 @@
 
 > `const` **lisa**: `ExtendedTool`\<[`LisaFunctionArgs`](../type-aliases/LisaFunctionArgs.md), [`LisaLlmResult`](../type-aliases/LisaLlmResult.md), [`LisaAdditionalData`](../type-aliases/LisaAdditionalData.md), [`LisaFunctionContext`](../type-aliases/LisaFunctionContext.md)\>
 
-Defined in: [packages/geoda/src/lisa/tool.ts:116](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/lisa/tool.ts#L116)
+Defined in: [packages/tools/geoda/src/lisa/tool.ts:112](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/lisa/tool.ts#L112)
 
 The LISA tool is used to apply local indicators of spatial association (LISA) statistics
 to identify local clusters and spatial outliers.

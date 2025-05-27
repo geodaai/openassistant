@@ -1,8 +1,8 @@
 # Type Alias: LisaAdditionalData
 
-> **LisaAdditionalData**: `LocalMoranResult` & `object`
+> **LisaAdditionalData**: `Partial`\<`LocalMoranResult`\> & `object`
 
-Defined in: [packages/geoda/src/lisa/tool.ts:51](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/lisa/tool.ts#L51)
+Defined in: [packages/tools/geoda/src/lisa/tool.ts:46](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/lisa/tool.ts#L46)
 
 ## Type declaration
 
@@ -10,9 +10,9 @@ Defined in: [packages/geoda/src/lisa/tool.ts:51](https://github.com/GeoDaCenter/
 
 > **datasetName**: `string`
 
-### lisaDatasetName
+### originalDatasetName
 
-> **lisaDatasetName**: `string`
+> **originalDatasetName**: `string`
 
 ### significanceThreshold
 

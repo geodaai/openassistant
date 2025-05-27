@@ -1,72 +1,58 @@
-# Getting Started with OpenAssistant in React with TailwindCSS
+# DuckDB Example with esbuild
 
-This tutorial shows how to use **OpenAssistant** in a React project that includes **TailwindCSS** for styling.
+This example demonstrates how to use `@openassistant/duckdb` with esbuild in a React application. The example includes a sample dataset of venues and allows you to query the data using natural language through an AI assistant.
 
-## Instructions
+## Features
 
-### 1. Install Dependencies
+- Uses esbuild for fast bundling
+- React 18 with TypeScript
+- DuckDB integration for data querying
+- AI Assistant interface for natural language queries
+- Sample dataset with venue information
 
-To use OpenAssistant in your React project, install the required packages:
+## Getting Started
+
+1. Install dependencies:
+```bash
+yarn install
+```
+
+2. Set up your OpenAI API key:
+```bash
+export OPENAI_API_KEY=your_api_key_here
+```
+
+3. Start the development server:
+```bash
+yarn dev
+```
+
+4. Open your browser and navigate to `http://localhost:3000`
+
+## Example Queries
+
+You can try the following example queries with the AI assistant:
+
+- "Show me the revenue per capita for each location"
+- "Which city has the highest revenue?"
+- "What's the average latitude and longitude of all venues?"
+- "List all cities with revenue above 10 million"
+
+## Project Structure
+
+- `src/App.tsx` - Main application component
+- `src/dataset.ts` - Sample dataset
+- `src/index.tsx` - Application entry point
+- `index.html` - HTML entry point
+- `package.json` - Project dependencies and scripts
+- `tsconfig.json` - TypeScript configuration
+
+## Building for Production
+
+To create a production build:
 
 ```bash
-yarn add @openassistant/ui
+yarn build
 ```
 
-If you haven't already set up TailwindCSS in your React project, follow these steps to install and configure it:
-
-```javascript
-import { nextui } from '@nextui-org/react';
-
-module.exports = {
-  content: [
-    // your content here
-    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
-    './node_modules/@openassistant/ui/dist/**/*.{js,ts,jsx,tsx}',
-  ],
-  theme: {
-    extend: {},
-  },
-  darkMode: 'class',
-  plugins: [nextui()],
-};
-```
-
-### 2. Add the OpenAssistant Chat Component to Your App
-
-Here’s how to use the `Assistant` component from OpenAssistant:
-
-```jsx
-import { Assistant } from '@openassistant/ui';
-
-function App() {
-  return (
-    <div className="w-[400px] h-[800px] m-5">
-      <Assistant
-        name="My Assistant"
-        apiKey=""
-        version="v1"
-        modelProvider="ollama"
-        model="llama3.1"
-        baseUrl="http://127.0.0.1:11434"
-        welcomeMessage="Hello, how can I help you today?"
-        instructions="You are a helpful assistant."
-        functions={[]}
-      />
-    </div>
-  );
-}
-
-export default App;
-```
-
-### 3. Run the Project
-
-Start your React project with:
-
-```bash
-yarn start
-```
-
-You should now see the OpenAssistant UI rendered in your React app styled with TailwindCSS.
-
-<img width="300" alt="" src="https://github.com/user-attachments/assets/9875ac6f-f903-482b-a9ab-0a366fffec0a" />
+The built files will be in the `dist` directory. You can serve these files using any static file server.

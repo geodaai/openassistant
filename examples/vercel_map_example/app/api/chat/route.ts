@@ -1,14 +1,20 @@
 import { openai } from '@ai-sdk/openai';
-import { getDuckDBTool } from 'packages/tools/duckdb/dist';
-import { getPlotsTool } from 'packages/tools/plots/dist';
+import { localQuery } from '@openassistant/duckdb';
+import { histogram } from '@openassistant/plots';
+import { GetGeometries } from '@openassistant/geoda';
 import {
-  getGeoDaTool,
-  GeoDaToolNames,
-  GetGeometries,
-} from 'packages/tools/geoda/dist';
-import { getOsmTool, OsmToolNames } from 'packages/tools/osm/dist';
-import { getMapTool, MapToolNames } from 'packages/tools/map/dist';
-import { getValuesFromGeoJSON } from '@openassistant/utils';
+  geocoding,
+  routing,
+  isochrone,
+  dataClassify,
+  spatialWeights,
+  lisa,
+} from '@openassistant/osm';
+import { downloadMapData, keplergl } from '@openassistant/map';
+import {
+  getValuesFromGeoJSON,
+  convertToVercelAiTool,
+} from '@openassistant/utils';
 import { createDataStreamResponse, streamText } from 'ai';
 
 // Move toolAdditionalData outside the POST function to persist across requests
@@ -80,62 +86,59 @@ const onToolCompleted = (toolCallId: string, toolOutput?: unknown) => {
 };
 
 // client-side tools:
-const keplerglTool = getMapTool(MapToolNames.keplergl, {
-  toolContext: {},
+const keplerglTool = convertToVercelAiTool(keplergl, {
   isExecutable: false,
 });
-const localQueryTool = getDuckDBTool('localQuery', {
+
+const localQueryTool = convertToVercelAiTool(localQuery, {
   isExecutable: false,
 });
 
 // server-side tools:
-const downloadMapDataTool = getMapTool(MapToolNames.downloadMapData, {
-  toolContext: {},
+const downloadMapDataTool = convertToVercelAiTool({
+  ...downloadMapData,
   onToolCompleted,
-  isExecutable: true,
 });
-const geocodingTool = getOsmTool(OsmToolNames.geocoding, {
+const geocodingTool = convertToVercelAiTool({
+  ...geocoding,
   onToolCompleted,
-  isExecutable: true,
 });
-const routingTool = getOsmTool(OsmToolNames.routing, {
-  toolContext: {
+const routingTool = convertToVercelAiTool({
+  ...routing,
+  context: {
     getMapboxToken: () => process.env.MAPBOX_TOKEN!,
   },
   onToolCompleted,
-  isExecutable: true,
 });
-
-const isochroneTool = getOsmTool(OsmToolNames.isochrone, {
-  toolContext: {
+const isochroneTool = convertToVercelAiTool({
+  ...isochrone,
+  context: {
     getMapboxToken: () => process.env.MAPBOX_TOKEN!,
   },
   onToolCompleted,
-  isExecutable: true,
+});
+const dataClassifyTool = convertToVercelAiTool({
+  ...dataClassify,
+  context: { getValues },
+  onToolCompleted,
 });
 
-const dataClassifyTool = getGeoDaTool(GeoDaToolNames.dataClassify, {
-  toolContext: { getValues },
+const spatialWeightsTool = convertToVercelAiTool({
+  ...spatialWeights,
+  context: { getGeometries },
   onToolCompleted,
-  isExecutable: true,
 });
 
-const spatialWeightsTool = getGeoDaTool(GeoDaToolNames.spatialWeights, {
-  toolContext: { getGeometries },
+const lisaTool = convertToVercelAiTool({
+  ...lisa,
+  context: { getValues, getGeometries },
   onToolCompleted,
-  isExecutable: true,
 });
 
-const lisaTool = getGeoDaTool(GeoDaToolNames.lisa, {
-  toolContext: { getValues, getGeometries },
+const histogramTool = convertToVercelAiTool({
+  ...histogram,
+  context: { getValues },
   onToolCompleted,
-  isExecutable: true,
-});
-
-const histogramTool = getPlotsTool('histogram', {
-  toolContext: { getValues },
-  onToolCompleted,
-  isExecutable: true,
 });
 
 export async function POST(req: Request) {

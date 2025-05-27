@@ -1,30 +1,33 @@
 # Variable: localQuery
 
-> `const` **localQuery**: `ExtendedTool`\<`ZodObject`\<\{ `datasetName`: `ZodString`; `dbTableName`: `ZodString`; `sql`: `ZodString`; `variableNames`: `ZodArray`\<`ZodString`, `"many"`\>; \}, `"strip"`, `ZodTypeAny`, \{ `datasetName`: `string`; `dbTableName`: `string`; `sql`: `string`; `variableNames`: `string`[]; \}, \{ `datasetName`: `string`; `dbTableName`: `string`; `sql`: `string`; `variableNames`: `string`[]; \}\>, \{ `data`: \{ `firstTwoRows`: `object`[]; \}; `dbTableName`: `any`; `error`: `undefined`; `instruction`: `undefined`; `success`: `boolean`; \}, \{ `config`: \{ `isDraggable`: `boolean`; \}; `datasetName`: `any`; `dbTableName`: `any`; `sql`: `any`; `title`: `string`; `variableNames`: `any`; \}, \{ `config`: \{ `isDraggable`: `boolean`; \}; `duckDB`: `null`; `getValues`: () => `never`; `onSelected`: () => `never`; \}\>
+> `const` **localQuery**: `ExtendedTool`\<[`LocalQueryArgs`](../type-aliases/LocalQueryArgs.md), [`LocalQueryResult`](../type-aliases/LocalQueryResult.md), [`LocalQueryAdditionalData`](../type-aliases/LocalQueryAdditionalData.md), [`LocalQueryContext`](../type-aliases/LocalQueryContext.md)\>
 
-Defined in: [packages/duckdb/src/tool.ts:97](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/duckdb/src/tool.ts#L97)
+Defined in: [packages/tools/duckdb/src/tool.ts:129](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/duckdb/src/tool.ts#L129)
 
-[**Browser Tool**] The localQuery tool is used to execute a query against a local dataset.
+The `localQuery` tool is used to execute a query against a local dataset.
 
-## Example
+:::note
+This tool can not be executed on the server side.
+:::
 
+### Example
 ```typescript
-import { getDuckDBTool } from '@openassistant/duckdb';
+import { localQuery } from '@openassistant/duckdb';
+import { convertToVercelAiTool } from '@openassistent/utils';
+import { generateText } from 'ai';
 
-// context
-const context = {
-  getValues: (datasetName: string, variableName: string) => {
-    // get the values of the variable from your dataset, e.g.
-    return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+const myQueryTool: LocalQueryTool = {
+  ...localQuery,
+  context: {
+    ...localQuery.context,
+    getValues: async (datasetName: string, variableName: string) => {
+      // get the values of the variable from your dataset, e.g.
+      return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+    },
   },
-}
+};
 
-const onToolCompleted = (toolCallId: string, additionalData?: unknown) => {
-  // do something with the additionalData
-}
-
-// get the tool
-const localQueryTool = getDuckDBTool('localQuery', {context, onToolCompleted});
+const localQueryTool = convertToVercelAiTool(myQueryTool);
 
 generateText({
   model: 'gpt-4o-mini',
@@ -33,27 +36,16 @@ generateText({
 });
 ```
 
-### getValues()
-
-User implements this function to get the values of the variable from dataset.
-
-For prompts like "_Show me the revenue per capita for each location in dataset myVenues_", the tool will
-call the `getValues()` function twice:
-- get the values of **revenue** from dataset: getValues('myVenues', 'revenue')
-- get the values of **population** from dataset: getValues('myVenues', 'population')
-
-A duckdb table will be created using the values returned from `getValues()`, and LLM will generate a sql query to query the table to answer the user's prompt.
-
-## Server Side Usage
-
-Here is an example of how to use the localQuery tool in server side:
+### Example with useChat
 
 `app/api/chat/route.ts`
 ```typescript
-import { getDuckDBTools } from '@openassistant/duckdb';
+import { localQuery } from '@openassistant/duckdb';
+import { convertToVercelAiTool } from '@openassistent/utils';
+import { streamText } from 'ai';
 
 // localQuery tool will be running on the client side
-const localQueryTool = getDuckDBTool('localQuery', {isExecutable: false});
+const localQueryTool = convertToVercelAiTool(localQuery, {isExecutable: false}); 
 
 export async function POST(req: Request) {
   // ...
@@ -68,28 +60,62 @@ export async function POST(req: Request) {
 `app/page.tsx`
 ```typescript
 import { useChat } from 'ai/react';
-import { getDuckDBTool } from '@openassistant/duckdb';
+import { localQuery } from '@openassistant/duckdb';
+import { convertToVercelAiTool } from '@openassistent/utils';
 
-const localQueryTool = getDuckDBTool('localQuery', {
+const myLocalQuery: LocalQueryTool = {
+  ...localQuery,
   context: {
+    ...localQuery.context,
     getValues: async (datasetName: string, variableName: string) => {
       // get the values of the variable from your dataset, e.g.
       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
     },
   },
-  onToolCompleted: (toolCallId: string, additionalData?: unknown) => {
-    // do something with the additionalData
-  },
-  isExecutable: true,
-});
+};
+
+const localQueryTool = convertToVercelAiTool(myLocalQuery);
 
 const { messages, input, handleInputChange, handleSubmit } = useChat({
   maxSteps: 20,
-  onToolCall: async (toolCallId, toolCall) => {
+  onToolCall: async (toolCall) => {
      if (toolCall.name === 'localQuery') {
        const result = await localQueryTool.execute(toolCall.args, toolCall.options);
        return result;
      }
   }
 });
+```
+
+### Example with `@openassistant/ui`
+
+```typescript
+import { localQuery } from '@openassistant/duckdb';
+import { convertToVercelAiTool } from '@openassistent/utils';
+
+const localQueryTool: LocalQueryTool = {
+  ...localQuery,
+  context: {
+    ...localQuery.context,
+    getValues: async (datasetName: string, variableName: string) => {
+      // get the values of the variable from your dataset, e.g.
+      return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+    },
+  },
+}; 
+
+ export function App() {
+   return (
+     <AiAssistant
+       apiKey={process.env.OPENAI_API_KEY || ''}
+       modelProvider="openai"
+       model="gpt-4o"
+       welcomeMessage="Hello! I'm your assistant."
+       instructions={instructions}
+       tools={{localQuery: localQueryTool}}
+       useMarkdown={true}
+       theme="dark"
+     />  
+   );
+ }
 ```

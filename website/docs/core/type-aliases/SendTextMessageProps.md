@@ -2,7 +2,7 @@
 
 > **SendTextMessageProps**: `object`
 
-Defined in: [packages/core/src/hooks/use-assistant.ts:78](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/hooks/use-assistant.ts#L78)
+Defined in: [packages/core/src/hooks/use-assistant.ts:78](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/core/src/hooks/use-assistant.ts#L78)
 
 Parameters for sending a text message to the assistant.
 
@@ -12,23 +12,23 @@ Parameters for sending a text message to the assistant.
 
 > **message**: `string`
 
-### onStepFinish()?
+### onToolFinished()?
 
-> `optional` **onStepFinish**: (`event`, `toolCallMessages`) => `Promise`\<`void`\> \| `void`
+> `optional` **onToolFinished**: (`toolCallId`, `additionalData`) => `void`
 
 #### Parameters
 
-##### event
+##### toolCallId
 
-`StepResult`\<`ToolSet`\>
+`string`
 
-##### toolCallMessages
+##### additionalData
 
-[`ToolCallMessage`](ToolCallMessage.md)[]
+`unknown`
 
 #### Returns
 
-`Promise`\<`void`\> \| `void`
+`void`
 
 ### streamMessageCallback
 
@@ -44,4 +44,4 @@ Callback function to handle streaming response chunks.
 
 ## Param
 
-Optional callback triggered when a conversation step completes.
+Optional callback triggered when a tool call completes.

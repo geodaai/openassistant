@@ -1,15 +1,16 @@
 'use client';
 
 import { useChat } from '@ai-sdk/react';
-import { getDuckDBTool, DuckDBToolNames } from 'packages/tools/duckdb/dist';
-import {
-  getMapTool,
-  getValuesFromGeoJSON,
-  MapToolNames,
-} from 'packages/tools/map/dist';
 import { useRef } from 'react';
-import { MessageParts } from './components/parts';
 import { SpatialGeometry } from '@geoda/core';
+import {
+  convertToVercelAiTool,
+  getValuesFromGeoJSON,
+} from '@openassistant/utils';
+
+import { MessageParts } from './components/parts';
+import { keplergl } from '@openassistant/map';
+import { localQuery } from '@openassistant/duckdb';
 
 export default function Home() {
   // preserve the tool data between renders
@@ -80,8 +81,9 @@ export default function Home() {
     onToolCall: async ({ toolCall }) => {
       const { toolName, args, toolCallId } = toolCall;
       if (toolName === 'localQuery') {
-        const localQueryTool = getDuckDBTool(DuckDBToolNames.localQuery, {
-          toolContext: { getValues },
+        const localQueryTool = convertToVercelAiTool({
+          ...localQuery,
+          context: { getValues },
           onToolCompleted,
         });
         const result = await localQueryTool.execute?.(
@@ -89,9 +91,10 @@ export default function Home() {
           { toolCallId }
         );
         return result;
-      } else if (toolName === MapToolNames.keplergl) {
-        const keplerglTool = getMapTool(MapToolNames.keplergl, {
-          toolContext: { getDataset, getGeometries },
+      } else if (toolName === 'keplergl') {
+        const keplerglTool = convertToVercelAiTool({
+          ...keplergl,
+          context: { getDataset, getGeometries },
           onToolCompleted,
         });
         return keplerglTool.execute?.(args as Record<string, unknown>, {

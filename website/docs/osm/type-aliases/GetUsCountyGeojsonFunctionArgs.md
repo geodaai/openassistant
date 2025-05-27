@@ -2,4 +2,4 @@
 
 > **GetUsCountyGeojsonFunctionArgs**: `z.ZodObject`\<\{ `fipsCodes`: `z.ZodArray`\<`z.ZodString`\>; \}\>
 
-Defined in: [packages/osm/src/us/county.ts:9](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/osm/src/us/county.ts#L9)
+Defined in: [packages/tools/osm/src/us/county.ts:10](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/us/county.ts#L10)

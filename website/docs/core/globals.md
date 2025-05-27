@@ -57,3 +57,4 @@
 - [rebuildMessages](functions/rebuildMessages.md)
 - [shouldTriggerNextRequest](functions/shouldTriggerNextRequest.md)
 - [useAssistant](functions/useAssistant.md)
+- [useToolCache](functions/useToolCache.md)

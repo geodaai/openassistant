@@ -2,7 +2,7 @@
 
 > **ProcessMessageProps**: `object`
 
-Defined in: [packages/core/src/types.ts:180](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/core/src/types.ts#L180)
+Defined in: [packages/core/src/types.ts:179](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/core/src/types.ts#L179)
 
 Type of ProcessMessageProps
 
@@ -16,29 +16,23 @@ Type of ProcessMessageProps
 
 > `optional` **message**: `string`
 
-### onStepFinish()?
+### onToolFinished()?
 
-> `optional` **onStepFinish**: (`event`, `toolCallMessages`) => `Promise`\<`void`\> \| `void`
-
-The callback function to handle the step finish.
+> `optional` **onToolFinished**: (`toolCallId`, `additionalData`) => `void`
 
 #### Parameters
 
-##### event
+##### toolCallId
 
-`StepResult`\<`ToolSet`\>
+`string`
 
-The step result returned from Vercel AI SDK
+##### additionalData
 
-##### toolCallMessages
-
-[`ToolCallMessage`](ToolCallMessage.md)[]
-
-The tool call messages, that can be used to update the UI, see [ToolCallMessage](ToolCallMessage.md)
+`unknown`
 
 #### Returns
 
-`Promise`\<`void`\> \| `void`
+`void`
 
 ### streamMessageCallback
 

@@ -1,19 +1,11 @@
 import {
   isSpatialWeightsOutputData,
-  SpatialWeightsToolComponent,
-} from 'packages/components/echarts/dist';
-import { useMemo } from 'react';
+  SpatialWeightsComponent,
+} from '@openassistant/tables';
 
-interface WeightsToolProps {
-  additionalData: unknown;
-}
-
-export function WeightsTool({ additionalData }: WeightsToolProps) {
+export function WeightsTool({ additionalData }: { additionalData: unknown }) {
   if (isSpatialWeightsOutputData(additionalData)) {
-    return useMemo(
-      () => <SpatialWeightsToolComponent {...additionalData} />,
-      [additionalData]
-    );
+    return <SpatialWeightsComponent {...additionalData} />;
   }
   return null;
 }

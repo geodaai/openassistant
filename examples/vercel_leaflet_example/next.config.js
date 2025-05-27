@@ -7,16 +7,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 module.exports = withBundleAnalyzer({
   reactStrictMode: true,
   productionBrowserSourceMaps: true,
-  transpilePackages: [
-    '@dnd-kit/core',
-    '@dnd-kit/sortable',
-    '@dnd-kit/utilities',
-    'd3-color',
-    '@kepler.gl/components',
-    '@kepler.gl/utils',
-    'leaflet',
-    'react-leaflet',
-  ],
+  transpilePackages: [],
   env: {
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   },
@@ -30,18 +21,14 @@ module.exports = withBundleAnalyzer({
       };
     }
 
-    // Make @dnd-kit and @kepler.gl/components client-side only
+    // Make @kepler.gl/processors client-side only
     if (isServer) {
       config.resolve.alias = {
         ...config.resolve.alias,
-        '@dnd-kit/core': false,
-        '@dnd-kit/sortable': false,
-        '@dnd-kit/utilities': false,
-        '@kepler.gl/components': false,
+        '@kepler.gl/processors': false,
         vega: false,
         'react-leaflet': false,
         leaflet: false,
-        'd3-color': false,
       };
     }
 

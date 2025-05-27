@@ -1,19 +1,11 @@
 import {
   isHistogramOutputData,
-  HistogramComponent,
-} from 'packages/components/echarts/dist';
-import { useMemo } from 'react';
+  HistogramPlotComponent,
+} from '@openassistant/echarts';
 
-interface HistogramToolProps {
-  additionalData: unknown;
-}
-
-export function HistogramTool({ additionalData }: HistogramToolProps) {
+export function HistogramTool({ additionalData }: { additionalData: unknown }) {
   if (isHistogramOutputData(additionalData)) {
-    return useMemo(
-      () => <HistogramComponent {...additionalData} />,
-      [additionalData]
-    );
+    return <HistogramPlotComponent {...additionalData} />;
   }
   return null;
 }

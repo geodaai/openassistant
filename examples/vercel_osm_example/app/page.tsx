@@ -1,18 +1,19 @@
 'use client';
 
 import { useChat } from '@ai-sdk/react';
-import { getDuckDBTool } from 'packages/tools/duckdb/dist';
+import { localQuery, LocalQueryTool } from '@openassistant/duckdb';
+import { convertToVercelAiTool } from '@openassistant/utils';
 import { useRef } from 'react';
 import { MessageParts } from './components/parts';
 
 export default function Home() {
-  // preserve the tool data between renders
   const toolAdditionalData = useRef<Record<string, unknown>>({});
 
   // context for local tools
   const context = {
     getValues: async (datasetName: string, variableName: string) => {
       // simulate a local tool that returns a list of values
+      console.log('getValues', datasetName, variableName);
       return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     },
   };
@@ -24,20 +25,26 @@ export default function Home() {
     }
   };
 
+  const myLocalQuery: LocalQueryTool = {
+    ...localQuery,
+    context: {
+      ...localQuery.context,
+      getValues,
+    },
+    onToolCompleted,
+  };
+
+  const localQueryTool = convertToVercelAiTool(myLocalQuery);
+
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     maxSteps: 20,
     // local tools that are handled by the client
     onToolCall: async ({ toolCall }) => {
       const { toolName, args, toolCallId } = toolCall;
       if (toolName === 'localQuery') {
-        const localQueryTool = getDuckDBTool('localQuery', {
-          toolContext: context,
-          onToolCompleted,
+        const result = await localQueryTool.execute?.(args, {
+          toolCallId,
         });
-        const result = await localQueryTool.execute?.(
-          args as Record<string, unknown>,
-          { toolCallId }
-        );
         return result;
       }
     },

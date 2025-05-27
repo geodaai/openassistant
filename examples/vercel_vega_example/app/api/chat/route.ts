@@ -1,5 +1,5 @@
 import { openai } from '@ai-sdk/openai';
-import { getPlotsTool, PlotsToolNames } from 'packages/tools/plots/dist';
+import { vegaLitePlot, VegaLitePlotTool } from '@openassistant/plots';
 import { createDataStreamResponse, streamText } from 'ai';
 
 export async function POST(req: Request) {
@@ -11,9 +11,10 @@ You can use the following datasets:
 
   let toolAdditionalData: Record<string, unknown> = {};
 
-  // create a tool for histogram
-  const vegaLitePlotTool = getPlotsTool(PlotsToolNames.vegaLitePlot, {
-    toolContext: {
+  // create a tool for vegalite plot
+  const vegaLitePlotTool: VegaLitePlotTool = {
+    ...vegaLitePlot,
+    context: {
       getValues: async (datasetName: string, variableName: string) => {
         // simulate values
         if (variableName === 'HR60') {
@@ -34,7 +35,7 @@ You can use the following datasets:
       }
     },
     isExecutable: true,
-  });
+  };
 
   const { messages } = await req.json();
 

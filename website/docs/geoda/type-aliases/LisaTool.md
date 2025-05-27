@@ -2,4 +2,4 @@
 
 > **LisaTool**: *typeof* [`lisa`](../variables/lisa.md)
 
-Defined in: [packages/geoda/src/lisa/tool.ts:176](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/geoda/src/lisa/tool.ts#L176)
+Defined in: [packages/tools/geoda/src/lisa/tool.ts:172](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/lisa/tool.ts#L172)

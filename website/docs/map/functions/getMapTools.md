@@ -2,7 +2,7 @@
 
 > **getMapTools**(`toolContext`, `onToolCompleted`, `isExecutable`): `object`
 
-Defined in: [packages/map/src/register-tools.ts:137](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/map/src/register-tools.ts#L137)
+Defined in: [packages/tools/map/src/register-tools.ts:155](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/map/src/register-tools.ts#L155)
 
 Get all keplergl tools.
 
@@ -10,7 +10,7 @@ Get all keplergl tools.
 
 ### toolContext
 
-[`KeplerglToolContext`](../type-aliases/KeplerglToolContext.md)
+[`MapToolContext`](../type-aliases/MapToolContext.md)
 
 The tool context, which is required for some tools e.g. routing, isochrone, etc.
 

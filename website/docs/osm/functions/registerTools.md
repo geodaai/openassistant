@@ -2,7 +2,7 @@
 
 > **registerTools**(): `object`
 
-Defined in: [packages/osm/src/register-tools.ts:33](https://github.com/GeoDaCenter/openassistant/blob/2c7e2a603db0fcbd6603996e5ea15006191c5f7f/packages/osm/src/register-tools.ts#L33)
+Defined in: [packages/tools/osm/src/register-tools.ts:49](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/register-tools.ts#L49)
 
 ## Returns
 
@@ -26,12 +26,16 @@ Defined in: [packages/osm/src/register-tools.ts:33](https://github.com/GeoDaCent
 
 ### isochrone
 
-> **isochrone**: `ExtendedTool`\<[`IsochroneFunctionArgs`](../type-aliases/IsochroneFunctionArgs.md), [`IsochroneLlmResult`](../type-aliases/IsochroneLlmResult.md), [`IsochroneAdditionalData`](../type-aliases/IsochroneAdditionalData.md), [`OsmToolContext`](../type-aliases/OsmToolContext.md)\>
+> **isochrone**: `ExtendedTool`\<[`IsochroneFunctionArgs`](../type-aliases/IsochroneFunctionArgs.md), [`IsochroneLlmResult`](../type-aliases/IsochroneLlmResult.md), [`IsochroneAdditionalData`](../type-aliases/IsochroneAdditionalData.md), [`MapboxToolContext`](../type-aliases/MapboxToolContext.md)\>
 
 ### queryUSZipcodes
 
 > **queryUSZipcodes**: `ExtendedTool`\<[`QueryZipcodeFunctionArgs`](../type-aliases/QueryZipcodeFunctionArgs.md), [`QueryZipcodeLlmResult`](../type-aliases/QueryZipcodeLlmResult.md), [`QueryZipcodeAdditionalData`](../type-aliases/QueryZipcodeAdditionalData.md), `never`\>
 
+### roads
+
+> **roads**: `ExtendedTool`\<[`RoadsFunctionArgs`](../type-aliases/RoadsFunctionArgs.md), [`RoadsLlmResult`](../type-aliases/RoadsLlmResult.md), [`RoadsAdditionalData`](../type-aliases/RoadsAdditionalData.md), [`OsmToolContext`](../type-aliases/OsmToolContext.md)\>
+
 ### routing
 
-> **routing**: `ExtendedTool`\<[`RoutingFunctionArgs`](../type-aliases/RoutingFunctionArgs.md), [`RoutingLlmResult`](../type-aliases/RoutingLlmResult.md), [`RoutingAdditionalData`](../type-aliases/RoutingAdditionalData.md), [`OsmToolContext`](../type-aliases/OsmToolContext.md)\>
+> **routing**: `ExtendedTool`\<[`RoutingFunctionArgs`](../type-aliases/RoutingFunctionArgs.md), [`RoutingLlmResult`](../type-aliases/RoutingLlmResult.md), [`RoutingAdditionalData`](../type-aliases/RoutingAdditionalData.md), [`MapboxToolContext`](../type-aliases/MapboxToolContext.md)\>
