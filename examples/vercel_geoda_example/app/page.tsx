@@ -1,9 +1,11 @@
 'use client';
 
 import { useChat } from '@ai-sdk/react';
-import { getDuckDBTool } from 'packages/tools/duckdb/dist';
 import { useRef } from 'react';
+
 import { MessageParts } from './components/parts';
+import { localQuery } from '@openassistant/duckdb';
+import { convertToVercelAiTool } from '@openassistant/utils';
 
 export default function Home() {
   // preserve the tool data between renders
@@ -30,8 +32,9 @@ export default function Home() {
     onToolCall: async ({ toolCall }) => {
       const { toolName, args, toolCallId } = toolCall;
       if (toolName === 'localQuery') {
-        const localQueryTool = getDuckDBTool('localQuery', {
-          toolContext: context,
+        const localQueryTool = convertToVercelAiTool({
+          ...localQuery, 
+          context,
           onToolCompleted,
         });
         const result = await localQueryTool.execute?.(

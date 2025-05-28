@@ -2,8 +2,9 @@ import {
   MessageModel,
   SendImageMessageProps,
   SendTextMessageProps,
+  StreamMessage,
 } from '@openassistant/core';
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 export type SendTextMessageHandlerProps = {
   newMessage: string;
@@ -204,4 +205,17 @@ export async function sendImageMessageHandler({
       onMessagesUpdated(newMessages);
     }
   }
+}
+
+export function createWelcomeMessage(
+  welcomeMessage: string | ReactNode
+): StreamMessage {
+  if (typeof welcomeMessage === 'string') {
+    return {
+      parts: [{ type: 'text', text: welcomeMessage }],
+    };
+  }
+  return {
+    parts: [{ type: 'text', text: '' }],
+  };
 }

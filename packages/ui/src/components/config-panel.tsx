@@ -8,7 +8,7 @@ import {
 } from '@heroui/react';
 import { GetAssistantModelByProvider } from '@openassistant/core';
 import { Icon } from '@iconify/react';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useState, useEffect } from 'react';
 
 import { MODEL_PROVIDERS } from '../config/constants';
 
@@ -33,6 +33,8 @@ export type AiAssistantConfig = {
   topP: number;
   /** The base URL for the AI provider. */
   baseUrl?: string;
+  /** The MapBox token. */
+  mapBoxToken?: string;
 };
 
 /**
@@ -65,6 +67,8 @@ export type ConfigPanelProps = {
   showBaseUrl?: boolean;
   /** Whether to show the check connection button. */
   showCheckConnectionButton?: boolean;
+  /** Whether to show MapBox Token input */
+  showMapBoxToken?: boolean;
 };
 
 /**
@@ -116,22 +120,58 @@ export type ConfigPanelProps = {
 export function ConfigPanel(props: ConfigPanelProps) {
   const defaultProviderModels = props.defaultProviderModels || MODEL_PROVIDERS;
   const connectionTimeout = props.connectionTimeout || 10000;
+  
+  // Helper function to get API key from localStorage
+  const getStoredApiKey = () => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('openassistant-api-key') || '';
+    }
+    return '';
+  };
+
+  // Helper function to get MapBox token from localStorage
+  const getStoredMapBoxToken = () => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('openassistant-mapbox-token') || '';
+    }
+    return '';
+  };
+
   const [provider, setProvider] = useState(
     props.initialConfig?.provider || 'openai'
   );
   const [model, setModel] = useState(
     props.initialConfig?.model || defaultProviderModels[provider][0]
   );
-  const [apiKey, setApiKey] = useState(props.initialConfig?.apiKey || '');
+  const [apiKey, setApiKey] = useState(
+    props.initialConfig?.apiKey || getStoredApiKey()
+  );
   const [temperature, setTemperature] = useState(
     props.initialConfig?.temperature || 0.8
   );
   const [topP, setTopP] = useState(props.initialConfig?.topP || 0.8);
   const [baseUrl, setBaseUrl] = useState(props.initialConfig?.baseUrl);
+  const [mapBoxToken, setMapBoxToken] = useState(
+    props.initialConfig?.mapBoxToken || getStoredMapBoxToken()
+  );
   const [connectionError, setConnectionError] = useState(false);
   const [keyError, setKeyError] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const [isRunning, setIsRunning] = useState(false);
+
+  // Store API key in localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined' && apiKey) {
+      localStorage.setItem('openassistant-api-key', apiKey);
+    }
+  }, [apiKey]);
+
+  // Store MapBox token in localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined' && mapBoxToken) {
+      localStorage.setItem('openassistant-mapbox-token', mapBoxToken);
+    }
+  }, [mapBoxToken]);
 
   const generateConfig = (
     overrides: Partial<AiAssistantConfig> = {}
@@ -143,6 +183,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
     temperature,
     topP,
     ...(baseUrl && { baseUrl }),
+    ...(mapBoxToken && { mapBoxToken }),
     ...overrides,
   });
 
@@ -168,6 +209,16 @@ export function ConfigPanel(props: ConfigPanelProps) {
   const onApiKeyChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     setApiKey(inputValue);
+    
+    // Store in localStorage if not empty
+    if (typeof window !== 'undefined') {
+      if (inputValue.trim()) {
+        localStorage.setItem('openassistant-api-key', inputValue);
+      } else {
+        localStorage.removeItem('openassistant-api-key');
+      }
+    }
+    
     // reset previous key error if any
     setConnectionError(false);
     setErrorMessage('');
@@ -197,6 +248,22 @@ export function ConfigPanel(props: ConfigPanelProps) {
     setErrorMessage('');
 
     props.onConfigChange?.(generateConfig({ baseUrl: inputValue }));
+  };
+
+  const onMapBoxTokenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    setMapBoxToken(inputValue);
+    
+    // Store in localStorage if not empty
+    if (typeof window !== 'undefined') {
+      if (inputValue.trim()) {
+        localStorage.setItem('openassistant-mapbox-token', inputValue);
+      } else {
+        localStorage.removeItem('openassistant-mapbox-token');
+      }
+    }
+
+    props.onConfigChange?.(generateConfig({ mapBoxToken: inputValue }));
   };
 
   const AssistantModel = GetAssistantModelByProvider({
@@ -292,6 +359,16 @@ export function ConfigPanel(props: ConfigPanelProps) {
           className="max-w-full"
           required
           onChange={onBaseUrlChange}
+        />
+      )}
+      {props.showMapBoxToken && (
+        <Input
+          type="string"
+          label="MapBox Token"
+          value={mapBoxToken || ''}
+          placeholder="Enter MapBox token (optional for routing/isochrone)"
+          className="max-w-full"
+          onChange={onMapBoxTokenChange}
         />
       )}
       {props.showParameters && (

@@ -30,6 +30,7 @@
     "@openassistant/echarts": "workspace:*",
     "@openassistant/geoda": "workspace:*",
     "@openassistant/keplergl": "workspace:*",
+    "@openassistant/map": "workspace:*",
     "@openassistant/osm": "workspace:*",
     "@openassistant/plots": "workspace:*",
     "@openassistant/ui": "workspace:*",

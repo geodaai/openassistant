@@ -18,14 +18,18 @@ export function isSpatialWeightsOutputData(
 
 export type SpatialWeightsComponentProps = {
   id?: string;
-  weightsMeta: WeightsMeta;
+  [key: string]: unknown;
   isExpanded?: boolean;
   isDraggable?: boolean;
 };
 
-export function SpatialWeightsComponent({
-  weightsMeta,
-}: SpatialWeightsComponentProps) {
+export function SpatialWeightsComponent(props: SpatialWeightsComponentProps) {
+  const weightsId = props.id;
+
+  const weightsMeta = useMemo(() => {
+    return weightsId ? (props[weightsId] as WeightsMeta) : {};
+  }, [weightsId, props]);
+
   // weightsMeta: mapping its key to descriptive label
   const WeightsMetaLabels = useMemo(
     () => ({

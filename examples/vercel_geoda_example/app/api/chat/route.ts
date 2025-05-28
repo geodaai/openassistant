@@ -1,12 +1,14 @@
 import { openai } from '@ai-sdk/openai';
-import { getDuckDBTool } from 'packages/tools/duckdb/dist';
-import { getPlotsTool } from 'packages/tools/plots/dist';
-import {
-  getGeoDaTool,
-  GeoDaToolNames,
-  GetGeometries,
-} from 'packages/tools/geoda/dist';
 import { createDataStreamResponse, streamText } from 'ai';
+import {
+  dataClassify,
+  GetGeometries,
+  lisa,
+  spatialWeights,
+} from '@openassistant/geoda';
+import { convertToVercelAiTool } from '@openassistant/utils';
+import { localQuery } from '@openassistant/duckdb';
+import { histogram } from '@openassistant/plots';
 
 export async function POST(req: Request) {
   const systemPrompt = `You are a helpful assistant that can answer questions and help with tasks. 
@@ -58,37 +60,34 @@ You can use the following datasets:
     }
   };
 
-  // create a server-side tool for classifyData (runs in server)
-  const dataClassifyTool = getGeoDaTool(GeoDaToolNames.dataClassify, {
-    toolContext: { getValues },
+  // create server-side tools
+  const dataClassifyTool = convertToVercelAiTool({
+    ...dataClassify,
+    context: { getValues },
     onToolCompleted,
-    isExecutable: true,
   });
 
-  // create a server-side tool for spatialWeights (runs in server)
-  const spatialWeightsTool = getGeoDaTool(GeoDaToolNames.spatialWeights, {
-    toolContext: { getGeometries },
+  const spatialWeightsTool = convertToVercelAiTool({
+    ...spatialWeights,
+    context: { getGeometries },
     onToolCompleted,
-    isExecutable: true,
   });
 
-  // create a server-side tool for lisa (runs in server)
-  const lisaTool = getGeoDaTool(GeoDaToolNames.lisa, {
-    toolContext: { getValues },
+  const lisaTool = convertToVercelAiTool({
+    ...lisa,
+    context: { getValues },
     onToolCompleted,
-    isExecutable: true,
+  });
+
+  const histogramTool = convertToVercelAiTool({
+    ...histogram,
+    context: { getValues },
+    onToolCompleted,
   });
 
   // create a client-side tool for local query (runs in browser)
-  const localQueryTool = getDuckDBTool('localQuery', {
+  const localQueryTool = convertToVercelAiTool(localQuery, {
     isExecutable: false,
-  });
-
-  // create a server-side tool for histogram
-  const histogramTool = getPlotsTool('histogram', {
-    toolContext: { getValues },
-    onToolCompleted,
-    isExecutable: true,
   });
 
   const { messages } = await req.json();

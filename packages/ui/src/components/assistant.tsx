@@ -11,6 +11,7 @@ import MessageCard from './message-card';
 import PromptInputWithBottomActions from './prompt-input-with-bottom-actions';
 import { ChatContainer } from './chat-container';
 import {
+  createWelcomeMessage,
   sendImageMessageHandler,
   sendTextMessageHandler,
 } from './assistant-utils';
@@ -21,7 +22,7 @@ import {
 export type AiAssistantProps = UseAssistantProps & {
   theme?: 'dark' | 'light';
   /** The welcome message of the assistant. */
-  welcomeMessage: string;
+  welcomeMessage: string | ReactNode;
   /** The ideas of the assistant, which will be shown above the prompt input box. */
   ideas?: { title: string; description: string }[];
   /** The callback function to handle the refresh ideas. */
@@ -67,26 +68,6 @@ export type AiAssistantProps = UseAssistantProps & {
   /** The initial messages of the assistant. */
   initialMessages?: MessageModel[];
 };
-
-/**
- * Creates a welcome message.
- * @param welcomeMessage - The welcome message.
- * @returns The welcome message.
- */
-const createWelcomeMessage = (welcomeMessage: string): MessageModel => ({
-  sentTime: 'just now',
-  sender: 'assistant',
-  direction: 'incoming',
-  position: 'first',
-  messageContent: {
-    parts: [
-      {
-        type: 'text',
-        text: welcomeMessage,
-      },
-    ],
-  },
-});
 
 function rebuildMessages(historyMessages: MessageModel[]): Message[] {
   const result: Message[] = [];
@@ -139,7 +120,7 @@ export function AiAssistant(props: AiAssistantProps) {
   const [messages, setMessages] = useState<MessageModel[]>(
     props.initialMessages && props.initialMessages.length > 0
       ? props.initialMessages
-      : [createWelcomeMessage(props.welcomeMessage)]
+      : []
   );
   const [isPrompting, setIsPrompting] = useState(false);
 
@@ -243,7 +224,7 @@ export function AiAssistant(props: AiAssistantProps) {
     setIsPrompting(false);
 
     // reset the messages
-    setMessages([createWelcomeMessage(props.welcomeMessage)]);
+    setMessages([]);
 
     // restart the assistant
     await restartChat();
@@ -279,6 +260,17 @@ export function AiAssistant(props: AiAssistantProps) {
           id="chat-message-list"
         >
           <div className="overscroll-behavior-y-auto overflow-anchor-auto touch-action-none absolute bottom-0 left-0 right-0 top-0 flex h-full flex-col gap-4 px-1">
+            {props.welcomeMessage && (
+              <MessageCard
+                key={-1}
+                index={-1}
+                data-testid="message-card"
+                avatar={getAvatar('incoming')}
+                currentAttempt={1}
+                message={createWelcomeMessage(props.welcomeMessage)}
+                customMessage={props.welcomeMessage}
+              />
+            )}
             {messages.map((message, i) => {
               const messageElement = message.messageContent;
               return (

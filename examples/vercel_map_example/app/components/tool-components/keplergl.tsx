@@ -1,14 +1,14 @@
 import {
   CreateMapOutputData,
   isCreateMapOutputData,
-  KeplerGlToolComponent,
+  KeplerGlComponent,
 } from '@openassistant/keplergl';
 import { memo } from 'react';
 
 export const KeplerGlTool = memo(
   function KeplerGlTool({ additionalData }: { additionalData: unknown }) {
     if (isCreateMapOutputData(additionalData)) {
-      return <KeplerGlToolComponent {...additionalData} />;
+      return <KeplerGlComponent {...additionalData} />;
     }
     return null;
   },

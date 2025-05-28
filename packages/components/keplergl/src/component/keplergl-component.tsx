@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { IntlProvider } from 'react-intl';
 
-import { addDataToMap } from '@kepler.gl/actions';
+import { addDataToMap, addLayer } from '@kepler.gl/actions';
 import { RootContext } from '@kepler.gl/components';
 import { Layer } from '@kepler.gl/layers';
 import { messages } from '@kepler.gl/localization';
@@ -18,10 +18,13 @@ import { KeplerState, MAP_ID, store } from './keplergl-provider';
 export type CreateMapOutputData = {
   id?: string;
   datasetId: string;
+  layerId: string;
   datasetForKepler: FileCacheItem[];
   theme?: string;
-  isDraggable?: boolean;
   layerConfig?: string;
+  colorBy?: string;
+  colorType?: 'breaks' | 'unique';
+  colorMap?: { value: string | number | null; color: string }[];
   width?: number;
   height?: number;
 };
@@ -51,24 +54,99 @@ export function KeplerGlComponent(props: CreateMapOutputData) {
   const rootNode = useRef<HTMLDivElement>(null);
 
   return (
-    <AutoSizer>
-      {({ width, height }) => {
-        return (
-          <RootContext.Provider value={rootNode}>
-            <Provider store={store}>
-              <ThemeProvider theme={keplerTheme}>
-                <KeplerGlMiniComponent
-                  {...props}
-                  width={width}
-                  height={height}
-                />
-              </ThemeProvider>
-            </Provider>
-          </RootContext.Provider>
-        );
-      }}
-    </AutoSizer>
+    <>
+      <MapLegend
+        colorBy={props.colorBy}
+        colorType={props.colorType}
+        colorMap={props.colorMap}
+      />
+      <AutoSizer>
+        {({ width, height }) => {
+          return (
+            <RootContext.Provider value={rootNode}>
+              <Provider store={store}>
+                <ThemeProvider theme={keplerTheme}>
+                  <KeplerGlMiniComponent
+                    {...props}
+                    width={width}
+                    height={height}
+                  />
+                </ThemeProvider>
+              </Provider>
+            </RootContext.Provider>
+          );
+        }}
+      </AutoSizer>
+    </>
   );
+}
+
+function MapLegend(props: {
+  colorBy?: string;
+  colorType?: 'breaks' | 'unique';
+  colorMap?: { value: string | number | null; color: string }[];
+}) {
+  const { colorBy, colorType, colorMap } = props;
+
+  const formatLabel = (value: string | number | null, index: number) => {
+    if (colorType === 'breaks') {
+      if (value !== null) {
+        return `<= ${value}`;
+      } else {
+        const previousValue = colorMap?.[index - 1]?.value;
+        return `> ${previousValue}`;
+      }
+    }
+
+    return String(value);
+  };
+
+  return colorBy && colorType && colorMap ? (
+    <div style={{ fontSize: '0.6rem', width: '100%', marginTop: '-20px' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '0.1rem',
+        }}
+      >
+        <div
+          style={{
+            fontSize: '0.6rem',
+            fontWeight: 500,
+          }}
+        >
+          {colorBy}
+        </div>
+        {colorMap?.map((item, index) => (
+          <div
+            key={index}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.1rem' }}
+          >
+            <div
+              style={{
+                width: '1rem',
+                height: '0.5rem',
+                border: '1px solid #d1d5db',
+                borderRadius: '0.125rem',
+                flexShrink: 0,
+                backgroundColor: item.color,
+              }}
+            />
+            <span
+              style={{
+                fontSize: '0.5rem',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {formatLabel(item.value, index)}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  ) : null;
 }
 
 export function KeplerGlMiniComponent(props: CreateMapOutputData) {
@@ -108,20 +186,34 @@ export function KeplerGlMiniComponent(props: CreateMapOutputData) {
         return;
       }
 
-      dispatch(
-        addDataToMap({
-          datasets: datasetForKepler,
-          options: {
-            centerMap: true,
-            readOnly: false,
-            autoCreateLayers: true,
-            autoCreateTooltips: true,
-            keepExistingConfig:
-              Object.keys(keplerState?.visState?.datasets || {}).length > 0,
-          },
-          config: layerConfigObj,
-        })
-      );
+      // check if dataset already exists
+      const newDatasetId = datasetForKepler[0].info.id || '';
+      const datasetExists = Object.keys(
+        keplerState?.visState?.datasets || {}
+      ).includes(newDatasetId);
+
+      if (datasetExists) {
+        // add new layer
+        dispatch(
+          addLayer(layerConfigObj.config.visState.layers[0], newDatasetId)
+        );
+      } else {
+        // add new dataset and layer
+        dispatch(
+          addDataToMap({
+            datasets: datasetForKepler,
+            options: {
+              centerMap: true,
+              readOnly: false,
+              autoCreateLayers: true,
+              autoCreateTooltips: true,
+              keepExistingConfig:
+                Object.keys(keplerState?.visState?.datasets || {}).length > 0,
+            },
+            config: layerConfigObj,
+          })
+        );
+      }
       dataAddedRef.current = true;
     };
 
@@ -132,24 +224,20 @@ export function KeplerGlMiniComponent(props: CreateMapOutputData) {
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // {/* <KeplerGl
-  //   id={MAP_ID}
-  //   width={280}
-  //   height={280}
-  //   theme={keplerTheme}
-  // /> */}
-
-  // get layerId using datasetName
+  // get layer by layerId
   const layerId = keplerState?.visState?.layers.find(
-    (layer: Layer) =>
-      layer.config.label === props.datasetId ||
-      layer.config.dataId === props.datasetId
+    (layer: Layer) => layer.id === props.layerId
   )?.id;
 
   return (
     <>
       {keplerState?.visState?.layers?.length > 0 && keplerState?.uiState && (
-        <div style={{ width: `${props.width}px`, height: `${props.height}px` }}>
+        <div
+          style={{
+            width: `${props.width}px`,
+            height: `${props.height ? props.height - 20 : 180}px`,
+          }}
+        >
           <IntlProvider locale="en" messages={keplerMessages}>
             <KeplerMiniMap
               keplerTheme={keplerTheme}

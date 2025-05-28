@@ -140,8 +140,10 @@ export type KeplerGlToolAdditionalData = {
   longitudeColumn?: string;
   mapType?: string;
   datasetForKepler: FileCacheItem[];
-  isDraggable: boolean;
   layerConfig?: Record<string, unknown>;
+  colorBy?: string;
+  colorType?: 'breaks' | 'unique';
+  colorMap?: { value: string | number | null; color: string }[];
 };
 
 export type ExecuteCreateMapResult = {
@@ -185,7 +187,7 @@ async function executeCreateMap(
       colorType,
       colorMap,
     } = args;
-    const { getDataset, getGeometries, config } = options.context;
+    const { getDataset, getGeometries } = options.context;
 
     let dataContent;
 
@@ -346,7 +348,9 @@ async function executeCreateMap(
         layerId,
         datasetForKepler,
         layerConfig,
-        isDraggable: Boolean(config?.isDraggable),
+        colorBy,
+        colorType,
+        colorMap,
       },
     };
   } catch (error) {

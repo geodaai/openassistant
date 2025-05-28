@@ -55,4 +55,5 @@ export const downloadMapData = extendedTool({
       };
     }
   },
+  context: {},
 });

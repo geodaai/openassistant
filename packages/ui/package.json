@@ -1,6 +1,6 @@
 {
   "name": "@openassistant/ui",
-  "version": "0.5.0",
+  "version": "0.5.2",
   "description": "Chat UI components for OpenAssistant",
   "author": "Xun Li<lixun910@gmail.com>",
   "license": "MIT",
@@ -43,8 +43,8 @@
     "@heroui/react": "^2.7.8",
     "@heroui/use-clipboard": "^2.1.8",
     "@iconify/react": "^5.1.0",
-    "@openassistant/core": "workspace:*",
-    "@openassistant/utils": "workspace:*",
+    "@openassistant/core": "0.5.0",
+    "@openassistant/utils": "0.5.0",
     "ai": "^4.3.16",
     "framer-motion": "^11.15.0",
     "html2canvas": "^1.4.1",

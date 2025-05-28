@@ -4,7 +4,7 @@ import { Tool, convertToCoreMessages } from 'ai';
 import { ExtendedTool } from '@openassistant/utils';
 
 function isExtendedTool(tool: Tool | ExtendedTool): tool is ExtendedTool {
-  return 'context' in tool;
+  return 'context' in tool || 'onToolCompleted' in tool || 'component' in tool;
 }
 
 /**

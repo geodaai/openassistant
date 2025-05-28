@@ -1,13 +1,15 @@
 import { openai } from '@ai-sdk/openai';
-import { getDuckDBTool } from 'packages/tools/duckdb/dist';
-import { getPlotsTool } from 'packages/tools/plots/dist';
-import {
-  getGeoDaTool,
-  GeoDaToolNames,
-  GetGeometries,
-} from 'packages/tools/geoda/dist';
-import { getOsmTool, OsmToolNames } from 'packages/tools/osm/dist';
 import { createDataStreamResponse, streamText } from 'ai';
+import {
+  dataClassify,
+  GetGeometries,
+  lisa,
+  spatialWeights,
+} from '@openassistant/geoda';
+import { convertToVercelAiTool } from '@openassistant/utils';
+import { geocoding, routing, isochrone } from '@openassistant/osm';
+import { localQuery } from '@openassistant/duckdb';
+import { histogram } from '@openassistant/plots';
 
 export async function POST(req: Request) {
   const systemPrompt = `You are a helpful assistant that can answer questions and help with tasks. 
@@ -59,61 +61,55 @@ You can use the following datasets:
     }
   };
 
-  // create a server-side tool for geocoding: no context needed (runs in server)
-  const geocodingTool = getOsmTool(OsmToolNames.geocoding, {
+  // create server-side tools
+  const geocodingTool = convertToVercelAiTool({
+    ...geocoding,
     onToolCompleted,
-    isExecutable: true,
   });
 
-  // create a server-side tool for routing: you need to provide a tool context (runs in server)
-  const routingTool = getOsmTool(OsmToolNames.routing, {
-    toolContext: {
+  const routingTool = convertToVercelAiTool({
+    ...routing,
+    context: {
       getMapboxToken: () => process.env.MAPBOX_TOKEN!,
     },
     onToolCompleted,
-    isExecutable: true,
   });
 
-  // create a server-side tool for isochrone: you need to provide a tool context (runs in server)
-  const isochroneTool = getOsmTool(OsmToolNames.isochrone, {
-    toolContext: {
+  const isochroneTool = convertToVercelAiTool({
+    ...isochrone,
+    context: {
       getMapboxToken: () => process.env.MAPBOX_TOKEN!,
     },
     onToolCompleted,
-    isExecutable: true,
   });
 
-  // create a server-side tool for classifyData (runs in server)
-  const dataClassifyTool = getGeoDaTool(GeoDaToolNames.dataClassify, {
-    toolContext: { getValues },
+  const dataClassifyTool = convertToVercelAiTool({
+    ...dataClassify,
+    context: { getValues },
     onToolCompleted,
-    isExecutable: true,
   });
 
-  // create a server-side tool for spatialWeights (runs in server)
-  const spatialWeightsTool = getGeoDaTool(GeoDaToolNames.spatialWeights, {
-    toolContext: { getGeometries },
+  const spatialWeightsTool = convertToVercelAiTool({
+    ...spatialWeights,
+    context: { getGeometries },
     onToolCompleted,
-    isExecutable: true,
   });
 
-  // create a server-side tool for lisa (runs in server)
-  const lisaTool = getGeoDaTool(GeoDaToolNames.lisa, {
-    toolContext: { getValues },
+  const lisaTool = convertToVercelAiTool({
+    ...lisa,
+    context: { getValues },
     onToolCompleted,
-    isExecutable: true,
+  });
+
+  const histogramTool = convertToVercelAiTool({
+    ...histogram,
+    context: { getValues },
+    onToolCompleted,
   });
 
   // create a client-side tool for local query (runs in browser)
-  const localQueryTool = getDuckDBTool('localQuery', {
+  const localQueryTool = convertToVercelAiTool(localQuery, {
     isExecutable: false,
-  });
-
-  // create a server-side tool for histogram
-  const histogramTool = getPlotsTool('histogram', {
-    toolContext: { getValues },
-    onToolCompleted,
-    isExecutable: true,
   });
 
   const { messages } = await req.json();

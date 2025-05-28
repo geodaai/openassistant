@@ -6396,7 +6396,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@openassistant/core@workspace:*, @openassistant/core@workspace:packages/core":
+"@openassistant/core@npm:0.5.0, @openassistant/core@workspace:*, @openassistant/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@openassistant/core@workspace:packages/core"
   dependencies:
@@ -6603,8 +6603,8 @@ __metadata:
     "@heroui/react": "npm:^2.7.8"
     "@heroui/use-clipboard": "npm:^2.1.8"
     "@iconify/react": "npm:^5.1.0"
-    "@openassistant/core": "workspace:*"
-    "@openassistant/utils": "workspace:*"
+    "@openassistant/core": "npm:0.5.0"
+    "@openassistant/utils": "npm:0.5.0"
     ai: "npm:^4.3.16"
     framer-motion: "npm:^11.15.0"
     html2canvas: "npm:^1.4.1"
@@ -6619,7 +6619,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@openassistant/utils@workspace:*, @openassistant/utils@workspace:packages/utils":
+"@openassistant/utils@npm:0.5.0, @openassistant/utils@workspace:*, @openassistant/utils@workspace:packages/utils":
   version: 0.0.0-use.local
   resolution: "@openassistant/utils@workspace:packages/utils"
   dependencies:
@@ -21632,6 +21632,7 @@ __metadata:
     "@openassistant/echarts": "workspace:*"
     "@openassistant/geoda": "workspace:*"
     "@openassistant/keplergl": "workspace:*"
+    "@openassistant/map": "workspace:*"
     "@openassistant/osm": "workspace:*"
     "@openassistant/plots": "workspace:*"
     "@openassistant/ui": "workspace:*"
