@@ -24,11 +24,11 @@ export type SpatialWeightsComponentProps = {
 };
 
 export function SpatialWeightsComponent(props: SpatialWeightsComponentProps) {
-  const weightsId = props.id;
+  const wid = props.weightsId as string;
 
   const weightsMeta = useMemo(() => {
-    return weightsId ? (props[weightsId] as WeightsMeta) : {};
-  }, [weightsId, props]);
+    return wid ? (props[wid] as WeightsMeta) : {};
+  }, [wid, props]);
 
   // weightsMeta: mapping its key to descriptive label
   const WeightsMetaLabels = useMemo(

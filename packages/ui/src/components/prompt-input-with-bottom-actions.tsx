@@ -131,11 +131,11 @@ export default function Component({
                       className={`${context} ? 'animate-ping':''`}
                     />
                   )}
-                  <p>{title}</p>
+                  <span>{title}</span>
                 </div>
-                <p className="text-gray-500 dark:text-gray-400">
+                <span className="text-gray-500 dark:text-gray-400">
                   {description}
-                </p>
+                </span>
               </Button>
             </Tooltip>
           ))}

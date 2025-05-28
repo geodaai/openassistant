@@ -18,7 +18,7 @@ export function ResizablePlotContainer({
       <Resizable
         defaultSize={{
           width: defaultWidth ?? '100%',
-          height: defaultHeight ?? 180,
+          height: defaultHeight ?? 200,
         }}
         minWidth={200}
         minHeight={80}
