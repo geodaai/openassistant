@@ -22,48 +22,89 @@ export type KeplerGlToolArgs = z.ZodObject<{
       z.ZodObject<{
         value: z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodNull]>;
         color: z.ZodString;
+        label: z.ZodOptional<z.ZodString>;
       }>
     >
   >;
 }>;
 
 /**
- * The createMap tool is used to create a map visualization using Kepler.gl.
+ * The keplergl tool is used to create a map using Kepler.gl from a dataset.
  *
- * @example
+ * :::note
+ * This tool should be used in Browser environment.
+ * :::
+ *
+ * ### Example
  * ```typescript
- * import { getVercelAiTool } from '@openassistant/keplergl';
+ * import { keplergl, KeplerglTool } from '@openassistant/map';
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  * import { generateText } from 'ai';
  *
- * const toolContext = {
- *   getDataset: async (datasetName: string) => {
- *     return YOUR_DATASET;
+ * const keplerglTool: KeplerglTool = {
+ *   ...keplergl,
+ *   context: {
+ *     getDataset: async (datasetName: string) => {
+ *       return YOUR_DATASET;
+ *     },
  *   },
  * };
- *
- * const onToolCompleted = (toolCallId: string, additionalData?: unknown) => {
- *   console.log('Tool call completed:', toolCallId, additionalData);
- *   // render the map using <KeplerGlToolComponent props={additionalData} />
- * };
- *
- * const createMapTool = getVercelAiTool('keplergl', toolContext, onToolCompleted);
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Create a point map using the dataset "my_venues"',
- *   tools: {createMap: createMapTool},
+ *   tools: {createMap: convertToVercelAiTool(keplerglTool)},
  * });
  * ```
  *
- * ### getDataset()
+ * :::tip
+ * You can use the `downloadMapData` tool with the `keplergl` tool to download a dataset from a geojson or csv from a url and use it to create a map.
+ * :::
  *
- * User implements this function to get the dataset for visualization.
+ * ### Example
+ * ```typescript
+ * import { downloadMapData, isDownloadMapAdditionalData, keplergl, KeplerglTool } from '@openassistant/map';
+ * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { generateText } from 'ai';
  *
- * ### config
+ * const toolResultCache = new Map<string, unknown>();
  *
- * User can configure the map visualization with options like:
- * - isDraggable: Whether the map is draggable
- * - theme: The theme of the map
+ * const downloadMapTool = {
+ *   ...downloadMapData,
+ *   onToolCompleted: (toolCallId: string, additionalData?: unknown) => {
+ *     if (isDownloadMapAdditionalData(additionalData)) {
+ *       const datasetName = additionalData.datasetName;
+ *       const dataset = additionalData[datasetName];
+ *       toolResultCache.set(datasetName, dataset);
+ *     }
+ *   },
+ * };
+ *
+ * const keplerglTool: KeplerglTool = {
+ *   ...keplergl,
+ *   context: {
+ *     getDataset: async (datasetName: string) => {
+ *       // find dataset based on datasetName
+ *       // return MYDATASETS[datasetName];
+ *
+ *       // if no dataset is found, check if dataset is in toolResultCache
+ *       if (toolResultCache.has(datasetName)) {
+ *         return toolResultCache.get(datasetName);
+ *       }
+ *       throw new Error(`Dataset ${datasetName} not found`);
+ *     },
+ *   },
+ * };
+ *
+ * * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
+ *   prompt: 'Create a from https://geodacenter.github.io/data-and-lab//data/Chi_Carjackings.geojson',
+ *   tools: {
+ *     createMap: convertToVercelAiTool(keplerglTool),
+ *     downloadMapData: convertToVercelAiTool(downloadMapTool),
+ *   },
+ * });
+ * ```
  */
 export const keplergl = extendedTool<
   KeplerGlToolArgs,
@@ -76,7 +117,7 @@ export const keplergl = extendedTool<
 - Please generate colorBrewer colors if user does not provide colors.
 - For colorType 'breaks', the colorMap should be format like: [{value: 3, color: '#f7fcb9'}, {value: 10, color: '#addd8e'}, {value: null, color: '#31a354'}]
 - For colorType 'unique', the colorMap should be format like: [{value: 'a', color: '#f7fcb9'}, {value: 'b', color: '#addd8e'}, {value: 'c', color: '#31a354'}]
-- For geojson dataset, geometryColumn should be '_geojson'.
+- For geojson dataset, geometryColumn should be '_geojson' and mapType should be 'geojson' even if the geojson is a collection of points..
 `,
   parameters: z.object({
     datasetName: z.string(),
@@ -95,6 +136,7 @@ export const keplergl = extendedTool<
         z.object({
           value: z.union([z.string(), z.number(), z.null()]),
           color: z.string(),
+          label: z.string().optional(),
         })
       )
       .optional(),
@@ -143,7 +185,7 @@ export type KeplerGlToolAdditionalData = {
   layerConfig?: Record<string, unknown>;
   colorBy?: string;
   colorType?: 'breaks' | 'unique';
-  colorMap?: { value: string | number | null; color: string }[];
+  colorMap?: { value: string | number | null; color: string; label?: string }[];
 };
 
 export type ExecuteCreateMapResult = {

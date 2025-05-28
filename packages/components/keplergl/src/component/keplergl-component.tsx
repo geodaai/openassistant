@@ -15,6 +15,12 @@ import { theme as keplerTheme } from '@kepler.gl/styles';
 import { KeplerMiniMap } from './keplergl-mini-map';
 import { KeplerState, MAP_ID, store } from './keplergl-provider';
 
+type ColorMap = {
+  value: string | number | null;
+  color: string;
+  label?: string;
+}[];
+
 export type CreateMapOutputData = {
   id?: string;
   datasetId: string;
@@ -24,7 +30,7 @@ export type CreateMapOutputData = {
   layerConfig?: string;
   colorBy?: string;
   colorType?: 'breaks' | 'unique';
-  colorMap?: { value: string | number | null; color: string }[];
+  colorMap?: ColorMap;
   width?: number;
   height?: number;
 };
@@ -62,6 +68,9 @@ export function KeplerGlComponent(props: CreateMapOutputData) {
       />
       <AutoSizer>
         {({ width, height }) => {
+          const defaultHeight = 260;
+          const finalHeight = height || defaultHeight;
+          
           return (
             <RootContext.Provider value={rootNode}>
               <Provider store={store}>
@@ -69,7 +78,7 @@ export function KeplerGlComponent(props: CreateMapOutputData) {
                   <KeplerGlMiniComponent
                     {...props}
                     width={width}
-                    height={height}
+                    height={finalHeight}
                   />
                 </ThemeProvider>
               </Provider>
@@ -84,21 +93,25 @@ export function KeplerGlComponent(props: CreateMapOutputData) {
 function MapLegend(props: {
   colorBy?: string;
   colorType?: 'breaks' | 'unique';
-  colorMap?: { value: string | number | null; color: string }[];
+  colorMap?: ColorMap;
 }) {
   const { colorBy, colorType, colorMap } = props;
 
-  const formatLabel = (value: string | number | null, index: number) => {
+  const formatLabel = (
+    value: string | number | null,
+    index: number,
+    label?: string
+  ) => {
     if (colorType === 'breaks') {
       if (value !== null) {
-        return `<= ${value}`;
+        return label || `<= ${value}`;
       } else {
         const previousValue = colorMap?.[index - 1]?.value;
-        return `> ${previousValue}`;
+        return label || `> ${previousValue}`;
       }
     }
 
-    return String(value);
+    return label || String(value);
   };
 
   return colorBy && colorType && colorMap ? (
@@ -140,7 +153,7 @@ function MapLegend(props: {
                 whiteSpace: 'nowrap',
               }}
             >
-              {formatLabel(item.value, index)}
+              {formatLabel(item.value, index, item.label)}
             </span>
           </div>
         ))}

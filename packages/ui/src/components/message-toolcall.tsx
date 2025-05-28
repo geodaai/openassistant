@@ -99,12 +99,14 @@ const ToolCallComponentRenderer = memo(
   function ToolCallComponentRenderer({
     Component,
     additionalData,
+    toolCallId,
   }: {
     Component:
       | React.ComponentType<Record<string, unknown>>
       | React.ReactElement
       | null;
     additionalData: unknown;
+    toolCallId: string;
   }) {
     if (!Component) return null;
 
@@ -123,10 +125,10 @@ const ToolCallComponentRenderer = memo(
     );
   },
   (prevProps, nextProps) => {
-    // Deep comparison of additionalData
+    // comparison of additionalData using toolCallId
     return (
-      JSON.stringify(prevProps.additionalData) ===
-      JSON.stringify(nextProps.additionalData)
+      JSON.stringify(prevProps.toolCallId) ===
+      JSON.stringify(nextProps.toolCallId)
     );
   }
 );
@@ -273,6 +275,7 @@ export function ToolCallComponent({
         <ToolCallComponentRenderer
           Component={Component}
           additionalData={additionalData}
+          toolCallId={toolInvocation.toolCallId}
         />
       )}
     </div>

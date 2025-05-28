@@ -29,7 +29,13 @@ import {
   RoadsTool,
 } from '@openassistant/osm';
 import { KeplerGlComponent } from '@openassistant/keplergl';
-import { GetDataset, keplergl, KeplerglTool } from '@openassistant/map';
+import {
+  GetDataset,
+  keplergl,
+  KeplerglTool,
+  downloadMapData,
+  DownloadMapDataTool,
+} from '@openassistant/map';
 import { useToolCache } from '@openassistant/core';
 import { getValuesFromGeoJSON } from '@openassistant/utils';
 
@@ -204,6 +210,11 @@ export default function AiChat() {
     onToolCompleted,
   };
 
+  const downloadMapDataTool: DownloadMapDataTool = {
+    ...downloadMapData,
+    onToolCompleted,
+  };
+
   const tools = {
     dataClassify: classifyTool,
     spatialWeights: weightsTool,
@@ -219,6 +230,7 @@ export default function AiChat() {
     keplergl: keplerglTool,
     routing: routingTool,
     roads: roadsTool,
+    downloadMapData: downloadMapDataTool,
   };
 
   const welcomeMessage = `
@@ -236,6 +248,7 @@ Hi! I'm your GeoDa assistant. Here are some example queries you can try:
 10. How can I buffer the address "123 Main St, San Francisco, CA" by 10 KM?
 11. How can I get the routing directions between "123 Main St, San Francisco, CA" and "450 10th St, San Francisco, CA 94103"?
 12. Can I get the road network in zipcode 85248?
+13. Create another map from https://geodacenter.github.io/data-and-lab//data/Chicago_2020.geojson
 `;
 
   const instructions = `

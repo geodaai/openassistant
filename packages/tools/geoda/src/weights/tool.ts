@@ -35,9 +35,12 @@ export type SpatialWeightsLlmResult = {
 };
 
 export type SpatialWeightsAdditionalData = {
-  datasetName: string;
-  weights: number[][];
-  weightsMeta: WeightsMeta;
+  weightsId: string;
+} & {
+  [id: string]: {
+    weights: number[][];
+    weightsMeta: WeightsMeta;
+  };
 };
 
 /**
@@ -343,4 +346,16 @@ export function getCachedWeightsById(weightsId: string) {
     return existingWeightData;
   }
   return null;
+}
+
+export function isWeightsAdditionalData(
+  data: unknown
+): data is SpatialWeightsAdditionalData {
+  if (typeof data === 'object' && data !== null && 'weightsId' in data) {
+    const weightsId = data.weightsId;
+    if (typeof weightsId === 'string' && data[weightsId] !== undefined) {
+      return true;
+    }
+  }
+  return false;
 }

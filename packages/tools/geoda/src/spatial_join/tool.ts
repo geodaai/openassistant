@@ -105,10 +105,10 @@ export const spatialJoin = extendedTool<
   description: `Spatial join geometries two geometric datasets. For example:
 1. to get the number of points in polygons, "right dataset = points" and "left dataset = polygons"
 2. to check which point belongs to which polygon, "right dataset = polygons" and "left dataset = points"
-Please Note:
+IMPORTANT:
 1. left dataset and right dataset should be different.
 2. joinOperators can NOT be empty and should have the same length as joinVariableNames.
-3. IMPORTANT: joinVariables should comes from the right dataset.`,
+3. joinVariables should comes from the right dataset.`,
   parameters: z.object({
     rightDatasetName: z.string(),
     leftDatasetName: z.string(),
