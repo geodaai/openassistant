@@ -1,12 +1,16 @@
 import {
-  CreateMapOutputData,
   isCreateMapOutputData,
   KeplerGlComponent,
 } from '@openassistant/keplergl';
 import { memo } from 'react';
 
 export const KeplerGlTool = memo(
-  function KeplerGlTool({ additionalData }: { additionalData: unknown }) {
+  function KeplerGlTool({
+    additionalData,
+  }: {
+    toolCallId: string;
+    additionalData: unknown;
+  }) {
     if (isCreateMapOutputData(additionalData)) {
       return <KeplerGlComponent {...additionalData} />;
     }
@@ -14,10 +18,7 @@ export const KeplerGlTool = memo(
   },
   (prevProps, nextProps) => {
     // Deep comparison of additionalData
-    return (
-      (prevProps.additionalData as CreateMapOutputData).datasetId ===
-      (nextProps.additionalData as CreateMapOutputData).datasetId
-    );
+    return prevProps.toolCallId === nextProps.toolCallId;
   }
 );
 

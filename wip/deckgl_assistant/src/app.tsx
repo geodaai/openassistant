@@ -194,7 +194,6 @@ Fields:
           widgets={[
             new FullscreenWidget({
               placement: 'top-right',
-              opacity: 0.8,
             }),
             new AiAssistantWidget({
               modelProvider: 'openai',

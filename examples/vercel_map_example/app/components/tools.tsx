@@ -2,7 +2,11 @@
 
 import dynamic from 'next/dynamic';
 
-import { LocalQueryTool } from './tool-components/local-query';
+// import { LocalQueryTool } from './tool-components/local-query';
+
+const LocalQueryTool = dynamic(() => import('./tool-components/local-query').then(mod => ({ default: mod.LocalQueryTool })), {
+  ssr: false,
+});
 
 const HistogramTool = dynamic(() => import('./tool-components/histogram'), {
   ssr: false,
@@ -55,7 +59,11 @@ export function ToolInvocation({
         return <WeightsTool key={toolCallId} additionalData={additionalData} />;
       case 'keplergl':
         return (
-          <KeplerGlTool key={toolCallId} additionalData={additionalData} />
+          <KeplerGlTool
+            key={toolCallId}
+            toolCallId={toolCallId}
+            additionalData={additionalData}
+          />
         );
     }
   }

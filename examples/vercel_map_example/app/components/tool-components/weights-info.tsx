@@ -3,11 +3,7 @@ import {
   SpatialWeightsComponent,
 } from '@openassistant/tables';
 
-interface WeightsToolProps {
-  additionalData: unknown;
-}
-
-export function WeightsTool({ additionalData }: WeightsToolProps) {
+export function WeightsTool({ additionalData }: { additionalData: unknown }) {
   if (isSpatialWeightsOutputData(additionalData)) {
     return <SpatialWeightsComponent {...additionalData} />;
   }

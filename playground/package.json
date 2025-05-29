@@ -37,6 +37,7 @@
     "@openassistant/utils": "workspace:*",
     "github-markdown-css": "^5.8.1",
     "next": "^14.2.21",
+    "ollama-ai-provider": "^1.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-grid-layout": "^1.5.0",

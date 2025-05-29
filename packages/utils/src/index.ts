@@ -3,6 +3,8 @@ export * from './vercel-tool';
 export * from './cache';
 export * from './geojson';
 export * from './format';
+export * from './tool-output-manager';
+export * from './conversation-cache';
 
 export function generateId() {
   // generate a random id with 10 characters

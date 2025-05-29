@@ -55,29 +55,22 @@ Note:
       direction: 'incoming',
       position: 'single',
       payload: (
-        <div className="mt-4">
+        <div className="flex flex-col mt-4">
           <ConfigPanel
             initialConfig={aiConfig}
             onConfigChange={onAiConfigChange}
           />
+          <div className="flex flex-col mt-4">
+            <p>Here is the data you can use in the chat:</p>
+            <p>
+              dataset: myVenues column names: - index (int) - location (string)
+              - latitude (float) - longitude (float) - revenue (float) -
+              population (int) - income (float) Please select your prefered LLM
+              model and use your API key to start the chat.
+            </p>
+          </div>
         </div>
       ),
-      messageContent: {
-        text: `Here is the data you can use in the chat:
-
-dataset: myVenues
-column names:
-- index (int)
-- location (string)
-- latitude (float)
-- longitude (float)
-- revenue (float)
-- population (int)
-- income (float)
-
-Please select your prefered LLM model and use your API key to start the chat.
-      `,
-      },
     },
   ];
 

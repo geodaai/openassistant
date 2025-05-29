@@ -35,7 +35,6 @@ type MessageContentProps = {
   useMarkdown?: boolean;
   components?: ToolCallComponents;
   showTools?: boolean;
-  componentResizable?: boolean;
 };
 
 export function MessageContent({
@@ -47,7 +46,6 @@ export function MessageContent({
   useMarkdown,
   components,
   showTools,
-  componentResizable,
 }: MessageContentProps) {
   return (
     <div style={{ paddingRight: '30px' }}>

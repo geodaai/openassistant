@@ -230,8 +230,6 @@ export async function runDataClassify({
   try {
     const values = await getValues(datasetName, variableName);
 
-    console.log('🔍 values', values);
-
     let breaks;
     let uniqueValues;
     switch (method) {

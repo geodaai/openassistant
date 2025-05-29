@@ -13,6 +13,7 @@ import {
 import { leaflet, downloadMapData } from '@openassistant/map';
 import { isochrone, geocoding, routing } from '@openassistant/osm';
 import { localQuery } from '@openassistant/duckdb';
+import { histogram } from '@openassistant/plots';
 
 // Move toolAdditionalData outside the POST function to persist across requests
 const toolAdditionalData: { toolCallId: string; data: unknown }[] = [];

@@ -1,4 +1,4 @@
-import { Deck, Widget, WidgetPlacement } from '@deck.gl/core';
+import { Deck, Widget } from '@deck.gl/core';
 import { MessageModel, UseAssistantProps } from '@openassistant/core';
 import { AiAssistant, AiAssistantConfig, ConfigPanel } from '@openassistant/ui';
 import { createRoot } from 'react-dom/client';
@@ -11,7 +11,7 @@ export type AiAssistantWidgetProps = {
   /**
    * Widget positioning within the view. Default 'top-left'.
    */
-  placement?: WidgetPlacement;
+  placement?: string;
   /**
    * The width of the widget.
    */
@@ -97,7 +97,7 @@ export class AiAssistantWidget implements Widget<AiAssistantWidgetProps> {
   id: string = 'ai-assistant-widget';
   element?: HTMLDivElement;
   deck?: Deck<any>;
-  placement: WidgetPlacement = 'top-right';
+  placement: string = 'top-right';
   width: number = 390;
   height: number = 800;
   opacity: number = 0.8;

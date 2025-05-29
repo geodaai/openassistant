@@ -13,7 +13,7 @@ import {
  * The `localQuery` tool is used to execute a query against a local dataset.
  *
  * :::note
- * This tool can not be executed on the server side.
+ * This tool should be executed in Browser environment for now.
  * :::
  *
  * ### Example
@@ -22,7 +22,7 @@ import {
  * import { convertToVercelAiTool } from '@openassistent/utils';
  * import { generateText } from 'ai';
  *
- * const myQueryTool: LocalQueryTool = {
+ * const localQueryTool: LocalQueryTool = {
  *   ...localQuery,
  *   context: {
  *     ...localQuery.context,
@@ -33,12 +33,10 @@ import {
  *   },
  * };
  *
- * const localQueryTool = convertToVercelAiTool(myQueryTool);
- *
  * generateText({
  *   model: 'gpt-4o-mini',
  *   prompt: 'What are the venues in San Francisco?',
- *   tools: {localQuery: localQueryTool},
+ *   tools: {localQuery: convertToVercelAiTool(localQueryTool)},
  * });
  * ```
  *

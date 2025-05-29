@@ -1,8 +1,14 @@
-import {
-  isQueryDuckDBOutputData,
-  QueryDuckDBComponent,
-} from '@openassistant/tables';
-import { getDuckDB } from '@openassistant/duckdb';
+import dynamic from 'next/dynamic';
+
+const LocalQueryTool = dynamic(
+  () =>
+    import('./local-query').then((mod) => ({
+      default: mod.LocalQueryTool,
+    })),
+  {
+    ssr: false,
+  }
+);
 
 interface ToolInvocationProps {
   toolCallId: string;
@@ -30,30 +36,6 @@ export function ToolInvocation({
         />
       );
     }
-  }
-  return null;
-}
-
-interface LocalQueryToolProps {
-  toolCallId: string;
-  additionalData: unknown;
-  getValues: (datasetName: string, variableName: string) => Promise<number[]>;
-}
-
-export function LocalQueryTool({
-  toolCallId,
-  additionalData,
-  getValues,
-}: LocalQueryToolProps) {
-  if (isQueryDuckDBOutputData(additionalData)) {
-    return (
-      <QueryDuckDBComponent
-        key={toolCallId}
-        {...additionalData}
-        getDuckDB={getDuckDB}
-        getValues={getValues}
-      />
-    );
   }
   return null;
 }

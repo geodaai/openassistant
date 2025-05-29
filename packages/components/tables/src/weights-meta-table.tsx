@@ -22,20 +22,22 @@ export type SpatialWeightsComponentProps = {
   id?: string;
   isExpanded?: boolean;
   isDraggable?: boolean;
-} & {
   weightsId: string;
-} & {
-  [id: string]: {
-    weights: number[][];
-    weightsMeta: WeightsMeta;
-  };
+  [weightsId: string]: unknown;
+};
+
+export type WeightsResult = {
+  weights: number[][];
+  weightsMeta: WeightsMeta;
 };
 
 export function SpatialWeightsComponent(props: SpatialWeightsComponentProps) {
   const wid = props.weightsId as string;
 
   const { weights, weightsMeta } = useMemo(() => {
-    return wid && props[wid] ? props[wid] : { weights: [], weightsMeta: {} };
+    return wid && props[wid]
+      ? (props[wid] as WeightsResult)
+      : { weights: [], weightsMeta: {} };
   }, [wid, props]);
 
   // weightsMeta: mapping its key to descriptive label
