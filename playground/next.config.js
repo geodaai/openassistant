@@ -41,8 +41,6 @@ module.exports = {
       config.resolve.alias = {
         ...config.resolve.alias,
         '@kepler.gl/processors': false,
-        '@loaders.gl/parquet': false,
-        'parquet-wasm': false,
       };
     }
 
