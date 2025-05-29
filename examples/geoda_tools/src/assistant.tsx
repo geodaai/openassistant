@@ -38,6 +38,7 @@ import {
 } from '@openassistant/map';
 import { useToolCache } from '@openassistant/core';
 import { getValuesFromGeoJSON } from '@openassistant/utils';
+import '@openassistant/tables/dist/index.css';
 
 import { PointLayerData } from '@geoda/core';
 import { SAMPLE_DATASETS } from './dataset';
@@ -285,7 +286,7 @@ Note:
           tools={tools}
           welcomeMessage={welcomeMessage}
           instructions={instructions}
-          theme="dark"
+          theme="light"
         />
       </div>
     </div>

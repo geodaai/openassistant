@@ -63,6 +63,7 @@ export function KeplerMiniMap({
   const MapContainer = appInjector.get(MapContainerFactory);
 
   const dispatch = useDispatch();
+  const mapContainerRef = useRef<HTMLDivElement>(null);
 
   // get kepler state
   const keplerState = useSelector((state: KeplerState) => {
@@ -196,10 +197,44 @@ export function KeplerMiniMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Programmatically hide mapboxgl-children div
+  useEffect(() => {
+    const hideMapboxChildren = () => {
+      if (mapContainerRef.current) {
+        const mapboxChildrenDiv = mapContainerRef.current.querySelector(
+          'div[mapboxgl-children]'
+        );
+        if (mapboxChildrenDiv) {
+          (mapboxChildrenDiv as HTMLElement).style.display = 'none';
+        }
+      }
+    };
+
+    // Try to hide immediately
+    hideMapboxChildren();
+
+    // Set up a MutationObserver to watch for the element being added
+    const observer = new MutationObserver(() => {
+      hideMapboxChildren();
+    });
+
+    if (mapContainerRef.current) {
+      observer.observe(mapContainerRef.current, {
+        childList: true,
+        subtree: true,
+      });
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   return (
     <AutoSizer>
       {({ width = 480, height = 480 }) => (
         <div
+          ref={mapContainerRef}
           className="MapContainer"
           style={{
             width: `${width}px`,
@@ -207,6 +242,13 @@ export function KeplerMiniMap({
             position: 'relative',
           }}
         >
+          <style>
+            {`
+              .MapContainer div[mapboxgl-children] {
+                display: none !important;
+              }
+            `}
+          </style>
           <MapViewStateContextProvider mapState={newMapState}>
             <MapContainer
               width={width}

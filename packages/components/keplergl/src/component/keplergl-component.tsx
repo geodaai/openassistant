@@ -60,33 +60,46 @@ export function KeplerGlComponent(props: CreateMapOutputData) {
   const rootNode = useRef<HTMLDivElement>(null);
 
   return (
-    <>
+    <div
+      style={{
+        resize: 'both',
+        overflow: 'auto',
+        minWidth: '200px',
+        minHeight: '300px',
+        width: '100%',
+        height: '300px',
+      }}
+    >
       <MapLegend
         colorBy={props.colorBy}
         colorType={props.colorType}
         colorMap={props.colorMap}
       />
-      <AutoSizer>
-        {({ width, height }) => {
-          const defaultHeight = 260;
-          const finalHeight = height || defaultHeight;
-          
-          return (
-            <RootContext.Provider value={rootNode}>
-              <Provider store={store}>
-                <ThemeProvider theme={keplerTheme}>
-                  <KeplerGlMiniComponent
-                    {...props}
-                    width={width}
-                    height={finalHeight}
-                  />
-                </ThemeProvider>
-              </Provider>
-            </RootContext.Provider>
-          );
+      <div
+        style={{
+          width: '100%',
+          height: 'calc(100% - 20px)', // Account for legend height
         }}
-      </AutoSizer>
-    </>
+      >
+        <AutoSizer>
+          {({ width, height }) => {
+            return (
+              <RootContext.Provider value={rootNode}>
+                <Provider store={store}>
+                  <ThemeProvider theme={keplerTheme}>
+                    <KeplerGlMiniComponent
+                      {...props}
+                      width={width}
+                      height={height}
+                    />
+                  </ThemeProvider>
+                </Provider>
+              </RootContext.Provider>
+            );
+          }}
+        </AutoSizer>
+      </div>
+    </div>
   );
 }
 

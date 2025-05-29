@@ -253,6 +253,11 @@ export const roads = extendedTool<
       };
     }
   },
+  context: {
+    getGeometries: () => {
+      throw new Error('getGeometries not implemented.');
+    },
+  },
 });
 
 export type RoadsTool = typeof roads;

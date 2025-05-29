@@ -10,7 +10,6 @@ import {
 import { Pagination } from '@heroui/pagination';
 import { Button } from '@heroui/button';
 
-
 export type SpatialJoinComponentProps = {
   id?: string;
   joinResult: number[][];
@@ -47,61 +46,63 @@ export function SpatialJoinComponent({
       {error}
     </div>
   ) : (
-    <div className="flex flex-col max-w-full">
-      <Table
-        aria-label="Query Result Table"
-        bottomContent={
-          <div className="flex w-full justify-center">
-            <Pagination
-              isCompact
-              showControls
-              showShadow
-              color="secondary"
-              page={page}
-              total={pages}
-              onChange={(page) => setPage(page)}
-              size="sm"
-              hidden={pages <= 1}
-            />
+    <div className="overflow-auto resize pb-3 w-full h-[450px]">
+      <div className="flex flex-col max-w-full">
+        <Table
+          aria-label="Query Result Table"
+          bottomContent={
+            <div className="flex w-full justify-center">
+              <Pagination
+                isCompact
+                showControls
+                showShadow
+                color="secondary"
+                page={page}
+                total={pages}
+                onChange={(page) => setPage(page)}
+                size="sm"
+                hidden={pages <= 1}
+              />
+            </div>
+          }
+          classNames={{
+            wrapper:
+              'max-h-[440px] max-w-full overflow-x-auto rounded-none gap-0',
+            base: 'overflow-scroll p-0 m-0 text-tiny',
+            table: 'p-0 m-0 text-tiny',
+            th: 'text-tiny',
+            td: 'text-[9px]',
+          }}
+          isHeaderSticky
+          selectionMode="multiple"
+          selectionBehavior="replace"
+          disallowEmptySelection={false}
+        >
+          <TableHeader>
+            {Object.keys(joinValues || {}).map((variable) => (
+              <TableColumn key={variable}>{variable}</TableColumn>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {itemsOnPage.map((row, index) => (
+              <TableRow key={index}>
+                {Object.keys(joinValues || {}).map((variable) => (
+                  <TableCell key={variable} style={{ position: 'relative' }}>
+                    {joinValues?.[variable]?.[index]}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        {actionButtonLabel && actionButtonOnClick && joinValues && (
+          <div className="flex justify-end">
+            <Button color="secondary" onClick={() => actionButtonOnClick()}>
+              {actionButtonLabel}
+            </Button>
           </div>
-        }
-        classNames={{
-          wrapper:
-            'max-h-[440px] max-w-full overflow-x-auto rounded-none gap-0',
-          base: 'overflow-scroll p-0 m-0 text-tiny',
-          table: 'p-0 m-0 text-tiny',
-          th: 'text-tiny',
-          td: 'text-[9px]',
-        }}
-        isHeaderSticky
-        selectionMode="multiple"
-        selectionBehavior="replace"
-        disallowEmptySelection={false}
-      >
-        <TableHeader>
-          {Object.keys(joinValues || {}).map((variable) => (
-            <TableColumn key={variable}>{variable}</TableColumn>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {itemsOnPage.map((row, index) => (
-            <TableRow key={index}>
-              {Object.keys(joinValues || {}).map((variable) => (
-                <TableCell key={variable} style={{ position: 'relative' }}>
-                  {joinValues?.[variable]?.[index]}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      {actionButtonLabel && actionButtonOnClick && joinValues && (
-        <div className="flex justify-end">
-          <Button color="secondary" onClick={() => actionButtonOnClick()}>
-            {actionButtonLabel}
-          </Button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

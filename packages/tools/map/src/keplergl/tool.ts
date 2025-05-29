@@ -112,13 +112,23 @@ export const keplergl = extendedTool<
   KeplerGlToolAdditionalData,
   MapToolContext
 >({
-  description: `Create a map using kepler.gl. For basic map visualization, you can omit color related parameters.
-- When creating a map for a variable, please use dataClassify tool to classify the data into bins or unique values first.
-- Please generate colorBrewer colors if user does not provide colors.
-- For colorType 'breaks', the colorMap should be format like: [{value: 3, color: '#f7fcb9'}, {value: 10, color: '#addd8e'}, {value: null, color: '#31a354'}]
-- For colorType 'unique', the colorMap should be format like: [{value: 'a', color: '#f7fcb9'}, {value: 'b', color: '#addd8e'}, {value: 'c', color: '#31a354'}]
-- For geojson dataset, geometryColumn should be '_geojson' and mapType should be 'geojson' even if the geojson is a collection of points..
-`,
+  description: `Create a map using kepler.gl. You can create basic maps without color styling, or enhanced maps with color visualization.
+
+For basic maps:
+- Simply use datasetName, geometryColumn (if needed), latitudeColumn/longitudeColumn (for point maps), and mapType
+- Omit color-related parameters for simple visualization
+
+For colored maps:
+- If user requests color visualization, use available columns in the dataset
+- Use dataClassify tool to classify data into bins or unique values when needed
+- Generate colorBrewer colors automatically if user doesn't specify colors
+- For colorType 'breaks': [{value: 3, color: '#f7fcb9'}, {value: 10, color: '#addd8e'}, {value: null, color: '#31a354'}]
+- For colorType 'unique': [{value: 'a', color: '#f7fcb9'}, {value: 'b', color: '#addd8e'}, {value: 'c', color: '#31a354'}]
+
+For geojson datasets:
+- Use geometryColumn: '_geojson' and mapType: 'geojson' even for point collections
+
+Proceed directly with map creation unless user specifically asks for guidance on variable selection.`,
   parameters: z.object({
     datasetName: z.string(),
     geometryColumn: z.string().optional(),

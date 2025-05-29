@@ -98,39 +98,41 @@ export function BoxplotComponent(props: BoxplotOutputData): JSX.Element | null {
   };
 
   return (
-    <div className="relative h-full w-full flex flex-col rounded-lg gap-2 shadow-secondary-1 dark:text-gray-100">
-      <div className="relative h-full py-2 flex-grow">
-        <div className="h-full w-full">
-          <Boxplot {...props} />
-        </div>
-      </div>
-      <div className="footer text-xs">
-        {props.isExpanded && (
-          <div className="w-full text-tiny">
-            <Table
-              aria-label="Box Plot Statistics"
-              classNames={{
-                base: 'overflow-scroll p-0 m-0 text-tiny',
-                table: 'p-0 m-0 text-tiny',
-                wrapper: 'p-0 pr-2',
-                th: 'text-tiny',
-                td: 'text-tiny text-default-500',
-              }}
-              isCompact={true}
-              removeWrapper={true}
-            >
-              <TableHeader>
-                <>
-                  <TableColumn key="metric"> </TableColumn>
-                  {props.variables.map((variable) => (
-                    <TableColumn key={variable}>{variable}</TableColumn>
-                  ))}
-                </>
-              </TableHeader>
-              <TableBody>{generateStatsRows(props.boxplotData)}</TableBody>
-            </Table>
+    <div className="overflow-auto resize pb-3 w-full h-[300px]">
+      <div className="relative h-full w-full flex flex-col rounded-lg gap-2 shadow-secondary-1 dark:text-gray-100">
+        <div className="relative h-full py-2 flex-grow">
+          <div className="h-full w-full">
+            <Boxplot {...props} />
           </div>
-        )}
+        </div>
+        <div className="footer text-xs">
+          {props.isExpanded && (
+            <div className="w-full text-tiny">
+              <Table
+                aria-label="Box Plot Statistics"
+                classNames={{
+                  base: 'overflow-scroll p-0 m-0 text-tiny',
+                  table: 'p-0 m-0 text-tiny',
+                  wrapper: 'p-0 pr-2',
+                  th: 'text-tiny',
+                  td: 'text-tiny text-default-500',
+                }}
+                isCompact={true}
+                removeWrapper={true}
+              >
+                <TableHeader>
+                  <>
+                    <TableColumn key="metric"> </TableColumn>
+                    {props.variables.map((variable) => (
+                      <TableColumn key={variable}>{variable}</TableColumn>
+                    ))}
+                  </>
+                </TableHeader>
+                <TableBody>{generateStatsRows(props.boxplotData)}</TableBody>
+              </Table>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

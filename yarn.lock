@@ -6512,6 +6512,7 @@ __metadata:
     "@loaders.gl/schema": "npm:4.3.3"
     "@types/redux-logger": "npm:^3"
     esbuild-plugin-polyfill-node: "npm:^0.3.0"
+    re-resizable: "npm:^6.10.3"
     react-intl: "npm:^6.3.0"
     react-palm: "npm:^3.3.8"
     react-redux: "npm:^9.2.0"

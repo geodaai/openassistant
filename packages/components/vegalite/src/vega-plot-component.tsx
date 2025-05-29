@@ -69,36 +69,45 @@ export function VegaPlotComponent(props: VegaLiteOutputData) {
   };
 
   return (
-    <div style={containerStyle}>
-      <VegaLite
-        spec={{
-          ...spec,
-          width: 'container',
-          height: 'container',
-          autosize: {
-            type: 'fit',
-            contains: 'padding',
-          },
-        }}
-        theme={
-          (props.theme || 'ggplot2') as
-            | 'dark'
-            | 'excel'
-            | 'fivethirtyeight'
-            | 'ggplot2'
-            | 'latimes'
-            | 'quartz'
-            | 'vox'
-            | 'urbaninstitute'
-            | 'googlecharts'
-            | 'powerbi'
-            | 'carbonwhite'
-            | 'carbong10'
-            | 'carbong90'
-            | 'carbong100'
-        }
-        style={{ width: '100%', height: '100%' }}
-      />
+    <div
+      style={{
+        resize: 'both',
+        overflow: 'auto',
+        width: '100%',
+        height: '300px',
+      }}
+    >
+      <div style={containerStyle}>
+        <VegaLite
+          spec={{
+            ...spec,
+            width: 'container',
+            height: 'container',
+            autosize: {
+              type: 'fit',
+              contains: 'padding',
+            },
+          }}
+          theme={
+            (props.theme || 'ggplot2') as
+              | 'dark'
+              | 'excel'
+              | 'fivethirtyeight'
+              | 'ggplot2'
+              | 'latimes'
+              | 'quartz'
+              | 'vox'
+              | 'urbaninstitute'
+              | 'googlecharts'
+              | 'powerbi'
+              | 'carbonwhite'
+              | 'carbong10'
+              | 'carbong90'
+              | 'carbong100'
+          }
+          style={{ width: '100%', height: '100%' }}
+        />
+      </div>
     </div>
   );
 }

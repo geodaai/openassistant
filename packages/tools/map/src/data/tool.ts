@@ -24,11 +24,11 @@ export type DownloadMapAdditionalData = {
  * The downloadMapData tool is used to download map data (GeoJson or CSV) from a url.
  *
  * :::tip
- * Use this tool to download map data, you can cache the dataset in `onToolCompleted()` 
+ * Use this tool to download map data, you can cache the dataset in `onToolCompleted()`
  * callback. Other tools e.g. `keplergl` can use the downloaded dataset to create a map,
  * or query the downloaded dataset using `localQuery` tool.
  * :::
- * 
+ *
  * ### Example
  * ```typescript
  * import { downloadMapData, isDownloadMapAdditionalData, keplergl, KeplerglTool } from '@openassistant/map';
@@ -36,7 +36,7 @@ export type DownloadMapAdditionalData = {
  * import { generateText } from 'ai';
  *
  * const toolResultCache = new Map<string, unknown>();
- * 
+ *
  * const downloadMapTool = {
  *   ...downloadMapData,
  *   onToolCompleted: (toolCallId: string, additionalData?: unknown) => {
@@ -47,14 +47,14 @@ export type DownloadMapAdditionalData = {
  *     }
  *   },
  * };
- * 
+ *
  * const keplerglTool: KeplerglTool = {
  *   ...keplergl,
  *   context: {
  *     getDataset: async (datasetName: string) => {
- *       // find dataset based on datasetName 
+ *       // find dataset based on datasetName
  *       // return MYDATASETS[datasetName];
- * 
+ *
  *       // if no dataset is found, check if dataset is in toolResultCache
  *       if (toolResultCache.has(datasetName)) {
  *         return toolResultCache.get(datasetName);
@@ -63,7 +63,7 @@ export type DownloadMapAdditionalData = {
  *     },
  *   },
  * };
- * 
+ *
  * * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Create a from https://geodacenter.github.io/data-and-lab//data/Chi_Carjackings.geojson',
@@ -71,7 +71,7 @@ export type DownloadMapAdditionalData = {
  *     createMap: convertToVercelAiTool(keplerglTool),
  *     downloadMapData: convertToVercelAiTool(downloadMapTool),
  *   },
- * }); 
+ * });
  */
 export const downloadMapData = extendedTool<
   DownloadMapDataArgs,
@@ -105,7 +105,9 @@ export const downloadMapData = extendedTool<
         // first line is the header
         fields = data.split('\n')[0].split(',');
       } else {
-        throw new Error('Unsupported file type, only geojson and csv are supported.');
+        throw new Error(
+          'Unsupported file type, only geojson and csv are supported.'
+        );
       }
 
       if (!data) {
@@ -152,3 +154,5 @@ export function isDownloadMapAdditionalData(
   }
   return false;
 }
+
+export type DownloadMapDataTool = typeof downloadMapData;

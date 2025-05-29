@@ -16,7 +16,6 @@ import {
   CardBody,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import { ResizablePlotContainer } from '../containers/resizable-container';
 
 export const MarkdownContent = ({
   text,
@@ -99,7 +98,6 @@ const ToolCallComponentRenderer = memo(
   function ToolCallComponentRenderer({
     Component,
     additionalData,
-    toolCallId,
   }: {
     Component:
       | React.ComponentType<Record<string, unknown>>
@@ -111,25 +109,18 @@ const ToolCallComponentRenderer = memo(
     if (!Component) return null;
 
     return (
-      <div className="w-full">
-        <ResizablePlotContainer isHovered={true}>
-          <ToolCallErrorBoundary>
-            {typeof Component === 'function' ? (
-              <Component {...(additionalData as Record<string, unknown>)} />
-            ) : (
-              Component
-            )}
-          </ToolCallErrorBoundary>
-        </ResizablePlotContainer>
-      </div>
+      <ToolCallErrorBoundary>
+        {typeof Component === 'function' ? (
+          <Component {...(additionalData as Record<string, unknown>)} />
+        ) : (
+          Component
+        )}
+      </ToolCallErrorBoundary>
     );
   },
   (prevProps, nextProps) => {
     // comparison of additionalData using toolCallId
-    return (
-      JSON.stringify(prevProps.toolCallId) ===
-      JSON.stringify(nextProps.toolCallId)
-    );
+    return prevProps.toolCallId === nextProps.toolCallId;
   }
 );
 
@@ -272,11 +263,13 @@ export function ToolCallComponent({
         </CardBody>
       </Card>
       {Component && isCompleted && toolSuccess && (
-        <ToolCallComponentRenderer
-          Component={Component}
-          additionalData={additionalData}
-          toolCallId={toolInvocation.toolCallId}
-        />
+        <div>
+          <ToolCallComponentRenderer
+            Component={Component}
+            additionalData={additionalData}
+            toolCallId={toolInvocation.toolCallId}
+          />
+        </div>
       )}
     </div>
   );

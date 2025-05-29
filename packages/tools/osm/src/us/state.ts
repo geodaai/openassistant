@@ -135,6 +135,7 @@ export const getUsStateGeojson = extendedTool<
       };
     }
   },
+  context: {},
 });
 
 export type GetUsStateGeojsonTool = typeof getUsStateGeojson;

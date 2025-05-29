@@ -13,10 +13,12 @@ export function ParallelCoordinateComponent(
   props: ParallelCoordinateOutputData
 ): JSX.Element | null {
   return (
-    <div className="relative h-full w-full flex flex-col rounded-lg gap-2 pt-6 text-gray-900 shadow-secondary-1  dark:text-gray-100">
-      <div className="relative h-full py-2 flex-grow ">
-        <div className="absolute left-0 top-0 h-full w-full">
-          <ParallelCoordinatePlot {...props} />
+    <div className="overflow-auto resize pb-3 w-full h-[300px]">
+      <div className="relative h-full w-full flex flex-col rounded-lg gap-2 pt-6 text-gray-900 shadow-secondary-1  dark:text-gray-100">
+        <div className="relative h-full py-2 flex-grow ">
+          <div className="absolute left-0 top-0 h-full w-full">
+            <ParallelCoordinatePlot {...props} />
+          </div>
         </div>
       </div>
     </div>

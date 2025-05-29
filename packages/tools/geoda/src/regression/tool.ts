@@ -103,6 +103,11 @@ Note:
       ),
   }),
   execute: executeSpatialRegression,
+  context: {
+    getValues: () => {
+      throw new Error('getValues not implemented.');
+    },
+  },
 });
 
 export type SpatialRegressionTool = typeof spatialRegression;

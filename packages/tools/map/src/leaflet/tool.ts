@@ -133,4 +133,5 @@ export const leaflet = extendedTool<
       };
     }
   },
+  context: {},
 });

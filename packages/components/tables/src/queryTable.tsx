@@ -262,83 +262,87 @@ export function QueryDuckDBComponent({
       {error}
     </div>
   ) : queryResult.length > 0 ? (
-    <div className="flex flex-col gap-4 max-w-full">
-      <span className="text-tiny font-bold mt-2">Query Result</span>
-      <Table
-        aria-label="Query Result Table"
-        bottomContent={
-          <div className="flex w-full justify-center">
-            <Pagination
-              isCompact
-              showControls
-              showShadow
-              color="secondary"
-              page={page}
-              total={pages}
-              onChange={(page) => setPage(page)}
+    <div className="overflow-auto resize pb-3 w-full h-[450px]">
+      <div className="flex flex-col gap-4 max-w-full">
+        <span className="text-tiny font-bold mt-2">Query Result</span>
+        <Table
+          aria-label="Query Result Table"
+          bottomContent={
+            <div className="flex w-full justify-center">
+              <Pagination
+                isCompact
+                showControls
+                showShadow
+                color="secondary"
+                page={page}
+                total={pages}
+                onChange={(page) => setPage(page)}
+                size="sm"
+                hidden={pages <= 1}
+              />
+            </div>
+          }
+          classNames={{
+            wrapper: 'max-h-[420px] max-w-full overflow-x-auto',
+            base: 'overflow-scroll p-0 m-0 text-tiny',
+            table: 'p-0 m-0 text-tiny',
+            th: 'text-tiny',
+            td: 'text-[9px]',
+          }}
+          isHeaderSticky
+          selectedKeys={selectedKeys}
+          selectionMode="multiple"
+          selectionBehavior="replace"
+          disallowEmptySelection={false}
+          onSelectionChange={setSelectedKeys}
+          removeWrapper={true}
+        >
+          <TableHeader>
+            {Object.keys(queryResult[0] || {}).map((key) => (
+              <TableColumn key={key}>{key}</TableColumn>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {items.map((row, i) => (
+              <TableRow
+                key={`0${(row as Record<string, unknown>)['row_index'] || i}`}
+              >
+                {Object.values(row as Record<string, unknown>).map(
+                  (value, j) => (
+                    <TableCell key={j}>
+                      {typeof value === 'number' && !Number.isInteger(value)
+                        ? value.toFixed(3)
+                        : String(value)}
+                    </TableCell>
+                  )
+                )}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        {onSelected && (
+          <div className="flex flex-row gap-2 pl-2 text-tiny">
+            <Checkbox
               size="sm"
-              hidden={pages <= 1}
-            />
-          </div>
-        }
-        classNames={{
-          wrapper: 'max-h-[420px] max-w-full overflow-x-auto',
-          base: 'overflow-scroll p-0 m-0 text-tiny',
-          table: 'p-0 m-0 text-tiny',
-          th: 'text-tiny',
-          td: 'text-[9px]',
-        }}
-        isHeaderSticky
-        selectedKeys={selectedKeys}
-        selectionMode="multiple"
-        selectionBehavior="replace"
-        disallowEmptySelection={false}
-        onSelectionChange={setSelectedKeys}
-        removeWrapper={true}
-      >
-        <TableHeader>
-          {Object.keys(queryResult[0] || {}).map((key) => (
-            <TableColumn key={key}>{key}</TableColumn>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {items.map((row, i) => (
-            <TableRow
-              key={`0${(row as Record<string, unknown>)['row_index'] || i}`}
+              classNames={{ label: 'text-tiny' }}
+              onChange={onSyncSelection}
             >
-              {Object.values(row as Record<string, unknown>).map((value, j) => (
-                <TableCell key={j}>
-                  {typeof value === 'number' && !Number.isInteger(value)
-                    ? value.toFixed(3)
-                    : String(value)}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      {onSelected && (
-        <div className="flex flex-row gap-2 pl-2 text-tiny">
-          <Checkbox
-            size="sm"
-            classNames={{ label: 'text-tiny' }}
-            onChange={onSyncSelection}
-          >
-            sync selections by
-          </Checkbox>
-          <div className="flex-1">
-            <Select
-              size="sm"
-              onChange={onSyncSelectionBy}
-              aria-label="Select column for synchronization"
-            >
-              {variableNames.map((name) => (
-                <SelectItem key={name}>{name}</SelectItem>
-              ))}
-            </Select>
+              sync selections by
+            </Checkbox>
+            <div className="flex-1">
+              <Select
+                size="sm"
+                onChange={onSyncSelectionBy}
+                aria-label="Select column for synchronization"
+              >
+                {variableNames.map((name) => (
+                  <SelectItem key={name}>{name}</SelectItem>
+                ))}
+              </Select>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   ) : null;
 }

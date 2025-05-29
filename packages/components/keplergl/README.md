@@ -4,6 +4,13 @@ This package provides a component to create a map from your dataset using @opena
 
 <img src="https://openassistant-doc.vercel.app/img/keplerPlugin-1.png" width="400" alt="KeplerGL Tool" />
 
+## Features
+
+- ✨ **Interactive Maps**: Create rich, interactive maps from your datasets
+- 🎨 **Customizable Styling**: Support for color mapping and layering
+- 📏 **Resizable Interface**: Drag the bottom-right corner to resize the map component
+- 🔧 **Flexible Configuration**: Easily integrate with various data sources
+
 ## Installation
 
 ```bash
@@ -11,6 +18,42 @@ yarn add @openassistant/keplergl
 ```
 
 Note: please see the [common issues](#common-issues) below for some common issues and solutions.
+
+## Resizable Feature
+
+The `KeplerGlComponent` supports interactive resizing when used as a tool call component! The resizing functionality is provided by the `ResizableToolCallContainer` wrapper, which means **any tool call component** automatically gets resizable functionality.
+
+### How to Use Resizing:
+1. When the component is rendered as a tool call result, hover over it to see the resize handle
+2. Drag the bottom-right corner to adjust the width and height
+3. The map will automatically adjust its layout to the new dimensions
+
+### Architecture:
+- **Automatic**: Resizing is automatically applied to all tool call components
+- **Consistent**: All tool components get the same resizable experience
+- **Optimized**: Uses throttled resize handling for smooth performance
+- **Configurable**: The container provides sensible defaults but can be customized
+
+### Default Behavior:
+- Default size: 800px × 400px
+- Minimum size: 300px × 200px  
+- Resize handles: Bottom, right, and bottom-right corners
+- Visual feedback: Subtle border and resize handle on hover
+
+The component will show a subtle border and resize handle when you hover over it, making it easy to identify when resizing is available.
+
+### For Direct Usage:
+If you're using `KeplerGlComponent` directly (not as a tool call), you can wrap it with your own resizable container or use the provided dimensions via the `width` and `height` props:
+
+```tsx
+<KeplerGlComponent
+  datasetId="myVenues"
+  layerId="points" 
+  datasetForKepler={dataset}
+  width={800}
+  height={400}
+/>
+```
 
 ## Usage
 

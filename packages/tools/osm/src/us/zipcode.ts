@@ -138,6 +138,7 @@ export const getUsZipcodeGeojson = extendedTool<
       };
     }
   },
+  context: {}
 });
 
 export type GetUsZipcodeGeojsonTool = typeof getUsZipcodeGeojson;

@@ -137,6 +137,7 @@ export const getUsCountyGeojson = extendedTool<
       };
     }
   },
+  context: {},
 });
 
 export type GetUsCountyGeojsonTool = typeof getUsCountyGeojson;

@@ -66,7 +66,8 @@ export type ExecuteQueryUSZipcodesResult = {
 export const queryUSZipcodes = extendedTool<
   QueryZipcodeFunctionArgs,
   QueryZipcodeLlmResult,
-  QueryZipcodeAdditionalData
+  QueryZipcodeAdditionalData,
+  object
 >({
   description: 'Query US zipcodes within a given map bounds',
   parameters: z.object({
@@ -149,6 +150,7 @@ export const queryUSZipcodes = extendedTool<
       };
     }
   },
+  context: {},
 });
 
 export type QueryUSZipcodesTool = typeof queryUSZipcodes;

@@ -119,6 +119,11 @@ export const globalMoran = extendedTool<
       ),
   }),
   execute: executeGlobalMoran,
+  context: {
+    getValues: () => {
+      throw new Error('getValues not implemented.');
+    },
+  },
 });
 
 export type GlobalMoranTool = typeof globalMoran;

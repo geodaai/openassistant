@@ -118,6 +118,7 @@ export const geocoding = extendedTool<
       };
     }
   },
+  context: {},
 });
 
 export type GeocodingTool = typeof geocoding;

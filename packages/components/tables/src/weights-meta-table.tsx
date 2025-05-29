@@ -166,54 +166,56 @@ export function SpatialWeightsComponent(props: SpatialWeightsComponentProps) {
   };
 
   return (
-    <div className="flex flex-col max-w-full">
-      <Table
-        aria-label="Weights Property Table"
-        color="success"
-        selectionMode="single"
-        classNames={{
-          wrapper:
-            'max-h-[380px] max-w-full overflow-x-auto overflow-y-auto rounded-none gap-0',
-          base: 'overflow-scroll p-0 m-0 text-tiny',
-          table: 'p-0 m-0 text-tiny',
-          th: 'text-tiny',
-          td: 'text-[9px]',
-        }}
-        isHeaderSticky
-      >
-        <TableHeader>
-          <TableColumn key="property" className="bg-lime-600 text-white">
-            Property
-          </TableColumn>
-          <TableColumn key="value" className="bg-lime-600 text-white">
-            Value
-          </TableColumn>
-        </TableHeader>
-        <TableBody emptyContent="No rows to display." items={rows}>
-          {(item) => (
-            <TableRow key={item.key}>
-              {(columnKey) => (
-                <TableCell>{getKeyValue(item, columnKey)}</TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-
-      {/* Download button */}
-      <div className="flex justify-end mt-2">
-        <Button
-          size="sm"
-          color="primary"
-          variant="flat"
-          startContent={
-            <Icon icon="material-symbols:download" width="16" height="16" />
-          }
-          onPress={downloadGAL}
-          isDisabled={!weights || weights.length === 0}
+    <div className="overflow-auto resize pb-3">
+      <div className="flex flex-col max-w-full">
+        <Table
+          aria-label="Weights Property Table"
+          color="success"
+          selectionMode="single"
+          classNames={{
+            wrapper:
+              'max-h-[380px] max-w-full overflow-x-auto overflow-y-auto rounded-none gap-0',
+            base: 'overflow-scroll p-0 m-0 text-tiny',
+            table: 'p-0 m-0 text-tiny',
+            th: 'text-tiny',
+            td: 'text-[9px]',
+          }}
+          isHeaderSticky
         >
-          Download GAL
-        </Button>
+          <TableHeader>
+            <TableColumn key="property" className="bg-lime-600 text-white">
+              Property
+            </TableColumn>
+            <TableColumn key="value" className="bg-lime-600 text-white">
+              Value
+            </TableColumn>
+          </TableHeader>
+          <TableBody emptyContent="No rows to display." items={rows}>
+            {(item) => (
+              <TableRow key={item.key}>
+                {(columnKey) => (
+                  <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+                )}
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+
+        {/* Download button */}
+        <div className="flex justify-end mt-2">
+          <Button
+            size="sm"
+            color="primary"
+            variant="flat"
+            startContent={
+              <Icon icon="material-symbols:download" width="16" height="16" />
+            }
+            onPress={downloadGAL}
+            isDisabled={!weights || weights.length === 0}
+          >
+            Download GAL
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -300,33 +300,42 @@ export function LeafletMapComponent(props: LeafletOutputData) {
   }
 
   return (
-    <div style={styles.container}>
-      <MapContainer
-        center={center}
-        zoom={zoom}
-        maxBounds={props.mapBounds}
-        style={{ height: '100%', width: '100%' }}
-        scrollWheelZoom={false}
-      >
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
-        />
-        <GeoJSON
-          data={geoJsonData}
-          style={style}
-          pointToLayer={pointToLayer}
-          onEachFeature={onEachFeature}
-        />
-      </MapContainer>
-      {colorBy && colorType && colors && (
-        <Legend
-          breaks={breaks}
-          colors={colors}
-          colorType={colorType}
-          uniqueValues={uniqueValues}
-        />
-      )}
+    <div
+      style={{
+        resize: 'both',
+        overflow: 'auto',
+        width: '100%',
+        height: '300px',
+      }}
+    >
+      <div style={styles.container}>
+        <MapContainer
+          center={center}
+          zoom={zoom}
+          maxBounds={props.mapBounds}
+          style={{ height: '100%', width: '100%' }}
+          scrollWheelZoom={false}
+        >
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
+          />
+          <GeoJSON
+            data={geoJsonData}
+            style={style}
+            pointToLayer={pointToLayer}
+            onEachFeature={onEachFeature}
+          />
+        </MapContainer>
+        {colorBy && colorType && colors && (
+          <Legend
+            breaks={breaks}
+            colors={colors}
+            colorType={colorType}
+            uniqueValues={uniqueValues}
+          />
+        )}
+      </div>
     </div>
   );
 }
