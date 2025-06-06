@@ -40,7 +40,7 @@ export type ExecuteGetUsCountyGeojsonResult = {
  *
  * **Example user prompts:**
  * - "Get all counties in California"
- * - "Show me the county boundaries of New York state"
+ * - "Get all counties in current map view"
  * - "What are the counties in Texas?"
  *
  * :::tip
@@ -50,9 +50,22 @@ export type ExecuteGetUsCountyGeojsonResult = {
  *
  * @example
  * ```typescript
- * import { getOsmTool, OsmToolNames } from "@openassistant/osm";
- *
- * const countyTool = getOsmTool(OsmToolNames.getUsCountyGeojson);
+ * import { getUsCountyGeojson, GetUsCountyGeojsonTool } from "@openassistant/osm";
+ * import { convertToVercelAiTool } from '@openassistant/utils';
+ * 
+ * const countyTool: GetUsCountyGeojsonTool = {
+ *   ...getUsCountyGeojson,
+ *   onToolCompleted: (toolCallId, additionalData) => {
+ *     // the dataset name of the county geojson data is stored in additionalData['datasetName']
+ *     if (additionalData && typeof additionalData === 'object' && 'datasetName' in additionalData) {
+ *       const datasetName = additionalData['datasetName'];
+ *       // the geojson data is stored in additionalData[datasetName]
+ *       const dataset = additionalData[datasetName];
+ *       // you can save the dataset for later use
+ *       // saveDataset(datasetName, dataset);
+ *     }
+ *   },
+ * };
  *
  * streamText({
  *   model: openai('gpt-4o'),

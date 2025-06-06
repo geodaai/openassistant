@@ -1,4 +1,5 @@
 export * from './tool';
+export * from './tool-cache';
 export * from './vercel-tool';
 export * from './cache';
 export * from './geojson';

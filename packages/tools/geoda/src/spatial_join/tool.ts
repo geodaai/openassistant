@@ -303,6 +303,8 @@ export async function runSpatialJoin({
         joinStats: basicStatistics,
       },
       additionalData: {
+        joinResult: result,
+        joinValues,
         rightDatasetName,
         leftDatasetName,
         joinVariableNames,

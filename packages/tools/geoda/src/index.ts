@@ -17,6 +17,7 @@ export * from './spatial_ops/area';
 export * from './spatial_ops/buffer';
 export * from './spatial_ops/centroid';
 export * from './spatial_ops/dissolve';
+export * from './spatial_ops/grid';
 export * from './spatial_ops/length';
 export * from './spatial_ops/perimeter';
 

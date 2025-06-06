@@ -12,6 +12,7 @@ import { area } from './spatial_ops/area';
 import { buffer } from './spatial_ops/buffer';
 import { centroid } from './spatial_ops/centroid';
 import { dissolve } from './spatial_ops/dissolve';
+import { grid } from './spatial_ops/grid';
 import { length } from './spatial_ops/length';
 import { perimeter } from './spatial_ops/perimeter';
 
@@ -28,27 +29,27 @@ export enum GeoDaToolNames {
   buffer = 'buffer',
   centroid = 'centroid',
   dissolve = 'dissolve',
+  grid = 'grid',
   length = 'length',
   perimeter = 'perimeter',
 }
 
-export function registerTools() {
-  return {
-    dataClassify,
-    lisa,
-    globalMoran,
-    spatialRegression,
-    spatialJoin,
-    spatialFilter,
-    spatialWeights,
-    area,
-    buffer,
-    centroid,
-    dissolve,
-    length,
-    perimeter,
-  };
-}
+export const tools = {
+  dataClassify,
+  lisa,
+  globalMoran,
+  spatialRegression,
+  spatialJoin,
+  spatialFilter,
+  spatialWeights,
+  area,
+  buffer,
+  centroid,
+  dissolve,
+  grid,
+  length,
+  perimeter,
+};
 
 /**
  * Get a single GeoDa tool.
@@ -62,7 +63,7 @@ export function getGeoDaTool(
     isExecutable?: boolean;
   }
 ) {
-  const tool = registerTools()[toolName];
+  const tool = tools[toolName];
   if (!tool) {
     throw new Error(`Tool "${toolName}" not found`);
   }
@@ -80,8 +81,6 @@ export function getGeoDaTools(
   onToolCompleted: OnToolCompleted,
   isExecutable: boolean = true
 ) {
-  const tools = registerTools();
-
   const toolsResult = Object.fromEntries(
     Object.keys(tools).map((key) => {
       return [

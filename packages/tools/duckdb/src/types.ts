@@ -34,38 +34,27 @@ export type LocalQueryContext = {
 };
 
 /**
- * Result data structure from a successful localQuery execution
- */
-type LocalQuerySuccessResult = {
-  success: true;
-  data: {
-    firstTwoRows: Record<string, unknown>[];
-    [key: string]: unknown;
-  };
-};
-
-/**
- * Result data structure from a failed localQuery execution
- */
-type LocalQueryErrorResult = {
-  success: false;
-  error: string;
-  instruction?: string;
-};
-
-/**
  * Combined result type for localQuery
  */
-export type LocalQueryResult = LocalQuerySuccessResult | LocalQueryErrorResult;
+export type LocalQueryResult = {
+  llmResult: {
+    success: boolean;
+    error?: string;
+    instruction?: string;
+    data?: {
+      firstTwoRows: Record<string, unknown>[];
+    };
+  };
+  additionalData?: LocalQueryAdditionalData;
+};
 
 /**
  * Additional data returned with the query result
  */
 export type LocalQueryAdditionalData = {
-  title: string;
   sql: string;
-  columnData: Record<string, unknown[]>;
-  variableNames: string[];
+  columnData?: Record<string, unknown[]>;
+  queryDatasetName: string;
   datasetName: string;
   dbTableName: string;
 };

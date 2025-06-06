@@ -6468,6 +6468,7 @@ __metadata:
     "@loaders.gl/schema": "npm:^4.3.3"
     "@openassistant/plots": "workspace:*"
     "@openassistant/utils": "workspace:*"
+    "@turf/bbox": "npm:^7.2.0"
   peerDependencies:
     react: ">=18.2"
     react-dom: ">=18.2"

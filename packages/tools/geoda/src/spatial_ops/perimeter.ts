@@ -36,22 +36,26 @@ export type PerimeterAdditionalData = {
  * - "What is the total perimeter of these boundaries in miles?"
  * - "Measure the perimeter of these land parcels"
  *
- * Example code:
+ * ### Example
+ * 
  * ```typescript
- * import { getVercelAiTool } from '@openassistant/geoda';
+ * import { perimeter, PerimeterTool } from '@openassistant/geoda';
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  * import { generateText } from 'ai';
  *
- * const toolContext = {
- *   getGeometries: (datasetName) => {
- *     return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+ * const perimeterTool: PerimeterTool = {
+ *   ...perimeter,
+ *   context: {
+ *     getGeometries: (datasetName) => {
+ *       return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+ *     },
  *   },
  * };
- * const perimeterTool = getVercelAiTool('perimeter', toolContext, onToolCompleted);
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Calculate the perimeter of these polygons in kilometers',
- *   tools: {perimeter: perimeterTool},
+ *   tools: { perimeter: convertToVercelAiTool(perimeterTool) },
  * });
  * ```
  */
@@ -112,3 +116,5 @@ export const perimeter = extendedTool<
     getGeometries: async () => null,
   },
 });
+
+export type PerimeterTool = typeof perimeter;

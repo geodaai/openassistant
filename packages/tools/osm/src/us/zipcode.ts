@@ -42,18 +42,28 @@ export type ExecuteGetUsZipcodeGeojsonResult = {
  *
  * Example user prompts:
  * - "Get all zipcodes in California"
- * - "Show me the zipcode boundaries of New York state"
- * - "What are the zipcodes in Texas?"
- *
+ * - "Show me the zipcode boundaries of New"
+ * 
  * :::note
  * Note: to avoid overloading the Github API, we only fetch the GeoJSON data every 1 second.
  * :::
  *
  * @example
  * ```typescript
- * import { getOsmTool, OsmToolNames } from "@openassistant/osm";
+ * import { getUsZipcodeGeojson, GetUsZipcodeGeojsonTool } from "@openassistant/osm";
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  *
- * const zipcodeTool = getOsmTool(OsmToolNames.getUsZipcodeGeojson);
+ * const zipcodeTool: GetUsZipcodeGeojsonTool = {
+ *   ...getUsZipcodeGeojson,
+ *   onToolCompleted: (toolCallId, additionalData) => {
+ *     // the dataset name of the zipcode geojson data is stored in additionalData['datasetName']
+ *     const datasetName = additionalData['datasetName'];
+ *     // the geojson data is stored in additionalData[datasetName]
+ *     const dataset = additionalData[datasetName];
+ *     // you can save the dataset for later use
+ *     // saveDataset(datasetName, dataset);
+ *   },
+ * };
  *
  * streamText({
  *   model: openai('gpt-4o'),

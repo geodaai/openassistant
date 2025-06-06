@@ -38,22 +38,22 @@ export const MarkdownContent = ({
         remarkPlugins={[remarkGfm]}
         components={{
           ul: ({ children }) => (
-            <ul className="!text-sm -mt-6 list-disc ml-5">{children}</ul>
+            <ul className="text-tiny -mt-6 list-disc ml-5">{children}</ul>
           ),
           ol: ({ children }) => (
-            <ol className="!text-sm list-decimal ml-8 -mt-5">{children}</ol>
+            <ol className="text-tiny list-decimal ml-8 -mt-5">{children}</ol>
           ),
           li: ({ children }) => (
             // Used Tailwind's CSS nesting syntax to target p tags directly inside li elements with [&>p]
             // Added !mt-0 to force margin-top to 0
             // Used -translate-y-5 to move the paragraph up by 1.25rem to align with the marker
             // Added negative margin bottom to compensate for the translated paragraph
-            <li className="!text-sm my-0 h-fit -mb-2 min-h-0 [&>p]:-mb-6 [&>p]:!mt-0 [&>p]:-translate-y-5 [&>p]:h-fit [&>p]:leading-5">
+            <li className="text-tiny my-0 h-fit -mb-2 min-h-0 [&>p]:-mb-6 [&>p]:!mt-0 [&>p]:-translate-y-5 [&>p]:h-fit [&>p]:leading-5">
               {children}
             </li>
           ),
           p: ({ children }) => (
-            <p className="!text-sm whitespace-pre-wrap m-0 p-0">{children}</p>
+            <p className="text-tiny whitespace-pre-wrap m-0 p-0">{children}</p>
           ),
         }}
       >

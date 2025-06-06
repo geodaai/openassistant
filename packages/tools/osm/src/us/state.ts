@@ -36,8 +36,7 @@ export type ExecuteGetUsStateGeojsonResult = {
  *
  * Example user prompts:
  * - "Get the GeoJSON for California"
- * - "Show me the boundary of New York state"
- * - "What's the geometry of Texas?"
+ * - "Get all states in current map view"
  *
  * :::tip
  * This tool can be mixed with other tools for more complex tasks. For example, if you have a point datasets, you can use this tool
@@ -50,9 +49,22 @@ export type ExecuteGetUsStateGeojsonResult = {
  *
  * @example
  * ```typescript
- * import { getOsmTool, OsmToolNames } from "@openassistant/osm";
+ * import { getUsStateGeojson, GetUsStateGeojsonTool } from "@openassistant/osm";
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  *
- * const stateTool = getOsmTool(OsmToolNames.getUsStateGeojson);
+ * const stateTool: GetUsStateGeojsonTool = {
+ *   ...getUsStateGeojson,
+ *   onToolCompleted: (toolCallId, additionalData) => {
+ *     // the dataset name of the state geojson data is stored in additionalData['datasetName']
+ *     if (additionalData && typeof additionalData === 'object' && 'datasetName' in additionalData) {
+ *       const datasetName = additionalData['datasetName'];
+ *       // the geojson data is stored in additionalData[datasetName]
+ *       const dataset = additionalData[datasetName];
+ *       // you can save the dataset for later use
+ *       // saveDataset(datasetName, dataset);
+ *     }
+ *   },
+ * };
  *
  * streamText({
  *   model: openai('gpt-4o'),

@@ -48,15 +48,14 @@ export type ExecuteQueryUSZipcodesResult = {
  *
  * @example
  * ```typescript
- * import { getOsmTool, OsmToolNames } from "@openassistant/osm";
- *
- * const queryZipcodeTool = getOsmTool(OsmToolNames.queryUSZipcodes);
+ * import { queryUSZipcodes } from "@openassistant/osm";
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  *
  * streamText({
  *   model: openai('gpt-4o'),
  *   prompt: 'what are the zipcodes in Los Angeles county?',
  *   tools: {
- *     queryZipcode: queryZipcodeTool,
+ *     queryZipcode: convertToVercelAiTool(queryUSZipcodes),
  *   },
  * });
  * ```

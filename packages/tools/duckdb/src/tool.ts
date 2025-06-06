@@ -1,4 +1,4 @@
-import { extendedTool } from '@openassistant/utils';
+import { extendedTool, generateId } from '@openassistant/utils';
 import { Table as ArrowTable, tableFromArrays } from 'apache-arrow';
 import { z } from 'zod';
 import { getDuckDB, QueryDuckDBFunctionContext } from './query';
@@ -49,8 +49,8 @@ import {
  * import { streamText } from 'ai';
  *
  * // localQuery tool will be running on the client side
- * const localQueryTool = convertToVercelAiTool(localQuery, {isExecutable: false}); 
- * 
+ * const localQueryTool = convertToVercelAiTool(localQuery, {isExecutable: false});
+ *
  * export async function POST(req: Request) {
  *   // ...
  *   const result = streamText({
@@ -90,7 +90,7 @@ import {
  *   }
  * });
  * ```
- * 
+ *
  * ### Example with `@openassistant/ui`
  *
  * ```typescript
@@ -106,7 +106,7 @@ import {
  *       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
  *     },
  *   },
- * }; 
+ * };
  *
  *  export function App() {
  *    return (
@@ -119,7 +119,7 @@ import {
  *        tools={{localQuery: localQueryTool}}
  *        useMarkdown={true}
  *        theme="dark"
- *      />  
+ *      />
  *    );
  *  }
  * ```
@@ -137,7 +137,7 @@ export const localQuery = extendedTool<
     dbTableName: z
       .string()
       .describe(
-        'The name of the table to create and query. Please append a 6-digit random number to the end of the table name to avoid conflicts.'
+        'The name of a temporary table that will be created from the dataset specified by datasetName. Please use datasetName plus a 6-digit random number to avoid conflicts.'
       ),
     sql: z
       .string()
@@ -158,10 +158,9 @@ export const localQuery = extendedTool<
 async function executeLocalQuery(
   { datasetName, variableNames, sql, dbTableName },
   options
-) {
+): Promise<LocalQueryResult> {
   try {
-    const { getValues, config, duckDB } =
-      options.context as QueryDuckDBFunctionContext;
+    const { getValues, duckDB } = options.context as QueryDuckDBFunctionContext;
 
     // get values for each variable
     const columnData = {};
@@ -208,21 +207,20 @@ async function executeLocalQuery(
       );
     });
 
+    const queryDatasetName = `query_${generateId()}`;
+
     return {
       llmResult: {
         success: true,
-        dbTableName,
         data: {
           firstTwoRows,
         },
       },
       additionalData: {
-        title: 'Query Result',
         sql,
-        variableNames,
         datasetName,
         dbTableName,
-        config,
+        queryDatasetName,
       },
     };
   } catch (error) {

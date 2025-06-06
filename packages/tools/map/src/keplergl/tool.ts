@@ -152,11 +152,7 @@ Proceed directly with map creation unless user specifically asks for guidance on
       .optional(),
   }),
   execute: executeCreateMap,
-  context: {
-    config: {
-      isDraggable: false,
-    },
-  },
+  context: {},
 });
 
 /**

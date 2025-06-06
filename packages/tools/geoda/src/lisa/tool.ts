@@ -295,8 +295,16 @@ async function executeLisa(
 
     const additionalData: LisaAdditionalData = {
       originalDatasetName: datasetName,
-      significanceThreshold,
       datasetName: lisaDatasetName,
+      significanceThreshold,
+      clusters: lm.clusters,
+      lagValues: lm.lagValues,
+      pValues: lm.pValues,
+      lisaValues: lm.lisaValues,
+      sigCategories: lm.sigCategories,
+      nn: lm.nn,
+      labels: lm.labels,
+      colors: lm.colors,
     };
 
     // no need to create a new dataset if getGeometries() is not provided
