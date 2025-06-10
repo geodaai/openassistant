@@ -1,13 +1,14 @@
 import { extendedTool, generateId } from '@openassistant/utils';
 import { Table as ArrowTable, tableFromArrays } from 'apache-arrow';
 import { z } from 'zod';
-import { getDuckDB, QueryDuckDBFunctionContext } from './query';
+import { getDuckDB } from './query';
 import {
   LocalQueryAdditionalData,
   LocalQueryArgs,
   LocalQueryContext,
   LocalQueryResult,
 } from './types';
+import { convertArrowRowToObject } from './merge';
 
 /**
  * The `localQuery` tool is used to execute a query against a local dataset.
@@ -164,7 +165,8 @@ async function executeLocalQuery(
   options
 ): Promise<LocalQueryResult> {
   try {
-    const { getValues, getDuckDB: getUserDuckDB } = options.context as LocalQueryContext;
+    const { getValues, getDuckDB: getUserDuckDB } =
+      options.context as LocalQueryContext;
 
     // get values for each variable
     const columnData = {};
@@ -199,18 +201,13 @@ async function executeLocalQuery(
 
     await conn.close();
 
+    // convert arrowResult to a JSON object
+    const jsonResult: Record<string, unknown>[] = arrowResult
+      .toArray()
+      .map((row) => convertArrowRowToObject(row));
+
     // Get first 2 rows of the result as a json object to LLM
-    const subResult = arrowResult.toArray().slice(0, 2);
-    const firstTwoRows = subResult.map((row) => {
-      const json = row.toJSON();
-      // Convert any BigInt values to strings
-      return Object.fromEntries(
-        Object.entries(json).map(([key, value]) => [
-          key,
-          typeof value === 'bigint' ? value.toString() : value,
-        ])
-      );
-    });
+    const firstTwoRows = jsonResult.slice(0, 2);
 
     const queryDatasetName = `query_${generateId()}`;
 

@@ -113,6 +113,7 @@ export function ResizableContainerChildDriven({
       }),
       ...children.props,
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [containerSize, children.props, forceUpdate] // Add forceUpdate to dependencies
   );
 

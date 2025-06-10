@@ -51,32 +51,27 @@ export type ExecuteGetUsCountyGeojsonResult = {
  * @example
  * ```typescript
  * import { getUsCountyGeojson, GetUsCountyGeojsonTool } from "@openassistant/osm";
- * import { convertToVercelAiTool } from '@openassistant/utils';
- * 
+ * import { convertToVercelAiTool, ToolCache } from '@openassistant/utils';
+ * import { generateText } from 'ai';
+ *
+ * // you can use ToolCache to save the county geojson dataset for later use
+ * const toolResultCache = ToolCache.getInstance();
+ *
  * const countyTool: GetUsCountyGeojsonTool = {
  *   ...getUsCountyGeojson,
  *   onToolCompleted: (toolCallId, additionalData) => {
- *     // the dataset name of the county geojson data is stored in additionalData['datasetName']
- *     if (additionalData && typeof additionalData === 'object' && 'datasetName' in additionalData) {
- *       const datasetName = additionalData['datasetName'];
- *       // the geojson data is stored in additionalData[datasetName]
- *       const dataset = additionalData[datasetName];
- *       // you can save the dataset for later use
- *       // saveDataset(datasetName, dataset);
- *     }
+ *     toolResultCache.addDataset(toolCallId, additionalData);
  *   },
  * };
  *
- * streamText({
- *   model: openai('gpt-4o'),
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'What are the counties in Texas?',
  *   tools: {
- *     county: countyTool,
+ *     county: convertToVercelAiTool(countyTool),
  *   },
  * });
  * ```
- *
- * For a more complete example, see the [OSM Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_osm_example).
  */
 export const getUsCountyGeojson = extendedTool<
   GetUsCountyGeojsonFunctionArgs,
@@ -101,7 +96,7 @@ export const getUsCountyGeojson = extendedTool<
       const features: GeoJSON.Feature[] = [];
 
       for (const fips of fipsCodes) {
-        // get cached county geojson if exists
+        // get cached county geojson if exists in openassistant/utils module
         let geojson = getCachedData(fips);
         if (!geojson) {
           // Use the global rate limiter before making the API call
@@ -138,7 +133,10 @@ export const getUsCountyGeojson = extendedTool<
         additionalData: {
           fipsCodes,
           datasetName: outputDatasetName,
-          [outputDatasetName]: finalGeojson,
+          [outputDatasetName]: {
+            type: 'geojson',
+            content: finalGeojson,
+          },
         },
       };
     } catch (error) {

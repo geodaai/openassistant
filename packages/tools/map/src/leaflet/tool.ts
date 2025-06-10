@@ -32,6 +32,77 @@ export type LeafletToolArgs = z.ZodObject<{
   colors: z.ZodOptional<z.ZodArray<z.ZodString>>;
 }>;
 
+/**
+ * The leaflet tool is used to create a leaflet map from GeoJSON data.
+ *
+ * :::note
+ * This tool should be used in Browser environment.
+ * :::
+ *
+ * ### Example
+ * ```ts
+ * import { leaflet, LeafletTool } from '@openassistant/map';
+ * import { convertToVercelAiTool, ToolCache } from '@openassistant/utils';
+ * import { generateText } from 'ai';
+ *
+ * const leafletTool: LeafletTool = {
+ *   ...leaflet,
+ *   context: {
+ *     getDataset: async (datasetName) => {
+ *       return YOUR_DATASET;
+ *     },
+ *   },
+ * };
+ *
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
+ *   prompt: 'Create a leaflet map using the dataset "my_venues"',
+ *   tools: {createMap: convertToVercelAiTool(leafletTool)},
+ * });
+ * ```
+ *
+ * :::tip
+ * You can use the `downloadMapData` tool with the `leaflet` tool to download a dataset from a geojson from a url and use it to create a map.
+ * :::
+ *
+ * ### Example
+ * ```ts
+ * import { downloadMapData, isDownloadMapAdditionalData, leaflet, LeafletTool } from '@openassistant/map';
+ * import { convertToVercelAiTool, ToolCache } from '@openassistant/utils';
+ * import { generateText } from 'ai';
+ *
+ * const toolResultCache = ToolCache.getInstance();
+ *
+ * const downloadMapTool = {
+ *   ...downloadMapData,
+ *   onToolCompleted: (toolCallId: string, additionalData?: unknown) => {
+ *     toolResultCache.addDataset(toolCallId, additionalData);
+ *   },
+ * };
+ *
+ * const leafletTool: LeafletTool = {
+ *   ...leaflet,
+ *   context: {
+ *     getDataset: async (datasetName) => {
+ *       // find dataset based on datasetName first
+ *       // return MYDATASETS[datasetName];
+ *
+ *       // if no dataset is found, check if dataset is in toolResultCache
+ *       if (toolResultCache.hasDataset(datasetName)) {
+ *         return toolResultCache.getDataset(datasetName);
+ *       }
+ *       throw new Error(`Dataset ${datasetName} not found`);
+ *     },
+ *   },
+ * };
+ *
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
+ *   prompt: 'Create a leaflet map using the dataset "my_venues"',
+ *   tools: {createMap: convertToVercelAiTool(leafletTool), downloadMapData: convertToVercelAiTool(downloadMapTool)},
+ * });
+ * ```
+ */
 export const leaflet = extendedTool<
   LeafletToolArgs,
   LeafletToolLlmResult,
@@ -67,7 +138,18 @@ export const leaflet = extendedTool<
       let dataContent;
 
       if (getDataset) {
-        dataContent = await getDataset(datasetName);
+        const dataset = await getDataset(datasetName);
+        // in case the dataset is from the ToolCache
+        if (
+          typeof dataset === 'object' &&
+          dataset !== null &&
+          'type' in dataset &&
+          'content' in dataset
+        ) {
+          dataContent = dataset.content;
+        } else {
+          dataContent = dataset;
+        }
       }
 
       if (!dataContent && getGeometries) {
@@ -110,7 +192,7 @@ export const leaflet = extendedTool<
       return {
         llmResult: {
           success: true,
-          details: 'Map created successfully',
+          details: `Map created successfully with dataset: ${datasetName}`,
         },
         additionalData: {
           datasetName,

@@ -75,7 +75,11 @@ export type RoadsAdditionalData = {
  * @example
  * ```typescript
  * import { roads, RoadsTool } from "@openassistant/osm";
- * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { convertToVercelAiTool, ToolCache } from '@openassistant/utils';
+ * import { generateText } from 'ai';
+ * 
+ * // you can use ToolCache to save the roads dataset for later use
+ * const toolResultCache = ToolCache.getInstance();
  *
  * const roadsTool: RoadsTool = {
  *   ...roads,
@@ -84,10 +88,13 @@ export type RoadsAdditionalData = {
  *       return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
  *     },
  *   },
+ *   onToolCompleted: (toolCallId, additionalData) => {
+ *     toolResultCache.addDataset(toolCallId, additionalData);
+ *   },
  * };
  *
- * streamText({
- *   model: openai('gpt-4'),
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Show me all highways in New York City',
  *   tools: {
  *     roads: convertToVercelAiTool(roadsTool),
@@ -234,7 +241,7 @@ export const roads = extendedTool<
         features.push(...chunkFeatures);
       }
 
-      const geojson: GeoJSON.FeatureCollection = {
+      const roadsData: GeoJSON.FeatureCollection = {
         type: 'FeatureCollection',
         features,
       };
@@ -249,7 +256,10 @@ export const roads = extendedTool<
         },
         additionalData: {
           datasetName: outputDatasetName,
-          [outputDatasetName]: geojson,
+          [outputDatasetName]: {
+            type: 'geojson',
+            content: roadsData,
+          },
         },
       };
     } catch (error) {

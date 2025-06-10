@@ -65,6 +65,34 @@ export function getTool({
   };
 }
 
+/**
+ * Convert an extended tool to a Vercel AI tool.
+ *
+ * ## Example
+ * ```ts
+ * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { localQuery, LocalQueryTool } from '@openassistant/duckdb';
+ *
+ * const localQueryTool: LocalQueryTool = {
+ *   ...localQuery,
+ *   context: {
+ *     getValues: (datasetName, variableName) => {
+ *       return [1, 2, 3];
+ *     },
+ *   },
+ * };
+ *
+ * const tool = localQuery({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
+ *   prompt: 'Get the values of the variable "income" for the dataset "census"',
+ *   tools: { localQuery: convertToVercelAiTool(localQueryTool) },
+ * });
+ * ```
+ *
+ * @param extendedTool - The extended tool to convert.
+ * @param isExecutable - Whether the tool is executable.
+ * @returns The Vercel AI tool.
+ */
 export function convertToVercelAiTool<
   PARAMETERS extends Parameters = never,
   RETURN_TYPE = never,

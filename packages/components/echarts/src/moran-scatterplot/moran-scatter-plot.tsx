@@ -1,4 +1,3 @@
-import { WeightsMeta } from '@geoda/core';
 import { useMemo, useRef, useState } from 'react';
 import ReactEChartsCore from 'echarts-for-react';
 import {
@@ -31,8 +30,6 @@ export type MoranScatterOutputData = {
   id?: string;
   datasetName: string;
   variableName: string;
-  weights: number[][];
-  weightsMeta: WeightsMeta;
   values: number[];
   lagValues: number[];
   regression: SimpleLinearRegressionResult;

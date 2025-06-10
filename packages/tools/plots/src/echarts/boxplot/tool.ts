@@ -2,18 +2,28 @@ import { extendedTool, generateId } from '@openassistant/utils';
 import { z } from 'zod';
 
 import { BoxplotDataProps, createBoxplot } from './utils';
-import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../types';
+import {
+  EChartsToolContext,
+  isEChartsToolContext,
+  OnSelected,
+} from '../../types';
 
 /**
  * The boxplot tool is used to create a box plot for a given dataset and variable.
  *
+ * **Example user prompts:**
+ * - "Can you create a box plot of the revenue per capita for each location in dataset myVenues?"
+ * - "Can you show a box plot of the revenue per capita for each location in dataset myVenues?"
+ *
  * @example
  * ```typescript
- * import { getVercelAiTool } from '@openassistant/plots';
+ * import { boxplot, BoxplotTool } from '@openassistant/plots';
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  * import { generateText } from 'ai';
  *
  * const toolContext = {
  *   getValues: async (datasetName: string, variableName: string) => {
+ *     // get the values of the variable from dataset, e.g.
  *     return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
  *   },
  * };
@@ -23,28 +33,20 @@ import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../type
  *   // render the boxplot using <BoxplotComponentContainer props={additionalData} />
  * };
  *
- * const boxplotTool = getVercelAiTool('boxplot', toolContext, onToolCompleted);
+ * const boxplotTool: BoxplotTool = {
+ *   ...boxplot,
+ *   context: toolContext,
+ *   onToolCompleted,
+ * };
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Can you create a box plot of the revenue per capita for each location in dataset myVenues?',
- *   tools: {boxplot: boxplotTool},
+ *   tools: {
+ *     boxplot: convertToVercelAiTool(boxplotTool),
+ *   },
  * });
  * ```
- *
- * ### getValues()
- *
- * See {@link BoxplotFunctionContext} for detailed usage.
- *
- * User implements this function to get the values of the variable from dataset.
- *
- * For prompts like "_can you show a box plot of the revenue per capita for each location in dataset myVenues_", the tool will
- * call the `getValues()` function twice:
- * - get the values of **revenue** from dataset: getValues('myVenues', 'revenue')
- * - get the values of **population** from dataset: getValues('myVenues', 'population')
- *
- * A duckdb table will be created using the values returned from `getValues()`, and LLM will generate a sql query to query the table to answer the user's prompt.
- *
  */
 export const boxplot = extendedTool<
   // parameters of the tool

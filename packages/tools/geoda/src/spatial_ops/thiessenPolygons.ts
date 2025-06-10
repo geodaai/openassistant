@@ -17,19 +17,21 @@ import { isSpatialToolContext } from '../utils';
  * ## Example Code
  *
  * ```typescript
- * import { thiessenPolygons } from '@openassistant/geoda';
+ * import { thiessenPolygons, ThiessenPolygonsTool } from '@openassistant/geoda';
  * import { convertToVercelAiTool } from '@openassistant/utils';
  * import { generateText } from 'ai';
  *
- * const toolContext = {
- *   getGeometries: (datasetName) => {
- *     return getGeometries(datasetName);
- *   },
- * };
- *
  * const thiessenPolygonsTool: ThiessenPolygonsTool = {
  *   ...thiessenPolygons,
- *   context: toolContext,
+ *   context: {
+ *     getGeometries: (datasetName) => {
+ *       return getGeometries(datasetName);
+ *     },
+ *   },
+ *   onToolCompleted: (toolCallId, additionalData) => {
+ *     console.log(toolCallId, additionalData);
+ *     // do something like save the thiessen polygons result in additionalData
+ *   },
  * };
  *
  * generateText({
@@ -100,7 +102,10 @@ export const thiessenPolygons = extendedTool<
       },
       additionalData: {
         datasetName: outputDatasetName,
-        [outputDatasetName]: thiessenPolygonsGeojson,
+        [outputDatasetName]: {
+          type: 'geojson',
+          content: thiessenPolygonsGeojson,
+        },
       },
     };
   },

@@ -37,19 +37,16 @@ export type GeocodingAdditionalData = {
  * ```typescript
  * import { geocoding, GeocodingTool } from "@openassistant/osm";
  * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { generateText } from 'ai';
  *
- * const geocodingTool = convertToVercelAiTool(geocoding);
- *
- * streamText({
- *   model: openai('gpt-4o'),
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'What are the coordinates of the Eiffel Tower?',
  *   tools: {
- *     geocoding: geocodingTool,
+ *     geocoding: convertToVercelAiTool(geocoding),
  *   },
  * });
  * ```
- *
- * For a more complete example, see the [OSM Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_osm_example).
  */
 export const geocoding = extendedTool<
   GeocodingFunctionArgs,

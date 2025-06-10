@@ -1,4 +1,8 @@
-import { extendedTool, generateId } from '@openassistant/utils';
+import {
+  extendedTool,
+  generateId,
+  ToolCacheDataset,
+} from '@openassistant/utils';
 import { z } from 'zod';
 import { tableFromArrays } from 'apache-arrow';
 
@@ -146,7 +150,7 @@ IMPORTANT:
       await conn.close();
 
       // convert arrowResult to a JSON object
-      const jsonResult = arrowResult
+      const jsonResult: Record<string, unknown>[] = arrowResult
         .toArray()
         .map((row) => convertArrowRowToObject(row));
 
@@ -165,7 +169,10 @@ IMPORTANT:
         additionalData: {
           sql,
           datasetName: queryDatasetName,
-          [queryDatasetName]: jsonResult,
+          [queryDatasetName]: {
+            type: 'columnData',
+            content: jsonResult,
+          },
         },
       };
     } catch (error) {
@@ -212,7 +219,7 @@ export type MergeTablesLllmResult = {
 export type MergeTablesAdditionalData = {
   sql: string;
   datasetName: string;
-  [key: string]: unknown;
+  [key: string]: ToolCacheDataset | string;
 };
 
 export type MergeTablesToolResult = {

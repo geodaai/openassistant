@@ -1,4 +1,4 @@
-import { extendedTool } from '@openassistant/utils';
+import { extendedTool, generateId } from '@openassistant/utils';
 import { z } from 'zod';
 import {
   LinearRegressionResult,
@@ -58,21 +58,22 @@ export type SpatialRegressionFunctionContext = {
  *
  * ### Code example
  * ```typescript
- * import { getVercelAiTool } from '@openassistant/geoda';
+ * import { spatialRegression, SpatialRegressionTool } from '@openassistant/geoda';
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  * import { generateText } from 'ai';
  *
- * const toolContext = {
- *   getValues: (datasetName, variableName) => {
+ * const spatialRegressionTool: SpatialRegressionTool = {
+ *   ...spatialRegression,
+ *   context: {
+ *     getValues: (datasetName, variableName) => {
  *     return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
  *   },
  * };
  *
- * const regressionTool = getVercelAiTool('spatialRegression', toolContext, onToolCompleted);
- *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Can you run a spatial regression analysis of "revenue ~ population + income" on the data?',
- *   tools: {spatialRegression: regressionTool},
+ *   tools: {spatialRegression: convertToVercelAiTool(spatialRegressionTool)},
  * });
  * ```
  */
@@ -214,13 +215,15 @@ async function executeSpatialRegression(
     const report = regression.result;
     const regressionReport = printRegressionResult(report);
 
+    const outputDatasetName = `regression_${generateId()}`;
+
     return {
       llmResult: {
         success: true,
         result: regressionReport,
       },
       additionalData: {
-        datasetName,
+        datasetName: outputDatasetName,
         report,
       },
     };

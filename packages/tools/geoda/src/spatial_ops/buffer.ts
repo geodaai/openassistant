@@ -51,20 +51,27 @@ export type BufferAdditionalData = {
  *
  * ### Code example
  * ```typescript
- * import { getVercelAiTool } from '@openassistant/geoda';
+ * import { buffer, BufferTool } from '@openassistant/geoda';
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  * import { generateText } from 'ai';
  *
- * const toolContext = {
- *   getGeometries: (datasetName) => {
- *     return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+ * const bufferTool: BufferTool = {
+ *   ...buffer,
+ *   context: {
+ *     getGeometries: (datasetName) => {
+ *       return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+ *     },
+ *   },
+ *   onToolCompleted: (toolCallId, additionalData) => {
+ *     console.log(toolCallId, additionalData);
+ *     // do something like save the buffer result in additionalData
  *   },
  * };
- * const bufferTool = getVercelAiTool('buffer', toolContext, onToolCompleted);
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Can you create a 5km buffer around these roads?',
- *   tools: {buffer: bufferTool},
+ *   tools: {buffer: convertToVercelAiTool(bufferTool)},
  * });
  * ```
  *
@@ -117,6 +124,7 @@ export const buffer = extendedTool<
     let geometries;
 
     if (geojson) {
+      // in case that LLM can use a simple geojson object like the geocoding result
       const geojsonObject = JSON.parse(geojson);
       geometries = geojsonObject.features;
     } else if (datasetName && getGeometries) {
@@ -154,7 +162,10 @@ export const buffer = extendedTool<
       },
       additionalData: {
         datasetName: outputDatasetName,
-        [outputDatasetName]: outputGeojson,
+        [outputDatasetName]: {
+          type: 'geojson',
+          content: outputGeojson,
+        },
         distance,
         distanceUnit,
         pointsPerCircle,

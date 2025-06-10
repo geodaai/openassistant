@@ -4,15 +4,22 @@ import { computeRegression } from './utils';
 import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../types';
 
 /**
- * The scatterplot tool is used to create a scatterplot chart.
+ * The scatterplot tool is used to create a scatterplot chart for a given dataset and variables.
+ *
+ * **Example user prompts:**
+ * - "Can you create a scatter plot of the population and income for each location in dataset myVenues?"
+ * - "What is the relationship between population and income?"
+ * - "Can you show a scatter plot of the population and income for each location in dataset myVenues?"
  *
  * @example
  * ```typescript
- * import { getVercelAiTool } from '@openassistant/plots';
+ * import { scatterplot, ScatterplotTool } from '@openassistant/plots';
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  * import { generateText } from 'ai';
  *
  * const toolContext = {
  *   getValues: async (datasetName: string, variableName: string) => {
+ *     // get the values of the variable from dataset, e.g.
  *     return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
  *   },
  * };
@@ -22,18 +29,18 @@ import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../type
  *   // render the scatterplot using <ScatterplotComponentContainer props={additionalData} />
  * };
  *
- * const scatterplotTool = getVercelAiTool('scatterplot', toolContext, onToolCompleted);
+ * const scatterplotTool: ScatterplotTool = {
+ *   ...scatterplot,
+ *   context: toolContext,
+ *   onToolCompleted,
+ * };
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'What is the relationship between population and income?',
- *   tools: {scatterplot: scatterplotTool},
+ *   tools: {scatterplot: convertToVercelAiTool(scatterplotTool)},
  * });
  * ```
- *
- * :::tip
- * User: can you create a scatter plot using 'population' and 'income'?
- * :::
  *
  * ### getValues()
  *

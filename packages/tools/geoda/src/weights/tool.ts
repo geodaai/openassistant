@@ -61,20 +61,27 @@ export type SpatialWeightsAdditionalData = {
  *
  * Example code:
  * ```typescript
- * import { getVercelAiTool } from '@openassistant/geoda';
+ * import { spatialWeights, SpatialWeightsTool } from '@openassistant/geoda';
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  * import { generateText } from 'ai';
  *
- * const toolContext = {
- *   getGeometries: (datasetName) => {
- *     return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+ * const spatialWeightsTool: SpatialWeightsTool = {
+ *   ...spatialWeights,
+ *   context: {
+ *     getGeometries: (datasetName) => {
+ *       return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+ *     },
+ *   },
+ *   onToolCompleted: (toolCallId, additionalData) => {
+ *     console.log(toolCallId, additionalData);
+ *     // do something like save the weights result in additionalData
  *   },
  * };
- * const weightsTool = getVercelAiTool('spatialWeights', toolContext, onToolCompleted);
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Create a queen contiguity weights matrix for these counties',
- *   tools: {spatialWeights: weightsTool},
+ *   tools: {spatialWeights: convertToVercelAiTool(spatialWeightsTool)},
  * });
  * ```
  */
@@ -282,8 +289,11 @@ async function executeSpatialWeights(
     additionalData: {
       weightsId: id,
       [id]: {
-        weights: w.weights,
-        weightsMeta: w.weightsMeta,
+        type: 'weights',
+        content: {
+          weights: w.weights,
+          weightsMeta: w.weightsMeta,
+        },
       },
     },
   };

@@ -40,28 +40,32 @@ export type DissolveAdditionalData = {
  * ### For example
  * ```
  * User: can you merge these counties into a single region?
- * LLM: I've merged the counties into a single region. The merged geometry is saved in dataset "dissolve_123"...
  * ```
  *
  * ### Code example
  * ```typescript
- * import { getVercelAiTool } from '@openassistant/geoda';
+ * import { dissolve, DissolveTool } from '@openassistant/geoda';
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  * import { generateText } from 'ai';
  *
- * const toolContext = {
- *   getGeometries: (datasetName) => {
- *     return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+ * const dissolveTool: DissolveTool = {
+ *   ...dissolve,
+ *   context: {
+ *     getGeometries: (datasetName) => {
+ *       return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+ *     },
+ *   },
+ *   onToolCompleted: (toolCallId, additionalData) => {
+ *     console.log(toolCallId, additionalData);
+ *     // do something like save the dissolve result in additionalData
  *   },
  * };
- * const dissolveTool = getVercelAiTool('dissolve', toolContext, onToolCompleted);
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
- *       // return the geometries from the dataset
- *       return [];
- *     }
- *   }
- * };
+ *   prompt: 'Can you merge these counties into a single region?',
+ *   tools: {dissolve: convertToVercelAiTool(dissolveTool)},
+ * });
  * ```
  */
 export const dissolve = extendedTool<
@@ -121,7 +125,10 @@ export const dissolve = extendedTool<
       },
       additionalData: {
         datasetName: outputDatasetName,
-        [outputDatasetName]: outputGeojson,
+        [outputDatasetName]: {
+          type: 'geojson',
+          content: outputGeojson,
+        },
       },
     };
   },

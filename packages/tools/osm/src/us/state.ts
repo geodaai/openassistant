@@ -50,32 +50,27 @@ export type ExecuteGetUsStateGeojsonResult = {
  * @example
  * ```typescript
  * import { getUsStateGeojson, GetUsStateGeojsonTool } from "@openassistant/osm";
- * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { convertToVercelAiTool, ToolCache } from '@openassistant/utils';
+ * import { generateText } from 'ai';
+ *
+ * // you can use ToolCache to save the state geojson dataset for later use
+ * const toolResultCache = ToolCache.getInstance();
  *
  * const stateTool: GetUsStateGeojsonTool = {
  *   ...getUsStateGeojson,
  *   onToolCompleted: (toolCallId, additionalData) => {
- *     // the dataset name of the state geojson data is stored in additionalData['datasetName']
- *     if (additionalData && typeof additionalData === 'object' && 'datasetName' in additionalData) {
- *       const datasetName = additionalData['datasetName'];
- *       // the geojson data is stored in additionalData[datasetName]
- *       const dataset = additionalData[datasetName];
- *       // you can save the dataset for later use
- *       // saveDataset(datasetName, dataset);
- *     }
+ *     toolResultCache.addDataset(toolCallId, additionalData);
  *   },
  * };
  *
- * streamText({
- *   model: openai('gpt-4o'),
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Get the GeoJSON for California',
  *   tools: {
- *     state: stateTool,
+ *     state: convertToVercelAiTool(stateTool),
  *   },
  * });
  * ```
- *
- * For a more complete example, see the [OSM Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_osm_example).
  */
 export const getUsStateGeojson = extendedTool<
   GetUsStateGeojsonFunctionArgs,
@@ -135,7 +130,10 @@ export const getUsStateGeojson = extendedTool<
         additionalData: {
           stateNames,
           datasetName: outputDatasetName,
-          [outputDatasetName]: finalGeojson
+          [outputDatasetName]: {
+            type: 'geojson',
+            content: finalGeojson,
+          },
         },
       };
     } catch (error) {

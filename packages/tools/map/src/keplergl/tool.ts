@@ -64,19 +64,15 @@ export type KeplerGlToolArgs = z.ZodObject<{
  * ### Example
  * ```typescript
  * import { downloadMapData, isDownloadMapAdditionalData, keplergl, KeplerglTool } from '@openassistant/map';
- * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { convertToVercelAiTool, ToolCache } from '@openassistant/utils';
  * import { generateText } from 'ai';
  *
- * const toolResultCache = new Map<string, unknown>();
+ * const toolResultCache = ToolCache.getInstance();
  *
  * const downloadMapTool = {
  *   ...downloadMapData,
  *   onToolCompleted: (toolCallId: string, additionalData?: unknown) => {
- *     if (isDownloadMapAdditionalData(additionalData)) {
- *       const datasetName = additionalData.datasetName;
- *       const dataset = additionalData[datasetName];
- *       toolResultCache.set(datasetName, dataset);
- *     }
+ *     toolResultCache.addDataset(toolCallId, additionalData);
  *   },
  * };
  *
@@ -88,8 +84,8 @@ export type KeplerGlToolArgs = z.ZodObject<{
  *       // return MYDATASETS[datasetName];
  *
  *       // if no dataset is found, check if dataset is in toolResultCache
- *       if (toolResultCache.has(datasetName)) {
- *         return toolResultCache.get(datasetName);
+ *       if (toolResultCache.hasDataset(datasetName)) {
+ *         return toolResultCache.getDataset(datasetName);
  *       }
  *       throw new Error(`Dataset ${datasetName} not found`);
  *     },
@@ -240,7 +236,18 @@ async function executeCreateMap(
     let dataContent;
 
     if (getDataset) {
-      dataContent = await getDataset(datasetName);
+      const dataset = await getDataset(datasetName);
+      // in case the dataset is from the ToolCache
+      if (
+        typeof dataset === 'object' &&
+        dataset !== null &&
+        'type' in dataset &&
+        'content' in dataset
+      ) {
+        dataContent = dataset.content;
+      } else {
+        dataContent = dataset;
+      }
     }
 
     if (!dataContent && getGeometries) {
@@ -374,8 +381,6 @@ async function executeCreateMap(
       };
     }
 
-    console.log('layerConfig', layerConfig);
-
     return {
       llmResult: {
         success: true,
@@ -385,7 +390,7 @@ async function executeCreateMap(
         longitudeColumn,
         mapType,
         layerId,
-        details: 'Map layer created successfully.',
+        details: `Map layer with id ${layerId} created successfully.`,
       },
       additionalData: {
         datasetId,

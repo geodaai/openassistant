@@ -32,19 +32,15 @@ export type DownloadMapAdditionalData = {
  * ### Example
  * ```typescript
  * import { downloadMapData, isDownloadMapAdditionalData, keplergl, KeplerglTool } from '@openassistant/map';
- * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { convertToVercelAiTool, ToolCache } from '@openassistant/utils';
  * import { generateText } from 'ai';
  *
- * const toolResultCache = new Map<string, unknown>();
+ * const toolResultCache = ToolCache.getInstance();
  *
  * const downloadMapTool = {
  *   ...downloadMapData,
  *   onToolCompleted: (toolCallId: string, additionalData?: unknown) => {
- *     if (isDownloadMapAdditionalData(additionalData)) {
- *       const datasetName = additionalData.datasetName;
- *       const dataset = additionalData[datasetName];
- *       toolResultCache.set(datasetName, dataset);
- *     }
+ *     toolResultCache.addDataset(toolCallId, additionalData);
  *   },
  * };
  *
@@ -52,12 +48,12 @@ export type DownloadMapAdditionalData = {
  *   ...keplergl,
  *   context: {
  *     getDataset: async (datasetName: string) => {
- *       // find dataset based on datasetName
+ *       // find dataset based on datasetName first
  *       // return MYDATASETS[datasetName];
  *
  *       // if no dataset is found, check if dataset is in toolResultCache
- *       if (toolResultCache.has(datasetName)) {
- *         return toolResultCache.get(datasetName);
+ *       if (toolResultCache.hasDataset(datasetName)) {
+ *         return toolResultCache.getDataset(datasetName);
  *       }
  *       throw new Error(`Dataset ${datasetName} not found`);
  *     },
@@ -92,16 +88,24 @@ export const downloadMapData = extendedTool<
 
       const rawData = await fetch(url);
 
-      let data;
+      let content;
       let fields;
 
       const contentType = rawData.headers.get('content-type');
       if (contentType?.includes('json')) {
-        data = await rawData.json();
+        const data = await rawData.json();
+        content = {
+          type: 'geojson',
+          content: data,
+        };
         // get the fields from the geojson file
         fields = Object.keys(data.features[0].properties);
       } else if (contentType?.includes('csv')) {
-        data = await rawData.text();
+        const data = await rawData.text();
+        content = {
+          type: 'rowObjects',
+          content: data.split('\n').map((line) => line.split(',')),
+        };
         // first line is the header
         fields = data.split('\n')[0].split(',');
       } else {
@@ -110,7 +114,7 @@ export const downloadMapData = extendedTool<
         );
       }
 
-      if (!data) {
+      if (!content) {
         throw new Error('Unsupported file type, only geojson is supported.');
       }
 
@@ -127,7 +131,7 @@ export const downloadMapData = extendedTool<
         },
         additionalData: {
           datasetName,
-          [datasetName]: data,
+          [datasetName]: content,
         },
       };
     } catch (error) {

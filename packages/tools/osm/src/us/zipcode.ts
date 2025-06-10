@@ -43,7 +43,7 @@ export type ExecuteGetUsZipcodeGeojsonResult = {
  * Example user prompts:
  * - "Get all zipcodes in California"
  * - "Show me the zipcode boundaries of New"
- * 
+ *
  * :::note
  * Note: to avoid overloading the Github API, we only fetch the GeoJSON data every 1 second.
  * :::
@@ -51,30 +51,28 @@ export type ExecuteGetUsZipcodeGeojsonResult = {
  * @example
  * ```typescript
  * import { getUsZipcodeGeojson, GetUsZipcodeGeojsonTool } from "@openassistant/osm";
- * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { convertToVercelAiTool, ToolCache } from '@openassistant/utils';
+ * import { generateText } from 'ai';
+ *
+ * // you can use ToolCache to save the zipcode geojson dataset for later use
+ * const toolResultCache = ToolCache.getInstance();
  *
  * const zipcodeTool: GetUsZipcodeGeojsonTool = {
  *   ...getUsZipcodeGeojson,
  *   onToolCompleted: (toolCallId, additionalData) => {
- *     // the dataset name of the zipcode geojson data is stored in additionalData['datasetName']
- *     const datasetName = additionalData['datasetName'];
- *     // the geojson data is stored in additionalData[datasetName]
- *     const dataset = additionalData[datasetName];
- *     // you can save the dataset for later use
- *     // saveDataset(datasetName, dataset);
+ *     toolResultCache.addDataset(toolCallId, additionalData);
  *   },
  * };
  *
- * streamText({
- *   model: openai('gpt-4o'),
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Get all zipcodes in California',
  *   tools: {
- *     zipcode: zipcodeTool,
+ *     zipcode: convertToVercelAiTool(zipcodeTool),
  *   },
  * });
  * ```
  *
- * For a more complete example, see the [OSM Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_osm_example).
  */
 export const getUsZipcodeGeojson = extendedTool<
   GetUsZipcodeGeojsonFunctionArgs,
@@ -148,7 +146,7 @@ export const getUsZipcodeGeojson = extendedTool<
       };
     }
   },
-  context: {}
+  context: {},
 });
 
 export type GetUsZipcodeGeojsonTool = typeof getUsZipcodeGeojson;

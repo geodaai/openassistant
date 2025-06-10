@@ -52,6 +52,36 @@ export type StandardizeVariableToolContext = {
   getValues: GetValues;
 };
 
+/**
+ * This tool is used to standardize the data of a variable using one of the following methods:
+ * - deviation from mean
+ * - standardize MAD
+ * - range adjust
+ * - range standardize
+ * - standardize (Z-score)
+ *
+ * ## Example Code
+ * ```ts
+ * import { standardizeVariable, StandardizeVariableTool } from '@openassistant/geoda';
+ * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { generateText } from 'ai';
+ *
+ * const standardizeVariableTool: StandardizeVariableTool = {
+ *   ...standardizeVariable,
+ *   context: {
+ *     getValues: (datasetName, variableName) => {
+ *       return getValues(datasetName, variableName);
+ *     },
+ *   },
+ * };
+ *
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
+ *   prompt: 'Standardize the data of the variable "income" of the dataset "income_data" using the deviation from mean method',
+ *   tools: { standardizeVariable: convertToVercelAiTool(standardizeVariableTool) },
+ * });
+ * ```
+ */
 export const standardizeVariable = extendedTool<
   StandardizeVariableToolArgs,
   StandardizeVariableToolLlmResult,
@@ -128,7 +158,7 @@ export const standardizeVariable = extendedTool<
         datasetName: outputDatasetName,
         originalDatasetName: datasetName,
         [outputDatasetName]: {
-          type: 'variables',
+          type: 'columnData',
           content: {
             [outputVariableName]: values,
           },

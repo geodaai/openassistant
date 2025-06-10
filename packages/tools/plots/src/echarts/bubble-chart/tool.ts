@@ -3,13 +3,16 @@ import { extendedTool, generateId } from '@openassistant/utils';
 import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../types';
 
 /**
- * The bubble chart tool.
+ * The bubble chart tool is used to create a bubble chart for a given dataset and variables.
  *
- * To use it, you need to provide the implementation of the `getValues` function.
+ * **Example user prompts:**
+ * - "Can you create a bubble chart of the population and income for each location in dataset myVenues, and use the size of the bubble to represent the revenue?"
+ * - "Can you show a bubble chart of the population and income for each location in dataset myVenues, and use the size of the bubble to represent the revenue?"
  *
  * @example
  * ```ts
- * import { getVercelAiTool } from '@openassistant/plots';
+ * import { bubbleChart, BubbleChartTool } from '@openassistant/plots';
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  * import { generateText } from 'ai';
  *
  * const toolContext = {
@@ -23,19 +26,20 @@ import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../type
  *   // render the bubble chart using <BubbleChartComponentContainer props={additionalData} />
  * };
  *
- * const bubbleChartTool = getVercelAiTool('bubbleChart', toolContext, onToolCompleted);
+ * const bubbleChartTool: BubbleChartTool = {
+ *   ...bubbleChart,
+ *   context: toolContext,
+ *   onToolCompleted,
+ * };
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Can you create a bubble chart of the population and income for each location in dataset myVenues, and use the size of the bubble to represent the revenue?',
- *   tools: {bubbleChart: bubbleChartTool},
+ *   tools: {
+ *     bubbleChart: convertToVercelAiTool(bubbleChartTool),
+ *   },
  * });
  * ```
- *
- * ### getValues()
- *
- * See {@link BubbleChartFunctionContext} for detailed usage.
- *
  */
 export const bubbleChart = extendedTool<
   BubbleChartToolArgs,

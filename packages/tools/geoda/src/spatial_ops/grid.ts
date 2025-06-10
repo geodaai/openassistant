@@ -147,20 +147,28 @@ function spatialGeometryToGeoJSON(
  *
  * Example code:
  * ```typescript
- * import { getVercelAiTool } from '@openassistant/geoda';
+ * import { grid, GridTool } from '@openassistant/geoda';
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  * import { generateText } from 'ai';
  *
- * const toolContext = {
+ * const gridTool: GridTool = {
+ *   ...grid,
+ *   context: {
  *   getGeometries: (datasetName) => {
  *     return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
  *   },
+ *   },
+ * },
+ *   onToolCompleted: (toolCallId, additionalData) => {
+ *     console.log(toolCallId, additionalData);
+ *     // do something like save the grid result in additionalData
+ *   },
  * };
- * const gridTool = getVercelAiTool('grid', toolContext, onToolCompleted);
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Create a 5x5 grid over this area',
- *   tools: {grid: gridTool},
+ *   tools: {grid: convertToVercelAiTool(gridTool)},
  * });
  * ```
  */
@@ -299,7 +307,10 @@ export const grid = extendedTool<
       additionalData: {
         datasetName: outputDatasetName,
         mapBounds,
-        [outputDatasetName]: outputGeojson,
+        [outputDatasetName]: {
+          type: 'geojson',
+          content: outputGeojson,
+        },
       },
     };
   },

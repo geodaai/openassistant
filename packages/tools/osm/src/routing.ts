@@ -91,9 +91,7 @@ export type ExecuteRoutingResult = {
 };
 
 /**
- * Routing Tool
- *
- * This tool calculates routes between two points using Mapbox's Directions API.
+ * This routing tool calculates routes between two points using Mapbox's Directions API.
  * It supports different transportation modes (driving, walking, cycling) and returns
  * detailed route information including distance, duration, and turn-by-turn directions.
  *
@@ -109,29 +107,31 @@ export type ExecuteRoutingResult = {
  * Example code:
  * ```typescript
  * import { geocoding, routing, RoutingTool, GeocodingTool } from "@openassistant/osm";
- * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { convertToVercelAiTool, ToolCache } from '@openassistant/utils';
+ * import { generateText } from 'ai';
  *
- * const geocodingTool: GeocodingTool = {
- *   ...geocoding,
- * };
+ * // you can use ToolCache to save the routing dataset for later use
+ * const toolResultCache = ToolCache.getInstance();
+ *
  * const routingTool: RoutingTool = {
  *   ...routing,
  *   toolContext: {
  *     getMapboxToken: () => process.env.MAPBOX_TOKEN!,
  *   },
- * });
+ *   onToolCompleted: (toolCallId, additionalData) => {
+ *     toolResultCache.addDataset(toolCallId, additionalData);
+ *   },
+ * };
  *
- * streamText({
- *   model: openai('gpt-4o'),
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Find the driving route from Times Square to Central Park',
  *   tools: {
- *     geocoding: convertToVercelAiTool(geocodingTool),
+ *     geocoding: convertToVercelAiTool(geocoding),
  *     routing: convertToVercelAiTool(routingTool),
  *   },
  * });
  * ```
- *
- * For a more complete example, see the [OSM Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_osm_example).
  */
 export const routing = extendedTool<
   RoutingFunctionArgs,
@@ -222,7 +222,7 @@ export const routing = extendedTool<
         })),
       };
 
-      const geojson: FeatureCollection = {
+      const routingData: FeatureCollection = {
         type: 'FeatureCollection',
         features: [
           {
@@ -252,7 +252,10 @@ export const routing = extendedTool<
           destination: destination,
           mode,
           datasetName: outputDatasetName,
-          [outputDatasetName]: geojson,
+          [outputDatasetName]: {
+            type: 'geojson',
+            content: routingData,
+          },
         },
       };
     } catch (error) {

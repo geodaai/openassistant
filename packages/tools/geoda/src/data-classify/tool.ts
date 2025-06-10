@@ -73,28 +73,24 @@ export type DataClassifyFunctionContext = {
  *
  * @example
  * ```typescript
- * import { getGeoDaTool, GeoDaToolNames } from "@openassistant/geoda";
- *
- * const classifyTool = getGeoDaTool(GeoDaToolNames.dataClassify, {
+ * import { dataClassify, DataClassifyTool } from "@openassistant/geoda";
+ * import { convertToVercelAiTool } from "@openassistant/utils";
+ * 
+ * const classifyTool: DataClassifyTool = {
+ *   ...dataClassify,
  *   toolContext: {
  *     getValues: async (datasetName: string, variableName: string) => {
  *       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
  *     },
  *   },
- *   onToolCompleted: (toolCallId, additionalData) => {
- *     console.log(toolCallId, additionalData);
- *   },
- *   isExecutable: true,
- * });
- *
+ * };
  *
  * const result = await generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Can you classify the data of population into 5 classes?',
- *   tools: {dataClassify: classifyTool},
+ *   tools: {dataClassify: convertToVercelAiTool(classifyTool)},
  * });
  *
- * console.log(result);
  * ```
  *
  * For a more complete example, see the [Geoda Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_geoda_example).

@@ -4,18 +4,29 @@ import {
   ParallelCoordinateDataProps,
   processParallelCoordinateData,
 } from './utils';
-import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../types';
+import {
+  EChartsToolContext,
+  isEChartsToolContext,
+  OnSelected,
+} from '../../types';
 
 /**
- * The PCP tool is used to create a parallel coordinates plot.
+ * The PCP tool is used to create a parallel coordinates plot for a given dataset and variables.
+ *
+ * **Example user prompts:**
+ * - "Can you create a PCP of the population and income for each location in dataset myVenues?"
+ * - "What is the relationship between population and income?"
+ * - "Can you show a PCP of the population and income for each location in dataset myVenues?"
  *
  * @example
  * ```typescript
- * import { getVercelAiTool } from '@openassistant/plots';
+ * import { pcp, PCPTool } from '@openassistant/plots';
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  * import { generateText } from 'ai';
  *
  * const toolContext = {
  *   getValues: async (datasetName, variableName) => {
+ *     // get the values of the variable from dataset, e.g.
  *     return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
  *   },
  * };
@@ -25,25 +36,20 @@ import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../type
  *   // render the PCP using <ParallelCoordinateComponentContainer props={additionalData} />
  * };
  *
- * const pcpTool = getVercelAiTool('pcp', toolContext, onToolCompleted);
+ * const pcpTool: PCPTool = {
+ *   ...pcp,
+ *   context: toolContext,
+ *   onToolCompleted,
+ * };
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Can you create a PCP of the population and income?',
- *   tools: {pcp: pcpTool},
+ *   tools: {
+ *     pcp: convertToVercelAiTool(pcpTool),
+ *   },
  * });
  * ```
- *
- * ### getValues()
- *
- * See {@link PCPFunctionContext} for detailed usage.
- *
- * User implements this function to get the values of the variable from dataset.
- *
- * For prompts like "_can you show a PCP of the revenue per capita for each location in dataset myVenues_", the tool will
- * call the `getValues()` function twice:
- * - get the values of **revenue** from dataset: getValues('myVenues', 'revenue')
- * - get the values of **population** from dataset: getValues('myVenues', 'population')
  */
 export const pcp = extendedTool<
   PCPFunctionArgs,

@@ -72,42 +72,35 @@ export type LisaFunctionContext = {
  *
  * @example
  * ```typescript
- * import { getGeoDaTool, GeoDaToolNames } from "@openassistant/geoda";
+ * import { spatialWeights, SpatialWeightsTool, lisa, LisaTool } from "@openassistant/geoda";
  *
- * const spatialWeightsTool = getGeoDaTool(GeoDaToolNames.spatialWeights, {
- *   toolContext: {
+ * const spatialWeightsTool: SpatialWeightsTool = {
+ *   ...spatialWeights,
+ *   context: {
  *     getGeometries: (datasetName) => {
  *       return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
  *     },
  *   },
- *   onToolCompleted: (toolCallId, additionalData) => {
- *     console.log(toolCallId, additionalData);
- *   },
- *   isExecutable: true,
- * });
+ * };
  *
- * const lisaTool = getGeoDaTool(GeoDaToolNames.lisa, {
- *   toolContext: {
+ * const lisaTool: LisaTool = {
+ *   ...lisa,
+ *   context: {
  *     getValues: (datasetName, variableName) => {
  *       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
  *     },
  *   },
- *   onToolCompleted: (toolCallId, additionalData) => {
- *     console.log(toolCallId, additionalData);
- *   },
- *   isExecutable: true,
  * });
  *
  * const result = await generateText({
  *   model: openai('gpt-4o'),
  *   prompt: 'Can you perform a local Moran analysis on the population data?',
- *   tools: {lisa: lisaTool, spatialWeights: spatialWeightsTool},
+ *   tools: {
+ *     lisa: convertToVercelAiTool(lisaTool),
+ *     spatialWeights: convertToVercelAiTool(spatialWeightsTool),
+ *   },
  * });
- *
- * console.log(result);
  * ```
- *
- * For a more complete example, see the [Geoda Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_geoda_example).
  */
 export const lisa = extendedTool<
   LisaFunctionArgs,
@@ -321,12 +314,13 @@ async function executeLisa(
         lagValues: lm.lagValues,
         nn: lm.nn,
       };
-      lisaGeoJson = appendJoinValuesToGeometries(
-        geometries,
-        featureValues
-      ) as GeoJSON.FeatureCollection;
+      // @ts-expect-error - Support append lisa results to ArcLayer data
+      lisaGeoJson = appendJoinValuesToGeometries(geometries, featureValues);
       // append lisaGeoJson to additionalData
-      additionalData[lisaDatasetName] = lisaGeoJson;
+      additionalData[lisaDatasetName] = {
+        type: 'geojson',
+        content: lisaGeoJson,
+      };
     }
 
     return {

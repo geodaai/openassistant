@@ -31,9 +31,6 @@ export type MoranScatterPlotLlmResult = {
 export type MoranScatterPlotAdditionalData = {
   datasetName: string;
   variableName: string;
-  weightsId: string;
-  weights: number[][];
-  weightsMeta: WeightsMeta;
   values: number[];
   lagValues: number[];
   regression: SimpleLinearRegressionResult;
@@ -61,37 +58,35 @@ export type MoranScatterPlotFunctionContext = {
  *
  * @example
  * ```typescript
- * import { getGeoDaTool, GeoDaToolNames } from "@openassistant/geoda";
+ * import { globalMoran, GlobalMoranTool, spatialWeights, SpatialWeightsTool } from "@openassistant/geoda";
+ * import { convertToVercelAiTool } from "@openassistant/utils";
  *
- * const spatialWeightsTool = getGeoDaTool(GeoDaToolNames.spatialWeights, {
- *   toolContext: {
- *     getGeometries: (datasetName) => {
+ * const spatialWeightsTool: SpatialWeightsTool = {
+ *   ...spatialWeights,
+ *   context: {
+ *     getGeometries: async (datasetName) => {
  *       return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
  *     },
  *   },
- *   onToolCompleted: (toolCallId, additionalData) => {
- *     console.log(toolCallId, additionalData);
- *   },
  * });
  *
- * const moranTool = getGeoDaTool(GeoDaToolNames.globalMoran, {
- *   toolContext: {
+ * const moranTool: GlobalMoranTool = {
+ *   ...globalMoran,
+ *   context: {
  *     getValues: async (datasetName, variableName) => {
  *       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
  *     },
- *   },
- *   onToolCompleted: (toolCallId, additionalData) => {
- *     console.log(toolCallId, additionalData);
  *   },
  * });
  *
  * const result = await generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Can you calculate the Global Moran\'s I for the population data?',
- *   tools: {globalMoran: moranTool, spatialWeights: spatialWeightsTool},
+ *   tools: {
+ *     globalMoran: convertToVercelAiTool(moranTool),
+ *     spatialWeights: convertToVercelAiTool(spatialWeightsTool),
+ *   },
  * });
- *
- * console.log(result);
  * ```
  *
  * :::tip
@@ -204,6 +199,7 @@ async function executeGlobalMoran(
     }
 
     if (!weights && weightsId) {
+      // get weights from cache inside openassistant/geoda module
       const existingWeights = getCachedWeightsById(weightsId);
       if (existingWeights) {
         weights = existingWeights.weights;
@@ -230,9 +226,6 @@ async function executeGlobalMoran(
       additionalData: {
         datasetName,
         variableName,
-        weightsId,
-        weights,
-        weightsMeta,
         values,
         lagValues,
         regression,

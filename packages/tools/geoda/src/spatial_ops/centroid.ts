@@ -97,6 +97,7 @@ export const centroid = extendedTool<
     let geometries: SpatialGeometry | null = null;
 
     if (geojson) {
+      // in case that LLM can use a simple geojson object like the US State GeoJSON
       const geojsonObject = JSON.parse(geojson);
       geometries = geojsonObject.features;
     } else if (datasetName && getGeometries) {
@@ -135,7 +136,10 @@ export const centroid = extendedTool<
       },
       additionalData: {
         datasetName: outputDatasetName,
-        [outputDatasetName]: outputGeojson,
+        [outputDatasetName]: {
+          type: 'geojson',
+          content: outputGeojson,
+        },
       },
     };
   },

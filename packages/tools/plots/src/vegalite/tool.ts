@@ -27,10 +27,45 @@ export type VegaLitePlotAdditionalData = {
 /**
  * Tool to create a Vega plot from a dataset and variables.
  *
+ * There are many different plot types in Vega-Lite, you can find the full list of plot types [here](https://vega.github.io/vega-lite/docs/mark.html).
+ *
+ * **Example user prompts:**
+ * - "Can you create a bar chart of the population for each location in dataset myVenues?"
+ * - "Can you show a bar chart of the population for each location in dataset myVenues?"
+ *
  * :::note
  * This tool is a browser-side tool.
  * :::
  *
+ * @example
+ * ```ts
+ * import { vegaLitePlot, VegaLitePlotTool } from '@openassistant/plots';
+ * // import { VegaPlotComponent } from '@openassistant/vegalite';
+ * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { generateText } from 'ai';
+ *
+ * const vegaLitePlotTool: VegaLitePlotTool = {
+ *   ...vegaLitePlot,
+ *   context: {
+ *     getValues: async (datasetName, variableName) => {
+ *       // get the values of the variable from dataset, e.g.
+ *       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+ *     },
+ *   },
+ *   onToolCompleted: (toolCallId, additionalData) => {
+ *     console.log('Tool call completed:', toolCallId, additionalData);
+ *     // render the Vega plot using <VegaPlotComponent props={additionalData} />
+ *   },
+ * };
+ *
+ * generateText({
+ *   model: openai('gpt-4o-mini', { apiKey: key }),
+ *   prompt: 'Can you create a bar chart of the population for each location in dataset myVenues?',
+ *   tools: {
+ *     vegaLitePlot: convertToVercelAiTool(vegaLitePlotTool),
+ *   },
+ * });
+ * ```
  */
 export const vegaLitePlot = extendedTool<
   VegaLitePlotToolArgs,

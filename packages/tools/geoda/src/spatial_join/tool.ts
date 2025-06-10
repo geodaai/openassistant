@@ -76,23 +76,31 @@ export type SpatialJoinFunctionContext = {
  *
  * ### Code example
  * ```typescript
- * import { getVercelAiTool } from '@openassistant/geoda';
+ * import { spatialJoin, SpatialJoinTool } from '@openassistant/geoda';
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  * import { generateText } from 'ai';
  *
- * const toolContext = {
- *   getGeometries: (datasetName) => {
- *     return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+ * const spatialJoinTool: SpatialJoinTool = {
+ *   ...spatialJoin,
+ *   context: {
+ *     getGeometries: (datasetName) => {
+ *       return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+ *     },
+ *     getValues: (datasetName, variableName) => {
+ *       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+ *     },
  *   },
- *   getValues: (datasetName, variableName) => {
- *     return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+ *   onToolCompleted: (toolCallId, additionalData) => {
+ *     console.log(toolCallId, additionalData);
+ *     // do something like save the join result in additionalData
  *   },
  * };
- * const joinTool = getVercelAiTool('spatialJoin', toolContext, onToolCompleted);
+ *
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Can you join the population data with county boundaries?',
- *   tools: {spatialJoin: joinTool},
+ *   tools: {spatialJoin: convertToVercelAiTool(spatialJoinTool)},
  * });
  * ```
  */
@@ -353,7 +361,7 @@ export function getBasicStatistics(result: number[][]) {
 export function appendJoinValuesToGeometries(
   geometries: SpatialGeometry,
   joinValues: Record<string, number[]>
-): GeoJSON.FeatureCollection | unknown[] {
+) {
   const geometryType = CheckGeometryType(geometries);
   const variableNames = Object.keys(joinValues);
 
@@ -377,7 +385,10 @@ export function appendJoinValuesToGeometries(
           },
         })),
       };
-      return featureCollection;
+      return {
+        type: 'geojson',
+        content: featureCollection,
+      };
     }
     case SpatialJoinGeometryType.GeoJsonFeature: {
       // append joinValues to the properties of the features
@@ -390,9 +401,13 @@ export function appendJoinValuesToGeometries(
           ),
         },
       }));
-      return {
+      const result ={
         type: 'FeatureCollection',
         features: featuresWithJoinValues,
+      };
+      return {
+        type: 'geojson',
+        content: result,
       };
     }
     case SpatialJoinGeometryType.ArcLayerData: {
@@ -404,7 +419,10 @@ export function appendJoinValuesToGeometries(
       ]);
       // append the variable names to the first row
       featuresWithJoinValues.unshift(['geometry', ...variableNames]);
-      return featuresWithJoinValues;
+      return {
+        type: 'rowObjects',
+        content: featuresWithJoinValues,
+      };
     }
     case SpatialJoinGeometryType.PointLayerData: {
       // return a csv style array of features with joinValues
@@ -417,7 +435,7 @@ export function appendJoinValuesToGeometries(
       featuresWithJoinValues.unshift(['geometry', ...variableNames]);
 
       // convert geometries to FeatureCollection
-      const featureCollection: GeoJSON.FeatureCollection = {
+      const result: GeoJSON.FeatureCollection = {
         type: 'FeatureCollection',
         features: geometries.map((feature, index) => ({
           type: 'Feature' as const,
@@ -430,7 +448,10 @@ export function appendJoinValuesToGeometries(
           ),
         })),
       };
-      return featureCollection;
+      return {
+        type: 'geojson',
+        content: result,
+      };
     }
     default:
       throw new Error('Unsupported geometry type');

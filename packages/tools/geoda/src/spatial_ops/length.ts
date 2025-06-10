@@ -37,20 +37,23 @@ export type LengthAdditionalData = {
  *
  * Example code:
  * ```typescript
- * import { getVercelAiTool } from '@openassistant/geoda';
+ * import { length, LengthTool } from '@openassistant/geoda';
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  * import { generateText } from 'ai';
  *
- * const toolContext = {
- *   getGeometries: (datasetName) => {
- *     return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+ * const lengthTool: LengthTool = {
+ *   ...length,
+ *   context: {
+ *     getGeometries: (datasetName) => {
+ *       return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+ *     },
  *   },
- * };
- * const lengthTool = getVercelAiTool('length', toolContext, onToolCompleted);
+ * });
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Calculate the length of these roads in kilometers',
- *   tools: {length: lengthTool},
+ *   tools: {length: convertToVercelAiTool(lengthTool)},
  * });
  * ```
  */

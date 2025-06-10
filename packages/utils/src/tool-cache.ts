@@ -1,15 +1,35 @@
 /**
  * A dataset in the tool cache.
  * The type of the content is determined by the tool that added the dataset.
- * The type includes:
- * - 'array'
- * - 'geojson' (GeoJSON Feature or FeatureCollection)
- * - 'object'
  */
-export type ToolCacheDataset = {
-  type: 'array' | 'geojson' | 'object';
-  content: unknown;
-};
+export type ToolCacheDataset =
+  | {
+      type: 'geojson';
+      content: GeoJSON.FeatureCollection;
+    }
+  | {
+      type: 'columnData';
+      content: Record<string, unknown>[];
+    }
+  | {
+      type: 'string';
+      content: string;
+    }
+  | {
+      type: 'rowObjects';
+      content: unknown[][];
+    }
+  | {
+      type: 'json';
+      content: Record<string, unknown>;
+    }
+  | {
+      type: 'weights';
+      content: {
+        weights: number[][];
+        weightsMeta: Record<string, unknown>;
+      };
+    };
 
 /**
  * A singleton class to cache the results of tools.

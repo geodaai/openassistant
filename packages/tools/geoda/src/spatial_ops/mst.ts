@@ -21,19 +21,17 @@ import { isSpatialToolContext } from '../utils';
  * ## Example Code
  *
  * ```typescript
- * import { mst } from '@openassistant/geoda';
+ * import { minimumSpanningTree, MinimumSpanningTreeTool } from '@openassistant/geoda';
  * import { convertToVercelAiTool } from '@openassistant/utils';
  * import { generateText } from 'ai';
  *
- * const toolContext = {
- *   getGeometries: (datasetName) => {
- *     return getGeometries(datasetName);
- *   },
- * };
- *
  * const mstTool: MstTool = {
  *   ...mst,
- *   context: toolContext,
+ *   context: {
+ *     getGeometries: (datasetName) => {
+ *       return getGeometries(datasetName);
+ *     },
+ *   },
  * };
  *
  * generateText({
@@ -106,7 +104,10 @@ export const minimumSpanningTree = extendedTool<
       },
       additionalData: {
         datasetName: outputDatasetName,
-        [outputDatasetName]: mstGeojson,
+        [outputDatasetName]: {
+          type: 'geojson',
+          content: mstGeojson,
+        },
       },
     };
   },
