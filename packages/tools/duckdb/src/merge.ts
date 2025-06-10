@@ -1,8 +1,4 @@
-import {
-  extendedTool,
-  generateId,
-  ToolCacheDataset,
-} from '@openassistant/utils';
+import { extendedTool, generateId } from '@openassistant/utils';
 import { z } from 'zod';
 import { tableFromArrays } from 'apache-arrow';
 
