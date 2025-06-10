@@ -1,3 +1,5 @@
+import './index.css';
+
 export * from './boxplot/box-plot-component';
 export * from './boxplot/box-plot';
 export * from './boxplot/boxplot-option';
