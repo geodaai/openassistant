@@ -1,6 +1,6 @@
 {
   "name": "@openassistant/echarts",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "author": "Xun Li<lixun910@gmail.com>",
   "description": "The eCharts components for OpenAssistant",
   "main": "./dist/index.cjs.js",
