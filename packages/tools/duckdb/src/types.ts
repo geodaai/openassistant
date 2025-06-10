@@ -57,4 +57,5 @@ export type LocalQueryAdditionalData = {
   queryDatasetName: string;
   datasetName: string;
   dbTableName: string;
+  variableNames: string[];
 };

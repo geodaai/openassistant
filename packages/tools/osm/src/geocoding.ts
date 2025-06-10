@@ -35,9 +35,10 @@ export type GeocodingAdditionalData = {
  *
  * @example
  * ```typescript
- * import { getOsmTool, OsmToolNames } from "@openassistant/osm";
+ * import { geocoding, GeocodingTool } from "@openassistant/osm";
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  *
- * const geocodingTool = getOsmTool(OsmToolNames.geocoding);
+ * const geocodingTool = convertToVercelAiTool(geocoding);
  *
  * streamText({
  *   model: openai('gpt-4o'),

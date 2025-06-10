@@ -288,8 +288,7 @@ export const grid = extendedTool<
     return {
       llmResult: {
         success: true,
-        datasetName: outputDatasetName,
-        result: `Grid created successfully with ${rows} rows and ${columns} columns (${totalCells} total cells). The dataset name is: ${outputDatasetName}`,
+        result: `Grid created successfully with ${rows} rows and ${columns} columns (${totalCells} total cells). It has been saved in dataset: ${outputDatasetName}`,
         gridInfo: {
           rows,
           columns,

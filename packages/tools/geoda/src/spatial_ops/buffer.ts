@@ -150,8 +150,7 @@ export const buffer = extendedTool<
     return {
       llmResult: {
         success: true,
-        datasetName: outputDatasetName,
-        result: `Buffers created successfully, and it can be used as a dataset for mapping. The dataset name is: ${outputDatasetName}`,
+        result: `Buffers created successfully, and it has been saved in dataset: ${outputDatasetName}`,
       },
       additionalData: {
         datasetName: outputDatasetName,

@@ -20,6 +20,10 @@ export * from './spatial_ops/dissolve';
 export * from './spatial_ops/grid';
 export * from './spatial_ops/length';
 export * from './spatial_ops/perimeter';
+export * from './spatial_ops/thiessenPolygons';
+export * from './spatial_ops/mst';
+
+export * from './variable/tool';
 
 export * from './types';
 export * from './utils';

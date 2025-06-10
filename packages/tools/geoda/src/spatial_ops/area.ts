@@ -38,19 +38,24 @@ export type AreaAdditionalData = {
  *
  * Example code:
  * ```typescript
- * import { getVercelAiTool } from '@openassistant/geoda';
+ * import { area } from '@openassistant/geoda';
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  * import { generateText } from 'ai';
+ * 
  * const toolContext = {
  *   getGeometries: (datasetName) => {
  *     return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
  *   },
  * };
- * const areaTool = getVercelAiTool('area', toolContext, onToolCompleted);
+ * const areaTool: AreaTool = {
+ *   ...area,
+ *   context: toolContext,
+ * };
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Calculate the area of these counties in square kilometers',
- *   tools: {area: areaTool},
+ *   tools: {area: convertToVercelAiTool(area)},
  * });
  * ```
  *

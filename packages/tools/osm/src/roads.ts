@@ -74,15 +74,23 @@ export type RoadsAdditionalData = {
  *
  * @example
  * ```typescript
- * import { getOsmTool, OsmToolNames } from "@openassistant/osm";
+ * import { roads, RoadsTool } from "@openassistant/osm";
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  *
- * const roadsTool = getOsmTool(OsmToolNames.roads);
+ * const roadsTool: RoadsTool = {
+ *   ...roads,
+ *   context: {
+ *     getGeometries: (datasetName) => {
+ *       return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+ *     },
+ *   },
+ * };
  *
  * streamText({
  *   model: openai('gpt-4'),
  *   prompt: 'Show me all highways in New York City',
  *   tools: {
- *     roads: roadsTool,
+ *     roads: convertToVercelAiTool(roadsTool),
  *   },
  * });
  * ```

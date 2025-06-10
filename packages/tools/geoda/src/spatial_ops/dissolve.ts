@@ -117,11 +117,10 @@ export const dissolve = extendedTool<
     return {
       llmResult: {
         success: true,
-        datasetName: outputDatasetName,
-        result: `Geometries dissolved successfully, and it can be used as a dataset for mapping. The dataset name is: ${outputDatasetName}`,
+        result: `Geometries dissolved successfully, and it has been saved in dataset: ${outputDatasetName}`,
       },
       additionalData: {
-        datasetName,
+        datasetName: outputDatasetName,
         [outputDatasetName]: outputGeojson,
       },
     };

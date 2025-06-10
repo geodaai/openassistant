@@ -1,3 +1,20 @@
+/**
+ * A dataset in the tool cache.
+ * The type of the content is determined by the tool that added the dataset.
+ * The type includes:
+ * - 'array'
+ * - 'geojson' (GeoJSON Feature or FeatureCollection)
+ * - 'object'
+ */
+export type ToolCacheDataset = {
+  type: 'array' | 'geojson' | 'object';
+  content: unknown;
+};
+
+/**
+ * A singleton class to cache the results of tools.
+ *
+ */
 export class ToolCache {
   private static instance: ToolCache;
   private cachedResults: Record<string, unknown> = {};
@@ -23,11 +40,13 @@ export class ToolCache {
       'datasetName' in additionalData &&
       additionalData.datasetName
     ) {
-      const datasetName = additionalData.datasetName as string;
-      if (datasetName) {
+      const datasetName = additionalData.datasetName;
+      if (datasetName && typeof datasetName === 'string') {
+        const dataset = additionalData[datasetName];
+        // dataset should be an object with a type property and a content property
         this.cachedResults = {
           ...this.cachedResults,
-          [datasetName]: additionalData[datasetName],
+          [datasetName]: dataset,
         };
       }
     }
@@ -47,7 +66,7 @@ export class ToolCache {
     return datasetName in this.cachedResults;
   }
 
-  getDataset(datasetName: string): unknown | null {
-    return this.cachedResults[datasetName] || null;
+  getDataset(datasetName: string): ToolCacheDataset | null {
+    return this.cachedResults[datasetName] as ToolCacheDataset | null;
   }
 }

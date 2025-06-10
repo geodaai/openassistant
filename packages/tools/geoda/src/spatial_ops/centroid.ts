@@ -44,20 +44,23 @@ export type CentroidAdditionalData = {
  *
  * ### Code example
  * ```typescript
- * import { getVercelAiTool } from '@openassistant/geoda';
+ * import { centroid, CentroidTool } from '@openassistant/geoda';
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  * import { generateText } from 'ai';
  *
- * const toolContext = {
- *   getGeometries: (datasetName) => {
- *     return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+ * const centroidTool: CentroidTool = {
+ *   ...centroid,
+ *   context: {
+ *     getGeometries: (datasetName) => {
+ *       return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+ *     },
  *   },
  * };
- * const centroidTool = getVercelAiTool('centroid', toolContext, onToolCompleted);
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Can you find the center points of these counties?',
- *   tools: {centroid: centroidTool},
+ *   tools: {centroid: convertToVercelAiTool(centroidTool)},
  * });
  * ```
  */
@@ -128,11 +131,10 @@ export const centroid = extendedTool<
     return {
       llmResult: {
         success: true,
-        datasetName: outputDatasetName,
-        result: `Centroids calculated successfully, and it can be used as a dataset for mapping. The dataset name is: ${outputDatasetName}`,
+        result: `Centroids calculated successfully, and it has been saved in dataset: ${outputDatasetName}`,
       },
       additionalData: {
-        datasetName,
+        datasetName: outputDatasetName,
         [outputDatasetName]: outputGeojson,
       },
     };

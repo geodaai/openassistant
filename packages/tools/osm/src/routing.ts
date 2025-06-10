@@ -108,10 +108,14 @@ export type ExecuteRoutingResult = {
  *
  * Example code:
  * ```typescript
- * import { getOsmTool, OsmToolNames } from "@openassistant/osm";
+ * import { geocoding, routing, RoutingTool, GeocodingTool } from "@openassistant/osm";
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  *
- * const geocodingTool = getOsmTool(OsmToolNames.geocoding);
- * const routingTool = getOsmTool(OsmToolNames.routing, {
+ * const geocodingTool: GeocodingTool = {
+ *   ...geocoding,
+ * };
+ * const routingTool: RoutingTool = {
+ *   ...routing,
  *   toolContext: {
  *     getMapboxToken: () => process.env.MAPBOX_TOKEN!,
  *   },
@@ -121,8 +125,8 @@ export type ExecuteRoutingResult = {
  *   model: openai('gpt-4o'),
  *   prompt: 'Find the driving route from Times Square to Central Park',
  *   tools: {
- *     geocoding: geocodingTool,
- *     routing: routingTool,
+ *     geocoding: convertToVercelAiTool(geocodingTool),
+ *     routing: convertToVercelAiTool(routingTool),
  *   },
  * });
  * ```

@@ -133,16 +133,20 @@ export const localQuery = extendedTool<
   description: `You are a SQL (duckdb) expert. You can help to query users datasets using select query clause.`,
   parameters: z.object({
     datasetName: z.string(),
-    variableNames: z.array(z.string()),
+    variableNames: z
+      .array(z.string())
+      .describe(
+        'Only use variable names already exist in the dataset. New columns created via SQL expressions should only be referenced in the SQL query.'
+      ),
     dbTableName: z
       .string()
       .describe(
-        'The name of a temporary table that will be created from the dataset specified by datasetName. Please use datasetName plus a 6-digit random number to avoid conflicts.'
+        'The alias of the table created from from the dataset specified by datasetName. Please use datasetName plus a 6-digit random number to avoid conflicts.'
       ),
     sql: z
       .string()
       .describe(
-        'The SQL query to execute. Please follow the SQL syntax of duckdb. Please use the dbTableName to query the table.'
+        'IMPORTANT: please use dbTableName instead of the datasetName in SQL query.'
       ),
   }),
   execute: executeLocalQuery,
@@ -160,7 +164,7 @@ async function executeLocalQuery(
   options
 ): Promise<LocalQueryResult> {
   try {
-    const { getValues, duckDB } = options.context as QueryDuckDBFunctionContext;
+    const { getValues, getDuckDB: getUserDuckDB } = options.context as LocalQueryContext;
 
     // get values for each variable
     const columnData = {};
@@ -172,7 +176,8 @@ async function executeLocalQuery(
     const arrowTable: ArrowTable = tableFromArrays(columnData);
 
     // Initialize DuckDB with external instance if provided
-    const db = await getDuckDB(duckDB);
+    const userDuckDB = await getUserDuckDB?.();
+    const db = await getDuckDB(userDuckDB ?? undefined);
     if (!db) {
       throw new Error('DuckDB instance is not initialized');
     }
@@ -221,6 +226,7 @@ async function executeLocalQuery(
         datasetName,
         dbTableName,
         queryDatasetName,
+        variableNames,
       },
     };
   } catch (error) {

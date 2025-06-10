@@ -85,10 +85,11 @@ export type ExecuteIsochroneResult = {
  *
  * @example
  * ```typescript
- * import { getOsmTool, OsmToolNames } from "@openassistant/osm";
+ * import { isochrone, IsochroneTool } from "@openassistant/osm";
+ * import { convertToVercelAiTool } from '@openassistant/utils';
  *
- * const geocodingTool = getOsmTool(OsmToolNames.geocoding);
- * const isochroneTool = getOsmTool(OsmToolNames.isochrone, {
+ * const isochroneTool: IsochroneTool = {
+ *   ...isochrone,
  *   toolContext: {
  *     getMapboxToken: () => process.env.MAPBOX_TOKEN!,
  *   },
@@ -98,7 +99,7 @@ export type ExecuteIsochroneResult = {
  *   model: openai('gpt-4o'),
  *   prompt: 'What areas can I reach within 2km of the Eiffel Tower on foot?',
  *   tools: {
- *     isochrone: isochroneTool,
+ *     isochrone: convertToVercelAiTool(isochroneTool),
  *   },
  * });
  * ```
