@@ -2,7 +2,7 @@
 
 > `const` **buffer**: `ExtendedTool`\<[`BufferFunctionArgs`](../type-aliases/BufferFunctionArgs.md), [`BufferLlmResult`](../type-aliases/BufferLlmResult.md), [`BufferAdditionalData`](../type-aliases/BufferAdditionalData.md), [`SpatialToolContext`](../type-aliases/SpatialToolContext.md)\>
 
-Defined in: [packages/tools/geoda/src/spatial\_ops/buffer.ts:74](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/spatial_ops/buffer.ts#L74)
+Defined in: [packages/tools/geoda/src/spatial\_ops/buffer.ts:81](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/geoda/src/spatial_ops/buffer.ts#L81)
 
 The buffer tool is used to create buffer zones around geometries.
 
@@ -26,20 +26,27 @@ LLM: I've created 5km buffers around the roads. The buffered geometries are save
 
 ### Code example
 ```typescript
-import { getVercelAiTool } from '@openassistant/geoda';
+import { buffer, BufferTool } from '@openassistant/geoda';
+import { convertToVercelAiTool } from '@openassistant/utils';
 import { generateText } from 'ai';
 
-const toolContext = {
-  getGeometries: (datasetName) => {
-    return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+const bufferTool: BufferTool = {
+  ...buffer,
+  context: {
+    getGeometries: (datasetName) => {
+      return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+    },
+  },
+  onToolCompleted: (toolCallId, additionalData) => {
+    console.log(toolCallId, additionalData);
+    // do something like save the buffer result in additionalData
   },
 };
-const bufferTool = getVercelAiTool('buffer', toolContext, onToolCompleted);
 
 generateText({
   model: openai('gpt-4o-mini', { apiKey: key }),
   prompt: 'Can you create a 5km buffer around these roads?',
-  tools: {buffer: bufferTool},
+  tools: {buffer: convertToVercelAiTool(bufferTool)},
 });
 ```
 

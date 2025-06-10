@@ -2,7 +2,7 @@
 
 > `const` **getUsCountyGeojson**: `ExtendedTool`\<[`GetUsCountyGeojsonFunctionArgs`](../type-aliases/GetUsCountyGeojsonFunctionArgs.md), [`GetUsCountyGeojsonLlmResult`](../type-aliases/GetUsCountyGeojsonLlmResult.md), [`GetUsCountyGeojsonAdditionalData`](../type-aliases/GetUsCountyGeojsonAdditionalData.md), `object`\>
 
-Defined in: [packages/tools/osm/src/us/county.ts:68](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/us/county.ts#L68)
+Defined in: [packages/tools/osm/src/us/county.ts:76](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/osm/src/us/county.ts#L76)
 
 Get US County GeoJSON Tool
 
@@ -14,7 +14,7 @@ to avoid overloading the Github API, we only fetch the GeoJSON data every 1 seco
 
 **Example user prompts:**
 - "Get all counties in California"
-- "Show me the county boundaries of New York state"
+- "Get all counties in current map view"
 - "What are the counties in Texas?"
 
 :::tip
@@ -25,17 +25,25 @@ to answer questions like "What are the total revenus in the counties of Californ
 ## Example
 
 ```typescript
-import { getOsmTool, OsmToolNames } from "@openassistant/osm";
+import { getUsCountyGeojson, GetUsCountyGeojsonTool } from "@openassistant/osm";
+import { convertToVercelAiTool, ToolCache } from '@openassistant/utils';
+import { generateText } from 'ai';
 
-const countyTool = getOsmTool(OsmToolNames.getUsCountyGeojson);
+// you can use ToolCache to save the county geojson dataset for later use
+const toolResultCache = ToolCache.getInstance();
 
-streamText({
-  model: openai('gpt-4o'),
+const countyTool: GetUsCountyGeojsonTool = {
+  ...getUsCountyGeojson,
+  onToolCompleted: (toolCallId, additionalData) => {
+    toolResultCache.addDataset(toolCallId, additionalData);
+  },
+};
+
+generateText({
+  model: openai('gpt-4o-mini', { apiKey: key }),
   prompt: 'What are the counties in Texas?',
   tools: {
-    county: countyTool,
+    county: convertToVercelAiTool(countyTool),
   },
 });
 ```
-
-For a more complete example, see the [OSM Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_osm_example).

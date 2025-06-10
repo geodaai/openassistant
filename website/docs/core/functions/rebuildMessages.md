@@ -2,7 +2,7 @@
 
 > **rebuildMessages**(`conversations`): `Message`[]
 
-Defined in: [packages/core/src/utils/messages.ts:40](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/core/src/utils/messages.ts#L40)
+Defined in: [packages/core/src/utils/messages.ts:40](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/core/src/utils/messages.ts#L40)
 
 Rebuild the messages from the conversations, which is an array of `{prompt, response}`.
 The messages are in the format of the Message interface in Vercel AI SDK.

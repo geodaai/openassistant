@@ -2,7 +2,7 @@
 
 > `const` **dataClassify**: `ExtendedTool`\<[`DataClassifyFunctionArgs`](../type-aliases/DataClassifyFunctionArgs.md), [`DataClassifyLlmResult`](../type-aliases/DataClassifyLlmResult.md), [`DataClassifyAdditionalData`](../type-aliases/DataClassifyAdditionalData.md), [`DataClassifyFunctionContext`](../type-aliases/DataClassifyFunctionContext.md)\>
 
-Defined in: [packages/tools/geoda/src/data-classify/tool.ts:102](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/data-classify/tool.ts#L102)
+Defined in: [packages/tools/geoda/src/data-classify/tool.ts:98](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/geoda/src/data-classify/tool.ts#L98)
 
 The data classify tool is used to classify the data into k bins or classes.
 
@@ -21,27 +21,24 @@ The classification method can be one of the following types:
 ## Example
 
 ```typescript
-import { getGeoDaTool, GeoDaToolNames } from "@openassistant/geoda";
+import { dataClassify, DataClassifyTool } from "@openassistant/geoda";
+import { convertToVercelAiTool } from "@openassistant/utils";
 
-const classifyTool = getGeoDaTool(GeoDaToolNames.dataClassify, {
+const classifyTool: DataClassifyTool = {
+  ...dataClassify,
   toolContext: {
     getValues: async (datasetName: string, variableName: string) => {
       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
     },
   },
-  onToolCompleted: (toolCallId, additionalData) => {
-    console.log(toolCallId, additionalData);
-  },
-  isExecutable: true,
-});
+};
 
 const result = await generateText({
   model: openai('gpt-4o-mini', { apiKey: key }),
   prompt: 'Can you classify the data of population into 5 classes?',
-  tools: {dataClassify: classifyTool},
+  tools: {dataClassify: convertToVercelAiTool(classifyTool)},
 });
 
-console.log(result);
 ```
 
 For a more complete example, see the [Geoda Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_geoda_example).

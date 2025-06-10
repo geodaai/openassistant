@@ -2,7 +2,7 @@
 
 > `const` **roads**: `ExtendedTool`\<[`RoadsFunctionArgs`](../type-aliases/RoadsFunctionArgs.md), [`RoadsLlmResult`](../type-aliases/RoadsLlmResult.md), [`RoadsAdditionalData`](../type-aliases/RoadsAdditionalData.md), [`OsmToolContext`](../type-aliases/OsmToolContext.md)\>
 
-Defined in: [packages/tools/osm/src/roads.ts:90](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/roads.ts#L90)
+Defined in: [packages/tools/osm/src/roads.ts:105](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/osm/src/roads.ts#L105)
 
 Roads Tool
 
@@ -18,15 +18,30 @@ Example user prompts:
 ## Example
 
 ```typescript
-import { getOsmTool, OsmToolNames } from "@openassistant/osm";
+import { roads, RoadsTool } from "@openassistant/osm";
+import { convertToVercelAiTool, ToolCache } from '@openassistant/utils';
+import { generateText } from 'ai';
 
-const roadsTool = getOsmTool(OsmToolNames.roads);
+// you can use ToolCache to save the roads dataset for later use
+const toolResultCache = ToolCache.getInstance();
 
-streamText({
-  model: openai('gpt-4'),
+const roadsTool: RoadsTool = {
+  ...roads,
+  context: {
+    getGeometries: (datasetName) => {
+      return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+    },
+  },
+  onToolCompleted: (toolCallId, additionalData) => {
+    toolResultCache.addDataset(toolCallId, additionalData);
+  },
+};
+
+generateText({
+  model: openai('gpt-4o-mini', { apiKey: key }),
   prompt: 'Show me all highways in New York City',
   tools: {
-    roads: roadsTool,
+    roads: convertToVercelAiTool(roadsTool),
   },
 });
 ```

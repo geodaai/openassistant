@@ -6,6 +6,10 @@
 
 ## Type Aliases
 
+- [DownloadMapAdditionalData](type-aliases/DownloadMapAdditionalData.md)
+- [DownloadMapDataArgs](type-aliases/DownloadMapDataArgs.md)
+- [DownloadMapDataTool](type-aliases/DownloadMapDataTool.md)
+- [DownloadMapLlmResult](type-aliases/DownloadMapLlmResult.md)
 - [ExecuteCreateMapResult](type-aliases/ExecuteCreateMapResult.md)
 - [GetDataset](type-aliases/GetDataset.md)
 - [GetGeometries](type-aliases/GetGeometries.md)
@@ -29,6 +33,7 @@
 
 - [getMapTool](functions/getMapTool.md)
 - [getMapTools](functions/getMapTools.md)
+- [isDownloadMapAdditionalData](functions/isDownloadMapAdditionalData.md)
 - [isKeplerglToolArgs](functions/isKeplerglToolArgs.md)
 - [isMapToolContext](functions/isMapToolContext.md)
 - [registerTools](functions/registerTools.md)

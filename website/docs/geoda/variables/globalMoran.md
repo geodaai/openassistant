@@ -2,7 +2,7 @@
 
 > `const` **globalMoran**: `ExtendedTool`\<[`MoranScatterPlotFunctionArgs`](../type-aliases/MoranScatterPlotFunctionArgs.md), [`MoranScatterPlotLlmResult`](../type-aliases/MoranScatterPlotLlmResult.md), [`MoranScatterPlotAdditionalData`](../type-aliases/MoranScatterPlotAdditionalData.md), [`MoranScatterPlotFunctionContext`](../type-aliases/MoranScatterPlotFunctionContext.md)\>
 
-Defined in: [packages/tools/geoda/src/global-moran/tool.ts:104](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/global-moran/tool.ts#L104)
+Defined in: [packages/tools/geoda/src/global-moran/tool.ts:99](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/geoda/src/global-moran/tool.ts#L99)
 
 The Global Moran's I tool is used to calculate Global Moran's I for a given variable to check if the variable is spatially clustered or dispersed.
 
@@ -18,37 +18,35 @@ The global Moran's I tool should always be used with the spatialWeights tool. Th
 ## Example
 
 ```typescript
-import { getGeoDaTool, GeoDaToolNames } from "@openassistant/geoda";
+import { globalMoran, GlobalMoranTool, spatialWeights, SpatialWeightsTool } from "@openassistant/geoda";
+import { convertToVercelAiTool } from "@openassistant/utils";
 
-const spatialWeightsTool = getGeoDaTool(GeoDaToolNames.spatialWeights, {
-  toolContext: {
-    getGeometries: (datasetName) => {
+const spatialWeightsTool: SpatialWeightsTool = {
+  ...spatialWeights,
+  context: {
+    getGeometries: async (datasetName) => {
       return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
     },
   },
-  onToolCompleted: (toolCallId, additionalData) => {
-    console.log(toolCallId, additionalData);
-  },
 });
 
-const moranTool = getGeoDaTool(GeoDaToolNames.globalMoran, {
-  toolContext: {
+const moranTool: GlobalMoranTool = {
+  ...globalMoran,
+  context: {
     getValues: async (datasetName, variableName) => {
       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
     },
-  },
-  onToolCompleted: (toolCallId, additionalData) => {
-    console.log(toolCallId, additionalData);
   },
 });
 
 const result = await generateText({
   model: openai('gpt-4o-mini', { apiKey: key }),
   prompt: 'Can you calculate the Global Moran\'s I for the population data?',
-  tools: {globalMoran: moranTool, spatialWeights: spatialWeightsTool},
+  tools: {
+    globalMoran: convertToVercelAiTool(moranTool),
+    spatialWeights: convertToVercelAiTool(spatialWeightsTool),
+  },
 });
-
-console.log(result);
 ```
 
 :::tip

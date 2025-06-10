@@ -2,7 +2,7 @@
 
 > `const` **area**: `ExtendedTool`\<[`AreaFunctionArgs`](../type-aliases/AreaFunctionArgs.md), [`AreaLlmResult`](../type-aliases/AreaLlmResult.md), [`AreaAdditionalData`](../type-aliases/AreaAdditionalData.md), [`SpatialToolContext`](../type-aliases/SpatialToolContext.md)\>
 
-Defined in: [packages/tools/geoda/src/spatial\_ops/area.ts:61](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/spatial_ops/area.ts#L61)
+Defined in: [packages/tools/geoda/src/spatial\_ops/area.ts:66](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/geoda/src/spatial_ops/area.ts#L66)
 
 Area Tool
 
@@ -17,19 +17,24 @@ Example user prompts:
 
 Example code:
 ```typescript
-import { getVercelAiTool } from '@openassistant/geoda';
+import { area } from '@openassistant/geoda';
+import { convertToVercelAiTool } from '@openassistant/utils';
 import { generateText } from 'ai';
+
 const toolContext = {
   getGeometries: (datasetName) => {
     return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
   },
 };
-const areaTool = getVercelAiTool('area', toolContext, onToolCompleted);
+const areaTool: AreaTool = {
+  ...area,
+  context: toolContext,
+};
 
 generateText({
   model: openai('gpt-4o-mini', { apiKey: key }),
   prompt: 'Calculate the area of these counties in square kilometers',
-  tools: {area: areaTool},
+  tools: {area: convertToVercelAiTool(area)},
 });
 ```
 

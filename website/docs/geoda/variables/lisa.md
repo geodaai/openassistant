@@ -2,7 +2,7 @@
 
 > `const` **lisa**: `ExtendedTool`\<[`LisaFunctionArgs`](../type-aliases/LisaFunctionArgs.md), [`LisaLlmResult`](../type-aliases/LisaLlmResult.md), [`LisaAdditionalData`](../type-aliases/LisaAdditionalData.md), [`LisaFunctionContext`](../type-aliases/LisaFunctionContext.md)\>
 
-Defined in: [packages/tools/geoda/src/lisa/tool.ts:112](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/lisa/tool.ts#L112)
+Defined in: [packages/tools/geoda/src/lisa/tool.ts:105](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/geoda/src/lisa/tool.ts#L105)
 
 The LISA tool is used to apply local indicators of spatial association (LISA) statistics
 to identify local clusters and spatial outliers.
@@ -22,39 +22,32 @@ The LISA tool should always be used with the spatialWeights tool. The LLM models
 ## Example
 
 ```typescript
-import { getGeoDaTool, GeoDaToolNames } from "@openassistant/geoda";
+import { spatialWeights, SpatialWeightsTool, lisa, LisaTool } from "@openassistant/geoda";
 
-const spatialWeightsTool = getGeoDaTool(GeoDaToolNames.spatialWeights, {
-  toolContext: {
+const spatialWeightsTool: SpatialWeightsTool = {
+  ...spatialWeights,
+  context: {
     getGeometries: (datasetName) => {
       return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
     },
   },
-  onToolCompleted: (toolCallId, additionalData) => {
-    console.log(toolCallId, additionalData);
-  },
-  isExecutable: true,
-});
+};
 
-const lisaTool = getGeoDaTool(GeoDaToolNames.lisa, {
-  toolContext: {
+const lisaTool: LisaTool = {
+  ...lisa,
+  context: {
     getValues: (datasetName, variableName) => {
       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
     },
   },
-  onToolCompleted: (toolCallId, additionalData) => {
-    console.log(toolCallId, additionalData);
-  },
-  isExecutable: true,
 });
 
 const result = await generateText({
   model: openai('gpt-4o'),
   prompt: 'Can you perform a local Moran analysis on the population data?',
-  tools: {lisa: lisaTool, spatialWeights: spatialWeightsTool},
+  tools: {
+    lisa: convertToVercelAiTool(lisaTool),
+    spatialWeights: convertToVercelAiTool(spatialWeightsTool),
+  },
 });
-
-console.log(result);
 ```
-
-For a more complete example, see the [Geoda Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_geoda_example).

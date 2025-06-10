@@ -2,7 +2,7 @@
 
 > `const` **dissolve**: `ExtendedTool`\<[`DissolveFunctionArgs`](../type-aliases/DissolveFunctionArgs.md), [`DissolveLlmResult`](../type-aliases/DissolveLlmResult.md), [`DissolveAdditionalData`](../type-aliases/DissolveAdditionalData.md), [`SpatialToolContext`](../type-aliases/SpatialToolContext.md)\>
 
-Defined in: [packages/tools/geoda/src/spatial\_ops/dissolve.ts:67](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/spatial_ops/dissolve.ts#L67)
+Defined in: [packages/tools/geoda/src/spatial\_ops/dissolve.ts:71](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/geoda/src/spatial_ops/dissolve.ts#L71)
 
 The dissolve tool is used to merge multiple geometries into a single geometry.
 
@@ -20,26 +20,30 @@ When user prompts e.g. *can you merge these counties into a single region?*
 ### For example
 ```
 User: can you merge these counties into a single region?
-LLM: I've merged the counties into a single region. The merged geometry is saved in dataset "dissolve_123"...
 ```
 
 ### Code example
 ```typescript
-import { getVercelAiTool } from '@openassistant/geoda';
+import { dissolve, DissolveTool } from '@openassistant/geoda';
+import { convertToVercelAiTool } from '@openassistant/utils';
 import { generateText } from 'ai';
 
-const toolContext = {
-  getGeometries: (datasetName) => {
-    return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+const dissolveTool: DissolveTool = {
+  ...dissolve,
+  context: {
+    getGeometries: (datasetName) => {
+      return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+    },
+  },
+  onToolCompleted: (toolCallId, additionalData) => {
+    console.log(toolCallId, additionalData);
+    // do something like save the dissolve result in additionalData
   },
 };
-const dissolveTool = getVercelAiTool('dissolve', toolContext, onToolCompleted);
 
 generateText({
   model: openai('gpt-4o-mini', { apiKey: key }),
-      // return the geometries from the dataset
-      return [];
-    }
-  }
-};
+  prompt: 'Can you merge these counties into a single region?',
+  tools: {dissolve: convertToVercelAiTool(dissolveTool)},
+});
 ```

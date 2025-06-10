@@ -2,11 +2,9 @@
 
 > `const` **routing**: `ExtendedTool`\<[`RoutingFunctionArgs`](../type-aliases/RoutingFunctionArgs.md), [`RoutingLlmResult`](../type-aliases/RoutingLlmResult.md), [`RoutingAdditionalData`](../type-aliases/RoutingAdditionalData.md), [`MapboxToolContext`](../type-aliases/MapboxToolContext.md)\>
 
-Defined in: [packages/tools/osm/src/routing.ts:132](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/routing.ts#L132)
+Defined in: [packages/tools/osm/src/routing.ts:136](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/osm/src/routing.ts#L136)
 
-Routing Tool
-
-This tool calculates routes between two points using Mapbox's Directions API.
+This routing tool calculates routes between two points using Mapbox's Directions API.
 It supports different transportation modes (driving, walking, cycling) and returns
 detailed route information including distance, duration, and turn-by-turn directions.
 
@@ -21,23 +19,29 @@ Example user prompts:
 
 Example code:
 ```typescript
-import { getOsmTool, OsmToolNames } from "@openassistant/osm";
+import { geocoding, routing, RoutingTool, GeocodingTool } from "@openassistant/osm";
+import { convertToVercelAiTool, ToolCache } from '@openassistant/utils';
+import { generateText } from 'ai';
 
-const geocodingTool = getOsmTool(OsmToolNames.geocoding);
-const routingTool = getOsmTool(OsmToolNames.routing, {
+// you can use ToolCache to save the routing dataset for later use
+const toolResultCache = ToolCache.getInstance();
+
+const routingTool: RoutingTool = {
+  ...routing,
   toolContext: {
     getMapboxToken: () => process.env.MAPBOX_TOKEN!,
   },
-});
+  onToolCompleted: (toolCallId, additionalData) => {
+    toolResultCache.addDataset(toolCallId, additionalData);
+  },
+};
 
-streamText({
-  model: openai('gpt-4o'),
+generateText({
+  model: openai('gpt-4o-mini', { apiKey: key }),
   prompt: 'Find the driving route from Times Square to Central Park',
   tools: {
-    geocoding: geocodingTool,
-    routing: routingTool,
+    geocoding: convertToVercelAiTool(geocoding),
+    routing: convertToVercelAiTool(routingTool),
   },
 });
 ```
-
-For a more complete example, see the [OSM Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_osm_example).

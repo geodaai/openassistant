@@ -2,42 +2,77 @@
 
 > `const` **keplergl**: `ExtendedTool`\<[`KeplerGlToolArgs`](../type-aliases/KeplerGlToolArgs-1.md), [`KeplerGlToolLlmResult`](../type-aliases/KeplerGlToolLlmResult.md), [`KeplerGlToolAdditionalData`](../type-aliases/KeplerGlToolAdditionalData.md), [`MapToolContext`](../type-aliases/MapToolContext.md)\>
 
-Defined in: [packages/tools/map/src/keplergl/tool.ts:68](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/map/src/keplergl/tool.ts#L68)
+Defined in: [packages/tools/map/src/keplergl/tool.ts:105](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/map/src/keplergl/tool.ts#L105)
 
-The createMap tool is used to create a map visualization using Kepler.gl.
+The keplergl tool is used to create a map using Kepler.gl from a dataset.
 
-## Example
+:::note
+This tool should be used in Browser environment.
+:::
 
+### Example
 ```typescript
-import { getVercelAiTool } from '@openassistant/keplergl';
+import { keplergl, KeplerglTool } from '@openassistant/map';
+import { convertToVercelAiTool } from '@openassistant/utils';
 import { generateText } from 'ai';
 
-const toolContext = {
-  getDataset: async (datasetName: string) => {
-    return YOUR_DATASET;
+const keplerglTool: KeplerglTool = {
+  ...keplergl,
+  context: {
+    getDataset: async (datasetName: string) => {
+      return YOUR_DATASET;
+    },
   },
 };
-
-const onToolCompleted = (toolCallId: string, additionalData?: unknown) => {
-  console.log('Tool call completed:', toolCallId, additionalData);
-  // render the map using <KeplerGlToolComponent props={additionalData} />
-};
-
-const createMapTool = getVercelAiTool('keplergl', toolContext, onToolCompleted);
 
 generateText({
   model: openai('gpt-4o-mini', { apiKey: key }),
   prompt: 'Create a point map using the dataset "my_venues"',
-  tools: {createMap: createMapTool},
+  tools: {createMap: convertToVercelAiTool(keplerglTool)},
 });
 ```
 
-### getDataset()
+:::tip
+You can use the `downloadMapData` tool with the `keplergl` tool to download a dataset from a geojson or csv from a url and use it to create a map.
+:::
 
-User implements this function to get the dataset for visualization.
+### Example
+```typescript
+import { downloadMapData, isDownloadMapAdditionalData, keplergl, KeplerglTool } from '@openassistant/map';
+import { convertToVercelAiTool, ToolCache } from '@openassistant/utils';
+import { generateText } from 'ai';
 
-### config
+const toolResultCache = ToolCache.getInstance();
 
-User can configure the map visualization with options like:
-- isDraggable: Whether the map is draggable
-- theme: The theme of the map
+const downloadMapTool = {
+  ...downloadMapData,
+  onToolCompleted: (toolCallId: string, additionalData?: unknown) => {
+    toolResultCache.addDataset(toolCallId, additionalData);
+  },
+};
+
+const keplerglTool: KeplerglTool = {
+  ...keplergl,
+  context: {
+    getDataset: async (datasetName: string) => {
+      // find dataset based on datasetName
+      // return MYDATASETS[datasetName];
+
+      // if no dataset is found, check if dataset is in toolResultCache
+      if (toolResultCache.hasDataset(datasetName)) {
+        return toolResultCache.getDataset(datasetName);
+      }
+      throw new Error(`Dataset ${datasetName} not found`);
+    },
+  },
+};
+
+* generateText({
+  model: openai('gpt-4o-mini', { apiKey: key }),
+  prompt: 'Create a from https://geodacenter.github.io/data-and-lab//data/Chi_Carjackings.geojson',
+  tools: {
+    createMap: convertToVercelAiTool(keplerglTool),
+    downloadMapData: convertToVercelAiTool(downloadMapTool),
+  },
+});
+```

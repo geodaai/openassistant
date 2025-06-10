@@ -2,7 +2,7 @@
 
 > `const` **getUsStateGeojson**: `ExtendedTool`\<[`GetUsStateGeojsonFunctionArgs`](../type-aliases/GetUsStateGeojsonFunctionArgs.md), [`GetUsStateGeojsonLlmResult`](../type-aliases/GetUsStateGeojsonLlmResult.md), [`GetUsStateGeojsonAdditionalData`](../type-aliases/GetUsStateGeojsonAdditionalData.md), `object`\>
 
-Defined in: [packages/tools/osm/src/us/state.ts:68](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/us/state.ts#L68)
+Defined in: [packages/tools/osm/src/us/state.ts:75](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/osm/src/us/state.ts#L75)
 
 Get US State GeoJSON Tool
 
@@ -10,8 +10,7 @@ This tool can be used to get the GeoJSON data of one or more United States state
 
 Example user prompts:
 - "Get the GeoJSON for California"
-- "Show me the boundary of New York state"
-- "What's the geometry of Texas?"
+- "Get all states in current map view"
 
 :::tip
 This tool can be mixed with other tools for more complex tasks. For example, if you have a point datasets, you can use this tool
@@ -25,17 +24,25 @@ to avoid overloading the Github API, we only fetch the GeoJSON data every 1 seco
 ## Example
 
 ```typescript
-import { getOsmTool, OsmToolNames } from "@openassistant/osm";
+import { getUsStateGeojson, GetUsStateGeojsonTool } from "@openassistant/osm";
+import { convertToVercelAiTool, ToolCache } from '@openassistant/utils';
+import { generateText } from 'ai';
 
-const stateTool = getOsmTool(OsmToolNames.getUsStateGeojson);
+// you can use ToolCache to save the state geojson dataset for later use
+const toolResultCache = ToolCache.getInstance();
 
-streamText({
-  model: openai('gpt-4o'),
+const stateTool: GetUsStateGeojsonTool = {
+  ...getUsStateGeojson,
+  onToolCompleted: (toolCallId, additionalData) => {
+    toolResultCache.addDataset(toolCallId, additionalData);
+  },
+};
+
+generateText({
+  model: openai('gpt-4o-mini', { apiKey: key }),
   prompt: 'Get the GeoJSON for California',
   tools: {
-    state: stateTool,
+    state: convertToVercelAiTool(stateTool),
   },
 });
 ```
-
-For a more complete example, see the [OSM Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_osm_example).

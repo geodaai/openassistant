@@ -2,7 +2,7 @@
 
 > **registerTools**(): `object`
 
-Defined in: [packages/tools/osm/src/register-tools.ts:49](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/register-tools.ts#L49)
+Defined in: [packages/tools/osm/src/register-tools.ts:49](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/osm/src/register-tools.ts#L49)
 
 ## Returns
 
@@ -30,7 +30,7 @@ Defined in: [packages/tools/osm/src/register-tools.ts:49](https://github.com/Geo
 
 ### queryUSZipcodes
 
-> **queryUSZipcodes**: `ExtendedTool`\<[`QueryZipcodeFunctionArgs`](../type-aliases/QueryZipcodeFunctionArgs.md), [`QueryZipcodeLlmResult`](../type-aliases/QueryZipcodeLlmResult.md), [`QueryZipcodeAdditionalData`](../type-aliases/QueryZipcodeAdditionalData.md), `never`\>
+> **queryUSZipcodes**: `ExtendedTool`\<[`QueryZipcodeFunctionArgs`](../type-aliases/QueryZipcodeFunctionArgs.md), [`QueryZipcodeLlmResult`](../type-aliases/QueryZipcodeLlmResult.md), [`QueryZipcodeAdditionalData`](../type-aliases/QueryZipcodeAdditionalData.md), `object`\>
 
 ### roads
 

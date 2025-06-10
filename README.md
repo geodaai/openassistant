@@ -24,6 +24,7 @@ OpenAssistant provides the following AI tools which are compatible with [Vercel 
   - visualize geospatial data in kepler.gl
 - DuckDB Tools
   - query local data using duckdb
+  - tables: merge, filter, sort, group by, aggregate, etc.
 - Data Analysis Tools (geoda)
   - data classification: quantile, equal interval, natural breaks, standard deviation, percentile, box etc.
   - spatial operations
@@ -33,7 +34,10 @@ OpenAssistant provides the following AI tools which are compatible with [Vercel 
     - dissolve
     - length
     - perimeter
+    - Minimum Spanning Tree
+    - Thiessen polygons (Voronoi diagram)
   - spatial join
+  - spatial dissolve
   - spatial weights: queen/rook contiguity, KNN weights, distance-based weights, kernel weights
   - spatial analysis
     - global indicators of spatial association: Global Moran's I
@@ -71,30 +75,31 @@ npm install @openassistant/plots
 Add all echarts tools (histogram, box plot, etc.) to your application:
 
 ```ts
-import { getVercelAiTools } from '@openassistant/plots';
+import { histogram, HistogramTool } from '@openassistant/plots';
+import { convertToVercelAiTool } from '@openassistant/utils';
 import { generateText } from 'ai';
 
-const context = {
-  //
-  getValues: async (datasetName, variableName) => {
-    // your getValues function, e.g.
-    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const histogramTool: HistogramTool = {
+  ...histogram,
+  context: {
+    // get the values of the variable from your dataset, e.g.
+    getValues: async (datasetName, variableName) => {
+      // your getValues from Natregimes dataset and variable HR60, e.g.:
+      return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    },
+  },
+  onToolCompleted: (toolCallId, additionalData) => {
+    // the call back function when the tool is completed
+    console.log('toolCallId: additionalData', toolCallId, additionalData);
   },
 };
-
-const onToolCompleted = (toolCallId, additionalData) => {
-  // the call back function when the tool is completed
-  console.log('toolCallId: additionalData', toolCallId, additionalData);
-};
-
-const echartsTools = getVercelAiTools(context, onToolCompleted);
 
 // use tool with vercel ai sdk
 const result = await generateText({
   model: openai('gpt-4o', { apiKey: key }),
   system: 'You are a helpful assistant',
   prompt: 'create a histogram of HR60 in dataset Natregimes',
-  tools: { ...echartsTools },
+  tools: { histogram: convertToVercelAiTool(histogramTool) },
 });
 ```
 
@@ -171,13 +176,13 @@ See the source code of the example 🔗 [here](https://github.com/geodacenter/op
 If you are using TailwindCSS, you need to add the following configurations to your `tailwind.config.js` file:
 
 ```tsx
-import { nextui } from '@nextui-org/react';
+import { nextui } from '@heroui/react';
 ...
 
 module.exports = {
   content: [
     ...,
-    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
+    './node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}',
     './node_modules/@openassistant/ui/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {

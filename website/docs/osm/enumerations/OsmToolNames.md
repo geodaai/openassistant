@@ -1,6 +1,6 @@
 # Enumeration: OsmToolNames
 
-Defined in: [packages/tools/osm/src/register-tools.ts:12](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/register-tools.ts#L12)
+Defined in: [packages/tools/osm/src/register-tools.ts:12](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/osm/src/register-tools.ts#L12)
 
 ## Enumeration Members
 
@@ -8,7 +8,7 @@ Defined in: [packages/tools/osm/src/register-tools.ts:12](https://github.com/Geo
 
 > **geocoding**: `"geocoding"`
 
-Defined in: [packages/tools/osm/src/register-tools.ts:17](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/register-tools.ts#L17)
+Defined in: [packages/tools/osm/src/register-tools.ts:17](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/osm/src/register-tools.ts#L17)
 
 ***
 
@@ -16,7 +16,7 @@ Defined in: [packages/tools/osm/src/register-tools.ts:17](https://github.com/Geo
 
 > **getUsCountyGeojson**: `"getUsCountyGeojson"`
 
-Defined in: [packages/tools/osm/src/register-tools.ts:14](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/register-tools.ts#L14)
+Defined in: [packages/tools/osm/src/register-tools.ts:14](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/osm/src/register-tools.ts#L14)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [packages/tools/osm/src/register-tools.ts:14](https://github.com/Geo
 
 > **getUsStateGeojson**: `"getUsStateGeojson"`
 
-Defined in: [packages/tools/osm/src/register-tools.ts:13](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/register-tools.ts#L13)
+Defined in: [packages/tools/osm/src/register-tools.ts:13](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/osm/src/register-tools.ts#L13)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [packages/tools/osm/src/register-tools.ts:13](https://github.com/Geo
 
 > **getUsZipcodeGeojson**: `"getUsZipcodeGeojson"`
 
-Defined in: [packages/tools/osm/src/register-tools.ts:15](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/register-tools.ts#L15)
+Defined in: [packages/tools/osm/src/register-tools.ts:15](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/osm/src/register-tools.ts#L15)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [packages/tools/osm/src/register-tools.ts:15](https://github.com/Geo
 
 > **isochrone**: `"isochrone"`
 
-Defined in: [packages/tools/osm/src/register-tools.ts:19](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/register-tools.ts#L19)
+Defined in: [packages/tools/osm/src/register-tools.ts:19](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/osm/src/register-tools.ts#L19)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [packages/tools/osm/src/register-tools.ts:19](https://github.com/Geo
 
 > **queryUSZipcodes**: `"queryUSZipcodes"`
 
-Defined in: [packages/tools/osm/src/register-tools.ts:16](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/register-tools.ts#L16)
+Defined in: [packages/tools/osm/src/register-tools.ts:16](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/osm/src/register-tools.ts#L16)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [packages/tools/osm/src/register-tools.ts:16](https://github.com/Geo
 
 > **roads**: `"roads"`
 
-Defined in: [packages/tools/osm/src/register-tools.ts:20](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/register-tools.ts#L20)
+Defined in: [packages/tools/osm/src/register-tools.ts:20](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/osm/src/register-tools.ts#L20)
 
 ***
 
@@ -64,4 +64,4 @@ Defined in: [packages/tools/osm/src/register-tools.ts:20](https://github.com/Geo
 
 > **routing**: `"routing"`
 
-Defined in: [packages/tools/osm/src/register-tools.ts:18](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/register-tools.ts#L18)
+Defined in: [packages/tools/osm/src/register-tools.ts:18](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/osm/src/register-tools.ts#L18)

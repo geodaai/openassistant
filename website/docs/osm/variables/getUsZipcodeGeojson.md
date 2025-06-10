@@ -2,7 +2,7 @@
 
 > `const` **getUsZipcodeGeojson**: `ExtendedTool`\<[`GetUsZipcodeGeojsonFunctionArgs`](../type-aliases/GetUsZipcodeGeojsonFunctionArgs.md), [`GetUsZipcodeGeojsonLlmResult`](../type-aliases/GetUsZipcodeGeojsonLlmResult.md), [`GetUsZipcodeGeojsonAdditionalData`](../type-aliases/GetUsZipcodeGeojsonAdditionalData.md), `object`\>
 
-Defined in: [packages/tools/osm/src/us/zipcode.ts:69](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/us/zipcode.ts#L69)
+Defined in: [packages/tools/osm/src/us/zipcode.ts:77](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/osm/src/us/zipcode.ts#L77)
 
 Get US Zipcode GeoJSON Tool
 
@@ -15,8 +15,7 @@ to answer questions like "What are the total revenus in the zipcode of 10001, 10
 
 Example user prompts:
 - "Get all zipcodes in California"
-- "Show me the zipcode boundaries of New York state"
-- "What are the zipcodes in Texas?"
+- "Show me the zipcode boundaries of New"
 
 :::note
 Note: to avoid overloading the Github API, we only fetch the GeoJSON data every 1 second.
@@ -25,17 +24,25 @@ Note: to avoid overloading the Github API, we only fetch the GeoJSON data every 
 ## Example
 
 ```typescript
-import { getOsmTool, OsmToolNames } from "@openassistant/osm";
+import { getUsZipcodeGeojson, GetUsZipcodeGeojsonTool } from "@openassistant/osm";
+import { convertToVercelAiTool, ToolCache } from '@openassistant/utils';
+import { generateText } from 'ai';
 
-const zipcodeTool = getOsmTool(OsmToolNames.getUsZipcodeGeojson);
+// you can use ToolCache to save the zipcode geojson dataset for later use
+const toolResultCache = ToolCache.getInstance();
 
-streamText({
-  model: openai('gpt-4o'),
+const zipcodeTool: GetUsZipcodeGeojsonTool = {
+  ...getUsZipcodeGeojson,
+  onToolCompleted: (toolCallId, additionalData) => {
+    toolResultCache.addDataset(toolCallId, additionalData);
+  },
+};
+
+generateText({
+  model: openai('gpt-4o-mini', { apiKey: key }),
   prompt: 'Get all zipcodes in California',
   tools: {
-    zipcode: zipcodeTool,
+    zipcode: convertToVercelAiTool(zipcodeTool),
   },
 });
 ```
-
-For a more complete example, see the [OSM Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_osm_example).

@@ -2,7 +2,7 @@
 
 > `const` **length**: `ExtendedTool`\<`ZodObject`\<\{ `datasetName`: `ZodOptional`\<`ZodString`\>; `distanceUnit`: `ZodDefault`\<`ZodEnum`\<\[`"KM"`, `"Mile"`\]\>\>; `geojson`: `ZodOptional`\<`ZodString`\>; \}, `"strip"`, `ZodTypeAny`, \{ `datasetName`: `string`; `distanceUnit`: `"KM"` \| `"Mile"`; `geojson`: `string`; \}, \{ `datasetName`: `string`; `distanceUnit`: `"KM"` \| `"Mile"`; `geojson`: `string`; \}\>, \{ `distanceUnit`: `"KM"` \| `"Mile"`; `lengths`: `number`[]; `result`: `string`; `success`: `boolean`; \}, `never`, \{ `getGeometries`: () => `void`; \}\>
 
-Defined in: [packages/tools/geoda/src/spatial\_ops/length.ts:57](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/spatial_ops/length.ts#L57)
+Defined in: [packages/tools/geoda/src/spatial\_ops/length.ts:60](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/geoda/src/spatial_ops/length.ts#L60)
 
 Length Tool
 
@@ -17,19 +17,22 @@ Example user prompts:
 
 Example code:
 ```typescript
-import { getVercelAiTool } from '@openassistant/geoda';
+import { length, LengthTool } from '@openassistant/geoda';
+import { convertToVercelAiTool } from '@openassistant/utils';
 import { generateText } from 'ai';
 
-const toolContext = {
-  getGeometries: (datasetName) => {
-    return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+const lengthTool: LengthTool = {
+  ...length,
+  context: {
+    getGeometries: (datasetName) => {
+      return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+    },
   },
-};
-const lengthTool = getVercelAiTool('length', toolContext, onToolCompleted);
+});
 
 generateText({
   model: openai('gpt-4o-mini', { apiKey: key }),
   prompt: 'Calculate the length of these roads in kilometers',
-  tools: {length: lengthTool},
+  tools: {length: convertToVercelAiTool(lengthTool)},
 });
 ```

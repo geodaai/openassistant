@@ -2,7 +2,7 @@
 
 > `const` **centroid**: `ExtendedTool`\<[`CentroidFunctionArgs`](../type-aliases/CentroidFunctionArgs.md), [`CentroidLlmResult`](../type-aliases/CentroidLlmResult.md), [`CentroidAdditionalData`](../type-aliases/CentroidAdditionalData.md), [`SpatialToolContext`](../type-aliases/SpatialToolContext.md)\>
 
-Defined in: [packages/tools/geoda/src/spatial\_ops/centroid.ts:64](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/spatial_ops/centroid.ts#L64)
+Defined in: [packages/tools/geoda/src/spatial\_ops/centroid.ts:67](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/geoda/src/spatial_ops/centroid.ts#L67)
 
 The centroid tool is used to calculate the centroids (geometric centers) of geometries.
 
@@ -25,19 +25,22 @@ LLM: I've calculated the centroids of the counties. The centroid points are save
 
 ### Code example
 ```typescript
-import { getVercelAiTool } from '@openassistant/geoda';
+import { centroid, CentroidTool } from '@openassistant/geoda';
+import { convertToVercelAiTool } from '@openassistant/utils';
 import { generateText } from 'ai';
 
-const toolContext = {
-  getGeometries: (datasetName) => {
-    return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+const centroidTool: CentroidTool = {
+  ...centroid,
+  context: {
+    getGeometries: (datasetName) => {
+      return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+    },
   },
 };
-const centroidTool = getVercelAiTool('centroid', toolContext, onToolCompleted);
 
 generateText({
   model: openai('gpt-4o-mini', { apiKey: key }),
   prompt: 'Can you find the center points of these counties?',
-  tools: {centroid: centroidTool},
+  tools: {centroid: convertToVercelAiTool(centroidTool)},
 });
 ```

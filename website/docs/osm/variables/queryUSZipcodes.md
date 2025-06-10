@@ -1,8 +1,8 @@
 # Variable: queryUSZipcodes
 
-> `const` **queryUSZipcodes**: `ExtendedTool`\<[`QueryZipcodeFunctionArgs`](../type-aliases/QueryZipcodeFunctionArgs.md), [`QueryZipcodeLlmResult`](../type-aliases/QueryZipcodeLlmResult.md), [`QueryZipcodeAdditionalData`](../type-aliases/QueryZipcodeAdditionalData.md), `never`\>
+> `const` **queryUSZipcodes**: `ExtendedTool`\<[`QueryZipcodeFunctionArgs`](../type-aliases/QueryZipcodeFunctionArgs.md), [`QueryZipcodeLlmResult`](../type-aliases/QueryZipcodeLlmResult.md), [`QueryZipcodeAdditionalData`](../type-aliases/QueryZipcodeAdditionalData.md), `object`\>
 
-Defined in: [packages/tools/osm/src/us/queryZipcode.ts:66](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/us/queryZipcode.ts#L66)
+Defined in: [packages/tools/osm/src/us/queryZipcode.ts:65](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/osm/src/us/queryZipcode.ts#L65)
 
 Query US Zipcodes Tool
 
@@ -21,15 +21,14 @@ Example user prompts:
 ## Example
 
 ```typescript
-import { getOsmTool, OsmToolNames } from "@openassistant/osm";
-
-const queryZipcodeTool = getOsmTool(OsmToolNames.queryUSZipcodes);
+import { queryUSZipcodes } from "@openassistant/osm";
+import { convertToVercelAiTool } from '@openassistant/utils';
 
 streamText({
   model: openai('gpt-4o'),
   prompt: 'what are the zipcodes in Los Angeles county?',
   tools: {
-    queryZipcode: queryZipcodeTool,
+    queryZipcode: convertToVercelAiTool(queryUSZipcodes),
   },
 });
 ```

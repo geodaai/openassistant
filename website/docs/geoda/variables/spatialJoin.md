@@ -2,7 +2,7 @@
 
 > `const` **spatialJoin**: `ExtendedTool`\<[`SpatialJoinFunctionArgs`](../type-aliases/SpatialJoinFunctionArgs.md), [`SpatialJoinLlmResult`](../type-aliases/SpatialJoinLlmResult.md), [`SpatialJoinAdditionalData`](../type-aliases/SpatialJoinAdditionalData.md), [`SpatialJoinFunctionContext`](../type-aliases/SpatialJoinFunctionContext.md)\>
 
-Defined in: [packages/tools/geoda/src/spatial\_join/tool.ts:99](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/geoda/src/spatial_join/tool.ts#L99)
+Defined in: [packages/tools/geoda/src/spatial\_join/tool.ts:107](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/geoda/src/spatial_join/tool.ts#L107)
 
 The spatial join tool is used to join geometries from one dataset with geometries from another dataset.
 
@@ -28,22 +28,29 @@ LLM: I've performed a spatial join between the population data and county bounda
 
 ### Code example
 ```typescript
-import { getVercelAiTool } from '@openassistant/geoda';
+import { spatialJoin, SpatialJoinTool } from '@openassistant/geoda';
+import { convertToVercelAiTool } from '@openassistant/utils';
 import { generateText } from 'ai';
 
-const toolContext = {
-  getGeometries: (datasetName) => {
-    return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+const spatialJoinTool: SpatialJoinTool = {
+  ...spatialJoin,
+  context: {
+    getGeometries: (datasetName) => {
+      return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
+    },
+    getValues: (datasetName, variableName) => {
+      return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+    },
   },
-  getValues: (datasetName, variableName) => {
-    return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+  onToolCompleted: (toolCallId, additionalData) => {
+    console.log(toolCallId, additionalData);
+    // do something like save the join result in additionalData
   },
 };
-const joinTool = getVercelAiTool('spatialJoin', toolContext, onToolCompleted);
 
 generateText({
   model: openai('gpt-4o-mini', { apiKey: key }),
   prompt: 'Can you join the population data with county boundaries?',
-  tools: {spatialJoin: joinTool},
+  tools: {spatialJoin: convertToVercelAiTool(spatialJoinTool)},
 });
 ```

@@ -2,7 +2,7 @@
 
 > **registerTools**(): `object`
 
-Defined in: [packages/tools/map/src/register-tools.ts:14](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/map/src/register-tools.ts#L14)
+Defined in: [packages/tools/map/src/register-tools.ts:14](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/map/src/register-tools.ts#L14)
 
 ## Returns
 
@@ -10,7 +10,7 @@ Defined in: [packages/tools/map/src/register-tools.ts:14](https://github.com/Geo
 
 ### downloadMapData
 
-> **downloadMapData**: `ExtendedTool`\<`ZodObject`\<\{ `url`: `ZodString`; \}, `"strip"`, `ZodTypeAny`, \{ `url`: `string`; \}, \{ `url`: `string`; \}\>, \{ `datasetName`: `string`; `error`: `undefined`; `fields`: `any`; `instructions`: `string`; `result`: `string`; `success`: `boolean`; \}, \{ `[key: string]`: `any`;  `datasetName`: `string`; \}, `never`\>
+> **downloadMapData**: `ExtendedTool`\<[`DownloadMapDataArgs`](../type-aliases/DownloadMapDataArgs.md), [`DownloadMapLlmResult`](../type-aliases/DownloadMapLlmResult.md), [`DownloadMapAdditionalData`](../type-aliases/DownloadMapAdditionalData.md), [`MapToolContext`](../type-aliases/MapToolContext.md)\>
 
 ### keplergl
 

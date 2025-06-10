@@ -2,12 +2,12 @@
 
 > `const` **localQuery**: `ExtendedTool`\<[`LocalQueryArgs`](../type-aliases/LocalQueryArgs.md), [`LocalQueryResult`](../type-aliases/LocalQueryResult.md), [`LocalQueryAdditionalData`](../type-aliases/LocalQueryAdditionalData.md), [`LocalQueryContext`](../type-aliases/LocalQueryContext.md)\>
 
-Defined in: [packages/tools/duckdb/src/tool.ts:129](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/duckdb/src/tool.ts#L129)
+Defined in: [packages/tools/duckdb/src/tool.ts:128](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/duckdb/src/tool.ts#L128)
 
 The `localQuery` tool is used to execute a query against a local dataset.
 
 :::note
-This tool can not be executed on the server side.
+This tool should be executed in Browser environment for now.
 :::
 
 ### Example
@@ -16,7 +16,7 @@ import { localQuery } from '@openassistant/duckdb';
 import { convertToVercelAiTool } from '@openassistent/utils';
 import { generateText } from 'ai';
 
-const myQueryTool: LocalQueryTool = {
+const localQueryTool: LocalQueryTool = {
   ...localQuery,
   context: {
     ...localQuery.context,
@@ -27,12 +27,10 @@ const myQueryTool: LocalQueryTool = {
   },
 };
 
-const localQueryTool = convertToVercelAiTool(myQueryTool);
-
 generateText({
   model: 'gpt-4o-mini',
   prompt: 'What are the venues in San Francisco?',
-  tools: {localQuery: localQueryTool},
+  tools: {localQuery: convertToVercelAiTool(localQueryTool)},
 });
 ```
 
@@ -45,7 +43,7 @@ import { convertToVercelAiTool } from '@openassistent/utils';
 import { streamText } from 'ai';
 
 // localQuery tool will be running on the client side
-const localQueryTool = convertToVercelAiTool(localQuery, {isExecutable: false}); 
+const localQueryTool = convertToVercelAiTool(localQuery, {isExecutable: false});
 
 export async function POST(req: Request) {
   // ...
@@ -102,7 +100,7 @@ const localQueryTool: LocalQueryTool = {
       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
     },
   },
-}; 
+};
 
  export function App() {
    return (
@@ -115,7 +113,7 @@ const localQueryTool: LocalQueryTool = {
        tools={{localQuery: localQueryTool}}
        useMarkdown={true}
        theme="dark"
-     />  
+     />
    );
  }
 ```

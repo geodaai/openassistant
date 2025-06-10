@@ -2,7 +2,7 @@
 
 > `const` **geocoding**: `ExtendedTool`\<[`GeocodingFunctionArgs`](../type-aliases/GeocodingFunctionArgs.md), [`GeocodingLlmResult`](../type-aliases/GeocodingLlmResult.md), [`GeocodingAdditionalData`](../type-aliases/GeocodingAdditionalData.md), `object`\>
 
-Defined in: [packages/tools/osm/src/geocoding.ts:53](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/geocoding.ts#L53)
+Defined in: [packages/tools/osm/src/geocoding.ts:51](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/osm/src/geocoding.ts#L51)
 
 Geocoding Tool
 
@@ -16,17 +16,15 @@ Example user prompts:
 ## Example
 
 ```typescript
-import { getOsmTool, OsmToolNames } from "@openassistant/osm";
+import { geocoding, GeocodingTool } from "@openassistant/osm";
+import { convertToVercelAiTool } from '@openassistant/utils';
+import { generateText } from 'ai';
 
-const geocodingTool = getOsmTool(OsmToolNames.geocoding);
-
-streamText({
-  model: openai('gpt-4o'),
+generateText({
+  model: openai('gpt-4o-mini', { apiKey: key }),
   prompt: 'What are the coordinates of the Eiffel Tower?',
   tools: {
-    geocoding: geocodingTool,
+    geocoding: convertToVercelAiTool(geocoding),
   },
 });
 ```
-
-For a more complete example, see the [OSM Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_osm_example).

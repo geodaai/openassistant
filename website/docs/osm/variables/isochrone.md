@@ -2,11 +2,9 @@
 
 > `const` **isochrone**: `ExtendedTool`\<[`IsochroneFunctionArgs`](../type-aliases/IsochroneFunctionArgs.md), [`IsochroneLlmResult`](../type-aliases/IsochroneLlmResult.md), [`IsochroneAdditionalData`](../type-aliases/IsochroneAdditionalData.md), [`MapboxToolContext`](../type-aliases/MapboxToolContext.md)\>
 
-Defined in: [packages/tools/osm/src/isochrone.ts:108](https://github.com/GeoDaCenter/openassistant/blob/bf312b357cb340f1f76fa8b62441fb39bcbce0ce/packages/tools/osm/src/isochrone.ts#L108)
+Defined in: [packages/tools/osm/src/isochrone.ts:114](https://github.com/GeoDaCenter/openassistant/blob/28e38a23cf528ccfe10391135d12fba8d3e385da/packages/tools/osm/src/isochrone.ts#L114)
 
-Isochrone Tool
-
-This tool generates isochrone polygons showing reachable areas within a given time or distance limit
+This Isochrone tool generates isochrone polygons showing reachable areas within a given time or distance limit
 from a starting point using Mapbox's Isochrone API. It supports different transportation modes
 and can return either polygons or linestrings.
 
@@ -22,20 +20,28 @@ Example user prompts:
 ## Example
 
 ```typescript
-import { getOsmTool, OsmToolNames } from "@openassistant/osm";
+import { isochrone, IsochroneTool } from "@openassistant/osm";
+import { convertToVercelAiTool, ToolCache } from '@openassistant/utils';
+import { generateText } from 'ai';
 
-const geocodingTool = getOsmTool(OsmToolNames.geocoding);
-const isochroneTool = getOsmTool(OsmToolNames.isochrone, {
+// you can use ToolCache to save the isochrone dataset for later use
+const toolResultCache = ToolCache.getInstance();
+
+const isochroneTool: IsochroneTool = {
+  ...isochrone,
   toolContext: {
     getMapboxToken: () => process.env.MAPBOX_TOKEN!,
   },
-});
+  onToolCompleted: (toolCallId, additionalData) => {
+    toolResultCache.addDataset(toolCallId, additionalData);
+  },
+};
 
-streamText({
-  model: openai('gpt-4o'),
+generateText({
+  model: openai('gpt-4o-mini', { apiKey: key }),
   prompt: 'What areas can I reach within 2km of the Eiffel Tower on foot?',
   tools: {
-    isochrone: isochroneTool,
+    isochrone: convertToVercelAiTool(isochroneTool),
   },
 });
 ```
