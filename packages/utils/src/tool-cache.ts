@@ -29,6 +29,10 @@ export type ToolCacheDataset =
         weights: number[][];
         weightsMeta: Record<string, unknown>;
       };
+    }
+  | {
+      type: 'arrow';
+      content: unknown;
     };
 
 /**

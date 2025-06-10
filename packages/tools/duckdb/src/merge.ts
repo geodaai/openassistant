@@ -162,15 +162,14 @@ IMPORTANT:
       return {
         llmResult: {
           success: true,
-          data: {
-            firstTwoRows,
-          },
+          firstTwoRows,
+          details: `The merge has been completed. The result is stored in the dataset ${queryDatasetName}.`,
         },
         additionalData: {
           sql,
           datasetName: queryDatasetName,
           [queryDatasetName]: {
-            type: 'columnData',
+            type: 'rowObjects',
             content: jsonResult,
           },
         },
@@ -211,15 +210,14 @@ export type MergeTablesLllmResult = {
   success: boolean;
   error?: string;
   instruction?: string;
-  data?: {
-    firstTwoRows: Record<string, unknown>[];
-  };
+  firstTwoRows?: Record<string, unknown>[];
+  details?: string;
 };
 
 export type MergeTablesAdditionalData = {
   sql: string;
   datasetName: string;
-  [key: string]: ToolCacheDataset | string;
+  [key: string]: unknown;
 };
 
 export type MergeTablesToolResult = {
