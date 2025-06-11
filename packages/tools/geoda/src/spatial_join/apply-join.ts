@@ -1,4 +1,3 @@
-
 /**
  * Apply a join operation to a list of values
  * @param joinOperator - The join operation to apply, the following are supported:
@@ -21,6 +20,11 @@ export function applyJoin(joinOperator: string, values: number[]) {
       return Math.min(...values);
     case 'max':
       return Math.max(...values);
+    case 'unique':
+      // get first value
+      return values[0];
+    case 'concat':
+      return values.join('_');
     default:
       throw new Error(`Unsupported join operator: ${joinOperator}`);
   }

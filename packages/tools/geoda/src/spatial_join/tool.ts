@@ -23,7 +23,7 @@ export type SpatialJoinFunctionArgs = z.ZodObject<{
 export type SpatialJoinLlmResult = {
   success: boolean;
   firstTwoRows?: {
-    [x: string]: number[];
+    [x: string]: (number | string)[];
   }[];
   datasetName?: string;
   result?: string;
@@ -245,7 +245,7 @@ export async function runSpatialJoin({
     // get basic statistics of the result for LLM
     const basicStatistics = getBasicStatistics(result);
 
-    const joinValues: Record<string, number[]> = {
+    const joinValues: Record<string, (number | string)[]> = {
       Count: result.map((row) => row.length),
     };
 
@@ -360,7 +360,7 @@ export function getBasicStatistics(result: number[][]) {
 
 export function appendJoinValuesToGeometries(
   geometries: SpatialGeometry,
-  joinValues: Record<string, number[]>
+  joinValues: Record<string, (number | string)[]>
 ) {
   const geometryType = CheckGeometryType(geometries);
   const variableNames = Object.keys(joinValues);
@@ -401,7 +401,7 @@ export function appendJoinValuesToGeometries(
           ),
         },
       }));
-      const result ={
+      const result = {
         type: 'FeatureCollection',
         features: featuresWithJoinValues,
       };
