@@ -14,9 +14,15 @@ import { GetValues, GetGeometries } from '../types';
 export type SpatialJoinFunctionArgs = z.ZodObject<{
   rightDatasetName: z.ZodString;
   leftDatasetName: z.ZodString;
-  joinVariableNames: z.ZodArray<z.ZodString>;
-  joinOperators: z.ZodArray<
-    z.ZodEnum<['sum', 'mean', 'min', 'max', 'median', 'count']>
+  joinVariables: z.ZodOptional<
+    z.ZodArray<
+      z.ZodObject<{
+        variableName: z.ZodString;
+        operator: z.ZodEnum<
+          ['sum', 'mean', 'min', 'max', 'median', 'count', 'unique']
+        >;
+      }>
+    >
   >;
 }>;
 
@@ -115,15 +121,26 @@ export const spatialJoin = extendedTool<
 2. to check which point belongs to which polygon, "right dataset = polygons" and "left dataset = points"
 IMPORTANT:
 1. left dataset and right dataset should be different.
-2. joinOperators can NOT be empty and should have the same length as joinVariableNames.
-3. joinVariables should comes from the right dataset.`,
+2. joinVariables should come from the right dataset.`,
   parameters: z.object({
     rightDatasetName: z.string(),
     leftDatasetName: z.string(),
-    joinVariableNames: z.array(z.string()),
-    joinOperators: z.array(
-      z.enum(['sum', 'mean', 'min', 'max', 'median', 'count'])
-    ),
+    joinVariables: z
+      .array(
+        z.object({
+          variableName: z.string(),
+          operator: z.enum([
+            'sum',
+            'mean',
+            'min',
+            'max',
+            'median',
+            'count',
+            'unique',
+          ]),
+        })
+      )
+      .optional(),
   }),
   execute: executeSpatialJoin,
   context: {
@@ -144,8 +161,10 @@ export type SpatialJoinTool = typeof spatialJoin;
 type SpatialJoinArgs = {
   rightDatasetName: string;
   leftDatasetName: string;
-  joinVariableNames: string[];
-  joinOperators: string[];
+  joinVariables: {
+    variableName: string;
+    operator: string;
+  }[];
 };
 
 function isSpatialJoinArgs(args: unknown): args is SpatialJoinArgs {
@@ -185,20 +204,14 @@ async function executeSpatialJoin(
     throw new Error('Invalid context for spatialJoin tool');
   }
 
-  const {
-    rightDatasetName,
-    leftDatasetName,
-    joinVariableNames,
-    joinOperators,
-  } = args;
+  const { rightDatasetName, leftDatasetName, joinVariables } = args;
   const { getGeometries, getValues } = options.context;
 
   return runSpatialJoin({
     rightDatasetName,
     leftDatasetName,
     previousExecutionOutput: options.previousExecutionOutput,
-    joinVariableNames,
-    joinOperators,
+    joinVariables,
     getGeometries,
     getValues,
   });
@@ -207,8 +220,7 @@ async function executeSpatialJoin(
 export async function runSpatialJoin({
   rightDatasetName,
   leftDatasetName,
-  joinVariableNames,
-  joinOperators,
+  joinVariables,
   getGeometries,
   getValues,
 }: {
@@ -219,8 +231,10 @@ export async function runSpatialJoin({
       geojson?: GeoJSON.FeatureCollection;
     };
   };
-  joinVariableNames?: string[];
-  joinOperators?: string[];
+  joinVariables?: {
+    variableName: string;
+    operator: string;
+  }[];
   getGeometries: GetGeometries;
   getValues: GetValues;
 }) {
@@ -250,16 +264,10 @@ export async function runSpatialJoin({
     };
 
     // get the values of the left dataset if joinVariableNames is provided
-    if (
-      joinVariableNames &&
-      joinOperators &&
-      joinVariableNames.length > 0 &&
-      joinOperators.length > 0
-    ) {
+    if (joinVariables && joinVariables.length > 0) {
       await Promise.all(
-        joinVariableNames.map(async (variableName, index) => {
+        joinVariables.map(async ({ variableName, operator }) => {
           try {
-            const operator = joinOperators[index];
             const values = (await getValues(
               rightDatasetName,
               variableName
@@ -315,8 +323,7 @@ export async function runSpatialJoin({
         joinValues,
         rightDatasetName,
         leftDatasetName,
-        joinVariableNames,
-        joinOperators,
+        joinVariables,
         datasetName: outputDatasetName,
         [outputDatasetName]: leftGeometriesWithJoinValues,
       },

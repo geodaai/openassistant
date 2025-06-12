@@ -6,6 +6,6 @@ export const spatialFilter = {
 Please Note:
 1. The left dataset should be the dataset that contains the geometries to be filtered (e.g. points).
 2. The right dataset should be the dataset that contains the geometries to be used for filtering (e.g. polygons).
-3. joinVariableNames and the joinOperators should be empty arrays.
+3. joinVariables should be empty arrays.
 `,
 };
