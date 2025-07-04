@@ -1,6 +1,6 @@
 {
   "name": "@openassistant/utils",
-  "version": "0.5.13",
+  "version": "0.5.14-alpha.0",
   "description": "Utility functions for OpenAssistant tools",
   "author": "Xun Li<lixun910@gmail.com>",
   "license": "MIT",

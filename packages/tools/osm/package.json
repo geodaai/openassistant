@@ -1,6 +1,6 @@
 {
   "name": "@openassistant/osm",
-  "version": "0.5.13",
+  "version": "0.5.14-alpha.0",
   "author": "Xun Li<lixun910@gmail.com>",
   "description": "The OSM tools for OpenAssistant",
   "main": "dist/index.cjs.js",
