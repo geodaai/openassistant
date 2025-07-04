@@ -60,6 +60,7 @@ export async function createAssistant(props: UseAssistantProps) {
     maxSteps: props.maxSteps,
     toolCallStreaming: props.toolCallStreaming,
     ...(props.baseUrl ? { baseURL: props.baseUrl } : {}),
+    ...(props.headers ? { headers: props.headers } : {}),
   });
 
   // register custom functions using Vercel Tool format

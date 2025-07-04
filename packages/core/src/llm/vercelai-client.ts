@@ -43,6 +43,8 @@ export type VercelAiClientConfigureProps = {
   maxSteps?: number;
   /** Tool call streaming */
   toolCallStreaming?: boolean;
+  /** Custom headers to include in API requests */
+  headers?: Record<string, string>;
 };
 
 /**
@@ -61,6 +63,8 @@ export abstract class VercelAiClient extends VercelAi {
 
   /** Base URL for API requests */
   protected static baseURL = '';
+  /** Custom headers for API requests */
+  protected static headers: Record<string, string> = {};
 
   /** Language model instance */
   public llm: LanguageModel | null = null;
@@ -123,6 +127,7 @@ export abstract class VercelAiClient extends VercelAi {
     if (config.toolChoice) VercelAiClient.toolChoice = config.toolChoice;
     if (config.maxSteps !== undefined)
       VercelAiClient.maxSteps = config.maxSteps;
+    if (config.headers) VercelAiClient.headers = config.headers;
   }
 
   /**
@@ -316,6 +321,7 @@ export abstract class VercelAiClient extends VercelAi {
       ...(VercelAiClient.topP !== undefined && { topP: VercelAiClient.topP }),
       maxSteps,
       abortSignal: this.abortController?.signal,
+      ...(Object.keys(VercelAiClient.headers).length > 0 && { headers: VercelAiClient.headers }),
       onStepFinish: async (event: StepResult<ToolSet>) => {
         const { usage } = event;
         // update the tokens used
@@ -456,6 +462,7 @@ export abstract class VercelAiClient extends VercelAi {
       temperature: temperature || VercelAiClient.temperature,
       ...(VercelAiClient.topP !== undefined && { topP: VercelAiClient.topP }),
       abortSignal: this.abortController?.signal,
+      ...(Object.keys(VercelAiClient.headers).length > 0 && { headers: VercelAiClient.headers }),
     });
 
     return response.text;

@@ -66,6 +66,8 @@ export type UseAssistantProps = {
   toolCallStreaming?: boolean;
   /** Optional AbortController to cancel requests. */
   abortController?: AbortController;
+  /** Optional custom headers to include in API requests. */
+  headers?: Record<string, string>;
 };
 
 /**
