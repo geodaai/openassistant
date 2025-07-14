@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import './index.css';
 
 export * from './boxplot/box-plot-component';

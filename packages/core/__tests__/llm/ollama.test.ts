@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { LangChainAssistant } from '../../src/llm/langchain';
 import { OllamaAssistant } from '../../src/llm/ollama';
 import { ChatOllama } from '@langchain/ollama';

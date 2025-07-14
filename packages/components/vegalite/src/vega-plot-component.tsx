@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { VegaLite } from 'react-vega';
 
 export type VegaLitePlotAdditionalData = {

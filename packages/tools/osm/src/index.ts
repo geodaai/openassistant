@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 export * from './geocoding';
 export * from './routing';
 export * from './isochrone';

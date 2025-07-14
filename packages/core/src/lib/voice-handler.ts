@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { OpenAI } from 'openai';
 import { GetAssistantModelByProvider } from './model-utils';
 import { generateText } from 'ai';

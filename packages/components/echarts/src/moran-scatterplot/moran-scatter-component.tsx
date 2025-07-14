@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 // export function MoranScatterPlotContainer(props: MoranScatterOutputData) {
 //   const [isExpanded, setIsExpanded] = useState(props.isExpanded);
 

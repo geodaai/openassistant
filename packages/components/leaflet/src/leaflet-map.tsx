@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { useState, useEffect } from 'react';
 import { Feature, FeatureCollection } from 'geojson';
 import L from 'leaflet';

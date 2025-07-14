@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { useEffect, useRef } from 'react';
 import { Provider } from 'react-redux';
 import AutoSizer from 'react-virtualized-auto-sizer';

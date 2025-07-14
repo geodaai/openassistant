@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { Message, generateId } from 'ai';
 import { StreamMessage, StreamMessageSchema } from '../types';
 import { z } from 'zod';

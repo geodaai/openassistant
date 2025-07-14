@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { useState } from 'react';
 import { ThemeProvider, useTheme } from 'next-themes';
 

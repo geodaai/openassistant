@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { HistogramOutputData } from './histogram-plot';
 
 // type guard for histogram output data

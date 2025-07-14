@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { Resizable } from 're-resizable';
 
 export function ResizablePlotContainer({

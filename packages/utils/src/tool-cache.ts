@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 /**
  * A dataset in the tool cache.
  * The type of the content is determined by the tool that added the dataset.

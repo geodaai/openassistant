@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { encodingForModel } from '@langchain/core/utils/tiktoken';
 import { ToolInvocation } from 'ai';
 import { Tiktoken } from 'js-tiktoken/lite';

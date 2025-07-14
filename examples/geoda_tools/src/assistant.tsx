@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { AiAssistant } from '@openassistant/ui';
 import { MoranScatterComponent } from '@openassistant/echarts';
 import { SpatialWeightsComponent } from '@openassistant/tables';

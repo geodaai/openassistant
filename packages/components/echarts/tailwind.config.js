@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 const { heroui } = require('@heroui/theme');
 
 /** @type {import('tailwindcss').Config} */

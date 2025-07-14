@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { MessageModel } from '@openassistant/core';
 import { AiAssistant } from '@openassistant/ui';
 import { extendedTool } from '@openassistant/utils';

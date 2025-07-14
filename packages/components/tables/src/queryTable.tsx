@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { ChangeEvent, useEffect, useMemo, useState, useRef } from 'react';
 import { Table as ArrowTable, tableFromArrays } from 'apache-arrow';
 import { AsyncDuckDB } from '@duckdb/duckdb-wasm';

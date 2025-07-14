@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { mean, standardDeviation } from 'simple-statistics';
 import jStat from 'jstat';
 

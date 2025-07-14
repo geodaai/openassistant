@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { extendedTool } from '@openassistant/utils';
 import { AiAssistant } from '@openassistant/ui';
 import { z } from 'zod';

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { z } from 'zod';
 import { cacheData, getCachedData, extendedTool } from '@openassistant/utils';
 import { githubRateLimiter } from '../utils/rateLimiter';

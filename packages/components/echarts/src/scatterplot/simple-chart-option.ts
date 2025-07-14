@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { numericFormatter } from '@openassistant/utils';
 
 /**

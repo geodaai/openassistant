@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { GoogleAIAssistant } from '../../src/llm/google';
 
 // Mock external dependencies

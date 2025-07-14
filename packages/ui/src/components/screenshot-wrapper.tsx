@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import React, { MouseEvent, useEffect, useState } from 'react';
 import html2canvas from 'html2canvas';
 

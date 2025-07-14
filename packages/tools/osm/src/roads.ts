@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { z } from 'zod';
 import { extendedTool, generateId, getBoundsFromGeoJSON } from '@openassistant/utils';
 import { RateLimiter } from './utils/rateLimiter';

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { EChartsOption } from 'echarts';
 import { SimpleLinearRegressionResult } from '@openassistant/plots';
 import { numericFormatter } from '@openassistant/utils';

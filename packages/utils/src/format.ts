@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 /**
  * Formats a number to a more human-readable format, using compact notation
  * @param value The number to format

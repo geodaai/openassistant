@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { DATA_TYPES as AnalyzerDATA_TYPES } from 'type-analyzer';
 import * as arrow from 'apache-arrow';
 

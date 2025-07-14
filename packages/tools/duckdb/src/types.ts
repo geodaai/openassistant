@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { AsyncDuckDB } from '@duckdb/duckdb-wasm';
 import { z } from 'zod';
 

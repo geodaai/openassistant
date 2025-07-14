@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import {
   quantile as d3Quantile,
   median as d3Median,

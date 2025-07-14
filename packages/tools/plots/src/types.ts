@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 /**
  * The getValues function is used to get the values of the variable from dataset.
  */

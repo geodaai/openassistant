@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 /**
  * Apply a join operation to a list of values
  * @param joinOperator - The join operation to apply, the following are supported:

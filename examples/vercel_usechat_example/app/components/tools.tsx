@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import dynamic from 'next/dynamic';
 
 const LocalQueryTool = dynamic(

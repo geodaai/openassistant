@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 /**
  * Represents the properties for Parallel Coordinates Plot (PCP) data.
  * Each element in the array describes a dimension/axis of the PCP.

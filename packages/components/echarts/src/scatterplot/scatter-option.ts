@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { LoessResult, RegressionResults } from '@openassistant/plots';
 import { numericFormatter } from '@openassistant/utils';
 

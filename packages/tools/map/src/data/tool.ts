@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { extendedTool, generateId } from '@openassistant/utils';
 import { MapToolContext } from '../register-tools';
 import { z } from 'zod';

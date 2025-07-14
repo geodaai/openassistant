@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { Resizable } from 're-resizable';
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import React from 'react';

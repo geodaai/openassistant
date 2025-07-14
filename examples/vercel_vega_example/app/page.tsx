@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 'use client';
 
 import { useChat } from '@ai-sdk/react';

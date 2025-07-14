@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { getCartogram } from '@geoda/core';
 import { extendedTool, generateId } from '@openassistant/utils';
 import { isSpatialToolContext } from '../utils';

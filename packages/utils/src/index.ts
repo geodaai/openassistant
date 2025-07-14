@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 export * from './tool';
 export * from './tool-cache';
 export * from './vercel-tool';

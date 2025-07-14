@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { useMemo, useRef, useState } from 'react';
 import { CanvasRenderer } from 'echarts/renderers';
 import { ScatterChart } from 'echarts/charts';

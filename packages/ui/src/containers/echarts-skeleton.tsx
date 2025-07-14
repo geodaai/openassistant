@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { Card } from '@heroui/card';
 import { Skeleton } from '@heroui/skeleton';
 

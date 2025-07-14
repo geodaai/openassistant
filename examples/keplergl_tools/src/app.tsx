@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import React from 'react';
 import { AiAssistant } from '@openassistant/ui';
 import { keplergl, KeplerglTool } from '@openassistant/map';

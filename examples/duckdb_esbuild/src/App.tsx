@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { AiAssistant } from '@openassistant/ui';
 import { localQuery, LocalQueryTool, getDuckDB } from '@openassistant/duckdb';
 import {

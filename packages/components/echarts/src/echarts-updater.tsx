@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { EChartsType } from 'echarts';
 import debounce from 'lodash/debounce';
 import { OnBrushedCallback } from '@openassistant/hooks';

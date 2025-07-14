@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { EChartsOption } from 'echarts';
 import * as echarts from 'echarts';
 import { ParallelCoordinateDataProps } from '@openassistant/plots';

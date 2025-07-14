@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { getTool, OnToolCompleted } from '@openassistant/utils';
 import { SpatialToolContext } from './types';
 

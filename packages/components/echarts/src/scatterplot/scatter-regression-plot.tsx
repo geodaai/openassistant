@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import * as echarts from 'echarts/core';
 import {
   TooltipComponent,

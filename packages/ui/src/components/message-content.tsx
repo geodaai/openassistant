@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import React from 'react';
 import { Spinner, Link } from '@heroui/react';
 import {

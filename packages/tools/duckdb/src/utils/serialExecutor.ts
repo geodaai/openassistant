@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 /**
  * Create a serial executor that ensures that tasks are executed in order.
  * @returns A function that can be used to execute tasks in order.

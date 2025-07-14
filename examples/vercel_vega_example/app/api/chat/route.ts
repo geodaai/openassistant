@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { openai } from '@ai-sdk/openai';
 import { vegaLitePlot, VegaLitePlotTool } from '@openassistant/plots';
 import { createDataStreamResponse, streamText } from 'ai';

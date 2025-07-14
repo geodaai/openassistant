@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { createAssistant } from '@openassistant/core';
 import readlineSync from 'readline-sync';
 import dotenv from 'dotenv';

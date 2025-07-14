@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import * as duckdb from '@duckdb/duckdb-wasm';
 
 const JSDELIVR_BUNDLES = duckdb.getJsDelivrBundles();

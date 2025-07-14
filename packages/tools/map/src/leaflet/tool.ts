@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { extendedTool, getBoundsFromGeoJSON } from '@openassistant/utils';
 import { z } from 'zod';
 

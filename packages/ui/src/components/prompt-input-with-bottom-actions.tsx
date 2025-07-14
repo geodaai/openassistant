@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Tooltip, ScrollShadow, Badge } from '@heroui/react';
 import { Icon } from '@iconify/react';

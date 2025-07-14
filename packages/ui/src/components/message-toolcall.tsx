@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { ToolCallComponents, StreamMessagePart } from '@openassistant/core';
 import { ToolInvocation } from 'ai';
 import React, { ReactNode, memo } from 'react';

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { WeightsMeta } from '@geoda/core';
 
 import { getCachedWeightsById } from './weights/tool';

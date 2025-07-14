@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { DeepSeekAssistant } from '../llm/deepseek';
 import { GoogleAIAssistant } from '../llm/google';
 import { OllamaAssistant } from '../llm/ollama';

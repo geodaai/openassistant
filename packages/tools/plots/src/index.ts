@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 export * from './echarts/math/linear-regression';
 
 export * from './echarts/scatterplot/tool';

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 export type { SpatialJoinGeometries } from '@geoda/core';
 
 export * from './data-classify/tool';

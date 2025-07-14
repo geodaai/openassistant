@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { Button } from '@heroui/button';
 import { useDraggable } from '@heroui/use-draggable';
 import { Popover, PopoverContent, PopoverTrigger } from '@heroui/popover';

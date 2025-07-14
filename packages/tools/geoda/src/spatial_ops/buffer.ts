@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { extendedTool, generateId } from '@openassistant/utils';
 import { z } from 'zod';
 import { getBuffers } from '@geoda/core';

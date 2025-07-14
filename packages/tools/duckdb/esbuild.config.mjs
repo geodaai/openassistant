@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 // duckdb/esbuild.config.mjs
 import {
   createBaseConfig,

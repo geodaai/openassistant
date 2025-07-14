@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { FeatureCollection } from 'geojson';
 
 // Create a unique key for our cache on the global object

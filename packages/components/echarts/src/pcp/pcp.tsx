@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { CanvasRenderer } from 'echarts/renderers';
 import { ParallelChart } from 'echarts/charts';
 import * as echarts from 'echarts/core';

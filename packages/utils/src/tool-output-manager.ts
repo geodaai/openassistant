@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 interface ToolOutput {
   toolCallId: string;
   data: unknown;

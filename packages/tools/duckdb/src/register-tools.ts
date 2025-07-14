@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { localQuery } from './tool';
 import { getTool, OnToolCompleted } from '@openassistant/utils';
 import { LocalQueryContext } from './types';

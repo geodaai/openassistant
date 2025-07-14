@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { ThemeProvider } from 'next-themes';
 import { HeroUIProvider } from '@heroui/react';
 

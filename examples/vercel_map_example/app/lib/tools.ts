@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { localQuery } from '@openassistant/duckdb';
 import { histogram } from '@openassistant/plots';
 import { GetGeometries } from '@openassistant/geoda';

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { useMemo, useRef, useState } from 'react';
 import ReactEChartsCore from 'echarts-for-react';
 

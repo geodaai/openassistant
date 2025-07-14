@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { openai } from '@ai-sdk/openai';
 import { ConversationCache } from '@openassistant/utils';
 import { createDataStreamResponse, streamText } from 'ai';

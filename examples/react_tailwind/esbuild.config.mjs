@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import * as esbuild from 'esbuild';
 import { tailwindPlugin } from 'esbuild-plugin-tailwindcss';
 import open from 'open';

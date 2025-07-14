@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { BubbleChartOutputData, BubbleChart } from './bubble-chart';
 
 /**

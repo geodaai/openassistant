@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { Icon } from '@iconify/react';
 import { Button, Tooltip } from '@heroui/react';
 import { StreamMessage, TextUIPart } from '@openassistant/core';

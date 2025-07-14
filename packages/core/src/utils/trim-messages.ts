@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { tiktokenCounter } from './token-counter';
 import { Tool, ToolSet, CoreMessage } from 'ai';
 import { Message } from '@ai-sdk/ui-utils';

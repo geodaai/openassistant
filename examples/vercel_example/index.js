@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import dotenv from 'dotenv';
 import { generateText } from 'ai';
 import { openai } from '@ai-sdk/openai';

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { Icon } from "@iconify/react";
 import { Avatar, Badge } from "@heroui/react";
 import { ReactNode } from "react";

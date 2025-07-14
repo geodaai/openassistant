@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { AbstractAssistant } from '../../src/llm/assistant';
 import { ProcessImageMessageProps } from '../../src/types';
 import { RegisterFunctionCallingProps } from '../../src/types';

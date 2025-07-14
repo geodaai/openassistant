@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { extendedTool, generateId } from '@openassistant/utils';
 import { Table as ArrowTable, tableFromArrays } from 'apache-arrow';
 import { z } from 'zod';

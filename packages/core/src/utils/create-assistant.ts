@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright contributors to the openassistant project
+
 import { GetAssistantModelByProvider } from '../lib/model-utils';
 import { UseAssistantProps } from '../hooks/use-assistant';
 import { Tool, convertToCoreMessages } from 'ai';
