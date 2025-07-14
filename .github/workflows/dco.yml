@@ -14,12 +14,4 @@ jobs:
           fetch-depth: 0
 
       - name: Check DCO
-        run: |
-          # Check if all commits are signed
-          if ! git log --oneline --no-merges ${{ github.event.pull_request.base.sha }}..HEAD | grep -q "Signed-off-by:"; then
-            echo "❌ DCO check failed: Some commits are not signed"
-            echo "Please ensure all commits have a 'Signed-off-by:' line"
-            echo "You can sign commits using: git commit -s -m 'Your message'"
-            exit 1
-          fi
-          echo "✅ DCO check passed: All commits are signed"
+        uses: tisonkun/actions-dco@v1.1
