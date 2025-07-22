@@ -134,24 +134,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ai-sdk/react@npm:1.2.11, @ai-sdk/react@npm:^1.2.11":
-  version: 1.2.11
-  resolution: "@ai-sdk/react@npm:1.2.11"
-  dependencies:
-    "@ai-sdk/provider-utils": "npm:2.2.7"
-    "@ai-sdk/ui-utils": "npm:1.2.10"
-    swr: "npm:^2.2.5"
-    throttleit: "npm:2.1.0"
-  peerDependencies:
-    react: ^18 || ^19 || ^19.0.0-rc
-    zod: ^3.23.8
-  peerDependenciesMeta:
-    zod:
-      optional: true
-  checksum: d5e22ce348caca679243b1a2fb1f90082d1a681fed139bf900a78e7b1da267d40d8d901ae5380ee3d7749101307eca51de13119dab8cdc5d8b6319e323936109
-  languageName: node
-  linkType: hard
-
 "@ai-sdk/react@npm:1.2.12":
   version: 1.2.12
   resolution: "@ai-sdk/react@npm:1.2.12"
@@ -167,6 +149,24 @@ __metadata:
     zod:
       optional: true
   checksum: 1809d785f8c9df65620576aa04d08d1ca1d1e3905518d833837d5cc5c2d489e31ffecb78c301ac209e354dc4f8b13d48ccea0966d3bbc5b654aab1633c19b6ca
+  languageName: node
+  linkType: hard
+
+"@ai-sdk/react@npm:^1.2.11":
+  version: 1.2.11
+  resolution: "@ai-sdk/react@npm:1.2.11"
+  dependencies:
+    "@ai-sdk/provider-utils": "npm:2.2.7"
+    "@ai-sdk/ui-utils": "npm:1.2.10"
+    swr: "npm:^2.2.5"
+    throttleit: "npm:2.1.0"
+  peerDependencies:
+    react: ^18 || ^19 || ^19.0.0-rc
+    zod: ^3.23.8
+  peerDependenciesMeta:
+    zod:
+      optional: true
+  checksum: d5e22ce348caca679243b1a2fb1f90082d1a681fed139bf900a78e7b1da267d40d8d901ae5380ee3d7749101307eca51de13119dab8cdc5d8b6319e323936109
   languageName: node
   linkType: hard
 
@@ -6433,7 +6433,7 @@ __metadata:
     "@ai-sdk/react": "npm:^1.2.11"
     "@ai-sdk/ui-utils": "npm:^1.2.10"
     "@langchain/core": "npm:^0.3.38"
-    ai: "npm:^4.3.13"
+    ai: "npm:^4.3.19"
     openai: "npm:^4.93.0"
     openai-zod-functions: "npm:^0.1.2"
     zod: "npm:^3.24.4"
@@ -6636,7 +6636,7 @@ __metadata:
     "@iconify/react": "npm:^5.1.0"
     "@openassistant/core": "workspace:*"
     "@openassistant/utils": "workspace:*"
-    ai: "npm:^4.3.16"
+    ai: "npm:^4.3.19"
     framer-motion: "npm:^11.15.0"
     html2canvas: "npm:^1.4.1"
     next-themes: "npm:^0.4.4"
@@ -11152,29 +11152,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ai@npm:^4.3.13":
-  version: 4.3.13
-  resolution: "ai@npm:4.3.13"
-  dependencies:
-    "@ai-sdk/provider": "npm:1.1.3"
-    "@ai-sdk/provider-utils": "npm:2.2.7"
-    "@ai-sdk/react": "npm:1.2.11"
-    "@ai-sdk/ui-utils": "npm:1.2.10"
-    "@opentelemetry/api": "npm:1.9.0"
-    jsondiffpatch: "npm:0.6.0"
-  peerDependencies:
-    react: ^18 || ^19 || ^19.0.0-rc
-    zod: ^3.23.8
-  peerDependenciesMeta:
-    react:
-      optional: true
-  checksum: e0330043a7f2062ff755e6ebf217ab9e30ad8ba89bc89d2dabbc4cb3141c1d4296efe7ce1ea91f55a00e6837bb29b92af5e849d549172fd24a3d1b23cfbab25c
-  languageName: node
-  linkType: hard
-
-"ai@npm:^4.3.16":
-  version: 4.3.16
-  resolution: "ai@npm:4.3.16"
+"ai@npm:^4.3.19":
+  version: 4.3.19
+  resolution: "ai@npm:4.3.19"
   dependencies:
     "@ai-sdk/provider": "npm:1.1.3"
     "@ai-sdk/provider-utils": "npm:2.2.8"
@@ -11188,7 +11168,7 @@ __metadata:
   peerDependenciesMeta:
     react:
       optional: true
-  checksum: c48e0b61239708f4fdce2a3f177e21d85dad1e6c28f100bcc06faf00a6bb6884b3683bf8f6354e45d6c207853ca9c22c33141b1aad5cc0d948ed5e50605aa115
+  checksum: a0f398ce82f2b5ed29106acd227658e56a8ef107a00068878ef95b01c9cbe051d341cafe56340f7731a75e42a04635d058cde04baaa7f65912f2254b6d5ce3f1
   languageName: node
   linkType: hard
 
@@ -26755,7 +26735,7 @@ __metadata:
     "@types/node": "npm:^20.0.0"
     "@types/react": "npm:^19.0.0"
     "@types/react-dom": "npm:^19.0.0"
-    ai: "npm:^4.3.13"
+    ai: "npm:^4.3.19"
     autoprefixer: "npm:^10.4.16"
     dotenv: "npm:^16.4.5"
     next: "npm:15.3.2"
@@ -26785,7 +26765,7 @@ __metadata:
     "@types/node": "npm:^20.0.0"
     "@types/react": "npm:^19.0.0"
     "@types/react-dom": "npm:^19.0.0"
-    ai: "npm:^4.3.13"
+    ai: "npm:^4.3.19"
     autoprefixer: "npm:^10.4.16"
     dotenv: "npm:^16.4.5"
     next: "npm:14.1.0"
@@ -26811,7 +26791,7 @@ __metadata:
     "@types/node": "npm:^20.0.0"
     "@types/react": "npm:^19.0.0"
     "@types/react-dom": "npm:^19.0.0"
-    ai: "npm:^4.3.13"
+    ai: "npm:^4.3.19"
     autoprefixer: "npm:^10.4.16"
     dotenv: "npm:^16.4.5"
     next: "npm:14.1.0"
@@ -26836,7 +26816,7 @@ __metadata:
     "@types/node": "npm:^20.0.0"
     "@types/react": "npm:^18.2.0"
     "@types/react-dom": "npm:^18.2.0"
-    ai: "npm:^4.3.13"
+    ai: "npm:^4.3.19"
     autoprefixer: "npm:^10.4.16"
     dotenv: "npm:^16.4.5"
     next: "npm:14.1.0"
@@ -26856,7 +26836,7 @@ __metadata:
   dependencies:
     "@ai-sdk/openai": "npm:^1.3.21"
     "@openassistant/plots": "workspace:*"
-    ai: "npm:^4.3.13"
+    ai: "npm:^4.3.19"
     dotenv: "npm:^16.4.5"
     readline-sync: "npm:^1.4.10"
     zod: "npm:^3.24.4"

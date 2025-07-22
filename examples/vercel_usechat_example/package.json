@@ -14,7 +14,7 @@
     "@openassistant/duckdb": "workspace:*",
     "@openassistant/echarts": "workspace:*",
     "@openassistant/utils": "workspace:*",
-    "ai": "^4.3.13",
+    "ai": "^4.3.19",
     "dotenv": "^16.4.5",
     "next": "14.1.0",
     "react": "^19.0.0",
