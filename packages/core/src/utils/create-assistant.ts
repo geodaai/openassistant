@@ -62,8 +62,9 @@ export async function createAssistant(props: UseAssistantProps) {
     toolChoice: props.toolChoice,
     maxSteps: props.maxSteps,
     toolCallStreaming: props.toolCallStreaming,
-    ...(props.baseUrl ? { baseURL: props.baseUrl } : {}),
+    ...(props.baseUrl? { baseURL: props.baseUrl} : {}),
     ...(props.headers ? { headers: props.headers } : {}),
+    ...(props.raw ? { raw: props.raw } : {}),
   });
 
   // register custom functions using Vercel Tool format
