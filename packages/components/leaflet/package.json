@@ -1,6 +1,6 @@
 {
   "name": "@openassistant/leaflet",
-  "version": "0.5.14",
+  "version": "0.5.14-alpha.1",
   "author": "Xun Li<lixun910@gmail.com>",
   "description": "The Leaflet components for OpenAssistant",
   "main": "./dist/index.cjs.js",

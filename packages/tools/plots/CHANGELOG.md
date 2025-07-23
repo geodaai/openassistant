@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.5.14-alpha.1 (2025-07-23)
+
+## 0.5.13 (2025-06-24)
+
+## 0.5.12 (2025-06-20)
+
+## 0.5.11 (2025-06-18)
+
+## 0.5.9 (2025-06-13)
+
+### Bug Fixes
+
+* box plot component not linking correct ids ([86b640f](https://github.com/geodaai/openassistant/commit/86b640f82b93da3ac714753b4a3dff300ca1812a))
+
+## 0.5.8 (2025-06-12)
+
+## 0.5.14-alpha.0 (2025-07-23)
+
+## 0.5.13 (2025-06-24)
+
+## 0.5.12 (2025-06-20)
+
+## 0.5.11 (2025-06-18)
+
+## 0.5.9 (2025-06-13)
+
+### Bug Fixes
+
+* box plot component not linking correct ids ([86b640f](https://github.com/geodaai/openassistant/commit/86b640f82b93da3ac714753b4a3dff300ca1812a))
+
+## 0.5.8 (2025-06-12)
+
 ## 0.5.14 (2025-07-04)
 
 ## 0.5.14-alpha.0 (2025-07-04)

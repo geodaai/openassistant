@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.14-alpha.1](https://github.com/geodaai/openassistant/compare/@openassistant/duckdb@0.0.5...@openassistant/duckdb@0.5.14-alpha.1) (2025-07-23)
+
+## 0.5.13 (2025-06-24)
+
+## 0.5.12 (2025-06-20)
+
+## 0.5.11 (2025-06-18)
+
+### Bug Fixes
+
+* duckdb table creation error with column mixed with Polygon and MultiPolygon Features ([a831403](https://github.com/geodaai/openassistant/commit/a8314033bd9b287025865a08a56c3b758e27e848))
+
+### Features
+
+* add cartogram tool ([8bad930](https://github.com/geodaai/openassistant/commit/8bad93067ac8e80ac90a8ef413d3846786de1f5d))
+
+## 0.5.9 (2025-06-13)
+
+## 0.5.8 (2025-06-12)
+
+## [0.5.14-alpha.0](https://github.com/geodaai/openassistant/compare/@openassistant/duckdb@0.0.5...@openassistant/duckdb@0.5.14-alpha.0) (2025-07-23)
+
+## 0.5.13 (2025-06-24)
+
+## 0.5.12 (2025-06-20)
+
+## 0.5.11 (2025-06-18)
+
+### Bug Fixes
+
+* duckdb table creation error with column mixed with Polygon and MultiPolygon Features ([a831403](https://github.com/geodaai/openassistant/commit/a8314033bd9b287025865a08a56c3b758e27e848))
+
+### Features
+
+* add cartogram tool ([8bad930](https://github.com/geodaai/openassistant/commit/8bad93067ac8e80ac90a8ef413d3846786de1f5d))
+
+## 0.5.9 (2025-06-13)
+
+## 0.5.8 (2025-06-12)
+
 ## [0.5.14](https://github.com/geodaopenjs/openassistant/compare/@openassistant/duckdb@0.0.5...@openassistant/duckdb@0.5.14) (2025-07-04)
 
 ## 0.5.14-alpha.0 (2025-07-04)
