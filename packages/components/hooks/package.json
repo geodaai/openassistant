@@ -1,6 +1,6 @@
 {
   "name": "@openassistant/hooks",
-  "version": "0.5.14-alpha.1",
+  "version": "0.5.14-alpha.2",
   "author": "Xun Li<lixun910@gmail.com>",
   "description": "The hooks for OpenAssistant",
   "main": "./dist/index.cjs.js",

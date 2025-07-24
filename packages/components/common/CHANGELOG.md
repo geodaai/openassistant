@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.14-alpha.2](https://github.com/geodaai/openassistant/compare/@openassistant/common@0.0.5...@openassistant/common@0.5.14-alpha.2) (2025-07-24)
+
+## 0.5.14-alpha.1 (2025-07-23)
+
+## 0.5.13 (2025-06-24)
+
+## 0.5.12 (2025-06-20)
+
+## 0.5.11 (2025-06-18)
+
+## 0.5.9 (2025-06-13)
+
+## 0.5.8 (2025-06-12)
+
+**Note:** Version bump only for package @openassistant/common
+
 ## [0.5.14-alpha.1](https://github.com/geodaai/openassistant/compare/@openassistant/common@0.0.5...@openassistant/common@0.5.14-alpha.1) (2025-07-23)
 
 **Note:** Version bump only for package @openassistant/common
