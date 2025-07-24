@@ -15,6 +15,8 @@ type ConfigureProps = {
 
 type OllamaChatSettings = {
   raw?: boolean;
+  simulateStreaming?: boolean;
+  stream?: boolean;
 };
 
 type OllamaProvider = (
@@ -70,12 +72,24 @@ export class OllamaAssistant extends VercelAiClient {
   public static override configure(config: ConfigureProps) {
     // remove baseURL from config
     const { baseURL, raw, ...rest } = config;
+    
+    // Check if baseURL or model has changed
+    const baseURLChanged = baseURL && baseURL !== OllamaAssistant.baseURL;
+    const modelChanged = rest.model && rest.model !== OllamaAssistant.model;
+    
     // config baseURL
     if (baseURL) OllamaAssistant.baseURL = baseURL;
     // config raw
     if (raw) OllamaAssistant.raw = raw;
     // call parent configure, with config without baseURL
     super.configure(rest);
+    
+    // If baseURL or model changed, reset the instance to force recreation
+    if (baseURLChanged || modelChanged) {
+      if (OllamaAssistant.instance) {
+        OllamaAssistant.instance.restart();
+      }
+    }
   }
 
   private constructor(module: Module) {

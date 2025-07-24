@@ -31,8 +31,18 @@ export class GoogleAIAssistant extends VercelAiClient {
   }
 
   public static override configure(config: VercelAiClientConfigureProps) {
+    // Check if model has changed
+    const modelChanged = config.model && config.model !== GoogleAIAssistant.model;
+    
     // call parent configure
     super.configure(config);
+    
+    // If model changed, reset the instance to force recreation
+    if (modelChanged) {
+      if (GoogleAIAssistant.instance) {
+        GoogleAIAssistant.instance.restart();
+      }
+    }
   }
 
   private static async loadModule(): Promise<Module> {

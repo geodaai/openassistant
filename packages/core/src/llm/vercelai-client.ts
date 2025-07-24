@@ -323,7 +323,6 @@ export abstract class VercelAiClient extends VercelAi {
       temperature: VercelAiClient.temperature,
       ...(VercelAiClient.topP !== undefined && { topP: VercelAiClient.topP }),
       maxSteps,
-      maxTokens: VercelAiClient.maxTokens,
       abortSignal: this.abortController?.signal,
       ...(Object.keys(VercelAiClient.headers).length > 0 && { headers: VercelAiClient.headers }),
       onStepFinish: async (event: StepResult<ToolSet>) => {
