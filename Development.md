@@ -84,7 +84,7 @@ Then, you need to commit the changes of version number in all package.json files
 
 ```bash
 yarn install
-git commit -am --signoff "chore: update version number to X.Y.Z"
+git commit --signoff -am "chore: update version number to X.Y.Z"
 ```
 
 2. (Optional)Before pushing the tag, you can test the publishing process:
