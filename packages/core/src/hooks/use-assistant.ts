@@ -71,6 +71,8 @@ export type UseAssistantProps = {
   abortController?: AbortController;
   /** Optional custom headers to include in API requests. */
   headers?: Record<string, string>;
+  /** Optional raw mode for ollama. */
+  raw?: boolean;
 };
 
 /**

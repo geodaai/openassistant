@@ -10,9 +10,19 @@ import { LanguageModelV1 } from 'ai';
 
 type ConfigureProps = {
   baseURL?: string;
+  raw?: boolean;
 } & VercelAiClientConfigureProps;
 
-type OllamaProvider = (model: string) => LanguageModelV1;
+type OllamaChatSettings = {
+  raw?: boolean;
+  simulateStreaming?: boolean;
+  stream?: boolean;
+};
+
+type OllamaProvider = (
+  model: string,
+  settings?: OllamaChatSettings
+) => LanguageModelV1;
 interface Module {
   createOllama: (options: { baseURL: string }) => OllamaProvider;
 }
@@ -21,6 +31,8 @@ interface Module {
  */
 export class OllamaAssistant extends VercelAiClient {
   protected static baseURL: string = 'http://127.0.0.1:11434/api';
+  // raw mode for ollama, true to bypass the ollama templating system https://github.com/ollama/ollama/blob/main/docs/api.md#request-raw-mode
+  protected static raw: boolean = false;
   protected static instance: OllamaAssistant | null = null;
   protected providerInstance: OllamaProvider | null = null;
 
@@ -59,11 +71,25 @@ export class OllamaAssistant extends VercelAiClient {
 
   public static override configure(config: ConfigureProps) {
     // remove baseURL from config
-    const { baseURL, ...rest } = config;
+    const { baseURL, raw, ...rest } = config;
+    
+    // Check if baseURL or model has changed
+    const baseURLChanged = baseURL && baseURL !== OllamaAssistant.baseURL;
+    const modelChanged = rest.model && rest.model !== OllamaAssistant.model;
+    
     // config baseURL
     if (baseURL) OllamaAssistant.baseURL = baseURL;
+    // config raw
+    if (raw) OllamaAssistant.raw = raw;
     // call parent configure, with config without baseURL
     super.configure(rest);
+    
+    // If baseURL or model changed, reset the instance to force recreation
+    if (baseURLChanged || modelChanged) {
+      if (OllamaAssistant.instance) {
+        OllamaAssistant.instance.restart();
+      }
+    }
   }
 
   private constructor(module: Module) {
@@ -80,7 +106,9 @@ export class OllamaAssistant extends VercelAiClient {
       this.providerInstance = module.createOllama(options);
 
       // create a language model from the provider instance, e.g. phi3
-      this.llm = this.providerInstance(OllamaAssistant.model);
+      this.llm = this.providerInstance(OllamaAssistant.model, {
+        raw: OllamaAssistant.raw,
+      });
     }
   }
 

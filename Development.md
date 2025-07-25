@@ -73,11 +73,18 @@ yarn run version-major
 yarn run version-prerelease
 ```
 
+Note: if you need to set the base version first, you can run the following command, e.g.:
+
+```bash
+npx lerna version 0.5.14-alpha.0 --no-push --sync-workspace-lock --no-git-tag-version --force-publish --npm-client=yarn
+ts-node scripts/update-version.mjs
+```
+
 Then, you need to commit the changes of version number in all package.json files, especially the lockfile.
 
 ```bash
 yarn install
-git commit -am "chore: update version number to X.Y.Z"
+git commit -am --signoff "chore: update version number to X.Y.Z"
 ```
 
 2. (Optional)Before pushing the tag, you can test the publishing process:
@@ -114,7 +121,7 @@ The `publish-dry-run` command:
 
 ```bash
 git add .
-git commit -am "chore: update version number to X.Y.Z"
+git commit -am --signoff "chore: update version number to X.Y.Z"
 git push
 ```
 
