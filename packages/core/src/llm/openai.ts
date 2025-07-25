@@ -33,8 +33,18 @@ export class OpenAIAssistant extends VercelAiClient {
   }
 
   public static override configure(config: VercelAiClientConfigureProps) {
+    // Check if model has changed
+    const modelChanged = config.model && config.model !== OpenAIAssistant.model;
+    
     // call parent configure
     super.configure(config);
+    
+    // If model changed, reset the instance to force recreation
+    if (modelChanged) {
+      if (OpenAIAssistant.instance) {
+        OpenAIAssistant.instance.restart();
+      }
+    }
   }
 
   public static async testConnection(
