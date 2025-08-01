@@ -13,7 +13,7 @@ npm install @openassistant/places
 ### Basic Usage
 
 ```typescript
-import { placeSearch, getPlacesTool, PlacesToolNames } from '@openassistant/places';
+import { placeSearch, geotagging, getPlacesTool, PlacesToolNames } from '@openassistant/places';
 import { convertToVercelAiTool } from '@openassistant/utils';
 
 const placeSearchTool = getPlacesTool(PlacesToolNames.placeSearch, {
@@ -22,9 +22,16 @@ const placeSearchTool = getPlacesTool(PlacesToolNames.placeSearch, {
   },
 });
 
+const geotaggingTool = getPlacesTool(PlacesToolNames.geotagging, {
+  toolContext: {
+    getFsqToken: () => process.env.FSQ_TOKEN!,
+  },
+});
+
 // Use with Vercel AI SDK
 const tools = {
   placeSearch: convertToVercelAiTool(placeSearchTool),
+  geotagging: convertToVercelAiTool(geotaggingTool),
 };
 ```
 
@@ -78,6 +85,34 @@ Search for places using the Foursquare Places API. You can search by name, categ
 - "Search for restaurants within 2km of the Eiffel Tower"
 - "What are the best rated hotels in San Francisco?"
 - "Find gas stations near me"
+
+### geotagging
+
+Use Foursquare's Snap to Place technology to detect where your user's device is and what is around them. Returns geotagging candidates based on location coordinates with comprehensive place information.
+
+**Parameters:**
+- `ll` (string, optional): The latitude and longitude of the location (format: "latitude,longitude"). If not specified, the server will attempt to geolocate the IP address from the request.
+- `fields` (string[], optional): Indicate which fields to return in the response, separated by commas. If no fields are specified, all Pro Fields are returned by default.
+- `hacc` (number, optional): The estimated horizontal accuracy radius in meters of the user's location at the 68th percentile confidence level as returned by the user's cell phone OS.
+- `altitude` (number, optional): The altitude of the user's location in meters above the World Geodetic System 1984 (WGS84) reference ellipsoid as returned by the user's cell phone OS.
+- `query` (string, optional): A string to be matched against place name for candidates.
+- `limit` (number, optional): The number of results to return, up to 50. Defaults to 10.
+
+**Response includes:**
+- Basic place information (name, location, categories)
+- Contact details (phone, email, website)
+- Operating hours and availability
+- Photos and social media links
+- Ratings, popularity, and user tips
+- Attributes (wifi, parking, delivery, etc.)
+- Chain information and verification status
+
+**Example prompts:**
+- "Find places near my current location at 40.7589,-73.9851"
+- "What's around me at these coordinates?"
+- "Find nearby businesses at latitude 34.0522, longitude -118.2437"
+- "Get geotagging candidates for this location"
+- "Find places matching 'coffee' near me"
 
 ## Configuration
 
