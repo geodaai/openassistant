@@ -30,6 +30,7 @@ import {
   RoutingTool,
   roads,
   RoadsTool,
+  reverseGeocoding,
 } from '@openassistant/osm';
 import { KeplerGlComponent } from '@openassistant/keplergl';
 import {
@@ -230,6 +231,7 @@ export default function AiChat() {
     getUsZipcodeGeojson,
     getUsCountyGeojson,
     geocoding,
+    reverseGeocoding,
     buffer: bufferTool,
     keplergl: keplerglTool,
     routing: routingTool,

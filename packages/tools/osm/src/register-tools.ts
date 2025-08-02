@@ -7,6 +7,7 @@ import { getUsCountyGeojson } from './us/county';
 import { getUsZipcodeGeojson } from './us/zipcode';
 import { queryUSZipcodes } from './us/queryZipcode';
 import { geocoding } from './geocoding';
+import { reverseGeocoding } from './reverseGeocoding';
 import { routing } from './routing';
 import { isochrone } from './isochrone';
 import { roads } from './roads';
@@ -18,6 +19,7 @@ export enum OsmToolNames {
   getUsZipcodeGeojson = 'getUsZipcodeGeojson',
   queryUSZipcodes = 'queryUSZipcodes',
   geocoding = 'geocoding',
+  reverseGeocoding = 'reverseGeocoding',
   routing = 'routing',
   isochrone = 'isochrone',
   roads = 'roads',
@@ -56,6 +58,7 @@ export function registerTools() {
     getUsZipcodeGeojson,
     queryUSZipcodes,
     geocoding,
+    reverseGeocoding,
     routing,
     isochrone,
     roads,
