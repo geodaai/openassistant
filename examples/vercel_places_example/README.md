@@ -1,96 +1,138 @@
-# Vercel Places Example
+# Places Tool Example with GeoJSON Support
 
-This example demonstrates how to use OpenAssistant tools for location-based queries, place searches, routing, and spatial analysis with Next.js and Vercel AI SDK.
-
-## Setup
-
-1. Install dependencies:
-```bash
-npm install
-```
-
-2. Set up your environment variables:
-```bash
-cp env.example .env.local
-```
-
-Add your API tokens to `.env.local`:
-```
-OPENAI_API_KEY=your_openai_api_key_here
-FSQ_TOKEN=your_foursquare_api_token_here
-MAPBOX_TOKEN=your_mapbox_api_token_here
-```
-
-3. Run the development server:
-```bash
-npm run dev
-```
-
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+This example demonstrates how to use the OpenAssistant Places tools with GeoJSON output for mapping and geospatial applications.
 
 ## Features
 
-This example includes the following tools:
+- **Place Search**: Search for places using Foursquare Places API
+- **Geotagging**: Find places near specific coordinates
+- **GeoJSON Output**: Transform search results into GeoJSON format for mapping tools
+- **Interactive Maps**: Visualize results using Kepler.gl
+- **Geospatial Analysis**: Buffer analysis and spatial operations
 
-### Places Tools (@openassistant/places)
-- **geotagging**: Find places near a specific location using Foursquare's Snap to Place technology
-- **placeSearch**: Search for places using Foursquare's Places API
+## GeoJSON Support
 
-### OSM Tools (@openassistant/osm)
-- **geocoding**: Convert addresses to coordinates
-- **routing**: Find routes between two points using Mapbox Directions API
-- **isochrone**: Get reachable areas within a time limit from a starting point
+The place search tool now includes GeoJSON output that can be consumed by various mapping and geospatial tools:
 
-### Geoda Tools (@openassistant/geoda)
-- **buffer**: Create buffer zones around geometries
+### GeoJSON Structure
 
-### Map Tools (@openassistant/map)
-- **downloadMapData**: Download map data for visualization
-- **keplergl**: Visualize data on interactive maps
+```typescript
+interface GeoJSONFeatureCollection {
+  type: 'FeatureCollection';
+  features: GeoJSONFeature[];
+  properties?: {
+    searchMetadata?: {
+      query?: string;
+      location?: { longitude: number; latitude: number; radius?: number };
+      near?: string;
+      categories?: string[];
+      // ... other search parameters
+    };
+    totalFeatures: number;
+    generatedAt: string;
+  };
+}
+```
+
+### Example Usage
+
+```typescript
+// Search for coffee shops
+const result = await placeSearch.execute({
+  query: 'coffee',
+  location: { latitude: 40.7589, longitude: -73.9851, radius: 1000 },
+});
+
+// Access GeoJSON output
+if (result.llmResult.success && result.llmResult.geojson) {
+  const geojson = JSON.parse(result.llmResult.geojson);
+  console.log('Found', geojson.features.length, 'places');
+  
+  // Use with mapping libraries
+  // geojson can be directly consumed by Leaflet, Mapbox, etc.
+}
+```
+
+### Integration Examples
+
+#### Leaflet.js
+```javascript
+import L from 'leaflet';
+
+// Add GeoJSON to a Leaflet map
+L.geoJSON(geojsonData).addTo(map);
+```
+
+#### Mapbox GL JS
+```javascript
+import mapboxgl from 'mapbox-gl';
+
+// Add GeoJSON source to Mapbox
+map.addSource('places', {
+  type: 'geojson',
+  data: geojsonData
+});
+```
+
+#### QGIS
+The GeoJSON can be imported directly into QGIS for spatial analysis.
+
+#### Python (GeoPandas)
+```python
+import geopandas as gpd
+
+# Load GeoJSON into GeoPandas
+gdf = gpd.read_file('places.geojson')
+```
+
+## Getting Started
+
+1. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+2. **Set up environment variables**:
+   Create a `.env.local` file with:
+   ```
+   FSQ_TOKEN=your_foursquare_token
+   MAPBOX_TOKEN=your_mapbox_token
+   ```
+
+3. **Run the development server**:
+   ```bash
+   npm run dev
+   ```
+
+4. **Open your browser** and navigate to `http://localhost:3000`
 
 ## Example Queries
 
-### Place Searches
-- "Find coffee shops near Times Square"
+Try these example queries to test the GeoJSON functionality:
+
+- "Find coffee shops near Times Square and show them on a map"
 - "Search for restaurants within 2km of the Eiffel Tower"
+- "Find gas stations near me and create a buffer around them"
 - "What are the best rated hotels in San Francisco?"
-- "Find gas stations near me"
 
-### Geocoding and Routing
-- "Get directions from New York to Boston"
-- "Find the walking route from Times Square to Central Park"
-- "How long does it take to drive from LA to San Francisco?"
+## Tools Available
 
-### Spatial Analysis
-- "Create a 5km buffer around these roads"
-- "Show me the area reachable within 30 minutes from downtown"
+- **placeSearch**: Search for places with GeoJSON output
+- **geotagging**: Find places near coordinates
+- **geocoding**: Convert addresses to coordinates
+- **routing**: Find routes between points
+- **isochrone**: Get reachable areas within time limits
+- **buffer**: Create buffer zones around geometries
+- **keplergl**: Visualize data on interactive maps
 
-### Combined Workflows
-- "Find coffee shops near Times Square and create a 1km buffer around them"
-- "Get directions to the nearest hospital and show the route on a map"
+## GeoJSON Benefits
 
-## How it Works
+1. **Standard Format**: GeoJSON is widely supported by mapping libraries
+2. **Rich Metadata**: Includes all place information in feature properties
+3. **Spatial Analysis**: Can be used with GIS tools for analysis
+4. **Visualization**: Easy to display on maps and charts
+5. **Interoperability**: Works with most geospatial tools and platforms
 
-This example uses:
-- `@openassistant/places` for place search and geotagging functionality
-- `@openassistant/osm` for geocoding, routing, and isochrone analysis
-- `@openassistant/geoda` for spatial operations like buffering
-- `@openassistant/map` for map data download and visualization
-- `@openassistant/utils` for tool integration and caching
-- Vercel AI SDK for chat interface
-- Next.js for the web application framework
+## License
 
-The tools integrate seamlessly with AI chat, allowing users to ask natural language questions about places, get directions, perform spatial analysis, and visualize results on interactive maps.
-
-## API Keys Required
-
-- **OpenAI API Key**: For the AI chat functionality
-- **Foursquare API Token**: For place search and geotagging features
-- **Mapbox API Token**: For routing, isochrone, and map visualization features
-
-## Architecture
-
-The example follows a server-client architecture where:
-- Server-side tools (geotagging, placeSearch, geocoding, routing, isochrone, buffer, downloadMapData) are executed on the server with result caching
-- Client-side tools (keplergl) are executed in the browser for interactive visualization
-- Tool results are cached and can be referenced by subsequent tool calls in the same conversation 
+MIT 

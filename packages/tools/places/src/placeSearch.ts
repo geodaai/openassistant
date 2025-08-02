@@ -13,7 +13,28 @@ import {
   FoursquarePhotoExtended,
   FoursquareTipExtended,
   FoursquareContext,
+  PlaceSearchResult,
+  PlaceSearchMetadata,
 } from './types';
+
+// GeoJSON types
+interface GeoJSONPoint {
+  type: 'Point';
+  coordinates: [number, number]; // [longitude, latitude]
+}
+
+interface GeoJSONFeature {
+  type: 'Feature';
+  geometry: GeoJSONPoint;
+  properties: Record<string, unknown>;
+  id?: string;
+}
+
+interface GeoJSONFeatureCollection {
+  type: 'FeatureCollection';
+  features: GeoJSONFeature[];
+  properties?: Record<string, unknown>;
+}
 
 interface FoursquarePlace extends FoursquarePlaceBase {
   photos?: FoursquarePhotoExtended[];
@@ -54,14 +75,14 @@ export type PlaceSearchFunctionArgs = z.ZodObject<{
       latitude: z.ZodNumber;
       longitude: z.ZodNumber;
     }>
-  >;
+  >; // Coordinate type
   sw: z.ZodOptional<
     z.ZodObject<{
       latitude: z.ZodNumber;
       longitude: z.ZodNumber;
     }>
-  >;
-  polygonDatasetName: z.ZodOptional<z.ZodString>;
+  >; // Coordinate type
+  isochroneDatasetName: z.ZodOptional<z.ZodString>;
   limit: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
   sort: z.ZodOptional<
     z.ZodDefault<z.ZodEnum<['relevance', 'rating', 'distance']>>
@@ -75,24 +96,26 @@ export type PlaceSearchLlmResult = {
   datasetName?: string;
   query?: string;
   location?: {
-    longitude: number;
-    latitude: number;
+    latitude?: number;
+    longitude?: number;
     radius?: number;
   };
   near?: string;
   result?: string;
+  geojson?: string;
   error?: string;
 };
 
 export type PlaceSearchAdditionalData = {
   query: string;
   location?: {
-    longitude: number;
-    latitude: number;
+    latitude?: number;
+    longitude?: number;
     radius?: number;
   };
   near?: string;
   datasetName: string;
+  geojson?: GeoJSONFeatureCollection;
   [datasetName: string]: unknown;
 };
 
@@ -100,6 +123,73 @@ export type ExecutePlaceSearchResult = {
   llmResult: PlaceSearchLlmResult;
   additionalData?: PlaceSearchAdditionalData;
 };
+
+/**
+ * Transforms place search results into GeoJSON format
+ * @param places - Array of place objects from Foursquare API
+ * @param searchMetadata - Optional metadata about the search
+ * @returns GeoJSON FeatureCollection
+ */
+function transformPlacesToGeoJSON(
+  places: PlaceSearchResult[],
+  searchMetadata?: PlaceSearchMetadata
+): GeoJSONFeatureCollection {
+  const features: GeoJSONFeature[] = places.map((place) => ({
+    type: 'Feature',
+    id: place.id,
+    geometry: {
+      type: 'Point',
+      coordinates: [place.location.longitude, place.location.latitude],
+    },
+    properties: {
+      id: place.id,
+      name: place.name,
+      address: place.location.address,
+      city: place.location.city,
+      state: place.location.state,
+      country: place.location.country,
+      postalCode: place.location.postalCode,
+      categories: place.categories,
+      chains: place.chains,
+      distance: place.distance,
+      phone: place.phone,
+      website: place.website,
+      rating: place.rating,
+      price: place.price,
+      hours: place.hours,
+      description: place.description,
+      email: place.email,
+      attributes: place.attributes,
+      photos: place.photos,
+      popularity: place.popularity,
+      verified: place.verified,
+      socialMedia: place.socialMedia,
+      stats: place.stats,
+      tastes: place.tastes,
+      tips: place.tips,
+      dateCreated: place.dateCreated,
+      dateRefreshed: place.dateRefreshed,
+      dateClosed: place.dateClosed,
+      extendedLocation: place.extendedLocation,
+      hoursPopular: place.hoursPopular,
+      link: place.link,
+      menu: place.menu,
+      placemakerUrl: place.placemakerUrl,
+      storeId: place.storeId,
+      relatedPlaces: place.relatedPlaces,
+    },
+  }));
+
+  return {
+    type: 'FeatureCollection',
+    features,
+    properties: {
+      searchMetadata,
+      totalFeatures: features.length,
+      generatedAt: new Date().toISOString(),
+    },
+  };
+}
 
 /**
  * ## Place Search Tool
@@ -155,8 +245,7 @@ export const placeSearch = extendedTool<
   PlaceSearchAdditionalData,
   FoursquareToolContext
 >({
-  description:
-    'Search for places using the Foursquare Places API. You can search by name, category, or other criteria within a specified location or area.',
+  description: 'Search for places using the Foursquare Places API.',
   parameters: z.object({
     query: z
       .string()
@@ -253,9 +342,9 @@ export const placeSearch = extendedTool<
       })
       .describe('South-west corner for rectangular search bounds')
       .optional(),
-    polygonDatasetName: z
+    isochroneDatasetName: z
       .string()
-      .describe('Dataset name of the polygon GeoJSON to use for the search')
+      .describe('Dataset name of the isochrone GeoJSON')
       .optional(),
     limit: z
       .number()
@@ -304,7 +393,7 @@ export const placeSearch = extendedTool<
         currentTimestamp,
         ne,
         sw,
-        polygonDatasetName,
+        isochroneDatasetName,
         limit = 10,
         sort,
         session_token,
@@ -319,7 +408,7 @@ export const placeSearch = extendedTool<
       console.log('  - limit:', limit);
       console.log('  - sort:', sort);
       console.log('  - currentTimestamp:', currentTimestamp);
-      console.log('  - polygonDatasetName:', polygonDatasetName);
+      console.log('  - isochroneDatasetName:', isochroneDatasetName);
 
       // Generate output dataset name
       const outputDatasetName = `places_${generateId()}`;
@@ -347,11 +436,16 @@ export const placeSearch = extendedTool<
         console.log('  ⚠️  No query parameter provided');
       }
 
-      // Add optional parameters
-      if (limit) url.searchParams.set('limit', limit.toString());
+      // Check if rectangular bounds are provided
+      const hasRectangularBounds = ne && sw;
+
+      // Set limit based on search type
+      const effectiveLimit = hasRectangularBounds ? 50 : limit || 10;
+      url.searchParams.set('limit', effectiveLimit.toString());
+
+      // Add sort parameter
       if (sort) url.searchParams.set('sort', sort);
 
-      // Add location parameters using the new format
       if (location) {
         // Use the new ll parameter format: "latitude,longitude"
         url.searchParams.set(
@@ -363,22 +457,18 @@ export const placeSearch = extendedTool<
         url.searchParams.set('radius', radius.toString());
         console.log('  📍 Added location parameters:');
         console.log('    - ll:', `${location.latitude},${location.longitude}`);
-        console.log('    - radius:', radius);
-      } else if (near) {
-        url.searchParams.set('near', near);
-        console.log('  📍 Added near parameter:', near);
-      } else {
-        console.log('  ⚠️  No location parameters provided');
-      }
+      } 
 
-      // Add rectangular bounds
-      if (ne && sw) {
+      // Add location parameters based on search type
+      if (hasRectangularBounds) {
+        // When using rectangular bounds, don't pass latitude, longitude, and radius
         url.searchParams.set('ne', `${ne.latitude},${ne.longitude}`);
         url.searchParams.set('sw', `${sw.latitude},${sw.longitude}`);
-      } else if (polygonDatasetName && 'getGeometries' in options.context) {
+      } else if (isochroneDatasetName && 'getGeometries' in options.context) {
+        // Add rectangular bounds from polygon if no explicit bounds provided
         // use the polygon to get ne and sw
         const { getGeometries } = options.context;
-        const polygonGeoJSON = await getGeometries?.(polygonDatasetName);
+        const polygonGeoJSON = await getGeometries?.(isochroneDatasetName);
         if (polygonGeoJSON) {
           let ne: { latitude: number; longitude: number } | undefined;
           let sw: { latitude: number; longitude: number } | undefined;
@@ -390,24 +480,61 @@ export const placeSearch = extendedTool<
                 feature.geometry.type === 'MultiPolygon'
               ) {
                 const coordinates = feature.geometry.coordinates;
-                coordinates.forEach((coordinate) => {
-                  const [longitude, latitude] = coordinate;
-                  if (latitude > (ne?.latitude ?? -Infinity)) {
-                    ne = { latitude, longitude };
-                  }
-                  if (latitude < (sw?.latitude ?? Infinity)) {
-                    sw = { latitude, longitude };
-                  }
+                // Handle both Polygon and MultiPolygon coordinates
+                const allCoordinates =
+                  feature.geometry.type === 'Polygon'
+                    ? coordinates
+                    : coordinates.flat();
+
+                allCoordinates.forEach((ring) => {
+                  ring.forEach((coordinate) => {
+                    const [longitude, latitude] = coordinate;
+                    if (latitude > (ne?.latitude ?? -Infinity)) {
+                      ne = { latitude, longitude };
+                    }
+                    if (latitude < (sw?.latitude ?? Infinity)) {
+                      sw = { latitude, longitude };
+                    }
+                  });
                 });
               }
             }
             if (ne && sw) {
-              url.searchParams.set('ne', `${ne.latitude},${ne.longitude}`);
-              url.searchParams.set('sw', `${sw.latitude},${sw.longitude}`);
+              // url.searchParams.set('ne', `${ne.latitude},${ne.longitude}`);
+              // url.searchParams.set('sw', `${sw.latitude},${sw.longitude}`);
+              // Set limit to 50 for polygon-derived rectangular search
+              url.searchParams.set('limit', '50');
+              // set the radius to larger one so that all the places are included
+              url.searchParams.set('radius', '10000');
+              url.searchParams.set('order', 'distance');
             }
           }
         }
       }
+      // else {
+      //   // Default to latitude, longitude, and radius when no rectangular bounds
+      //   if (location) {
+      //     // Use the new ll parameter format: "latitude,longitude"
+      //     url.searchParams.set(
+      //       'll',
+      //       `${location.latitude},${location.longitude}`
+      //     );
+      //     // Set default radius to 1000 meters if not provided
+      //     const radius = location.radius ?? 1000;
+      //     url.searchParams.set('radius', radius.toString());
+      //     console.log('  📍 Added location parameters:');
+      //     console.log(
+      //       '    - ll:',
+      //       `${location.latitude},${location.longitude}`
+      //     );
+      //     console.log('    - radius:', radius);
+      //   } else if (near) {
+      //     url.searchParams.set('near', near);
+      //     console.log('  📍 Added near parameter:', near);
+      //   } else {
+      //     console.log('  ⚠️  No location parameters provided');
+      //   }
+      // }
 
       // Add categories if specified
       if (categories && categories.length > 0) {
@@ -473,17 +600,11 @@ export const placeSearch = extendedTool<
       }
 
       const data = (await response.json()) as FoursquarePlacesResponse;
-      console.log('📊 API Response data:');
-      console.log('  - Total results:', data.results?.length || 0);
-      console.log(
-        '  - Results:',
-        data.results
-          ?.slice(0, 2)
-          .map((p) => ({ name: p.name, distance: p.distance })) || []
-      );
+
+      // Sort the data.results by distance
+      data.results.sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0));
 
       if (!data.results || data.results.length === 0) {
-        console.log('❌ No places found in API response');
         return {
           llmResult: {
             success: false,
@@ -491,8 +612,6 @@ export const placeSearch = extendedTool<
           },
         };
       }
-
-      console.log('✅ Found', data.results.length, 'places in API response');
 
       // Transform the results for better usability
       const placesData = data.results.map((place) => ({
@@ -557,10 +676,21 @@ export const placeSearch = extendedTool<
         ...(place.related_places && { relatedPlaces: place.related_places }),
       }));
 
-      console.log('📋 Returning search results');
-      console.log('  - Dataset name:', outputDatasetName);
-      console.log('  - Query:', query);
-      console.log('  - Places found:', placesData.length);
+      // Transform to GeoJSON format
+      const geojsonData = transformPlacesToGeoJSON(placesData, {
+        query,
+        location,
+        near,
+        categories,
+        chains,
+        exclude_chains,
+        exclude_all_chains,
+        min_price,
+        max_price,
+        open_at,
+        open_now,
+        sort,
+      });
 
       return {
         llmResult: {
@@ -569,7 +699,7 @@ export const placeSearch = extendedTool<
           query,
           ...(location && { location }),
           ...(near && { near }),
-          result: JSON.stringify(placesData, null, 2),
+          result: `Successfully searched for places using the Foursquare Places API. The GeoJSON data has been saved with the dataset name: ${outputDatasetName}.`,
         },
         additionalData: {
           query: query || '',
@@ -577,22 +707,8 @@ export const placeSearch = extendedTool<
           ...(near && { near }),
           datasetName: outputDatasetName,
           [outputDatasetName]: {
-            type: 'places',
-            content: placesData,
-            metadata: {
-              totalResults: placesData.length,
-              searchQuery: query,
-              location: location || near,
-              categories,
-              chains,
-              exclude_chains,
-              exclude_all_chains,
-              min_price,
-              max_price,
-              open_at,
-              open_now,
-              sort,
-            },
+            type: 'geojson',
+            content: geojsonData,
           },
         },
       };
@@ -628,3 +744,7 @@ export type PlaceSearchTool = typeof placeSearch;
 export type PlaceSearchToolContext = {
   getFsqToken: () => string;
 };
+
+// Export GeoJSON types and transformation function for use by other tools
+export type { GeoJSONPoint, GeoJSONFeature, GeoJSONFeatureCollection };
+export { transformPlacesToGeoJSON };

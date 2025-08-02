@@ -197,6 +197,81 @@ export interface FoursquarePlaceBase {
   website?: string;
 }
 
+// Optimized types for place search results
+export interface PlaceSearchResult {
+  id: string;
+  name: string;
+  location: {
+    latitude: number;
+    longitude: number;
+    address?: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    postalCode?: string;
+  };
+  categories?: Array<{
+    id: string;
+    name: string;
+    icon?: string;
+  }>;
+  chains?: Array<{
+    id: string;
+    name: string;
+    logo?: string;
+  }>;
+  distance?: number;
+  phone?: string;
+  website?: string;
+  rating?: number;
+  price?: number;
+  hours?: unknown;
+  description?: string;
+  email?: string;
+  attributes?: unknown;
+  photos?: Array<{
+    id: string;
+    url: string;
+  }>;
+  popularity?: number;
+  verified?: boolean;
+  socialMedia?: unknown;
+  stats?: unknown;
+  tastes?: unknown;
+  tips?: unknown;
+  dateCreated?: string;
+  dateRefreshed?: string;
+  dateClosed?: string;
+  extendedLocation?: unknown;
+  hoursPopular?: unknown;
+  link?: string;
+  menu?: unknown;
+  placemakerUrl?: string;
+  storeId?: string;
+  relatedPlaces?: unknown;
+}
+
+// Optimized search metadata type
+export interface PlaceSearchMetadata {
+  query?: string;
+  location?: {
+    latitude?: number;
+    longitude?: number;
+    radius?: number;
+  };
+  near?: string;
+  categories?: string[];
+  chains?: string[];
+  exclude_chains?: string[];
+  exclude_all_chains?: boolean;
+  min_price?: number;
+  max_price?: number;
+  open_at?: string;
+  open_now?: boolean;
+  sort?: string;
+}
+
+
 // Common coordinate types
 export interface Coordinate {
   latitude: number;
