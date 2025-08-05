@@ -310,6 +310,8 @@ export const geotagging = extendedTool<
       // find the closest place from the candidatesData
       const closestPlace = candidatesData.sort((a, b) => (a.distance || 0) - (b.distance || 0))[0];
 
+      console.log('fsq_place_id: ', closestPlace.id);
+
       return {
         llmResult: {
           success: true,

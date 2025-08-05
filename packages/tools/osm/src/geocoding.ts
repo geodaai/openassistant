@@ -74,10 +74,51 @@ export const geocoding = extendedTool<
       // Use the global rate limiter before making the API call
       await nominatimRateLimiter.waitForNextCall();
 
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json`
-      );
-      const data = await response.json();
+      const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json`;
+      console.log('geocoding url: ', url);
+
+      // Retry mechanism for better reliability
+      let data;
+      let lastError;
+      
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+          const response = await fetch(url, {
+            headers: {
+              'User-Agent': 'OpenAssistant/1.0 (https://github.com/openassistant/openassistant)',
+              'Accept': 'application/json',
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const contentType = response.headers.get('content-type');
+          if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            throw new Error(`Expected JSON response but got: ${contentType}. Response: ${text.substring(0, 200)}...`);
+          }
+
+          data = await response.json();
+          break; // Success, exit retry loop
+        } catch (error) {
+          lastError = error;
+          if (attempt < 3) {
+            console.log(`Attempt ${attempt} failed, retrying in ${attempt * 1000}ms...`);
+            await new Promise(resolve => setTimeout(resolve, attempt * 1000));
+            await nominatimRateLimiter.waitForNextCall(); // Rate limit between retries
+          }
+        }
+      }
+
+      if (!data) {
+        throw lastError || new Error('Failed to fetch data after 3 attempts');
+      }
+
+      if (!Array.isArray(data) || data.length === 0) {
+        throw new Error('No geocoding results found for the given address');
+      }
 
       const geojson: GeoJSON.FeatureCollection = {
         type: 'FeatureCollection',
