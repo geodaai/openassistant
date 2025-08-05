@@ -4,16 +4,22 @@
 import { getTool, OnToolCompleted } from '@openassistant/utils';
 import { placeSearch } from './placeSearch';
 import { geotagging } from './geoTagging';
+import { webSearch } from './webSearch';
 
 // export the enum of tool names, so users can use it to check if a tool is available
 export enum PlacesToolNames {
   placeSearch = 'placeSearch',
   geotagging = 'geotagging',
+  webSearch = 'webSearch',
 }
 
 export type FoursquareToolContext = {
   getFsqToken: () => string;
   getGeometries?: (datasetName: string) => Promise<GeoJSON.Feature[] | null>;
+};
+
+export type SearchAPIToolContext = {
+  getSearchAPIKey: () => string;
 };
 
 export function isFoursquareToolContext(
@@ -26,10 +32,21 @@ export function isFoursquareToolContext(
   );
 }
 
+export function isSearchAPIToolContext(
+  context: unknown
+): context is SearchAPIToolContext {
+  return (
+    typeof context === 'object' &&
+    context !== null &&
+    'getSearchAPIKey' in context
+  );
+}
+
 export function registerTools() {
   return {
     placeSearch,
     geotagging,
+    webSearch,
   };
 }
 

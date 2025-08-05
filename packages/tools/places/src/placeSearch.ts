@@ -409,6 +409,7 @@ export const placeSearch = extendedTool<
       console.log('  - sort:', sort);
       console.log('  - currentTimestamp:', currentTimestamp);
       console.log('  - isochroneDatasetName:', isochroneDatasetName);
+      console.log('  - super_venue_id:', super_venue_id);
 
       // Generate output dataset name
       const outputDatasetName = `places_${generateId()}`;
@@ -612,6 +613,8 @@ export const placeSearch = extendedTool<
           },
         };
       }
+
+      console.log('fsq_place_id: ', data.results[0].fsq_place_id);
 
       // Transform the results for better usability
       const placesData = data.results.map((place) => ({

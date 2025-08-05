@@ -6,6 +6,7 @@ import { extendedTool, generateId } from '@openassistant/utils';
 import { RateLimiter } from './utils/rateLimiter';
 
 // Create a single instance to be shared across all calls
+// Nominatim requires 1 second between requests
 const nominatimRateLimiter = new RateLimiter(1000);
 
 export type ReverseGeocodingFunctionArgs = z.ZodObject<{
@@ -63,7 +64,9 @@ export const reverseGeocoding = extendedTool<
     'Reverse geocode coordinates to get the address and location information for a given latitude and longitude',
   parameters: z.object({
     latitude: z.number().describe('The latitude coordinate (decimal degrees)'),
-    longitude: z.number().describe('The longitude coordinate (decimal degrees)'),
+    longitude: z
+      .number()
+      .describe('The longitude coordinate (decimal degrees)'),
   }),
   execute: async (
     args
@@ -85,14 +88,55 @@ export const reverseGeocoding = extendedTool<
       // Use the global rate limiter before making the API call
       await nominatimRateLimiter.waitForNextCall();
 
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
-      );
-      const data = await response.json();
+      const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
+      console.log('reverseGeocoding url: ', url);
+
+      // Retry mechanism for better reliability
+      let data;
+      let lastError;
+      
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+          const response = await fetch(url, {
+            headers: {
+              'User-Agent': 'OpenAssistant/1.0 (https://github.com/openassistant/openassistant)',
+              'Accept': 'application/json',
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const contentType = response.headers.get('content-type');
+          if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            throw new Error(`Expected JSON response but got: ${contentType}. Response: ${text.substring(0, 200)}...`);
+          }
+
+          data = await response.json();
+          break; // Success, exit retry loop
+        } catch (error) {
+          lastError = error;
+          if (attempt < 3) {
+            console.log(`Attempt ${attempt} failed, retrying in ${attempt * 1000}ms...`);
+            await new Promise(resolve => setTimeout(resolve, attempt * 1000));
+            await nominatimRateLimiter.waitForNextCall(); // Rate limit between retries
+          }
+        }
+      }
+
+      if (!data) {
+        throw lastError || new Error('Failed to fetch data after 3 attempts');
+      }
+
+      console.log('reverseGeocoding data: ', data);
 
       if (data.error) {
         throw new Error(data.error);
       }
+
+      console.log('reverseGeocoding data: ', data);
 
       const geojson: GeoJSON.FeatureCollection = {
         type: 'FeatureCollection',
@@ -133,6 +177,7 @@ export const reverseGeocoding = extendedTool<
         },
       };
     } catch (error) {
+      console.error('reverseGeocoding error: ', error);
       return {
         llmResult: {
           success: false,
@@ -159,4 +204,4 @@ export type ExecuteReverseGeocodingResult = {
   };
 };
 
-export type ReverseGeocodingToolContext = object; 
+export type ReverseGeocodingToolContext = object;
