@@ -1,6 +1,3 @@
-// SPDX-License-Identifier: MIT
-// Copyright contributors to the openassistant project
-
 /// <reference types="next" />
 /// <reference types="next/image-types/global" />
 

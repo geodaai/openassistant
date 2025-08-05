@@ -3,4 +3,6 @@
 
 export * from './placeSearch';
 export * from './geoTagging';
-export * from './register-tools'; 
+export * from './webSearch';
+export * from './register-tools';
+export * from './types'; 
