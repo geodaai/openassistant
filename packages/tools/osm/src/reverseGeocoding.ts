@@ -6,13 +6,15 @@ import { extendedTool, generateId } from '@openassistant/utils';
 import { RateLimiter } from './utils/rateLimiter';
 
 // Create a single instance to be shared across all calls
+// Nominatim requires 1 second between requests
 const nominatimRateLimiter = new RateLimiter(1000);
 
-export type GeocodingFunctionArgs = z.ZodObject<{
-  address: z.ZodString;
+export type ReverseGeocodingFunctionArgs = z.ZodObject<{
+  latitude: z.ZodNumber;
+  longitude: z.ZodNumber;
 }>;
 
-export type GeocodingLlmResult = {
+export type ReverseGeocodingLlmResult = {
   success: boolean;
   datasetName?: string;
   geojson?: GeoJSON.FeatureCollection;
@@ -20,62 +22,74 @@ export type GeocodingLlmResult = {
   error?: string;
 };
 
-export type GeocodingAdditionalData = {
-  address: string;
+export type ReverseGeocodingAdditionalData = {
+  latitude: number;
+  longitude: number;
   datasetName: string;
   [datasetName: string]: unknown;
 };
 
 /**
- * ## Geocoding Tool
+ * ## Reverse Geocoding Tool
  *
- * This tool converts addresses into geographic coordinates (latitude and longitude) using OpenStreetMap's Nominatim service.
+ * This tool converts geographic coordinates (latitude and longitude) into human-readable addresses using OpenStreetMap's Nominatim service.
  *
  * Example user prompts:
- * - "Find the coordinates for 123 Main Street, New York"
- * - "What are the coordinates of the Eiffel Tower?"
- * - "Get the location of Central Park"
+ * - "What's the address at coordinates 40.7128, -74.0060?"
+ * - "Find the address for latitude 48.8584 and longitude 2.2945"
+ * - "What location is at 51.5074, -0.1278?"
  *
  * @example
  * ```typescript
- * import { geocoding, GeocodingTool } from "@openassistant/osm";
+ * import { reverseGeocoding, ReverseGeocodingTool } from "@openassistant/osm";
  * import { convertToVercelAiTool } from '@openassistant/utils';
  * import { generateText } from 'ai';
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
- *   prompt: 'What are the coordinates of the Eiffel Tower?',
+ *   prompt: 'What is the address at coordinates 40.7128, -74.0060?',
  *   tools: {
- *     geocoding: convertToVercelAiTool(geocoding),
+ *     reverseGeocoding: convertToVercelAiTool(reverseGeocoding),
  *   },
  * });
  * ```
  */
-export const geocoding = extendedTool<
-  GeocodingFunctionArgs,
-  GeocodingLlmResult,
-  GeocodingAdditionalData,
-  GeocodingToolContext
+export const reverseGeocoding = extendedTool<
+  ReverseGeocodingFunctionArgs,
+  ReverseGeocodingLlmResult,
+  ReverseGeocodingAdditionalData,
+  ReverseGeocodingToolContext
 >({
   description:
-    'Geocode an address to get the latitude and longitude of the address',
+    'Reverse geocode coordinates to get the address and location information for a given latitude and longitude',
   parameters: z.object({
-    address: z.string().describe('The address to geocode'),
+    latitude: z.number().describe('The latitude coordinate (decimal degrees)'),
+    longitude: z
+      .number()
+      .describe('The longitude coordinate (decimal degrees)'),
   }),
   execute: async (
     args
   ): Promise<{
-    llmResult: GeocodingLlmResult;
-    additionalData?: GeocodingAdditionalData;
+    llmResult: ReverseGeocodingLlmResult;
+    additionalData?: ReverseGeocodingAdditionalData;
   }> => {
     try {
-      const { address } = args;
+      const { latitude, longitude } = args;
+
+      // Validate coordinates
+      if (latitude < -90 || latitude > 90) {
+        throw new Error('Latitude must be between -90 and 90 degrees');
+      }
+      if (longitude < -180 || longitude > 180) {
+        throw new Error('Longitude must be between -180 and 180 degrees');
+      }
 
       // Use the global rate limiter before making the API call
       await nominatimRateLimiter.waitForNextCall();
 
-      const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json`;
-      console.log('geocoding url: ', url);
+      const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
+      console.log('reverseGeocoding url: ', url);
 
       // Retry mechanism for better reliability
       let data;
@@ -116,9 +130,13 @@ export const geocoding = extendedTool<
         throw lastError || new Error('Failed to fetch data after 3 attempts');
       }
 
-      if (!Array.isArray(data) || data.length === 0) {
-        throw new Error('No geocoding results found for the given address');
+      console.log('reverseGeocoding data: ', data);
+
+      if (data.error) {
+        throw new Error(data.error);
       }
+
+      console.log('reverseGeocoding data: ', data);
 
       const geojson: GeoJSON.FeatureCollection = {
         type: 'FeatureCollection',
@@ -127,35 +145,43 @@ export const geocoding = extendedTool<
             type: 'Feature',
             geometry: {
               type: 'Point',
-              coordinates: [data[0].lon, data[0].lat],
+              coordinates: [longitude, latitude],
             },
             properties: {
-              name: data[0].display_name,
+              name: data.display_name,
+              address: data.address,
+              type: data.type,
+              class: data.class,
+              place_id: data.place_id,
+              osm_id: data.osm_id,
+              osm_type: data.osm_type,
             },
           },
         ],
       };
 
-      const outputDatasetName = `geocoding_${generateId()}`;
+      const outputDatasetName = `reverse_geocoding_${generateId()}`;
 
       return {
         llmResult: {
           success: true,
           datasetName: outputDatasetName,
           geojson,
-          result: `Successfully geocoded address: ${address}. The GeoJSON data has been cached with the dataset name: ${outputDatasetName}.`,
+          result: `Successfully reverse geocoded coordinates (${latitude}, ${longitude}). The address is: ${data.display_name}. The GeoJSON data has been cached with the dataset name: ${outputDatasetName}.`,
         },
         additionalData: {
-          address,
+          latitude,
+          longitude,
           datasetName: outputDatasetName,
           [outputDatasetName]: geojson,
         },
       };
     } catch (error) {
+      console.error('reverseGeocoding error: ', error);
       return {
         llmResult: {
           success: false,
-          error: `Failed to geocode address: ${error}`,
+          error: `Failed to reverse geocode coordinates: ${error}`,
         },
       };
     }
@@ -163,18 +189,19 @@ export const geocoding = extendedTool<
   context: {},
 });
 
-export type GeocodingTool = typeof geocoding;
+export type ReverseGeocodingTool = typeof reverseGeocoding;
 
-export type ExecuteGeocodingResult = {
+export type ExecuteReverseGeocodingResult = {
   llmResult: {
     success: boolean;
     result?: GeoJSON.FeatureCollection;
     error?: string;
   };
   additionalData?: {
-    address: string;
+    latitude: number;
+    longitude: number;
     geojson: GeoJSON.FeatureCollection;
   };
 };
 
-export type GeocodingToolContext = object;
+export type ReverseGeocodingToolContext = object;

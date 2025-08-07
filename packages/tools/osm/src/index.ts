@@ -2,6 +2,7 @@
 // Copyright contributors to the openassistant project
 
 export * from './geocoding';
+export * from './reverseGeocoding';
 export * from './routing';
 export * from './isochrone';
 export * from './roads';

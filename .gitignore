@@ -18,3 +18,4 @@ packages/.DS_Store
 *.log
 .turbo
 node_modules/
+.vscode/
