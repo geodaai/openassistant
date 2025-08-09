@@ -1,6 +1,6 @@
 {
   "name": "@openassistant/places",
-  "version": "0.1.0",
+  "version": "0.5.14",
   "author": "Xun Li<lixun910@gmail.com>",
   "description": "The Places tools for OpenAssistant",
   "main": "dist/index.cjs.js",
