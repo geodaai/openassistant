@@ -8,6 +8,7 @@ import { OpenAIAssistant } from '../llm/openai';
 import { VercelAi } from '../llm/vercelai';
 import { XaiAssistant } from '../llm/grok';
 import { AnthropicAssistant } from '../llm/anthropic';
+import { BedrockAssistant } from '../llm/bedrock';
 
 /**
  * Returns the appropriate Assistant model based on the provider. (Internal use)
@@ -36,9 +37,9 @@ import { AnthropicAssistant } from '../llm/anthropic';
  * ```
  *
  * @param {Object} options - The options object
- * @param {string} [options.provider] - The name of the AI provider. The supported providers are: 'openai', 'anthropic', 'google', 'deepseek', 'xai', 'ollama'
+ * @param {string} [options.provider] - The name of the AI provider. The supported providers are: 'openai', 'anthropic', 'google', 'deepseek', 'xai', 'ollama', 'bedrock'
  * @param {string} [options.chatEndpoint] - The chat endpoint that handles the chat requests, e.g. '/api/chat'. This is required for server-side support.
- * @returns {typeof VercelAi | typeof AnthropicAssistant | typeof OpenAIAssistant | typeof GoogleAIAssistant | typeof DeepSeekAssistant | typeof XaiAssistant | typeof OllamaAssistant} The assistant model class.
+ * @returns {typeof VercelAi | typeof AnthropicAssistant | typeof OpenAIAssistant | typeof GoogleAIAssistant | typeof DeepSeekAssistant | typeof XaiAssistant | typeof OllamaAssistant | typeof BedrockAssistant} The assistant model class.
  */
 export function GetAssistantModelByProvider({
   provider,
@@ -53,7 +54,8 @@ export function GetAssistantModelByProvider({
   | typeof GoogleAIAssistant
   | typeof DeepSeekAssistant
   | typeof XaiAssistant
-  | typeof OllamaAssistant {
+  | typeof OllamaAssistant
+  | typeof BedrockAssistant {
   // server-side support
   if (chatEndpoint) {
     return VercelAi;
@@ -72,6 +74,8 @@ export function GetAssistantModelByProvider({
       return XaiAssistant;
     case 'ollama':
       return OllamaAssistant;
+    case 'bedrock':
+      return BedrockAssistant;
     default:
       return OpenAIAssistant;
   }

@@ -6439,6 +6439,7 @@ __metadata:
     zod: "npm:^3.24.4"
     zod-to-json-schema: "npm:^3.24.1"
   peerDependencies:
+    "@ai-sdk/amazon-bedrock": ^1.1.6
     "@ai-sdk/anthropic": ^1.1.14
     "@ai-sdk/deepseek": ^0.1.8
     "@ai-sdk/google": ^1.1.8
