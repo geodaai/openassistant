@@ -99,6 +99,7 @@ type VercelAiConfigureProps = {
   toolChoice?: ToolChoice<ToolSet>;
   toolCallStreaming?: boolean;
   headers?: Record<string, string>;
+  baseURL?: string;
 };
 
 /**
@@ -118,6 +119,7 @@ export class VercelAi extends AbstractAssistant {
   protected static maxTokens = 128000; // 128k tokens
   protected static hasInitializedServer = false;
   protected static headers: Record<string, string> = {};
+  protected static baseURL = '';
 
   // used by each processTextMessage call
   protected toolSteps = 0;
@@ -173,6 +175,7 @@ export class VercelAi extends AbstractAssistant {
     if (config.toolCallStreaming !== undefined)
       VercelAi.toolCallStreaming = config.toolCallStreaming;
     if (config.headers) VercelAi.headers = config.headers;
+    if (config.baseURL) VercelAi.baseURL = config.baseURL;
   }
 
   public static override registerTool({
