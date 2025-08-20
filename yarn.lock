@@ -6447,6 +6447,8 @@ __metadata:
     ollama-ai-provider-v2: ^0.0.6
     react: ">=18.2"
   peerDependenciesMeta:
+    "@ai-sdk/amazon-bedrock":
+      optional: true
     "@ai-sdk/anthropic":
       optional: true
     "@ai-sdk/deepseek":

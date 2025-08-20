@@ -84,13 +84,13 @@ export class VoiceHandler {
         provider,
       });
 
-      (AssistantModel as any).configure({
+      AssistantModel.configure({
         apiKey,
         model,
         temperature: 0,
       });
 
-      this.model = await (AssistantModel as any).getInstance();
+      this.model = await AssistantModel.getInstance();
     } catch (error) {
       console.error('Failed to initialize VoiceHandler:', error);
     }

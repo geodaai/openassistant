@@ -9,7 +9,7 @@ import {
   SelectSection,
   Slider,
 } from '@heroui/react';
-import { GetAssistantModelByProvider } from '@openassistant/core';
+import { GetAssistantModelByProvider, AssistantClass } from '@openassistant/core';
 import { Icon } from '@iconify/react';
 import { ChangeEvent, useState, useEffect } from 'react';
 
@@ -177,7 +177,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
         const AssistantModel = await GetAssistantModelByProvider({
           provider: provider,
         });
-        const defaultUrl = (AssistantModel as any)?.getBaseURL?.() || '';
+        const defaultUrl = AssistantModel.getBaseURL?.() || '';
         setDefaultBaseUrl(defaultUrl);
       } catch (error) {
         console.error('Failed to load default base URL:', error);
@@ -311,7 +311,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
       });
 
       const success = (await Promise.race([
-        (AssistantModel as any)?.testConnection(apiKey, model),
+        AssistantModel.testConnection?.(apiKey, model),
         timeoutPromise,
       ])) as boolean;
 

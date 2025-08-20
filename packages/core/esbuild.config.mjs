@@ -23,6 +23,7 @@ const baseConfig = createBaseConfig({
     '@ai-sdk/xai',
     '@ai-sdk/react',
     '@ai-sdk/ui-utils',
+    '@ai-sdk/amazon-bedrock',
     'ollama-ai-provider-v2',
     'openai',
     'p-retry',

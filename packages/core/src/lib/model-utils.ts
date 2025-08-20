@@ -2,6 +2,22 @@
 // Copyright contributors to the openassistant project
 
 import { VercelAi } from '../llm/vercelai';
+import { VercelAiClientConfigureProps } from '../llm/vercelai-client';
+
+// Interface for Assistant classes with common methods
+// Using any for getInstance return type to accommodate different assistant implementations
+export interface AssistantClass {
+  configure(config: VercelAiClientConfigureProps & { chatEndpoint?: string; voiceEndpoint?: string }): void;
+  getInstance(): Promise<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+  registerTool(props: {
+    name: string;
+    tool: unknown;
+    component?: unknown;
+  }): void;
+  addToolResult?(toolCallId: string, additionalData: unknown): void;
+  testConnection?(apiKey: string, model: string): Promise<boolean>;
+  getBaseURL?(): string | void;
+}
 
 /**
  * Returns the appropriate Assistant model based on the provider. (Internal use)
@@ -32,7 +48,7 @@ import { VercelAi } from '../llm/vercelai';
  * @param {Object} options - The options object
  * @param {string} [options.provider] - The name of the AI provider. The supported providers are: 'openai', 'anthropic', 'google', 'deepseek', 'xai', 'ollama', 'bedrock'
  * @param {string} [options.chatEndpoint] - The chat endpoint that handles the chat requests, e.g. '/api/chat'. This is required for server-side support.
- * @returns {Promise<typeof VercelAi | unknown>} Promise that resolves to the assistant model class.
+ * @returns {Promise<AssistantClass>} Promise that resolves to the assistant model class.
  */
 export async function GetAssistantModelByProvider({
   provider,
@@ -40,31 +56,31 @@ export async function GetAssistantModelByProvider({
 }: {
   provider?: string;
   chatEndpoint?: string;
-}): Promise<typeof VercelAi | unknown> {
+}): Promise<AssistantClass> {
   // server-side support
   if (chatEndpoint) {
-    return VercelAi;
+    return VercelAi as unknown as AssistantClass;
   }
   
   // client-side support with dynamic imports
   try {
     switch (provider?.toLowerCase()) {
       case 'openai':
-        return (await import('../llm/openai')).OpenAIAssistant;
+        return (await import('../llm/openai')).OpenAIAssistant as unknown as AssistantClass;
       case 'anthropic':
-        return (await import('../llm/anthropic')).AnthropicAssistant;
+        return (await import('../llm/anthropic')).AnthropicAssistant as unknown as AssistantClass;
       case 'google':
-        return (await import('../llm/google')).GoogleAIAssistant;
+        return (await import('../llm/google')).GoogleAIAssistant as unknown as AssistantClass;
       case 'deepseek':
-        return (await import('../llm/deepseek')).DeepSeekAssistant;
+        return (await import('../llm/deepseek')).DeepSeekAssistant as unknown as AssistantClass;
       case 'xai':
-        return (await import('../llm/grok')).XaiAssistant;
+        return (await import('../llm/grok')).XaiAssistant as unknown as AssistantClass;
       case 'ollama':
-        return (await import('../llm/ollama')).OllamaAssistant;
+        return (await import('../llm/ollama')).OllamaAssistant as unknown as AssistantClass;
       case 'bedrock':
-        return (await import('../llm/bedrock')).BedrockAssistant;
+        return (await import('../llm/bedrock')).BedrockAssistant as unknown as AssistantClass;
       default:
-        return (await import('../llm/openai')).OpenAIAssistant;
+        return (await import('../llm/openai')).OpenAIAssistant as unknown as AssistantClass;
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);

@@ -62,8 +62,30 @@ module.exports = {
       exprContextCritical: false,
     };
 
-    // Add externals configuration, so Next.js won't bundle them
-    // config.externals = [...config.externals, 'wbg'];
+    // Configure webpack to ignore dynamic import failures for optional dependencies
+    config.ignoreWarnings = [
+      /Module not found: Can't resolve '@ai-sdk\/amazon-bedrock'/,
+      /Module not found: Can't resolve '@ai-sdk\/anthropic'/,
+      /Module not found: Can't resolve '@ai-sdk\/deepseek'/,
+      /Module not found: Can't resolve '@ai-sdk\/google'/,
+      /Module not found: Can't resolve '@ai-sdk\/xai'/,
+      /Module not found: Can't resolve 'ollama-ai-provider-v2'/,
+    ];
+
+    // Try to skip bundling optional dependencies using a custom resolver
+    const originalResolve = config.resolve;
+    config.resolve = {
+      ...originalResolve,
+      fallback: {
+        ...originalResolve?.fallback,
+        '@ai-sdk/amazon-bedrock': false,
+        '@ai-sdk/anthropic': false,
+        '@ai-sdk/deepseek': false,
+        '@ai-sdk/google': false,
+        '@ai-sdk/xai': false,
+        'ollama-ai-provider-v2': false,
+      },
+    };
 
     return config;
   },
