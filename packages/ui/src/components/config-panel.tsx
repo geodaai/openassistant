@@ -9,7 +9,7 @@ import {
   SelectSection,
   Slider,
 } from '@heroui/react';
-import { GetAssistantModelByProvider, AssistantClass } from '@openassistant/core';
+import { GetAssistantModelByProvider } from '@openassistant/core';
 import { Icon } from '@iconify/react';
 import { ChangeEvent, useState, useEffect } from 'react';
 
