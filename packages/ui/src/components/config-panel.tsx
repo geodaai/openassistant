@@ -154,6 +154,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
   );
   const [topP, setTopP] = useState(props.initialConfig?.topP || 0.8);
   const [baseUrl, setBaseUrl] = useState(props.initialConfig?.baseUrl);
+  const [defaultBaseUrl, setDefaultBaseUrl] = useState<string>('');
   const [mapBoxToken, setMapBoxToken] = useState(
     props.initialConfig?.mapBoxToken || getStoredMapBoxToken()
   );
@@ -168,6 +169,24 @@ export function ConfigPanel(props: ConfigPanelProps) {
       localStorage.setItem('openassistant-api-key', apiKey);
     }
   }, [apiKey]);
+
+  // Load default base URL when provider changes
+  useEffect(() => {
+    const loadDefaultBaseUrl = async () => {
+      try {
+        const AssistantModel = await GetAssistantModelByProvider({
+          provider: provider,
+        });
+        const defaultUrl = (AssistantModel as any)?.getBaseURL?.() || '';
+        setDefaultBaseUrl(defaultUrl);
+      } catch (error) {
+        console.error('Failed to load default base URL:', error);
+        setDefaultBaseUrl('');
+      }
+    };
+    
+    loadDefaultBaseUrl();
+  }, [provider]);
 
   // Store MapBox token in localStorage whenever it changes
   useEffect(() => {
@@ -269,10 +288,6 @@ export function ConfigPanel(props: ConfigPanelProps) {
     props.onConfigChange?.(generateConfig({ mapBoxToken: inputValue }));
   };
 
-  const AssistantModel = GetAssistantModelByProvider({
-    provider: provider,
-  });
-
   const headingClasses =
     'flex w-full sticky top-1 z-20 py-1.5 px-2 bg-default-100 shadow-small rounded-small';
 
@@ -281,6 +296,10 @@ export function ConfigPanel(props: ConfigPanelProps) {
   const onCheckConnection = async () => {
     setIsRunning(true);
     try {
+      const AssistantModel = await GetAssistantModelByProvider({
+        provider: provider,
+      });
+
       const timeoutPromise = new Promise((_, reject) => {
         setTimeout(
           () =>
@@ -292,7 +311,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
       });
 
       const success = (await Promise.race([
-        AssistantModel?.testConnection(apiKey, model),
+        (AssistantModel as any)?.testConnection(apiKey, model),
         timeoutPromise,
       ])) as boolean;
 
@@ -357,7 +376,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
         <Input
           type="string"
           label="Base URL"
-          value={baseUrl || AssistantModel?.getBaseURL() || ''}
+          value={baseUrl || defaultBaseUrl || ''}
           placeholder="Enter base URL here"
           className="max-w-full"
           required

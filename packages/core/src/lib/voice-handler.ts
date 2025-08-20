@@ -74,23 +74,26 @@ export class VoiceHandler {
     apiKey: string;
     model: string;
   }) {
-    const AssistantModel = GetAssistantModelByProvider({
-      provider,
-    });
-
-    AssistantModel.configure({
-      apiKey,
-      model,
-      temperature: 0,
-    });
-
     this.model = null; // Initialize as null
-    this.initialize(AssistantModel); // Call initialize without await
+    this.initialize(provider, apiKey, model); // Call initialize without await
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private async initialize(AssistantModel) {
-    this.model = await AssistantModel.getInstance();
+  private async initialize(provider: string, apiKey: string, model: string) {
+    try {
+      const AssistantModel = await GetAssistantModelByProvider({
+        provider,
+      });
+
+      (AssistantModel as any).configure({
+        apiKey,
+        model,
+        temperature: 0,
+      });
+
+      this.model = await (AssistantModel as any).getInstance();
+    } catch (error) {
+      console.error('Failed to initialize VoiceHandler:', error);
+    }
   }
 
   async processRequest(req: Request): Promise<Response> {

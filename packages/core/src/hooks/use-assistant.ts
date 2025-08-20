@@ -137,12 +137,12 @@ export function useAssistant(props: UseAssistantProps) {
       assistant = await createAssistant(props);
 
       // restore the history messages
-      if (props.historyMessages && props.historyMessages.length > 0) {
+      if (assistant && props.historyMessages && props.historyMessages.length > 0) {
         assistant.setMessages(convertToCoreMessages(props.historyMessages));
       }
 
       // set the abort controller
-      if (props.abortController) {
+      if (assistant && props.abortController) {
         assistant.setAbortController(props.abortController);
       }
 

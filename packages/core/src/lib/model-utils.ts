@@ -1,14 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { DeepSeekAssistant } from '../llm/deepseek';
-import { GoogleAIAssistant } from '../llm/google';
-import { OllamaAssistant } from '../llm/ollama';
-import { OpenAIAssistant } from '../llm/openai';
 import { VercelAi } from '../llm/vercelai';
-import { XaiAssistant } from '../llm/grok';
-import { AnthropicAssistant } from '../llm/anthropic';
-import { BedrockAssistant } from '../llm/bedrock';
 
 /**
  * Returns the appropriate Assistant model based on the provider. (Internal use)
@@ -17,7 +10,7 @@ import { BedrockAssistant } from '../llm/bedrock';
  *  ```tsx
  * import { GetAssistantModelByProvider } from '@openassistant/core';
  *
- * const AssistantModel = GetAssistantModelByProvider({
+ * const AssistantModel = await GetAssistantModelByProvider({
  *   provider: 'openai',
  * });
  *
@@ -39,44 +32,46 @@ import { BedrockAssistant } from '../llm/bedrock';
  * @param {Object} options - The options object
  * @param {string} [options.provider] - The name of the AI provider. The supported providers are: 'openai', 'anthropic', 'google', 'deepseek', 'xai', 'ollama', 'bedrock'
  * @param {string} [options.chatEndpoint] - The chat endpoint that handles the chat requests, e.g. '/api/chat'. This is required for server-side support.
- * @returns {typeof VercelAi | typeof AnthropicAssistant | typeof OpenAIAssistant | typeof GoogleAIAssistant | typeof DeepSeekAssistant | typeof XaiAssistant | typeof OllamaAssistant | typeof BedrockAssistant} The assistant model class.
+ * @returns {Promise<typeof VercelAi | unknown>} Promise that resolves to the assistant model class.
  */
-export function GetAssistantModelByProvider({
+export async function GetAssistantModelByProvider({
   provider,
   chatEndpoint,
 }: {
   provider?: string;
   chatEndpoint?: string;
-}):
-  | typeof VercelAi
-  | typeof AnthropicAssistant
-  | typeof OpenAIAssistant
-  | typeof GoogleAIAssistant
-  | typeof DeepSeekAssistant
-  | typeof XaiAssistant
-  | typeof OllamaAssistant
-  | typeof BedrockAssistant {
+}): Promise<typeof VercelAi | unknown> {
   // server-side support
   if (chatEndpoint) {
     return VercelAi;
   }
-  // client-side support
-  switch (provider?.toLowerCase()) {
-    case 'openai':
-      return OpenAIAssistant;
-    case 'anthropic':
-      return AnthropicAssistant;
-    case 'google':
-      return GoogleAIAssistant;
-    case 'deepseek':
-      return DeepSeekAssistant;
-    case 'xai':
-      return XaiAssistant;
-    case 'ollama':
-      return OllamaAssistant;
-    case 'bedrock':
-      return BedrockAssistant;
-    default:
-      return OpenAIAssistant;
+  
+  // client-side support with dynamic imports
+  try {
+    switch (provider?.toLowerCase()) {
+      case 'openai':
+        return (await import('../llm/openai')).OpenAIAssistant;
+      case 'anthropic':
+        return (await import('../llm/anthropic')).AnthropicAssistant;
+      case 'google':
+        return (await import('../llm/google')).GoogleAIAssistant;
+      case 'deepseek':
+        return (await import('../llm/deepseek')).DeepSeekAssistant;
+      case 'xai':
+        return (await import('../llm/grok')).XaiAssistant;
+      case 'ollama':
+        return (await import('../llm/ollama')).OllamaAssistant;
+      case 'bedrock':
+        return (await import('../llm/bedrock')).BedrockAssistant;
+      default:
+        return (await import('../llm/openai')).OpenAIAssistant;
+    }
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    throw new Error(
+      `Failed to load provider '${provider}': ${errorMessage}. ` +
+      `Make sure the required provider package is installed. ` +
+      `For example, for '${provider}' provider, install the corresponding @ai-sdk package.`
+    );
   }
 }

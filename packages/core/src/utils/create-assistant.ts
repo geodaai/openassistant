@@ -43,13 +43,13 @@ function isExtendedTool(tool: Tool | ExtendedTool): tool is ExtendedTool {
  * });
  */
 export async function createAssistant(props: UseAssistantProps) {
-  const AssistantModel = GetAssistantModelByProvider({
+  const AssistantModel = await GetAssistantModelByProvider({
     provider: props.modelProvider,
     chatEndpoint: props.chatEndpoint,
   });
 
   // configure the assistant model
-  AssistantModel.configure({
+  (AssistantModel as any).configure({
     chatEndpoint: props.chatEndpoint,
     voiceEndpoint: props.voiceEndpoint,
     model: props.model,
@@ -87,7 +87,7 @@ export async function createAssistant(props: UseAssistantProps) {
               const { additionalData, llmResult } = result;
 
               if (additionalData && toolCallId) {
-                AssistantModel.addToolResult(toolCallId, additionalData);
+                (AssistantModel as any).addToolResult(toolCallId, additionalData);
                 if (onToolCompleted) {
                   onToolCompleted(toolCallId, additionalData);
                 }
@@ -104,13 +104,13 @@ export async function createAssistant(props: UseAssistantProps) {
           },
         };
 
-        AssistantModel.registerTool({
+        (AssistantModel as any).registerTool({
           name: functionName,
           tool: vercelTool,
           component: component,
         });
       } else {
-       AssistantModel.registerTool({
+       (AssistantModel as any).registerTool({
          name: functionName,
          tool: toolObject,
        }); 
@@ -119,7 +119,7 @@ export async function createAssistant(props: UseAssistantProps) {
   }
 
   // initialize the assistant model
-  const assistant = await AssistantModel.getInstance();
+  const assistant = await (AssistantModel as any).getInstance();
 
   // restore the history messages
   if (
