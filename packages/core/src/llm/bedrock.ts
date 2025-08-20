@@ -42,15 +42,16 @@ export class BedrockAssistant extends VercelAiClient {
     // Check if model has changed
     const modelChanged =
       config.model && config.model !== BedrockAssistant.model;
-    const regionChanged =
-      config.region && config.region !== BedrockAssistant.region;
+    const baseURLChanged =
+      config.baseURL && config.baseURL !== BedrockAssistant.baseURL;
 
     // call parent configure
     super.configure(config);
     if (config.region) BedrockAssistant.region = config.region;
+    if (config.baseURL) BedrockAssistant.baseURL = config.baseURL;
 
-    // If model or region changed, reset the instance to force recreation
-    if (modelChanged || regionChanged) {
+    // If model or baseURL changed, reset the instance to force recreation
+    if (modelChanged || baseURLChanged) {
       if (BedrockAssistant.instance) {
         BedrockAssistant.instance.restart();
       }
