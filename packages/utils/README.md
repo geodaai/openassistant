@@ -1,6 +1,15 @@
 # @openassistant/utils
 
-Utility functions for OpenAssistant tools.
+Utility functions for OpenAssistant tools with multi-provider support, following the Composio pattern for true provider compatibility.
+
+## Features
+
+- **True Multi-Provider Compatibility**: Tools are automatically converted to provider-specific formats (Vercel AI, OpenAI, LangChain, Google AI, Anthropic)
+- **Provider-Specific Tool Schemas**: Each provider gets tools in their native format
+- **Dynamic Provider Switching**: Switch between providers at runtime without redefining tools
+- **Unified Tool Interface**: Write tools once, use with any provider
+- **Context Management**: Flexible context passing and default context support
+- **Type Safety**: Full TypeScript support with Zod schema validation
 
 ## Installation
 
@@ -8,115 +17,359 @@ Utility functions for OpenAssistant tools.
 npm install @openassistant/utils
 ```
 
-## Usage
+## Quick Start
 
 ```typescript
-import { tool } from '@openassistant/utils';
+import { OpenAssistant, VercelAIProvider } from '@openassistant/utils';
 
-// Define your tool
-const myTool = tool({
-  description: 'My tool description',
-  parameters: z.object({
-    // your parameters
-  }),
-  execute: async (args) => {
-    // your implementation
+// Create a provider
+const provider = new VercelAIProvider();
+
+// Create OpenAssistant instance
+const assist = new OpenAssistant({
+  provider,
+  tools: {
+    places: yourPlacesTool,
+  },
+});
+
+// Initialize (this converts tools to provider-specific format)
+await assist.initialize();
+
+// Use tools - they're automatically compatible with the provider
+const result = await assist.getTools({
+  toolName: 'places',
+  context: {
+    getFSQToken: () => 'your-token',
+  },
+  parameters: {
+    query: 'coffee',
+    location: 'San Francisco',
+    limit: 5,
   },
 });
 ```
 
-## ConversationCache
+## How It Works (Composio Style)
 
-The `ConversationCache` class provides conversation-scoped caching for `ToolOutputManager` instances, enabling persistent tool outputs across multiple requests within the same conversation while maintaining isolation between different conversations.
+The library automatically converts your tools to provider-specific formats:
 
-### Conversation ID Generation
+1. **Tool Definition**: Define tools once using the unified interface
+2. **Provider Conversion**: Each provider converts tools to their native format
+3. **Automatic Compatibility**: Tools work seamlessly across all providers
+4. **Schema Generation**: Get provider-specific tool schemas automatically
 
-The cache uses a multi-strategy approach to generate unique conversation IDs:
+## Supported Providers
 
-1. **Message ID** (Recommended): Uses `message.id` if available
-2. **Conversation/Thread/Session IDs**: Looks for `conversationId`, `threadId`, or `sessionId` properties
-3. **Enhanced Message Content Hash**: Combines first 3 messages with available metadata
-   - Includes timestamps, user IDs, message positions, and total message count
-   - **Stability**: Once 3+ messages exist, the ID remains stable across requests
-   - **Uniqueness**: Enhanced with metadata to prevent collisions between different conversations
-4. **Random ID**: Last resort - generates random ID (cache won't persist across requests)
+### Vercel AI Provider
 
-**Recommended Message Structure:**
 ```typescript
-interface RecommendedMessage {
-  id: string;              // Unique message ID (preferred)
-  role: string;
-  content: string;
-  conversationId?: string; // Alternative: conversation identifier
-  threadId?: string;       // Alternative: thread identifier  
-  sessionId?: string;      // Alternative: session identifier
-  timestamp?: number;      // Helps with uniqueness in Strategy 3
-  createdAt?: string;      // Helps with uniqueness in Strategy 3
-  userId?: string;         // Helps with uniqueness in Strategy 3
-}
+import { VercelAIProvider } from '@openassistant/utils';
+
+const provider = new VercelAIProvider({
+  apiKey: 'your-api-key',
+  baseUrl: 'https://api.vercel.com',
+  model: 'gpt-4',
+});
+
+// Tools are automatically converted to Vercel AI format
+const toolSchema = assist.getToolSchema('places');
+// Returns: { type: 'function', function: { name: 'search', description: '...', parameters: {...} } }
 ```
 
-### Basic Usage
+### OpenAI Provider
 
 ```typescript
-import { ConversationCache } from '@openassistant/utils';
+import { OpenAIProvider } from '@openassistant/utils';
 
-// Create a conversation cache with default settings
-const conversationCache = new ConversationCache();
+const provider = new OpenAIProvider({
+  apiKey: 'your-openai-api-key',
+  model: 'gpt-4',
+  organization: 'your-org-id',
+});
 
-// In your API route
-export async function POST(req: Request) {
-  const { messages } = await req.json();
-  
-  // Get conversation-scoped ToolOutputManager
-  const { toolOutputManager, conversationId } = 
-    await conversationCache.getToolOutputManagerForMessages(messages);
-  
-  // Use toolOutputManager for your tools...
-}
+// Tools are automatically converted to OpenAI function calling format
+const toolSchema = assist.getToolSchema('places');
+// Returns: { type: 'function', function: { name: 'search', description: '...', parameters: {...} } }
 ```
 
-### Configuration Options
+### LangChain Provider
 
 ```typescript
-const conversationCache = new ConversationCache({
-  maxConversations: 100,           // Max conversations in memory
-  ttlMs: 1000 * 60 * 60 * 2,      // 2 hours TTL
-  cleanupProbability: 0.1,         // 10% cleanup chance per request
-  enableLogging: true,             // Enable debug logging (includes warnings)
+import { LangChainProvider } from '@openassistant/utils';
+
+const provider = new LangChainProvider({
+  chainType: 'agent', // 'llm' | 'agent' | 'conversation'
+  model: 'gpt-4',
+});
+
+// Tools are automatically converted to LangChain tool format
+const toolSchema = assist.getToolSchema('places');
+// Returns: { name: 'search', description: '...', schema: {...}, func: ... }
+```
+
+### Google AI Provider
+
+```typescript
+import { GoogleProvider } from '@openassistant/utils';
+
+const provider = new GoogleProvider({
+  apiKey: 'your-google-api-key',
+  model: 'gemini-pro',
+  projectId: 'your-project-id',
+});
+
+// Tools are automatically converted to Google AI function format
+const toolSchema = assist.getToolSchema('places');
+// Returns: { functionDeclarations: [{ name: 'search', description: '...', parameters: {...} }] }
+```
+
+### Anthropic Provider
+
+```typescript
+import { AnthropicProvider } from '@openassistant/utils';
+
+const provider = new AnthropicProvider({
+  apiKey: 'your-anthropic-api-key',
+  model: 'claude-3-sonnet',
+  organization: 'your-org-id',
+});
+
+// Tools are automatically converted to Anthropic tool use format
+const toolSchema = assist.getToolSchema('places');
+// Returns: { type: 'tool_use', name: 'search', description: '...', input_schema: {...} }
+```
+
+## Tool Definition
+
+Tools are defined using the `extendedTool` function and work with all providers:
+
+```typescript
+import { extendedTool } from '@openassistant/utils';
+
+const placesTool = extendedTool({
+  description: 'Search for places using Foursquare API',
+  parameters: {
+    query: 'string',
+    location: 'string',
+    limit: 'number',
+  },
+  execute: async (args, options) => {
+    const { query, location, limit } = args;
+    const { context } = options;
+    
+    // Get API token from context
+    const getFSQToken = context?.getFSQToken as () => string;
+    const token = getFSQToken();
+    
+    // Your tool logic here
+    const results = await searchPlaces(query, location, limit, token);
+    
+    return {
+      llmResult: results,
+      additionalData: { query, location, token },
+    };
+  },
 });
 ```
 
-### Advanced Usage
+## OpenAssistant Class
+
+The main class that coordinates between providers and tools with automatic conversion.
+
+### Constructor
 
 ```typescript
-// Generate conversation ID manually
-const conversationId = conversationCache.generateConversationId(messages);
-
-// Get ToolOutputManager for specific conversation
-const toolOutputManager = await conversationCache.getToolOutputManager(conversationId);
-
-// Get cache status for monitoring
-const status = await conversationCache.getStatus();
-console.log(status);
-// {
-//   totalConversations: 5,
-//   conversations: [
-//     { id: "a1b2c3d4", ageMinutes: 15, hasCache: true, toolOutputCount: 3 }
-//   ],
-//   config: { maxConversations: 100, ttlHours: 2, cleanupProbability: 0.1 }
-// }
-
-// Clear all conversations
-conversationCache.clearAll();
+const assist = new OpenAssistant({
+  provider: new VercelAIProvider(),
+  tools: { places: placesTool },
+  defaultContext: { apiVersion: 'v2' },
+});
 ```
 
-### Features
+### Key Methods
 
-- **Data isolation**: Prevents cache sharing between different users/conversations
-- **Flexible ID generation**: Multiple strategies for conversation identification
-- **Automatic cleanup**: Old conversations are removed based on TTL and max count
-- **Memory efficient**: Probabilistic cleanup avoids performance impact
-- **Type-safe**: Full TypeScript support with proper interfaces
-- **Configurable**: All settings can be customized
-- **Persistent**: Tool outputs persist across requests within same conversation (when using stable IDs)
+#### `initialize()`
+Initialize and convert all tools to provider-specific format.
+
+#### `getToolSchema(toolName)`
+Get the provider-specific tool schema for a tool.
+
+```typescript
+// Get OpenAI function calling format
+const openaiSchema = assist.getToolSchema('places');
+
+// Get Google AI function format
+const googleSchema = assist.getToolSchema('places');
+
+// Get LangChain tool format
+const langchainSchema = assist.getToolSchema('places');
+```
+
+#### `getAllToolSchemas()`
+Get all tool schemas in provider-specific format.
+
+#### `switchProvider(newProvider)`
+Switch to a different provider and automatically convert tools.
+
+```typescript
+// Switch from Vercel AI to OpenAI
+await assist.switchProvider(new OpenAIProvider({ apiKey: 'key' }));
+
+// Tools are automatically converted to OpenAI format
+const openaiSchema = assist.getToolSchema('places');
+```
+
+#### `getProviderTools()`
+Get provider-specific tool representations.
+
+## Dynamic Provider Switching
+
+Switch between providers at runtime:
+
+```typescript
+const assist = new OpenAssistant({
+  provider: new VercelAIProvider(),
+  tools: { places: placesTool },
+});
+
+await assist.initialize();
+
+// Use with Vercel AI
+const vercelResult = await assist.getTools({
+  toolName: 'places',
+  parameters: { query: 'coffee', location: 'SF' },
+});
+
+// Switch to OpenAI
+await assist.switchProvider(new OpenAIProvider({ apiKey: 'key' }));
+
+// Same tool, now in OpenAI format
+const openaiResult = await assist.getTools({
+  toolName: 'places',
+  parameters: { query: 'coffee', location: 'SF' },
+});
+```
+
+## Provider Tool Conversion
+
+Each provider automatically converts tools to their native format:
+
+```typescript
+// Vercel AI format
+{
+  type: 'function',
+  function: {
+    name: 'search',
+    description: 'Search for places...',
+    parameters: { ... }
+  }
+}
+
+// OpenAI format
+{
+  type: 'function',
+  function: {
+    name: 'search',
+    description: 'Search for places...',
+    parameters: { ... }
+  }
+}
+
+// LangChain format
+{
+  name: 'search',
+  description: 'Search for places...',
+  schema: { ... },
+  func: async (args) => { ... }
+}
+
+// Google AI format
+{
+  functionDeclarations: [{
+    name: 'search',
+    description: 'Search for places...',
+    parameters: { ... }
+  }]
+}
+
+// Anthropic format
+{
+  type: 'tool_use',
+  name: 'search',
+  description: 'Search for places...',
+  input_schema: { ... }
+}
+```
+
+## Context Management
+
+Context allows you to pass additional data to tools:
+
+```typescript
+// Set default context
+const assist = new OpenAssistant({
+  provider: new VercelAIProvider(),
+  tools: { places: placesTool },
+  defaultContext: {
+    getFSQToken: () => 'default-token',
+    apiVersion: 'v2',
+  },
+});
+
+// Override context for specific calls
+const result = await assist.getTools({
+  toolName: 'places',
+  context: {
+    getFSQToken: () => 'custom-token', // Overrides default
+  },
+  parameters: { query: 'restaurants', location: 'NYC' },
+});
+```
+
+## Examples
+
+See the examples directory for comprehensive usage:
+
+- `simple-example.ts` - Basic usage as requested
+- `usage-examples.ts` - All provider examples
+- `composio-style-example.ts` - Provider compatibility demos
+- `langchain-integration-example.ts` - Comprehensive LangChain integration examples
+
+## TypeScript Support
+
+Full TypeScript support with proper type inference:
+
+```typescript
+import { OpenAssistant, VercelAIProvider } from '@openassistant/utils';
+
+interface PlacesContext {
+  getFSQToken: () => string;
+}
+
+interface PlacesParameters {
+  query: string;
+  location: string;
+  limit: number;
+}
+
+const assist = new OpenAssistant<PlacesContext>({
+  provider: new VercelAIProvider(),
+  tools: { places: placesTool },
+});
+
+// TypeScript will infer the correct types
+const result = await assist.getTools({
+  toolName: 'places',
+  context: { getFSQToken: () => 'token' },
+  parameters: { query: 'coffee', location: 'SF', limit: 5 },
+});
+```
+
+## Contributing
+
+Contributions are welcome! Please read our contributing guidelines and submit pull requests for any improvements.
+
+## License
+
+MIT License - see LICENSE file for details.

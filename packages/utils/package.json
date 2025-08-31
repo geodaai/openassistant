@@ -1,7 +1,7 @@
 {
   "name": "@openassistant/utils",
   "version": "0.5.18",
-  "description": "Utility functions for OpenAssistant tools",
+  "description": "Utility functions for OpenAssistant tools with multi-provider support for Vercel AI, OpenAI, LangChain, Google AI, and Anthropic",
   "author": "Xun Li<lixun910@gmail.com>",
   "license": "MIT",
   "main": "./dist/index.cjs.js",
@@ -17,6 +17,9 @@
   "dependencies": {
     "zod": "^3.24.4"
   },
+  "peerDependencies": {
+    "ai": "^3.0.0"
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -30,5 +33,16 @@
     "src",
     "README.md",
     "package.json"
+  ],
+  "keywords": [
+    "openassistant",
+    "ai",
+    "tools",
+    "vercel-ai",
+    "openai",
+    "langchain",
+    "google-ai",
+    "anthropic",
+    "providers"
   ]
 }
