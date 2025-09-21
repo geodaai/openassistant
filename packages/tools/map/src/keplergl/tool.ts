@@ -10,7 +10,7 @@ import {
 } from '@kepler.gl/processors';
 import * as arrow from 'apache-arrow';
 import { arrowSchemaToFields } from './utils';
-import { MapToolContext, isMapToolContext } from '../register-tools';
+import { isMapToolContext } from '../register-tools';
 
 export const KeplerGlArgs = z.object({
   datasetName: z.string(),

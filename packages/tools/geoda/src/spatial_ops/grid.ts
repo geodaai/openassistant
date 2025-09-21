@@ -19,7 +19,6 @@ import { polygon } from '@turf/helpers';
 import { binaryToGeojson } from '@loaders.gl/gis';
 
 import { isSpatialToolContext } from '../utils';
-import { SpatialToolContext } from '../types';
 
 export const GridArgs = z.object({
   datasetName: z

@@ -49,7 +49,7 @@ export type GeocodingAdditionalData = {
  * const geocodingTool = new GeocodingTool(
  *   undefined, // use default description
  *   undefined, // use default parameters
- *   { /* custom context */ },
+ *   {}, // custom context
  *   GeocodingComponent,
  *   (toolCallId, additionalData) => {
  *     console.log('Geocoding completed:', toolCallId, additionalData);

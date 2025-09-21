@@ -3,7 +3,6 @@
 
 import { OpenAssistantTool, OpenAssistantToolOptions, z } from '@openassistant/utils';
 import { getArea } from '@geoda/core';
-import { SpatialToolContext } from '../types';
 import { isSpatialToolContext } from '../utils';
 
 export type AreaFunctionArgs = z.ZodObject<{

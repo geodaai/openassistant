@@ -5,7 +5,6 @@ import { getCartogram } from '@geoda/core';
 import { OpenAssistantTool, OpenAssistantToolOptions, generateId, z } from '@openassistant/utils';
 import { isSpatialToolContext } from '../utils';
 import { Feature } from 'geojson';
-import { SpatialToolContext } from '../types';
 
 /**
  * ## CartogramTool Class

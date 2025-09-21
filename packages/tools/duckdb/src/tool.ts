@@ -65,7 +65,7 @@ import { Feature } from 'geojson';
  * const localQueryTool = new LocalQueryTool(
  *   'Execute SQL queries against local datasets',
  *   LocalQueryArgs,
- *   { /* context */ }
+ *   { } // context
  * );
  *
  * export async function POST(req: Request) {

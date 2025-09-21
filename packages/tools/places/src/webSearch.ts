@@ -3,7 +3,7 @@
 
 import { z } from 'zod';
 import { generateId, OpenAssistantTool, OpenAssistantToolOptions } from '@openassistant/utils';
-import { isSearchAPIToolContext, SearchAPIToolContext } from './register-tools';
+import { isSearchAPIToolContext } from './register-tools';
 
 // Types for SearchAPI response
 interface SearchAPISearchMetadata {

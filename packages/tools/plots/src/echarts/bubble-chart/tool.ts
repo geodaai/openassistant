@@ -2,7 +2,7 @@
 // Copyright contributors to the openassistant project
 
 import { OpenAssistantTool, OpenAssistantToolOptions, generateId, z } from '@openassistant/utils';
-import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../types';
+import { isEChartsToolContext, OnSelected } from '../../types';
 
 /**
  * The BubbleChartTool class creates bubble charts for given datasets and variables.

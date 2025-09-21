@@ -97,8 +97,7 @@ export class GetUsZipcodeGeojsonTool extends OpenAssistantTool<typeof GetUsZipco
   }
 
   async execute(
-    args: z.infer<typeof GetUsZipcodeGeojsonArgs>,
-    options?: { context?: Record<string, unknown> }
+    args: z.infer<typeof GetUsZipcodeGeojsonArgs>
   ): Promise<ExecuteGetUsZipcodeGeojsonResult> {
     try {
       const { zipcodes } = args;

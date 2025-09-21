@@ -7,7 +7,6 @@ import { spatialDissolve } from '@geoda/core';
 import { Feature, Geometry } from 'geojson';
 
 import { isSpatialToolContext } from '../utils';
-import { SpatialToolContext } from '../types';
 import { applyJoin } from '../spatial_join/apply-join';
 
 export const DissolveArgs = z.object({

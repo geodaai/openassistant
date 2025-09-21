@@ -5,7 +5,6 @@ import { z } from 'zod';
 import { OpenAssistantTool, OpenAssistantToolOptions, generateId } from '@openassistant/utils';
 import { createHistogramBins } from './utils';
 import {
-  EChartsToolContext,
   isEChartsToolContext,
   OnSelected,
 } from '../../types';

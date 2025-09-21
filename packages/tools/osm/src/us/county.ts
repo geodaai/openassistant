@@ -100,8 +100,7 @@ export class GetUsCountyGeojsonTool extends OpenAssistantTool<typeof GetUsCounty
   }
 
   async execute(
-    args: z.infer<typeof GetUsCountyGeojsonArgs>,
-    options?: { context?: Record<string, unknown> }
+    args: z.infer<typeof GetUsCountyGeojsonArgs>
   ): Promise<ExecuteGetUsCountyGeojsonResult> {
     try {
       const { fipsCodes } = args;

@@ -3,7 +3,7 @@
 
 import { OpenAssistantTool, OpenAssistantToolOptions, generateId, z } from '@openassistant/utils';
 import { computeRegression } from './utils';
-import { EChartsToolContext, isEChartsToolContext, OnSelected } from '../../types';
+import { isEChartsToolContext, OnSelected } from '../../types';
 
 /**
  * The ScatterplotTool class creates scatter plots for given datasets and variables.

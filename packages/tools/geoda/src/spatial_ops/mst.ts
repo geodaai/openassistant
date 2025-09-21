@@ -5,7 +5,6 @@ import { getMinimumSpanningTree } from '@geoda/core';
 import { OpenAssistantTool, OpenAssistantToolOptions, generateId } from '@openassistant/utils';
 import { z } from 'zod';
 
-import { SpatialToolContext } from '../types';
 import { isSpatialToolContext } from '../utils';
 
 /**

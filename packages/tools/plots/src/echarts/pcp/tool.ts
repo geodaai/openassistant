@@ -7,7 +7,6 @@ import {
   processParallelCoordinateData,
 } from './utils';
 import {
-  EChartsToolContext,
   isEChartsToolContext,
   OnSelected,
 } from '../../types';

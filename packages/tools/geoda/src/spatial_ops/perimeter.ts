@@ -4,7 +4,6 @@
 import { OpenAssistantTool, OpenAssistantToolOptions } from '@openassistant/utils';
 import { z } from 'zod';
 import { getPerimeter } from '@geoda/core';
-import { SpatialToolContext } from '../types';
 import { isSpatialToolContext } from '../utils';
 
 export const PerimeterArgs = z.object({

@@ -5,7 +5,6 @@ import { OpenAssistantTool, OpenAssistantToolOptions } from '@openassistant/util
 import { z } from 'zod';
 import { getLength } from '@geoda/core';
 import { isSpatialToolContext } from '../utils';
-import { SpatialToolContext } from '../types';
 
 export const LengthArgs = z.object({
   geojson: z

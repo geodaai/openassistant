@@ -70,8 +70,7 @@ export class ReverseGeocodingTool extends OpenAssistantTool<typeof ReverseGeocod
   }
 
   async execute(
-    args: z.infer<typeof ReverseGeocodingArgs>,
-    options?: { context?: Record<string, unknown> }
+    args: z.infer<typeof ReverseGeocodingArgs>
   ): Promise<{
     llmResult: ReverseGeocodingLlmResult;
     additionalData?: ReverseGeocodingAdditionalData;

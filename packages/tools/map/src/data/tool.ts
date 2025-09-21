@@ -2,7 +2,6 @@
 // Copyright contributors to the openassistant project
 
 import { OpenAssistantTool, OpenAssistantToolOptions, generateId } from '@openassistant/utils';
-import { MapToolContext } from '../register-tools';
 import { z } from 'zod';
 
 export const DownloadMapDataArgs = z.object({
@@ -94,8 +93,7 @@ export class DownloadMapDataTool extends OpenAssistantTool<typeof DownloadMapDat
   }
 
   async execute(
-    args: z.infer<typeof DownloadMapDataArgs>,
-    options?: { context?: Record<string, unknown> }
+    args: z.infer<typeof DownloadMapDataArgs>
   ): Promise<{
     llmResult: DownloadMapLlmResult;
     additionalData?: DownloadMapAdditionalData;

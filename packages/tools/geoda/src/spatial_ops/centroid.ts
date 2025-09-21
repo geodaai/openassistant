@@ -6,7 +6,6 @@ import { getCentroids, SpatialGeometry } from '@geoda/core';
 import { Feature, Geometry } from 'geojson';
 
 import { isSpatialToolContext } from '../utils';
-import { SpatialToolContext } from '../types';
 
 export type CentroidFunctionArgs = z.ZodObject<{
   geojson: z.ZodOptional<z.ZodString>;

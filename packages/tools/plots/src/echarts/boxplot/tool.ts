@@ -5,7 +5,6 @@ import { OpenAssistantTool, OpenAssistantToolOptions, generateId, z } from '@ope
 
 import { BoxplotDataProps, createBoxplot } from './utils';
 import {
-  EChartsToolContext,
   isEChartsToolContext,
   OnSelected,
 } from '../../types';

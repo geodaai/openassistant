@@ -7,7 +7,6 @@ import { getBuffers } from '@geoda/core';
 import { Feature } from 'geojson';
 
 import { isSpatialToolContext } from '../utils';
-import { SpatialToolContext } from '../types';
 
 export const BufferArgs = z.object({
   geojson: z
