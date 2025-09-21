@@ -11,5 +11,6 @@
       "ignore": ["examples/*", "playground"]
     }
   },
-  "packages": ["packages/*", "packages/tools/*", "packages/components/*"]
+  "packages": ["packages/*", "packages/tools/*", "packages/components/*"],
+  "ignore": ["@openassistant/core", "@openassistant/ui", "playground"]
 }

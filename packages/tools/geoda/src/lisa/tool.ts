@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { extendedTool, generateId } from '@openassistant/utils';
+import { OpenAssistantTool, OpenAssistantToolOptions, generateId } from '@openassistant/utils';
 import { z } from 'zod';
 import {
   localMoran,
@@ -16,21 +16,50 @@ import { GetGeometries, GetValues } from '../types';
 import { getWeights } from '../utils';
 import { appendJoinValuesToGeometries } from '../spatial_join/tool';
 
-export type LisaFunctionArgs = z.ZodObject<{
-  method: z.ZodEnum<
-    ['localMoran', 'localGeary', 'localG', 'localGStar', 'quantileLisa']
-  >;
-  weightsID: z.ZodOptional<z.ZodString>;
-  variableName: z.ZodString;
-  multiVariableNames: z.ZodOptional<z.ZodArray<z.ZodString>>;
-  biVariableNames: z.ZodOptional<z.ZodArray<z.ZodString>>;
-  permutation: z.ZodOptional<z.ZodNumber>;
-  significanceThreshold: z.ZodOptional<z.ZodNumber>;
-  datasetName: z.ZodString;
-  k?: z.ZodOptional<z.ZodNumber>;
-  quantile?: z.ZodOptional<z.ZodNumber>;
-  mapBounds?: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
-}>;
+export const LisaArgs = z.object({
+  method: z
+    .enum([
+      'localMoran',
+      'localGeary',
+      'localG',
+      'localGStar',
+      'quantileLisa',
+    ])
+    .describe('The name of the LISA method'),
+  weightsID: z
+    .string()
+    .optional()
+    .describe('The weightsID of the spatial weights'),
+  variableName: z.string(),
+  multiVariableNames: z
+    .array(z.string())
+    .optional()
+    .describe('A list of variable names for localGeary and quantileLisa'),
+  biVariableNames: z
+    .array(z.string())
+    .optional()
+    .describe('A list of two variable names for bivariateLocalMoran'),
+  permutation: z
+    .number()
+    .optional()
+    .describe('The number of permutations used in LISA computation'),
+  significanceThreshold: z
+    .number()
+    .optional()
+    .describe(
+      'The significance threshold used to filter out insignificant clusters'
+    ),
+  datasetName: z.string(),
+  k: z
+    .number()
+    .optional()
+    .describe('The number of quantiles for quantile LISA'),
+  quantile: z
+    .number()
+    .optional()
+    .describe('The quantile value for quantile LISA'),
+  mapBounds: z.array(z.number()).optional(),
+});
 
 export type LisaLlmResult = {
   success: boolean;
@@ -58,7 +87,7 @@ export type LisaFunctionContext = {
 };
 
 /**
- * ## lisa Tool
+ * ## LisaTool
  * 
  * This tool is used to apply local indicators of spatial association (LISA) statistics
  * to identify local clusters and spatial outliers.
@@ -79,97 +108,68 @@ export type LisaFunctionContext = {
  *
  * @example
  * ```typescript
- * import { spatialWeights, SpatialWeightsTool, lisa, LisaTool } from "@openassistant/geoda";
+ * import { SpatialWeightsTool, LisaTool } from "@openassistant/geoda";
  *
- * const spatialWeightsTool: SpatialWeightsTool = {
- *   ...spatialWeights,
- *   context: {
+ * // Simple usage with defaults
+ * const spatialWeightsTool = new SpatialWeightsTool();
+ * const lisaTool = new LisaTool();
+ *
+ * // Or with custom context
+ * const spatialWeightsTool = new SpatialWeightsTool(
+ *   undefined, // use default description
+ *   undefined, // use default parameters
+ *   {
  *     getGeometries: (datasetName) => {
  *       return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
  *     },
- *   },
- * };
+ *   }
+ * );
  *
- * const lisaTool: LisaTool = {
- *   ...lisa,
- *   context: {
+ * const lisaTool = new LisaTool(
+ *   undefined, // use default description
+ *   undefined, // use default parameters
+ *   {
  *     getValues: (datasetName, variableName) => {
  *       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
  *     },
- *   },
- * });
+ *   }
+ * );
  *
  * const result = await generateText({
  *   model: openai('gpt-4o'),
  *   prompt: 'Can you perform a local Moran analysis on the population data?',
  *   tools: {
- *     lisa: convertToVercelAiTool(lisaTool),
- *     spatialWeights: convertToVercelAiTool(spatialWeightsTool),
+ *     lisa: lisaTool.toVercelAiTool(),
+ *     spatialWeights: spatialWeightsTool.toVercelAiTool(),
  *   },
  * });
  * ```
  */
-export const lisa = extendedTool<
-  LisaFunctionArgs,
-  LisaLlmResult,
-  LisaAdditionalData,
-  LisaFunctionContext
->({
-  description:
-    'Apply local indicators of spatial association (LISA) statistics to identify local clusters and spatial outliers.',
-  parameters: z.object({
-    method: z
-      .enum([
-        'localMoran',
-        'localGeary',
-        'localG',
-        'localGStar',
-        'quantileLisa',
-      ])
-      .describe('The name of the LISA method'),
-    weightsID: z
-      .string()
-      .optional()
-      .describe('The weightsID of the spatial weights'),
-    variableName: z.string(),
-    multiVariableNames: z
-      .array(z.string())
-      .optional()
-      .describe('A list of variable names for localGeary and quantileLisa'),
-    biVariableNames: z
-      .array(z.string())
-      .optional()
-      .describe('A list of two variable names for bivariateLocalMoran'),
-    permutation: z
-      .number()
-      .optional()
-      .describe('The number of permutations used in LISA computation'),
-    significanceThreshold: z
-      .number()
-      .optional()
-      .describe(
-        'The significance threshold used to filter out insignificant clusters'
-      ),
-    datasetName: z.string(),
-    k: z
-      .number()
-      .optional()
-      .describe('The number of quantiles for quantile LISA'),
-    quantile: z
-      .number()
-      .optional()
-      .describe('The quantile value for quantile LISA'),
-    mapBounds: z.array(z.number()).optional(),
-  }),
-  execute: executeLisa,
-  context: {
-    getValues: () => {
-      throw new Error('getValues() of LisaTool is not implemented');
-    },
-  },
-});
+export class LisaTool extends OpenAssistantTool<typeof LisaArgs> {
+  protected readonly defaultDescription = 'Apply local indicators of spatial association (LISA) statistics to identify local clusters and spatial outliers.';
+  protected readonly defaultParameters = LisaArgs;
 
-export type LisaTool = typeof lisa;
+  constructor(options: OpenAssistantToolOptions<typeof LisaArgs> = {}) {
+    super({
+      ...options,
+      context: options.context || {
+        getValues: () => {
+          throw new Error('getValues() of LisaTool is not implemented');
+        },
+      },
+    });
+  }
+
+  async execute(
+    args: z.infer<typeof LisaArgs>,
+    options?: { context?: Record<string, unknown> }
+  ): Promise<{
+    llmResult: LisaLlmResult;
+    additionalData?: LisaAdditionalData;
+  }> {
+    return executeLisa(args, options);
+  }
+}
 
 type LisaArgs = {
   method: string;

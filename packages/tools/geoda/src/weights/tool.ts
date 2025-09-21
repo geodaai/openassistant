@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { extendedTool } from '@openassistant/utils';
-import { z } from 'zod';
+import { OpenAssistantTool, OpenAssistantToolOptions, z } from '@openassistant/utils';
 import { createWeights, WeightsMeta, CreateWeightsProps } from '@geoda/core';
 import { WeightsProps, GetGeometries } from '../types';
 
@@ -47,9 +46,10 @@ export type SpatialWeightsAdditionalData = {
 };
 
 /**
- * ## spatialWeights Tool
+ * ## SpatialWeightsTool Class
  * 
- * This tool creates spatial weights matrices for spatial analysis. It supports multiple types of weights:
+ * The SpatialWeightsTool class creates spatial weights matrices for spatial analysis.
+ * This tool extends OpenAssistantTool and provides a class-based approach for spatial weights creation.
  *
  * ### Spatial Weights Types
  *
@@ -67,78 +67,90 @@ export type SpatialWeightsAdditionalData = {
  *
  * Example code:
  * ```typescript
- * import { spatialWeights, SpatialWeightsTool } from '@openassistant/geoda';
- * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { SpatialWeightsTool } from '@openassistant/geoda';
  * import { generateText } from 'ai';
  *
- * const spatialWeightsTool: SpatialWeightsTool = {
- *   ...spatialWeights,
- *   context: {
+ * // Simple usage with defaults
+ * const spatialWeightsTool = new SpatialWeightsTool();
+ *
+ * // Or with custom context and callbacks
+ * const spatialWeightsTool = new SpatialWeightsTool(
+ *   undefined, // use default description
+ *   undefined, // use default parameters
+ *   {
  *     getGeometries: (datasetName) => {
  *       return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
  *     },
  *   },
- *   onToolCompleted: (toolCallId, additionalData) => {
+ *   SpatialWeightsComponent,
+ *   (toolCallId, additionalData) => {
  *     console.log(toolCallId, additionalData);
  *     // do something like save the weights result in additionalData
- *   },
- * };
+ *   }
+ * );
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Create a queen contiguity weights matrix for these counties',
- *   tools: {spatialWeights: convertToVercelAiTool(spatialWeightsTool)},
+ *   tools: {spatialWeights: spatialWeightsTool.toVercelAiTool()},
  * });
  * ```
  */
-export const spatialWeights = extendedTool<
-  SpatialWeightsFunctionArgs,
-  SpatialWeightsLlmResult,
-  SpatialWeightsAdditionalData,
-  SpatialWeightsFunctionContext
->({
-  description: 'Create a spatial weights.',
-  parameters: z.object({
-    datasetName: z.string(),
-    type: z.enum(['knn', 'queen', 'rook', 'threshold']),
-    k: z
-      .number()
-      .optional()
-      .describe('Only for k nearest neighbor (knn) weights'),
-    orderOfContiguity: z.number().optional(),
-    includeLowerOrder: z.boolean().optional(),
-    precisionThreshold: z
-      .number()
-      .optional()
-      .describe(
-        'For queen/rook weights: precision threshold for matching coordinates to determine neighboring polygons. Default: 0.'
-      ),
-    distanceThreshold: z
-      .number()
-      .optional()
-      .describe(
-        'Only for distance based weights. It represents the distance threshold used to search nearby neighbors.'
-      ),
-    useCentroids: z
-      .boolean()
-      .optional()
-      .describe(
-        'Whether to use centroids for neighbor calculations. The default value is False.'
-      ),
-    isMile: z.boolean().optional().describe('Only for distance based weights.'),
-    mapBounds: z.array(z.number()).optional(),
-  }),
-  execute: executeSpatialWeights,
-  context: {
-    getGeometries: () => {
-      throw new Error(
-        'getGeometries() of SpatialWeightsTool is not implemented'
-      );
-    },
-  },
+export const SpatialWeightsArgs = z.object({
+  datasetName: z.string(),
+  type: z.enum(['knn', 'queen', 'rook', 'threshold']),
+  k: z
+    .number()
+    .optional()
+    .describe('Only for k nearest neighbor (knn) weights'),
+  orderOfContiguity: z.number().optional(),
+  includeLowerOrder: z.boolean().optional(),
+  precisionThreshold: z
+    .number()
+    .optional()
+    .describe(
+      'For queen/rook weights: precision threshold for matching coordinates to determine neighboring polygons. Default: 0.'
+    ),
+  distanceThreshold: z
+    .number()
+    .optional()
+    .describe(
+      'Only for distance based weights. It represents the distance threshold used to search nearby neighbors.'
+    ),
+  useCentroids: z
+    .boolean()
+    .optional()
+    .describe(
+      'Whether to use centroids for neighbor calculations. The default value is False.'
+    ),
+  isMile: z.boolean().optional().describe('Only for distance based weights.'),
+  mapBounds: z.array(z.number()).optional(),
 });
 
-export type SpatialWeightsTool = typeof spatialWeights;
+export class SpatialWeightsTool extends OpenAssistantTool<typeof SpatialWeightsArgs> {
+  protected readonly defaultDescription = 'Create spatial weights matrices for spatial analysis';
+  protected readonly defaultParameters = SpatialWeightsArgs;
+
+  constructor(options: OpenAssistantToolOptions<typeof SpatialWeightsArgs> = {}) {
+    super({
+      ...options,
+      context: options.context || {
+        getGeometries: () => {
+          throw new Error(
+            'getGeometries() of SpatialWeightsTool is not implemented'
+          );
+        },
+      },
+    });
+  }
+
+  async execute(
+    args: z.infer<typeof SpatialWeightsArgs>,
+    options?: { context?: Record<string, unknown> }
+  ): Promise<ExecuteSpatialWeightsResult> {
+    return executeSpatialWeights(args, options);
+  }
+}
 
 export type SpatialWeightsFunctionContext = {
   getGeometries: GetGeometries;

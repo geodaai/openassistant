@@ -6,7 +6,7 @@ import {
   VercelAiClientConfigureProps,
 } from './vercelai-client';
 import { testConnection } from '../utils/connection-test';
-import { LanguageModelV1 } from 'ai';
+import { LanguageModel } from 'ai';
 
 type ConfigureProps = {
   baseURL?: string;
@@ -22,7 +22,7 @@ type OllamaChatSettings = {
 type OllamaProvider = (
   model: string,
   settings?: OllamaChatSettings
-) => LanguageModelV1;
+) => LanguageModel;
 interface Module {
   createOllama: (options: { baseURL: string }) => OllamaProvider;
 }

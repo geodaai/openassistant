@@ -7,8 +7,8 @@ import { useState, useEffect } from 'react';
 import { StreamMessageCallback } from '../types';
 import { VercelAi } from '../llm/vercelai';
 import { createAssistant } from '../utils/create-assistant';
-import { convertToCoreMessages, Message, Tool, ToolChoice, ToolSet } from 'ai';
-import { ExtendedTool } from '@openassistant/utils';
+import { convertToCoreMessages, CoreMessage, Tool, ToolChoice, ToolSet } from 'ai';
+import { OpenAssistantTool } from '@openassistant/utils';
 
 /**
  * Props for configuring the AI Assistant and useAssistant hook.
@@ -57,10 +57,10 @@ export type UseAssistantProps = {
   /** System instructions/prompt for the assistant. */
   instructions: string;
   /** The history of messages exchanged with the assistant. */
-  historyMessages?: Message[];
+  historyMessages?: CoreMessage[];
   /** Custom tools the assistant can use. E.g. `{ localQuery: localQueryTool }` */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  tools?: Record<string, ExtendedTool<any, any, any, any> | Tool>;
+  tools?: Record<string, OpenAssistantTool<any> | Tool>;
   /** Controls how the assistant selects tools to use. */
   toolChoice?: ToolChoice<ToolSet>;
   /** Maximum number of steps/iterations in a conversation. */

@@ -6,9 +6,9 @@ import {
   VercelAiClientConfigureProps,
 } from './vercelai-client';
 import { testConnection } from '../utils/connection-test';
-import { LanguageModelV1 } from 'ai';
+import { LanguageModel } from 'ai';
 
-type XaiProvider = (model: string) => LanguageModelV1;
+type XaiProvider = (model: string) => LanguageModel;
 interface Module {
   createXai: (options: { apiKey: string; baseURL: string }) => XaiProvider;
 }

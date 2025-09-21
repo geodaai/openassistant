@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { extendedTool, generateId } from '@openassistant/utils';
+import { OpenAssistantTool, OpenAssistantToolOptions, generateId } from '@openassistant/utils';
 import { calculateRates } from '@geoda/core';
 import { z } from 'zod';
 
@@ -44,42 +44,28 @@ import { getWeights } from '../utils';
  * });
  * ```
  */
-export const rate = extendedTool<
-  RateFunctionArgs,
-  RateLlmResult,
-  RateAdditionalData,
-  RateContext
->({
-  description:
-    'Calculate the rates from a base variable and an event variable.',
-  parameters: z.object({
-    datasetName: z.string(),
-    baseVariableName: z.string(),
-    eventVariableName: z.string(),
-    rateMethod: z.enum([
-      'Raw Rates',
-      'Excess Risk',
-      'Empirical Bayes',
-      'Spatial Rates',
-      'Spatial Empirical Bayes',
-      'EB Rate Standardization',
-    ]),
-    saveData: z
-      .boolean()
-      .optional()
-      .describe('Whether to save the rates data.'),
-    outputRateVariableName: z
-      .string()
-      .optional()
-      .describe('A name for the output rate variable based on the context.'),
-    weightsID: z
-      .string()
-      .optional()
-      .describe(
-        'The weightsID of the spatial weights. Only required for spatial rates.'
-      ),
-  }),
-  execute: async (args, options) => {
+export class RateTool extends OpenAssistantTool<typeof RateArgs> {
+  protected readonly defaultDescription = 'Calculate the rates from a base variable and an event variable.';
+  protected readonly defaultParameters = RateArgs;
+
+  constructor(options: OpenAssistantToolOptions<typeof RateArgs> = {}) {
+    super({
+      ...options,
+      context: options.context || {
+        getValues: () => {
+          throw new Error('getValues not implemented.');
+        },
+      },
+    });
+  }
+
+  async execute(
+    args: z.infer<typeof RateArgs>,
+    options?: { context?: Record<string, unknown> }
+  ): Promise<{
+    llmResult: RateLlmResult;
+    additionalData?: RateAdditionalData;
+  }> {
     try {
       const {
         datasetName,
@@ -151,27 +137,8 @@ export const rate = extendedTool<
         },
       };
     }
-  },
-});
-
-export type RateFunctionArgs = z.ZodObject<{
-  datasetName: z.ZodString;
-  baseVariableName: z.ZodString;
-  eventVariableName: z.ZodString;
-  rateMethod: z.ZodEnum<
-    [
-      'Raw Rates',
-      'Excess Risk',
-      'Empirical Bayes',
-      'Spatial Rates',
-      'Spatial Empirical Bayes',
-      'EB Rate Standardization',
-    ]
-  >;
-  weightsID: z.ZodOptional<z.ZodString>;
-  saveData: z.ZodOptional<z.ZodBoolean>;
-  outputRateVariableName: z.ZodOptional<z.ZodString>;
-}>;
+  }
+}
 
 export type RateLlmResult = {
   success: boolean;
@@ -194,5 +161,3 @@ export function isRateContext(context: unknown): context is RateContext {
     typeof context === 'object' && context !== null && 'getValues' in context
   );
 }
-
-export type RateTool = typeof rate;

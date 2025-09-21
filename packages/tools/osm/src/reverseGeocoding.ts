@@ -2,17 +2,19 @@
 // Copyright contributors to the openassistant project
 
 import { z } from 'zod';
-import { extendedTool, generateId } from '@openassistant/utils';
+import { OpenAssistantTool, OpenAssistantToolOptions, generateId } from '@openassistant/utils';
 import { RateLimiter } from './utils/rateLimiter';
 
 // Create a single instance to be shared across all calls
 // Nominatim requires 1 second between requests
 const nominatimRateLimiter = new RateLimiter(1000);
 
-export type ReverseGeocodingFunctionArgs = z.ZodObject<{
-  latitude: z.ZodNumber;
-  longitude: z.ZodNumber;
-}>;
+export const ReverseGeocodingArgs = z.object({
+  latitude: z.number().describe('The latitude coordinate (decimal degrees)'),
+  longitude: z
+    .number()
+    .describe('The longitude coordinate (decimal degrees)'),
+});
 
 export type ReverseGeocodingLlmResult = {
   success: boolean;
@@ -30,7 +32,7 @@ export type ReverseGeocodingAdditionalData = {
 };
 
 /**
- * ## Reverse Geocoding Tool
+ * ## ReverseGeocodingTool
  *
  * This tool converts geographic coordinates (latitude and longitude) into human-readable addresses using OpenStreetMap's Nominatim service.
  *
@@ -41,39 +43,39 @@ export type ReverseGeocodingAdditionalData = {
  *
  * @example
  * ```typescript
- * import { reverseGeocoding, ReverseGeocodingTool } from "@openassistant/osm";
- * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { ReverseGeocodingTool } from "@openassistant/osm";
  * import { generateText } from 'ai';
+ *
+ * // Simple usage with defaults
+ * const reverseGeocodingTool = new ReverseGeocodingTool();
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'What is the address at coordinates 40.7128, -74.0060?',
  *   tools: {
- *     reverseGeocoding: convertToVercelAiTool(reverseGeocoding),
+ *     reverseGeocoding: reverseGeocodingTool.toVercelAiTool(),
  *   },
  * });
  * ```
  */
-export const reverseGeocoding = extendedTool<
-  ReverseGeocodingFunctionArgs,
-  ReverseGeocodingLlmResult,
-  ReverseGeocodingAdditionalData,
-  ReverseGeocodingToolContext
->({
-  description:
-    'Reverse geocode coordinates to get the address and location information for a given latitude and longitude',
-  parameters: z.object({
-    latitude: z.number().describe('The latitude coordinate (decimal degrees)'),
-    longitude: z
-      .number()
-      .describe('The longitude coordinate (decimal degrees)'),
-  }),
-  execute: async (
-    args
+export class ReverseGeocodingTool extends OpenAssistantTool<typeof ReverseGeocodingArgs> {
+  protected readonly defaultDescription = 'Reverse geocode coordinates to get the address and location information for a given latitude and longitude';
+  protected readonly defaultParameters = ReverseGeocodingArgs;
+
+  constructor(options: OpenAssistantToolOptions<typeof ReverseGeocodingArgs> = {}) {
+    super({
+      ...options,
+      context: options.context || {},
+    });
+  }
+
+  async execute(
+    args: z.infer<typeof ReverseGeocodingArgs>,
+    options?: { context?: Record<string, unknown> }
   ): Promise<{
     llmResult: ReverseGeocodingLlmResult;
     additionalData?: ReverseGeocodingAdditionalData;
-  }> => {
+  }> {
     try {
       const { latitude, longitude } = args;
 
@@ -185,11 +187,8 @@ export const reverseGeocoding = extendedTool<
         },
       };
     }
-  },
-  context: {},
-});
-
-export type ReverseGeocodingTool = typeof reverseGeocoding;
+  }
+}
 
 export type ExecuteReverseGeocodingResult = {
   llmResult: {

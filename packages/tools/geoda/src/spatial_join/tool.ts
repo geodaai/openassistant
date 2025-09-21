@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { extendedTool, generateId } from '@openassistant/utils';
+import { OpenAssistantTool, OpenAssistantToolOptions, generateId } from '@openassistant/utils';
 import {
   CheckGeometryType,
   SpatialGeometry,
@@ -14,20 +14,26 @@ import { binaryToGeojson } from '@loaders.gl/gis';
 import { applyJoin } from './apply-join';
 import { GetValues, GetGeometries } from '../types';
 
-export type SpatialJoinFunctionArgs = z.ZodObject<{
-  rightDatasetName: z.ZodString;
-  leftDatasetName: z.ZodString;
-  joinVariables: z.ZodOptional<
-    z.ZodArray<
-      z.ZodObject<{
-        variableName: z.ZodString;
-        operator: z.ZodEnum<
-          ['sum', 'mean', 'min', 'max', 'median', 'count', 'unique']
-        >;
-      }>
-    >
-  >;
-}>;
+export const SpatialJoinArgs = z.object({
+  rightDatasetName: z.string(),
+  leftDatasetName: z.string(),
+  joinVariables: z
+    .array(
+      z.object({
+        variableName: z.string(),
+        operator: z.enum([
+          'sum',
+          'mean',
+          'min',
+          'max',
+          'median',
+          'count',
+          'unique',
+        ]),
+      })
+    )
+    .optional(),
+});
 
 export type SpatialJoinLlmResult = {
   success: boolean;
@@ -61,7 +67,7 @@ export type SpatialJoinFunctionContext = {
 };
 
 /**
- * ## spatialJoin Tool
+ * ## SpatialJoinTool
  * 
  * This tool is used to join geometries from one dataset with geometries from another dataset.
  *
@@ -89,13 +95,17 @@ export type SpatialJoinFunctionContext = {
  *
  * ### Code example
  * ```typescript
- * import { spatialJoin, SpatialJoinTool } from '@openassistant/geoda';
- * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { SpatialJoinTool } from '@openassistant/geoda';
  * import { generateText } from 'ai';
  *
- * const spatialJoinTool: SpatialJoinTool = {
- *   ...spatialJoin,
- *   context: {
+ * // Simple usage with defaults
+ * const spatialJoinTool = new SpatialJoinTool();
+ *
+ * // Or with custom context and callbacks
+ * const spatialJoinTool = new SpatialJoinTool(
+ *   undefined, // use default description
+ *   undefined, // use default parameters
+ *   {
  *     getGeometries: (datasetName) => {
  *       return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
  *     },
@@ -103,67 +113,56 @@ export type SpatialJoinFunctionContext = {
  *       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
  *     },
  *   },
- *   onToolCompleted: (toolCallId, additionalData) => {
+ *   undefined, // component
+ *   (toolCallId, additionalData) => {
  *     console.log(toolCallId, additionalData);
  *     // do something like save the join result in additionalData
- *   },
- * };
- *
+ *   }
+ * );
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Can you join the population data with county boundaries?',
- *   tools: {spatialJoin: convertToVercelAiTool(spatialJoinTool)},
+ *   tools: {spatialJoin: spatialJoinTool.toVercelAiTool()},
  * });
  * ```
  */
-export const spatialJoin = extendedTool<
-  SpatialJoinFunctionArgs,
-  SpatialJoinLlmResult,
-  SpatialJoinAdditionalData,
-  SpatialJoinFunctionContext
->({
-  description: `Spatial join geometries two geometric datasets. For example:
+export class SpatialJoinTool extends OpenAssistantTool<typeof SpatialJoinArgs> {
+  protected readonly defaultDescription = `Spatial join geometries two geometric datasets. For example:
 1. to get the number of points in polygons, "right dataset = points" and "left dataset = polygons"
 2. to check which point belongs to which polygon, "right dataset = polygons" and "left dataset = points"
 IMPORTANT:
 1. left dataset and right dataset should be different.
-2. joinVariables should come from the right dataset.`,
-  parameters: z.object({
-    rightDatasetName: z.string(),
-    leftDatasetName: z.string(),
-    joinVariables: z
-      .array(
-        z.object({
-          variableName: z.string(),
-          operator: z.enum([
-            'sum',
-            'mean',
-            'min',
-            'max',
-            'median',
-            'count',
-            'unique',
-          ]),
-        })
-      )
-      .optional(),
-  }),
-  execute: executeSpatialJoin,
-  context: {
-    getGeometries: () => {
-      throw new Error('getGeometries() of SpatialJoinTool is not implemented');
-    },
-    getValues: () => {
-      throw new Error('getValues() of SpatialJoinTool is not implemented');
-    },
-    saveAsDataset: () => {
-      throw new Error('saveAsDataset() of SpatialJoinTool is not implemented');
-    },
-  },
-});
+2. joinVariables should come from the right dataset.`;
+  protected readonly defaultParameters = SpatialJoinArgs;
 
-export type SpatialJoinTool = typeof spatialJoin;
+  constructor(options: OpenAssistantToolOptions<typeof SpatialJoinArgs> = {}) {
+    super({
+      ...options,
+      context: options.context || {
+        getGeometries: () => {
+          throw new Error('getGeometries() of SpatialJoinTool is not implemented');
+        },
+        getValues: () => {
+          throw new Error('getValues() of SpatialJoinTool is not implemented');
+        },
+        saveAsDataset: () => {
+          throw new Error('saveAsDataset() of SpatialJoinTool is not implemented');
+        },
+      },
+    });
+  }
+
+  async execute(
+    args: z.infer<typeof SpatialJoinArgs>,
+    options?: { context?: Record<string, unknown> }
+  ): Promise<{
+    llmResult: SpatialJoinLlmResult;
+    additionalData?: SpatialJoinAdditionalData;
+  }> {
+    return executeSpatialJoin(args, options);
+  }
+}
 
 type SpatialJoinArgs = {
   rightDatasetName: string;

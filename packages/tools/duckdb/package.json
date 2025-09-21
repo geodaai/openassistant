@@ -34,7 +34,7 @@
     "@duckdb/duckdb-wasm": "^1.29.0",
     "@openassistant/utils": "workspace:*",
     "apache-arrow": "^17.0.0",
-    "zod": "^3.24.4"
+    "zod": "^3.25.76"
   },
   "peerDependencies": {
     "react": ">=18.2",

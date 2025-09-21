@@ -3,7 +3,7 @@
 
 export * from './tool';
 export * from './tool-cache';
-export * from './vercel-tool';
+export * from './openassistant-tool';
 export * from './cache';
 export * from './geojson';
 export * from './format';

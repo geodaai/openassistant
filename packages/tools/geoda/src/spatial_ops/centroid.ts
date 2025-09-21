@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { extendedTool, generateId } from '@openassistant/utils';
-import { z } from 'zod';
+import { OpenAssistantTool, generateId, z } from '@openassistant/utils';
 import { getCentroids, SpatialGeometry } from '@geoda/core';
 import { Feature, Geometry } from 'geojson';
 
@@ -71,29 +70,31 @@ export type CentroidAdditionalData = {
  * });
  * ```
  */
-export const centroid = extendedTool<
-  CentroidFunctionArgs,
-  CentroidLlmResult,
-  CentroidAdditionalData,
-  SpatialToolContext
->({
-  description: 'Calculate centroids of geometries',
-  parameters: z.object({
-    geojson: z
-      .string()
-      .optional()
-      .describe(
-        'GeoJSON string of the geometry to calculate centroids from. Important: it needs to be wrapped in a FeatureCollection object!'
-      ),
-    datasetName: z
-      .string()
-      .optional()
-      .describe(
-        'Name of the dataset with geometries to calculate centroids from'
-      ),
-  }),
-  execute: async (args, options) => {
-    const { datasetName, geojson } = args;
+export class CentroidTool extends OpenAssistantTool<typeof CentroidArgs> {
+  constructor(
+    context: SpatialToolContext = {
+      getGeometries: async () => null,
+    },
+    component?: React.ReactNode,
+    onToolCompleted?: (toolCallId: string, additionalData?: unknown) => void
+  ) {
+    super(
+      'Calculate centroids of geometries',
+      CentroidArgs,
+      context,
+      component,
+      onToolCompleted
+    );
+  }
+
+  async execute(
+    params: z.infer<typeof CentroidArgs>,
+    options?: { context?: Record<string, unknown> }
+  ): Promise<{
+    llmResult: CentroidLlmResult;
+    additionalData?: CentroidAdditionalData;
+  }> {
+    const { datasetName, geojson } = params;
     if (!options?.context || !isSpatialToolContext(options.context)) {
       throw new Error(
         'Context is required and must implement SpatialToolContext'
@@ -139,6 +140,7 @@ export const centroid = extendedTool<
     return {
       llmResult: {
         success: true,
+        datasetName: outputDatasetName,
         result: `Centroids calculated successfully, and it has been saved in dataset: ${outputDatasetName}`,
       },
       additionalData: {
@@ -149,10 +151,25 @@ export const centroid = extendedTool<
         },
       },
     };
-  },
-  context: {
-    getGeometries: async () => null,
-  },
+  }
+}
+
+export const CentroidArgs = z.object({
+  geojson: z
+    .string()
+    .optional()
+    .describe(
+      'GeoJSON string of the geometry to calculate centroids from. Important: it needs to be wrapped in a FeatureCollection object!'
+    ),
+  datasetName: z
+    .string()
+    .optional()
+    .describe(
+      'Name of the dataset with geometries to calculate centroids from'
+    ),
 });
 
-export type CentroidTool = typeof centroid;
+// For backward compatibility, create a default instance
+export const centroid = new CentroidTool();
+
+export type { CentroidTool };

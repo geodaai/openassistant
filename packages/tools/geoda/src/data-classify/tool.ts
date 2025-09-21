@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { extendedTool } from '@openassistant/utils';
+import { OpenAssistantTool, OpenAssistantToolOptions } from '@openassistant/utils';
 import { z } from 'zod';
 import {
   equalIntervalBreaks,
@@ -14,11 +14,11 @@ import {
 } from '@geoda/core';
 import { GetValues } from '../types';
 
-export type DataClassifyFunctionArgs = z.ZodObject<{
-  datasetName: z.ZodString;
-  variableName: z.ZodString;
-  method: z.ZodEnum<
-    [
+export const DataClassifyArgs = z.object({
+  datasetName: z.string(),
+  variableName: z.string(),
+  method: z
+    .enum([
       'quantile',
       'natural breaks',
       'equal interval',
@@ -26,11 +26,19 @@ export type DataClassifyFunctionArgs = z.ZodObject<{
       'box',
       'standard deviation',
       'unique values',
-    ]
-  >;
-  k: z.ZodOptional<z.ZodNumber>;
-  hinge: z.ZodOptional<z.ZodNumber>;
-}>;
+    ])
+    .describe('The classification method.'),
+  k: z
+    .number()
+    .optional()
+    .describe(
+      'The number of bins or classes. This is only required for quantile, natural breaks, equal interval.'
+    ),
+  hinge: z
+    .number()
+    .optional()
+    .describe('The hinge value when box method is used. Default is 1.5.'),
+});
 
 export type DataClassifyLlmResult = {
   success: boolean;
@@ -60,7 +68,7 @@ export type DataClassifyFunctionContext = {
 };
 
 /**
- * ## dataClassify Tool
+ * ## DataClassifyTool
  * 
  * This tool is used to classify the data into k bins or classes.
  *
@@ -80,69 +88,57 @@ export type DataClassifyFunctionContext = {
  *
  * @example
  * ```typescript
- * import { dataClassify, DataClassifyTool } from "@openassistant/geoda";
- * import { convertToVercelAiTool } from "@openassistant/utils";
+ * import { DataClassifyTool } from "@openassistant/geoda";
  *
- * const classifyTool: DataClassifyTool = {
- *   ...dataClassify,
- *   toolContext: {
+ * // Simple usage with defaults
+ * const classifyTool = new DataClassifyTool();
+ *
+ * // Or with custom context
+ * const classifyTool = new DataClassifyTool(
+ *   undefined, // use default description
+ *   undefined, // use default parameters
+ *   {
  *     getValues: async (datasetName: string, variableName: string) => {
  *       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
  *     },
- *   },
- * };
+ *   }
+ * );
  *
  * const result = await generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Can you classify the data of population into 5 classes?',
- *   tools: {dataClassify: convertToVercelAiTool(classifyTool)},
+ *   tools: {dataClassify: classifyTool.toVercelAiTool()},
  * });
  *
  * ```
  *
  * For a more complete example, see the [Geoda Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_geoda_example).
  */
-export const dataClassify = extendedTool<
-  DataClassifyFunctionArgs,
-  DataClassifyLlmResult,
-  DataClassifyAdditionalData,
-  DataClassifyFunctionContext
->({
-  description: 'Classify the data into k bins or categories, and return k-1 or k (for unique values) break values.',
-  parameters: z.object({
-    datasetName: z.string(),
-    variableName: z.string(),
-    method: z
-      .enum([
-        'quantile',
-        'natural breaks',
-        'equal interval',
-        'percentile',
-        'box',
-        'standard deviation',
-        'unique values',
-      ])
-      .describe('The classification method.'),
-    k: z
-      .number()
-      .optional()
-      .describe(
-        'The number of bins or classes. This is only required for quantile, natural breaks, equal interval.'
-      ),
-    hinge: z
-      .number()
-      .optional()
-      .describe('The hinge value when box method is used. Default is 1.5.'),
-  }),
-  execute: executeDataClassify,
-  context: {
-    getValues: () => {
-      throw new Error('getValues() of DataClassifyTool is not implemented');
-    },
-  },
-});
+export class DataClassifyTool extends OpenAssistantTool<typeof DataClassifyArgs> {
+  protected readonly defaultDescription = 'Classify the data into k bins or categories, and return k-1 or k (for unique values) break values.';
+  protected readonly defaultParameters = DataClassifyArgs;
 
-export type DataClassifyTool = typeof dataClassify;
+  constructor(options: OpenAssistantToolOptions<typeof DataClassifyArgs> = {}) {
+    super({
+      ...options,
+      context: options.context || {
+        getValues: () => {
+          throw new Error('getValues() of DataClassifyTool is not implemented');
+        },
+      },
+    });
+  }
+
+  async execute(
+    args: z.infer<typeof DataClassifyArgs>,
+    options?: { context?: Record<string, unknown> }
+  ): Promise<{
+    llmResult: DataClassifyLlmResult;
+    additionalData?: DataClassifyAdditionalData;
+  }> {
+    return executeDataClassify(args, options);
+  }
+}
 
 type DataClassifyToolArgs = {
   datasetName: string;

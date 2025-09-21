@@ -1,16 +1,25 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { extendedTool } from '@openassistant/utils';
+import { OpenAssistantTool, OpenAssistantToolOptions } from '@openassistant/utils';
 import { z } from 'zod';
 import { getLength } from '@geoda/core';
 import { isSpatialToolContext } from '../utils';
+import { SpatialToolContext } from '../types';
 
-export type LengthFunctionArgs = z.ZodObject<{
-  geojson: z.ZodOptional<z.ZodString>;
-  datasetName: z.ZodOptional<z.ZodString>;
-  distanceUnit: z.ZodEnum<['KM', 'Mile']>;
-}>;
+export const LengthArgs = z.object({
+  geojson: z
+    .string()
+    .optional()
+    .describe(
+      'GeoJSON string of the geometry to calculate length for. Important: it needs to be wrapped in a FeatureCollection object!'
+    ),
+  datasetName: z
+    .string()
+    .optional()
+    .describe('Name of the dataset with geometries to calculate length for'),
+  distanceUnit: z.enum(['KM', 'Mile']).default('KM'),
+});
 
 export type LengthLlmResult = {
   success: boolean;
@@ -27,7 +36,7 @@ export type LengthAdditionalData = {
 };
 
 /**
- * ## length Tool
+ * ## LengthTool
  *
  * This tool calculates the length of geometries in a GeoJSON dataset.
  *
@@ -43,42 +52,50 @@ export type LengthAdditionalData = {
  *
  * Example code:
  * ```typescript
- * import { length, LengthTool } from '@openassistant/geoda';
- * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { LengthTool } from '@openassistant/geoda';
  * import { generateText } from 'ai';
  *
- * const lengthTool: LengthTool = {
- *   ...length,
- *   context: {
+ * // Simple usage with defaults
+ * const lengthTool = new LengthTool();
+ *
+ * // Or with custom context
+ * const lengthTool = new LengthTool(
+ *   undefined, // use default description
+ *   undefined, // use default parameters
+ *   {
  *     getGeometries: (datasetName) => {
  *       return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
  *     },
- *   },
- * });
+ *   }
+ * );
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Calculate the length of these roads in kilometers',
- *   tools: {length: convertToVercelAiTool(lengthTool)},
+ *   tools: {length: lengthTool.toVercelAiTool()},
  * });
  * ```
  */
-export const length = extendedTool({
-  description: 'Calculate length of geometries',
-  parameters: z.object({
-    geojson: z
-      .string()
-      .optional()
-      .describe(
-        'GeoJSON string of the geometry to calculate length for. Important: it needs to be wrapped in a FeatureCollection object!'
-      ),
-    datasetName: z
-      .string()
-      .optional()
-      .describe('Name of the dataset with geometries to calculate length for'),
-    distanceUnit: z.enum(['KM', 'Mile']).default('KM'),
-  }),
-  execute: async (args, options) => {
+export class LengthTool extends OpenAssistantTool<typeof LengthArgs> {
+  protected readonly defaultDescription = 'Calculate length of geometries';
+  protected readonly defaultParameters = LengthArgs;
+
+  constructor(options: OpenAssistantToolOptions<typeof LengthArgs> = {}) {
+    super({
+      ...options,
+      context: options.context || {
+        getGeometries: async () => null,
+      },
+    });
+  }
+
+  async execute(
+    args: z.infer<typeof LengthArgs>,
+    options?: { context?: Record<string, unknown> }
+  ): Promise<{
+    llmResult: LengthLlmResult;
+    additionalData?: LengthAdditionalData;
+  }> {
     const { datasetName, geojson, distanceUnit = 'KM' } = args;
     if (!options?.context || !isSpatialToolContext(options.context)) {
       throw new Error(
@@ -110,8 +127,5 @@ export const length = extendedTool({
         distanceUnit,
       },
     };
-  },
-  context: {
-    getGeometries: () => {},
-  },
-});
+  }
+}

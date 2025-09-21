@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { z } from 'zod';
-import { extendedTool, generateId } from '@openassistant/utils';
+import { OpenAssistantTool, OpenAssistantToolOptions, generateId, z } from '@openassistant/utils';
 import { RateLimiter } from './utils/rateLimiter';
 
 // Create a single instance to be shared across all calls
@@ -27,9 +26,11 @@ export type GeocodingAdditionalData = {
 };
 
 /**
- * ## Geocoding Tool
+ * ## GeocodingTool Class
  *
- * This tool converts addresses into geographic coordinates (latitude and longitude) using OpenStreetMap's Nominatim service.
+ * The GeocodingTool class converts addresses into geographic coordinates (latitude and longitude)
+ * using OpenStreetMap's Nominatim service. This tool extends OpenAssistantTool and provides
+ * a class-based approach for geocoding functionality.
  *
  * Example user prompts:
  * - "Find the coordinates for 123 Main Street, New York"
@@ -38,38 +39,51 @@ export type GeocodingAdditionalData = {
  *
  * @example
  * ```typescript
- * import { geocoding, GeocodingTool } from "@openassistant/osm";
- * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { GeocodingTool } from "@openassistant/osm";
  * import { generateText } from 'ai';
+ *
+ * // Simple usage with defaults
+ * const geocodingTool = new GeocodingTool();
+ *
+ * // Or with custom context and callbacks
+ * const geocodingTool = new GeocodingTool(
+ *   undefined, // use default description
+ *   undefined, // use default parameters
+ *   { /* custom context */ },
+ *   GeocodingComponent,
+ *   (toolCallId, additionalData) => {
+ *     console.log('Geocoding completed:', toolCallId, additionalData);
+ *   }
+ * );
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'What are the coordinates of the Eiffel Tower?',
  *   tools: {
- *     geocoding: convertToVercelAiTool(geocoding),
+ *     geocoding: geocodingTool.toVercelAiTool(),
  *   },
  * });
  * ```
  */
-export const geocoding = extendedTool<
-  GeocodingFunctionArgs,
-  GeocodingLlmResult,
-  GeocodingAdditionalData,
-  GeocodingToolContext
->({
-  description:
-    'Geocode an address to get the latitude and longitude of the address',
-  parameters: z.object({
-    address: z.string().describe('The address to geocode'),
-  }),
-  execute: async (
-    args
+export class GeocodingTool extends OpenAssistantTool<typeof GeocodingArgs> {
+  protected readonly defaultDescription = 'Convert addresses to geographic coordinates using OpenStreetMap Nominatim';
+  protected readonly defaultParameters = GeocodingArgs;
+
+  constructor(options: OpenAssistantToolOptions<typeof GeocodingArgs> = {}) {
+    super({
+      ...options,
+      context: options.context || {},
+    });
+  }
+
+  async execute(
+    params: z.infer<typeof GeocodingArgs>
   ): Promise<{
     llmResult: GeocodingLlmResult;
     additionalData?: GeocodingAdditionalData;
-  }> => {
+  }> {
     try {
-      const { address } = args;
+      const { address } = params;
 
       // Use the global rate limiter before making the API call
       await nominatimRateLimiter.waitForNextCall();
@@ -159,11 +173,17 @@ export const geocoding = extendedTool<
         },
       };
     }
-  },
-  context: {},
+  }
+}
+
+export const GeocodingArgs = z.object({
+  address: z.string().describe('The address to geocode'),
 });
 
-export type GeocodingTool = typeof geocoding;
+// For backward compatibility, create a default instance
+export const geocoding = new GeocodingTool();
+
+export type { GeocodingTool };
 
 export type ExecuteGeocodingResult = {
   llmResult: {

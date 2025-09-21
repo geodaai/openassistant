@@ -4,10 +4,10 @@
 import { GetAssistantModelByProvider } from '../lib/model-utils';
 import { UseAssistantProps } from '../hooks/use-assistant';
 import { Tool, convertToCoreMessages } from 'ai';
-import { ExtendedTool } from '@openassistant/utils';
+import { OpenAssistantTool } from '@openassistant/utils';
 
-function isExtendedTool(tool: Tool | ExtendedTool): tool is ExtendedTool {
-  return 'context' in tool || 'onToolCompleted' in tool || 'component' in tool;
+function isOpenAssistantTool(tool: Tool | OpenAssistantTool): tool is OpenAssistantTool {
+  return tool instanceof OpenAssistantTool;
 }
 
 /**
@@ -73,41 +73,14 @@ export async function createAssistant(props: UseAssistantProps) {
   if (tools) {
     Object.keys(tools).forEach((functionName) => {
       const toolObject = tools![functionName];
-      if (isExtendedTool(toolObject)) {
-        const { execute, context, component, onToolCompleted, ...rest } =
-          toolObject;
-
-        const vercelTool: Tool = {
-          ...rest,
-          execute: async (args, options) => {
-            const { toolCallId } = options;
-            try {
-              const result = await execute(args as never, { ...options, context });
-
-              const { additionalData, llmResult } = result;
-
-              if (additionalData && toolCallId) {
-                AssistantModel.addToolResult?.(toolCallId, additionalData);
-                if (onToolCompleted) {
-                  onToolCompleted(toolCallId, additionalData);
-                }
-              }
-
-              return llmResult;
-            } catch (error) {
-              console.error(error);
-              return {
-                success: false,
-                error: `Execute tool ${functionName} failed: ${error}`,
-              };
-            }
-          },
-        };
+      if (isOpenAssistantTool(toolObject)) {
+        // Convert OpenAssistantTool to Vercel AI SDK tool format
+        const vercelTool = toolObject.toVercelAiTool();
 
         AssistantModel.registerTool({
           name: functionName,
           tool: vercelTool,
-          component: component,
+          component: toolObject.component,
         });
       } else {
        AssistantModel.registerTool({

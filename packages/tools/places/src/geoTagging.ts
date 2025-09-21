@@ -2,7 +2,7 @@
 // Copyright contributors to the openassistant project
 
 import { z } from 'zod';
-import { generateId, extendedTool } from '@openassistant/utils';
+import { generateId, OpenAssistantTool } from '@openassistant/utils';
 import {
   isFoursquareToolContext,
   FoursquareToolContext,
@@ -151,56 +151,85 @@ export type ExecuteGeotaggingResult = {
  *
  * For a more complete example, see the [Places Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_places_example).
  */
-export const geotagging = extendedTool<
-  GeotaggingFunctionArgs,
-  GeotaggingLlmResult,
-  GeotaggingAdditionalData,
-  FoursquareToolContext
->({
-  description:
-    "Use Foursquare's Snap-to-Place or Check-in technology to detect where your user's device is and what is around them. Returns geotagging candidates based on location coordinates.",
-  parameters: z.object({
-    ll: z
-      .string()
-      .describe(
-        'The latitude and longitude of the location (format: "latitude,longitude"). If not specified, the server will attempt to geolocate the IP address from the request.'
-      )
-      .optional(),
-    fields: z
-      .array(z.string())
-      .describe(
-        'Indicate which fields to return in the response, separated by commas. If no fields are specified, all Pro Fields are returned by default.'
-      )
-      .optional(),
-    hacc: z
-      .number()
-      .describe(
-        "The estimated horizontal accuracy radius in meters of the user's location at the 68th percentile confidence level as returned by the user's cell phone OS."
-      )
-      .optional(),
-    altitude: z
-      .number()
-      .describe(
-        "The altitude of the user's location in meters above the World Geodetic System 1984 (WGS84) reference ellipsoid as returned by the user's cell phone OS."
-      )
-      .optional(),
-    query: z
-      .string()
-      .describe('A string to be matched against place name for candidates.')
-      .optional(),
-    limit: z
-      .number()
-      .min(1)
-      .max(50)
-      .describe('The number of results to return, up to 50. Defaults to 10.')
-      .default(10)
-      .optional(),
-  }),
-  execute: async (args, options): Promise<ExecuteGeotaggingResult> => {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
-    try {
-      const { ll, fields, hacc, altitude, query, limit = 10 } = args;
+export class GeotaggingTool extends OpenAssistantTool<typeof GeotaggingArgs> {
+  constructor(
+    context: FoursquareToolContext = {
+      getFsqToken: () => {
+        throw new Error('getFsqToken not implemented.');
+      },
+    },
+    component?: React.ReactNode,
+    onToolCompleted?: (toolCallId: string, additionalData?: unknown) => void
+  ) {
+    super(
+      "Use Foursquare's Snap-to-Place or Check-in technology to detect where your user's device is and what is around them. Returns geotagging candidates based on location coordinates.",
+      GeotaggingArgs,
+      context,
+      component,
+      onToolCompleted
+    );
+  }
+
+  async execute(
+    params: z.infer<typeof GeotaggingArgs>,
+    options?: { context?: Record<string, unknown> }
+  ): Promise<ExecuteGeotaggingResult> {
+    return executeGeotagging(params, options);
+  }
+}
+
+export const GeotaggingArgs = z.object({
+  ll: z
+    .string()
+    .describe(
+      'The latitude and longitude of the location (format: "latitude,longitude"). If not specified, the server will attempt to geolocate the IP address from the request.'
+    )
+    .optional(),
+  fields: z
+    .array(z.string())
+    .describe(
+      'Indicate which fields to return in the response, separated by commas. If no fields are specified, all Pro Fields are returned by default.'
+    )
+    .optional(),
+  hacc: z
+    .number()
+    .describe(
+      "The estimated horizontal accuracy radius in meters of the user's location at the 68th percentile confidence level as returned by the user's cell phone OS."
+    )
+    .optional(),
+  altitude: z
+    .number()
+    .describe(
+      "The altitude of the user's location in meters above the World Geodetic System 1984 (WGS84) reference ellipsoid as returned by the user's cell phone OS."
+    )
+    .optional(),
+  query: z
+    .string()
+    .describe('A string to be matched against place name for candidates.')
+    .optional(),
+  limit: z
+    .number()
+    .min(1)
+    .max(50)
+    .describe('The number of results to return, up to 50. Defaults to 10.')
+    .default(10)
+    .optional(),
+});
+
+// For backward compatibility, create a default instance
+export const geotagging = new GeotaggingTool();
+
+// Export the class as the main type
+export type { GeotaggingTool };
+
+async function executeGeotagging(
+  params: z.infer<typeof GeotaggingArgs>,
+  options?: { context?: Record<string, unknown> }
+): Promise<ExecuteGeotaggingResult> {
+  const { ll, fields, hacc, altitude, query, limit = 10 } = params;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
+  try {
 
       // Generate output dataset name
       const outputDatasetName = `geotagging_${generateId()}`;
@@ -346,14 +375,9 @@ export const geotagging = extendedTool<
         },
       };
     }
-  },
-  context: {
-    getFsqToken: () => {
-      throw new Error('getFsqToken not implemented.');
-    },
-  },
-});
+  }
 
+// Legacy type for backward compatibility
 export type GeotaggingTool = typeof geotagging;
 
 export type GeotaggingToolContext = {

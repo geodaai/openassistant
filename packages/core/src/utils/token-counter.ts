@@ -2,7 +2,7 @@
 // Copyright contributors to the openassistant project
 
 import { encodingForModel } from '@langchain/core/utils/tiktoken';
-import { ToolInvocation } from 'ai';
+import { ToolCall } from '@ai-sdk/provider-utils';
 import { Tiktoken } from 'js-tiktoken/lite';
 import { AIMessage } from 'src/types';
 
@@ -58,7 +58,7 @@ export async function tiktokenCounterPerMessage(
   // Handle function calls if present
   if ('toolInvocations' in msg && msg.toolInvocations) {
     for (const toolInvocation of msg.toolInvocations) {
-      const { toolName, args } = toolInvocation as ToolInvocation;
+      const { toolName, args } = toolInvocation as ToolCall<string, unknown>;
       numTokens += await strTokenCounter(toolName);
       numTokens += await strTokenCounter(JSON.stringify(args));
       if (toolInvocation.state === 'result') {

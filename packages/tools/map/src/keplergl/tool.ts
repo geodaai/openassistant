@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { generateId, extendedTool } from '@openassistant/utils';
+import { generateId, OpenAssistantTool, OpenAssistantToolOptions } from '@openassistant/utils';
 import { z } from 'zod';
 import {
   FileCacheItem,
@@ -12,27 +12,31 @@ import * as arrow from 'apache-arrow';
 import { arrowSchemaToFields } from './utils';
 import { MapToolContext, isMapToolContext } from '../register-tools';
 
-export type KeplerGlToolArgs = z.ZodObject<{
-  datasetName: z.ZodString;
-  geometryColumn: z.ZodOptional<z.ZodString>;
-  latitudeColumn: z.ZodOptional<z.ZodString>;
-  longitudeColumn: z.ZodOptional<z.ZodString>;
-  mapType: z.ZodEnum<['point', 'line', 'arc', 'geojson']>;
-  colorBy: z.ZodOptional<z.ZodString>;
-  colorType: z.ZodOptional<z.ZodEnum<['breaks', 'unique']>>;
-  colorMap: z.ZodOptional<
-    z.ZodArray<
-      z.ZodObject<{
-        value: z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodNull]>;
-        color: z.ZodString;
-        label: z.ZodOptional<z.ZodString>;
-      }>
-    >
-  >;
-}>;
+export const KeplerGlArgs = z.object({
+  datasetName: z.string(),
+  geometryColumn: z.string().optional(),
+  latitudeColumn: z.string().optional(),
+  longitudeColumn: z.string().optional(),
+  mapType: z
+    .enum(['point', 'line', 'arc', 'geojson'])
+    .describe(
+      'The kepler.gl map type. Other map types like heatmap, hexbin, h3 are not supported yet.'
+    ),
+  colorBy: z.string().optional(),
+  colorType: z.enum(['breaks', 'unique']).optional(),
+  colorMap: z
+    .array(
+      z.object({
+        value: z.union([z.string(), z.number(), z.null()]),
+        color: z.string(),
+        label: z.string().optional(),
+      })
+    )
+    .optional(),
+});
 
 /**
- * ## keplergl Tool
+ * ## KeplerglTool
  * 
  * This tool is used to create a map using Kepler.gl from a dataset.
  *
@@ -43,23 +47,27 @@ export type KeplerGlToolArgs = z.ZodObject<{
  * ### Example
  * 
  * ```typescript
- * import { keplergl, KeplerglTool } from '@openassistant/map';
- * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { KeplerglTool } from '@openassistant/map';
  * import { generateText } from 'ai';
  *
- * const keplerglTool: KeplerglTool = {
- *   ...keplergl,
- *   context: {
+ * // Simple usage with defaults
+ * const keplerglTool = new KeplerglTool();
+ *
+ * // Or with custom context
+ * const keplerglTool = new KeplerglTool(
+ *   undefined, // use default description
+ *   undefined, // use default parameters
+ *   {
  *     getDataset: async (datasetName: string) => {
  *       return YOUR_DATASET;
  *     },
- *   },
- * };
+ *   }
+ * );
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Create a point map using the dataset "my_venues"',
- *   tools: {createMap: convertToVercelAiTool(keplerglTool)},
+ *   tools: {createMap: keplerglTool.toVercelAiTool()},
  * });
  * ```
  *
@@ -69,22 +77,26 @@ export type KeplerGlToolArgs = z.ZodObject<{
  *
  * ### Example
  * ```typescript
- * import { downloadMapData, isDownloadMapAdditionalData, keplergl, KeplerglTool } from '@openassistant/map';
- * import { convertToVercelAiTool, ToolCache } from '@openassistant/utils';
+ * import { DownloadMapDataTool, KeplerglTool } from '@openassistant/map';
+ * import { ToolCache } from '@openassistant/utils';
  * import { generateText } from 'ai';
  *
  * const toolResultCache = ToolCache.getInstance();
  *
- * const downloadMapTool = {
- *   ...downloadMapData,
- *   onToolCompleted: (toolCallId: string, additionalData?: unknown) => {
+ * const downloadMapTool = new DownloadMapDataTool(
+ *   undefined, // use default description
+ *   undefined, // use default parameters
+ *   {}, // context
+ *   undefined, // component
+ *   (toolCallId: string, additionalData?: unknown) => {
  *     toolResultCache.addDataset(toolCallId, additionalData);
- *   },
- * };
+ *   }
+ * );
  *
- * const keplerglTool: KeplerglTool = {
- *   ...keplergl,
- *   context: {
+ * const keplerglTool = new KeplerglTool(
+ *   undefined, // use default description
+ *   undefined, // use default parameters
+ *   {
  *     getDataset: async (datasetName: string) => {
  *       // find dataset based on datasetName
  *       // return MYDATASETS[datasetName];
@@ -95,26 +107,21 @@ export type KeplerGlToolArgs = z.ZodObject<{
  *       }
  *       throw new Error(`Dataset ${datasetName} not found`);
  *     },
- *   },
- * };
+ *   }
+ * );
  *
- * * generateText({
+ * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Create a from https://geodacenter.github.io/data-and-lab//data/Chi_Carjackings.geojson',
  *   tools: {
- *     createMap: convertToVercelAiTool(keplerglTool),
- *     downloadMapData: convertToVercelAiTool(downloadMapTool),
+ *     createMap: keplerglTool.toVercelAiTool(),
+ *     downloadMapData: downloadMapTool.toVercelAiTool(),
  *   },
  * });
  * ```
  */
-export const keplergl = extendedTool<
-  KeplerGlToolArgs,
-  KeplerGlToolLlmResult,
-  KeplerGlToolAdditionalData,
-  MapToolContext
->({
-  description: `Create a map using kepler.gl. You can create basic maps without color styling, or enhanced maps with color visualization.
+export class KeplerglTool extends OpenAssistantTool<typeof KeplerGlArgs> {
+  protected readonly defaultDescription = `Create a map using kepler.gl. You can create basic maps without color styling, or enhanced maps with color visualization.
 
 For basic maps:
 - Simply use datasetName, geometryColumn (if needed), latitudeColumn/longitudeColumn (for point maps), and mapType
@@ -130,43 +137,23 @@ For colored maps:
 For geojson datasets:
 - Use geometryColumn: '_geojson' and mapType: 'geojson' even for point collections
 
-Proceed directly with map creation unless user specifically asks for guidance on variable selection.`,
-  parameters: z.object({
-    datasetName: z.string(),
-    geometryColumn: z.string().optional(),
-    latitudeColumn: z.string().optional(),
-    longitudeColumn: z.string().optional(),
-    mapType: z
-      .enum(['point', 'line', 'arc', 'geojson'])
-      .describe(
-        'The kepler.gl map type. Other map types like heatmap, hexbin, h3 are not supported yet.'
-      ),
-    colorBy: z.string().optional(),
-    colorType: z.enum(['breaks', 'unique']).optional(),
-    colorMap: z
-      .array(
-        z.object({
-          value: z.union([z.string(), z.number(), z.null()]),
-          color: z.string(),
-          label: z.string().optional(),
-        })
-      )
-      .optional(),
-  }),
-  execute: executeCreateMap,
-  context: {},
-});
+Proceed directly with map creation unless user specifically asks for guidance on variable selection.`;
+  protected readonly defaultParameters = KeplerGlArgs;
 
-/**
- * The type of the keplergl tool, which contains the following properties:
- *
- * - description: The description of the tool.
- * - parameters: The parameters of the tool.
- * - execute: The function that will be called when the tool is executed.
- * - context: The context of the tool.
- * - component: The component that will be used to render the tool.
- */
-export type KeplerglTool = typeof keplergl;
+  constructor(options: OpenAssistantToolOptions<typeof KeplerGlArgs> = {}) {
+    super({
+      ...options,
+      context: options.context || {},
+    });
+  }
+
+  async execute(
+    args: z.infer<typeof KeplerGlArgs>,
+    options?: { context?: Record<string, unknown> }
+  ): Promise<ExecuteCreateMapResult> {
+    return executeCreateMap(args, options);
+  }
+}
 
 export type KeplerGlToolLlmResult = {
   success: boolean;

@@ -2,14 +2,14 @@
 // Copyright contributors to the openassistant project
 
 import { getMinimumSpanningTree } from '@geoda/core';
-import { extendedTool, generateId } from '@openassistant/utils';
+import { OpenAssistantTool, OpenAssistantToolOptions, generateId } from '@openassistant/utils';
 import { z } from 'zod';
 
 import { SpatialToolContext } from '../types';
 import { isSpatialToolContext } from '../utils';
 
 /**
- * ## minimumSpanningTree Tool
+ * ## MinimumSpanningTreeTool
  *
  * This tool generates the minimum spanning tree from a given dataset or geojson.
  *
@@ -29,47 +29,61 @@ import { isSpatialToolContext } from '../utils';
  * ## Example Code
  *
  * ```typescript
- * import { minimumSpanningTree, MinimumSpanningTreeTool } from '@openassistant/geoda';
- * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { MinimumSpanningTreeTool } from '@openassistant/geoda';
  * import { generateText } from 'ai';
  *
- * const mstTool: MstTool = {
- *   ...mst,
- *   context: {
+ * // Simple usage with defaults
+ * const mstTool = new MinimumSpanningTreeTool();
+ *
+ * // Or with custom context
+ * const mstTool = new MinimumSpanningTreeTool(
+ *   undefined, // use default description
+ *   undefined, // use default parameters
+ *   {
  *     getGeometries: (datasetName) => {
  *       return getGeometries(datasetName);
  *     },
- *   },
- * };
+ *   }
+ * );
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Generate the minimum spanning tree for this dataset',
- *   tools: { mst: convertToVercelAiTool(mstTool) },
+ *   tools: { mst: mstTool.toVercelAiTool() },
  * });
  * ```
  *
  */
-export const minimumSpanningTree = extendedTool<
-  MinimumSpanningTreeArgs,
-  MinimumSpanningTreeLlmResult,
-  MinimumSpanningTreeAdditionalData,
-  SpatialToolContext
->({
-  description: 'Generate the minimum spanning tree',
-  parameters: z.object({
-    datasetName: z.string().optional(),
-    geojson: z
-      .string()
-      .optional()
-      .describe(
-        'GeoJSON string of the geometry to calculate area for. Important: it needs to be wrapped in a FeatureCollection object!'
-      ),
-  }),
-  context: {
-    getGeometries: async () => null,
-  },
-  execute: async (args, options) => {
+export const MinimumSpanningTreeArgs = z.object({
+  datasetName: z.string().optional(),
+  geojson: z
+    .string()
+    .optional()
+    .describe(
+      'GeoJSON string of the geometry to calculate area for. Important: it needs to be wrapped in a FeatureCollection object!'
+    ),
+});
+
+export class MinimumSpanningTreeTool extends OpenAssistantTool<typeof MinimumSpanningTreeArgs> {
+  protected readonly defaultDescription = 'Generate the minimum spanning tree';
+  protected readonly defaultParameters = MinimumSpanningTreeArgs;
+
+  constructor(options: OpenAssistantToolOptions<typeof MinimumSpanningTreeArgs> = {}) {
+    super({
+      ...options,
+      context: options.context || {
+        getGeometries: async () => null,
+      },
+    });
+  }
+
+  async execute(
+    args: z.infer<typeof MinimumSpanningTreeArgs>,
+    options?: { context?: Record<string, unknown> }
+  ): Promise<{
+    llmResult: MinimumSpanningTreeLlmResult;
+    additionalData?: MinimumSpanningTreeAdditionalData;
+  }> {
     if (!options?.context || !isSpatialToolContext(options.context)) {
       throw new Error(
         'Context is required and must implement SpatialToolContext'
@@ -118,13 +132,8 @@ export const minimumSpanningTree = extendedTool<
         },
       },
     };
-  },
-});
-
-export type MinimumSpanningTreeArgs = z.ZodObject<{
-  datasetName: z.ZodOptional<z.ZodString>;
-  geojson: z.ZodOptional<z.ZodString>;
-}>;
+  }
+}
 
 export type MinimumSpanningTreeLlmResult = {
   success: boolean;
@@ -135,5 +144,3 @@ export type MinimumSpanningTreeAdditionalData = {
   datasetName: string;
   [key: string]: unknown;
 };
-
-export type MinimumSpanningTreeTool = typeof minimumSpanningTree;

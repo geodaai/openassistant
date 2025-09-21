@@ -4,5 +4,4 @@
 export * from './placeSearch';
 export * from './geoTagging';
 export * from './webSearch';
-export * from './register-tools';
 export * from './types'; 

@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { z } from 'zod';
 import {
   cacheData,
   generateId,
   getCachedData,
-  extendedTool,
+  OpenAssistantTool,
+  z,
 } from '@openassistant/utils';
 import { githubRateLimiter } from '../utils/rateLimiter';
 
@@ -75,25 +75,26 @@ export type ExecuteGetUsStateGeojsonResult = {
  * });
  * ```
  */
-export const getUsStateGeojson = extendedTool<
-  GetUsStateGeojsonFunctionArgs,
-  GetUsStateGeojsonLlmResult,
-  GetUsStateGeojsonAdditionalData,
-  object
->({
-  description: 'Get the GeoJSON data of one or more United States states',
-  parameters: z.object({
-    stateNames: z.array(
-      z
-        .string()
-        .describe(
-          'The name of a United States state in lowercase (e.g., "north dakota")'
-        )
-    ),
-  }),
-  execute: async (args): Promise<ExecuteGetUsStateGeojsonResult> => {
+export class GetUsStateGeojsonTool extends OpenAssistantTool<typeof GetUsStateGeojsonArgs> {
+  constructor(
+    context: object = {},
+    component?: React.ReactNode,
+    onToolCompleted?: (toolCallId: string, additionalData?: unknown) => void
+  ) {
+    super(
+      'Get the GeoJSON data of one or more United States states',
+      GetUsStateGeojsonArgs,
+      context,
+      component,
+      onToolCompleted
+    );
+  }
+
+  async execute(
+    params: z.infer<typeof GetUsStateGeojsonArgs>
+  ): Promise<ExecuteGetUsStateGeojsonResult> {
     try {
-      const { stateNames } = args;
+      const { stateNames } = params;
       const features: GeoJSON.Feature[] = [];
 
       for (const stateName of stateNames) {
@@ -143,12 +144,24 @@ export const getUsStateGeojson = extendedTool<
       return {
         llmResult: {
           success: false,
-          error: `Failed to get the GeoJSON data of the state ${args}: ${error}`,
+          error: `Failed to get the GeoJSON data of the state ${params}: ${error}`,
         },
       };
     }
-  },
-  context: {},
+  }
+}
+
+export const GetUsStateGeojsonArgs = z.object({
+  stateNames: z.array(
+    z
+      .string()
+      .describe(
+        'The name of a United States state in lowercase (e.g., "north dakota")'
+      )
+  ),
 });
 
-export type GetUsStateGeojsonTool = typeof getUsStateGeojson;
+// For backward compatibility, create a default instance
+export const getUsStateGeojson = new GetUsStateGeojsonTool();
+
+export type { GetUsStateGeojsonTool };

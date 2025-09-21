@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { extendedTool, generateId } from '@openassistant/utils';
-import { z } from 'zod';
+import { OpenAssistantTool, OpenAssistantToolOptions, generateId, z } from '@openassistant/utils';
 
 import {
   deviationFromMean,
@@ -56,9 +55,10 @@ export type StandardizeVariableToolContext = {
 };
 
 /**
- * ## standardizeVariable Tool
+ * ## StandardizeVariableTool Class
  * 
- * This tool is used to standardize the data of a variable using one of the following methods:
+ * The StandardizeVariableTool class standardizes data variables using various statistical methods.
+ * This tool extends OpenAssistantTool and provides a class-based approach for data standardization.
  *
  * ### Standardization Methods
  *
@@ -70,57 +70,66 @@ export type StandardizeVariableToolContext = {
  *
  * ## Example Code
  * ```ts
- * import { standardizeVariable, StandardizeVariableTool } from '@openassistant/geoda';
- * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { StandardizeVariableTool } from '@openassistant/geoda';
  * import { generateText } from 'ai';
  *
- * const standardizeVariableTool: StandardizeVariableTool = {
- *   ...standardizeVariable,
- *   context: {
+ * // Simple usage with defaults
+ * const standardizeVariableTool = new StandardizeVariableTool();
+ *
+ * // Or with custom context
+ * const standardizeVariableTool = new StandardizeVariableTool(
+ *   undefined, // use default description
+ *   undefined, // use default parameters
+ *   {
  *     getValues: (datasetName, variableName) => {
  *       return getValues(datasetName, variableName);
  *     },
- *   },
- * };
+ *   }
+ * );
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Standardize the data of the variable "income" of the dataset "income_data" using the deviation from mean method',
- *   tools: { standardizeVariable: convertToVercelAiTool(standardizeVariableTool) },
+ *   tools: { standardizeVariable: standardizeVariableTool.toVercelAiTool() },
  * });
  * ```
  */
-export const standardizeVariable = extendedTool<
-  StandardizeVariableToolArgs,
-  StandardizeVariableToolLlmResult,
-  StandardizeVariableToolAdditionalData,
-  StandardizeVariableToolContext
->({
-  description:
-    'Standardize the data of a variable using one of the following methods: deviation from mean, standardize MAD, range adjust, range standardize, standardize (Z-score)',
-  parameters: z.object({
-    datasetName: z.string(),
-    variableName: z.string(),
-    standardizationMethod: z.enum([
-      'deviationFromMean',
-      'standardizeMAD',
-      'rangeAdjust',
-      'rangeStandardize',
-      'standardize',
-    ]),
-    saveData: z.boolean().optional(),
-  }),
-  context: {
-    getValues: () => {
-      throw new Error(
-        'getValues() of StandardizeVariableTool is not implemented'
-      );
-    },
-  },
-  execute: async (args, options): Promise<StandardizeVariableToolResult> => {
+export const StandardizeVariableArgs = z.object({
+  datasetName: z.string(),
+  variableName: z.string(),
+  standardizationMethod: z.enum([
+    'deviationFromMean',
+    'standardizeMAD',
+    'rangeAdjust',
+    'rangeStandardize',
+    'standardize',
+  ]),
+  saveData: z.boolean().optional(),
+});
+
+export class StandardizeVariableTool extends OpenAssistantTool<typeof StandardizeVariableArgs> {
+  protected readonly defaultDescription = 'Standardize the data of a variable using one of the following methods: deviation from mean, standardize MAD, range adjust, range standardize, standardize (Z-score)';
+  protected readonly defaultParameters = StandardizeVariableArgs;
+
+  constructor(options: OpenAssistantToolOptions<typeof StandardizeVariableArgs> = {}) {
+    super({
+      ...options,
+      context: options.context || {
+        getValues: () => {
+          throw new Error(
+            'getValues() of StandardizeVariableTool is not implemented'
+          );
+        },
+      },
+    });
+  }
+
+  async execute(
+    args: z.infer<typeof StandardizeVariableArgs>,
+    options?: { context?: Record<string, unknown> }
+  ): Promise<StandardizeVariableToolResult> {
     try {
-      const { datasetName, variableName, standardizationMethod, saveData } =
-        args;
+      const { datasetName, variableName, standardizationMethod, saveData } = args;
       const { getValues } = options?.context as StandardizeVariableToolContext;
 
       const values = await getValues(datasetName, variableName);
@@ -191,7 +200,5 @@ export const standardizeVariable = extendedTool<
         },
       };
     }
-  },
-});
-
-export type StandardizeVariableTool = typeof standardizeVariable;
+  }
+}

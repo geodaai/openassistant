@@ -1,22 +1,22 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { extendedTool, generateId } from '@openassistant/utils';
+import { OpenAssistantTool, OpenAssistantToolOptions, generateId } from '@openassistant/utils';
 import { MapToolContext } from '../register-tools';
 import { z } from 'zod';
 
-export type DownloadMapDataArgs = z.ZodObject<{
-  url: z.ZodString;
-}>;
+export const DownloadMapDataArgs = z.object({
+  url: z.string(),
+});
 
-export type DownloadMapLlmResult = z.ZodObject<{
-  success: z.ZodBoolean;
-  datasetName?: z.ZodString;
-  fields?: z.ZodArray<z.ZodString>;
-  result?: z.ZodString;
-  instructions?: z.ZodString;
-  error?: z.ZodString;
-}>;
+export type DownloadMapLlmResult = {
+  success: boolean;
+  datasetName?: string;
+  fields?: string[];
+  result?: string;
+  instructions?: string;
+  error?: string;
+};
 
 export type DownloadMapAdditionalData = {
   datasetName: string;
@@ -24,6 +24,8 @@ export type DownloadMapAdditionalData = {
 };
 
 /**
+ * DownloadMapDataTool
+ *
  * The downloadMapData tool is used to download map data (GeoJson or CSV) from a url.
  *
  * :::tip
@@ -34,22 +36,30 @@ export type DownloadMapAdditionalData = {
  *
  * ### Example
  * ```typescript
- * import { downloadMapData, isDownloadMapAdditionalData, keplergl, KeplerglTool } from '@openassistant/map';
- * import { convertToVercelAiTool, ToolCache } from '@openassistant/utils';
+ * import { DownloadMapDataTool, KeplerglTool } from '@openassistant/map';
+ * import { ToolCache } from '@openassistant/utils';
  * import { generateText } from 'ai';
  *
  * const toolResultCache = ToolCache.getInstance();
  *
- * const downloadMapTool = {
- *   ...downloadMapData,
- *   onToolCompleted: (toolCallId: string, additionalData?: unknown) => {
- *     toolResultCache.addDataset(toolCallId, additionalData);
- *   },
- * };
+ * // Simple usage with defaults
+ * const downloadMapTool = new DownloadMapDataTool();
  *
- * const keplerglTool: KeplerglTool = {
- *   ...keplergl,
- *   context: {
+ * // Or with custom callbacks
+ * const downloadMapTool = new DownloadMapDataTool(
+ *   undefined, // use default description
+ *   undefined, // use default parameters
+ *   {}, // context
+ *   undefined, // component
+ *   (toolCallId: string, additionalData?: unknown) => {
+ *     toolResultCache.addDataset(toolCallId, additionalData);
+ *   }
+ * );
+ *
+ * const keplerglTool = new KeplerglTool(
+ *   undefined, // use default description
+ *   undefined, // use default parameters
+ *   {
  *     getDataset: async (datasetName: string) => {
  *       // find dataset based on datasetName first
  *       // return MYDATASETS[datasetName];
@@ -60,29 +70,36 @@ export type DownloadMapAdditionalData = {
  *       }
  *       throw new Error(`Dataset ${datasetName} not found`);
  *     },
- *   },
- * };
+ *   }
+ * );
  *
- * * generateText({
+ * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Create a from https://geodacenter.github.io/data-and-lab//data/Chi_Carjackings.geojson',
  *   tools: {
- *     createMap: convertToVercelAiTool(keplerglTool),
- *     downloadMapData: convertToVercelAiTool(downloadMapTool),
+ *     createMap: keplerglTool.toVercelAiTool(),
+ *     downloadMapData: downloadMapTool.toVercelAiTool(),
  *   },
  * });
  */
-export const downloadMapData = extendedTool<
-  DownloadMapDataArgs,
-  DownloadMapLlmResult,
-  DownloadMapAdditionalData,
-  MapToolContext
->({
-  description: 'Download map data from a url',
-  parameters: z.object({
-    url: z.string(),
-  }),
-  execute: async (args) => {
+export class DownloadMapDataTool extends OpenAssistantTool<typeof DownloadMapDataArgs> {
+  protected readonly defaultDescription = 'Download map data from a url';
+  protected readonly defaultParameters = DownloadMapDataArgs;
+
+  constructor(options: OpenAssistantToolOptions<typeof DownloadMapDataArgs> = {}) {
+    super({
+      ...options,
+      context: options.context || {},
+    });
+  }
+
+  async execute(
+    args: z.infer<typeof DownloadMapDataArgs>,
+    options?: { context?: Record<string, unknown> }
+  ): Promise<{
+    llmResult: DownloadMapLlmResult;
+    additionalData?: DownloadMapAdditionalData;
+  }> {
     const { url } = args;
     try {
       // download the url, which could be
@@ -146,9 +163,8 @@ export const downloadMapData = extendedTool<
         },
       };
     }
-  },
-  context: {},
-});
+  }
+}
 
 export function isDownloadMapAdditionalData(
   data: unknown
@@ -161,5 +177,3 @@ export function isDownloadMapAdditionalData(
   }
   return false;
 }
-
-export type DownloadMapDataTool = typeof downloadMapData;

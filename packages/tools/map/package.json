@@ -33,7 +33,7 @@
     "@openassistant/utils": "workspace:*",
     "apache-arrow": "^17.0.0",
     "type-analyzer": "^0.4.0",
-    "zod": "^3.24.4"
+    "zod": "^3.25.76"
   },
   "publishConfig": {
     "access": "public"

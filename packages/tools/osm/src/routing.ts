@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { z } from 'zod';
 import { FeatureCollection } from 'geojson';
-import { generateId, extendedTool } from '@openassistant/utils';
+import { generateId, OpenAssistantTool, z } from '@openassistant/utils';
 import { isMapboxToolContext, MapboxToolContext } from './register-tools';
 import { mapboxRateLimiter } from './utils/rateLimiter';
 
@@ -138,33 +137,33 @@ export type ExecuteRoutingResult = {
  * });
  * ```
  */
-export const routing = extendedTool<
-  RoutingFunctionArgs,
-  RoutingLlmResult,
-  RoutingAdditionalData,
-  MapboxToolContext
->({
-  description:
-    'Get routing directions between two coordinates using Mapbox Directions API',
-  parameters: z.object({
-    origin: z.object({
-      longitude: z.number().describe('The longitude of the origin point'),
-      latitude: z.number().describe('The latitude of the origin point'),
-    }),
-    destination: z.object({
-      longitude: z.number().describe('The longitude of the destination point'),
-      latitude: z.number().describe('The latitude of the destination point'),
-    }),
-    mode: z
-      .enum(['driving', 'walking', 'cycling'])
-      .describe('The mode of the routing')
-      .optional(),
-  }),
-  execute: async (args, options): Promise<ExecuteRoutingResult> => {
+export class RoutingTool extends OpenAssistantTool<typeof RoutingArgs> {
+  constructor(
+    context: MapboxToolContext = {
+      getMapboxToken: () => {
+        throw new Error('getMapboxToken() not implemented.');
+      },
+    },
+    component?: React.ReactNode,
+    onToolCompleted?: (toolCallId: string, additionalData?: unknown) => void
+  ) {
+    super(
+      'Get routing directions between two coordinates using Mapbox Directions API',
+      RoutingArgs,
+      context,
+      component,
+      onToolCompleted
+    );
+  }
+
+  async execute(
+    params: z.infer<typeof RoutingArgs>,
+    options?: { context?: Record<string, unknown> }
+  ): Promise<ExecuteRoutingResult> {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000);
     try {
-      const { origin, destination, mode = 'driving' } = args;
+      const { origin, destination, mode = 'driving' } = params;
       const { longitude: originLon, latitude: originLat } = origin;
       const { longitude: destLon, latitude: destLat } = destination;
 
@@ -272,15 +271,28 @@ export const routing = extendedTool<
         },
       };
     }
-  },
-  context: {
-    getMapboxToken: () => {
-      throw new Error('getMapboxToken() not implemented.');
-    },
-  },
+  }
+}
+
+export const RoutingArgs = z.object({
+  origin: z.object({
+    longitude: z.number().describe('The longitude of the origin point'),
+    latitude: z.number().describe('The latitude of the origin point'),
+  }),
+  destination: z.object({
+    longitude: z.number().describe('The longitude of the destination point'),
+    latitude: z.number().describe('The latitude of the destination point'),
+  }),
+  mode: z
+    .enum(['driving', 'walking', 'cycling'])
+    .describe('The mode of the routing')
+    .optional(),
 });
 
-export type RoutingTool = typeof routing;
+// For backward compatibility, create a default instance
+export const routing = new RoutingTool();
+
+export type { RoutingTool };
 
 export type RoutingToolContext = {
   getMapboxToken: () => string;

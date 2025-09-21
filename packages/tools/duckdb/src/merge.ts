@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { extendedTool, generateId } from '@openassistant/utils';
-import { z } from 'zod';
+import { OpenAssistantTool, generateId, z } from '@openassistant/utils';
 import { tableFromArrays } from 'apache-arrow';
 
 import { getDuckDB } from './query';
@@ -37,13 +36,20 @@ export function convertArrowRowToObject(row) {
   return row;
 }
 
-export const mergeTables = extendedTool<
-  MergeTablesArgs,
-  MergeTablesLllmResult,
-  MergeTablesAdditionalData,
-  LocalQueryContext
->({
-  description: `Merge table B to table A into a new table using SQL in duckdb.
+export class MergeTablesTool extends OpenAssistantTool<typeof MergeTablesArgs> {
+  constructor(
+    context: LocalQueryContext = {
+      getValues: () => {
+        // get the values of the variable from the dataset,
+        // the values will be used to create and plot the histogram
+        throw new Error('getValues() of mergeTables is not implemented');
+      },
+    },
+    component?: React.ReactNode,
+    onToolCompleted?: (toolCallId: string, additionalData?: unknown) => void
+  ) {
+    super(
+      `Merge table B to table A into a new table using SQL in duckdb.
 - If merge horizontally, table A and B should be joined on a key column that exists in both tables.
   - e.g. SELECT A.id, A.name, A.INCOME, B.POP, B.INCOME AS B_INCOME FROM A JOIN B USING (id)
 - If merge vertically, the tables should have the same columns.
@@ -51,30 +57,18 @@ export const mergeTables = extendedTool<
 IMPORTANT:
   - Please do not use * in the SQL query, instead use the column names of table A and B.
 `,
-  parameters: z.object({
-    datasetNameA: z.string(),
-    datasetNameB: z.string(),
-    columnNamesA: z.array(z.string()).describe('The columns of table A.'),
-    columnNamesB: z.array(z.string()).describe('The columns of table B.'),
-    mergeType: z.enum(['horizontal', 'vertical']),
-    keyColumn: z
-      .string()
-      .optional()
-      .describe('The key column to join on if merge horizontally.'),
-    dbTableNameA: z
-      .string()
-      .describe(
-        'The alias of table A based on databaseNameA. Please use datasetName plus a 6-digit random number to avoid conflicts.'
-      ),
-    dbTableNameB: z
-      .string()
-      .describe(
-        'The alias of table B based on databaseNameB. Please use datasetName plus a 6-digit random number to avoid conflicts.'
-      ),
-    sql: z.string(),
-  }),
-  execute: async (
-    {
+      MergeTablesArgs,
+      context,
+      component,
+      onToolCompleted
+    );
+  }
+
+  async execute(
+    params: z.infer<typeof MergeTablesArgs>,
+    options?: { context?: Record<string, unknown> }
+  ): Promise<MergeTablesToolResult> {
+    const {
       datasetNameA,
       datasetNameB,
       columnNamesA,
@@ -84,9 +78,8 @@ IMPORTANT:
       sql,
       dbTableNameA,
       dbTableNameB,
-    },
-    options
-  ): Promise<MergeTablesToolResult> => {
+    } = params;
+
     try {
       const { getValues, getDuckDB: getUserDuckDB } =
         options?.context as LocalQueryContext;
@@ -183,27 +176,31 @@ IMPORTANT:
         },
       };
     }
-  },
-  context: {
-    getValues: () => {
-      // get the values of the variable from the dataset,
-      // the values will be used to create and plot the histogram
-      throw new Error('getValues() of mergeTables is not implemented');
-    },
-  },
-});
+  }
+}
 
-export type MergeTablesArgs = z.ZodObject<{
-  datasetNameA: z.ZodString;
-  datasetNameB: z.ZodString;
-  columnNamesA: z.ZodArray<z.ZodString>;
-  columnNamesB: z.ZodArray<z.ZodString>;
-  mergeType: z.ZodEnum<['horizontal', 'vertical']>;
-  keyColumn: z.ZodOptional<z.ZodString>;
-  dbTableNameA: z.ZodString;
-  dbTableNameB: z.ZodString;
-  sql: z.ZodString;
-}>;
+export const MergeTablesArgs = z.object({
+  datasetNameA: z.string(),
+  datasetNameB: z.string(),
+  columnNamesA: z.array(z.string()).describe('The columns of table A.'),
+  columnNamesB: z.array(z.string()).describe('The columns of table B.'),
+  mergeType: z.enum(['horizontal', 'vertical']),
+  keyColumn: z
+    .string()
+    .optional()
+    .describe('The key column to join on if merge horizontally.'),
+  dbTableNameA: z
+    .string()
+    .describe(
+      'The alias of table A based on databaseNameA. Please use datasetName plus a 6-digit random number to avoid conflicts.'
+    ),
+  dbTableNameB: z
+    .string()
+    .describe(
+      'The alias of table B based on databaseNameB. Please use datasetName plus a 6-digit random number to avoid conflicts.'
+    ),
+  sql: z.string(),
+});
 
 export type MergeTablesLllmResult = {
   success: boolean;
@@ -224,4 +221,8 @@ export type MergeTablesToolResult = {
   additionalData?: MergeTablesAdditionalData;
 };
 
-export type MergeTablesTool = typeof mergeTables;
+// For backward compatibility, create a default instance
+export const mergeTables = new MergeTablesTool();
+
+// Export the class as the main type
+export type { MergeTablesTool };

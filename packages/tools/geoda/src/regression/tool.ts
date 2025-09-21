@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { extendedTool, generateId } from '@openassistant/utils';
+import { OpenAssistantTool, OpenAssistantToolOptions, generateId } from '@openassistant/utils';
 import { z } from 'zod';
 import {
   LinearRegressionResult,
@@ -13,13 +13,18 @@ import { GetValues, WeightsProps } from '../types';
 import { printRegressionResult, runRegression } from './utils';
 import { getWeights } from '../utils';
 
-export type SpatialRegressionFunctionArgs = z.ZodObject<{
-  datasetName: z.ZodString;
-  dependentVariable: z.ZodString;
-  independentVariables: z.ZodArray<z.ZodString>;
-  modelType: z.ZodEnum<['classic', 'spatial-lag', 'spatial-error']>;
-  weightsId: z.ZodOptional<z.ZodString>;
-}>;
+export const SpatialRegressionArgs = z.object({
+  datasetName: z.string(),
+  dependentVariable: z.string(),
+  independentVariables: z.array(z.string()),
+  modelType: z.enum(['classic', 'spatial-lag', 'spatial-error']),
+  weightsId: z
+    .string()
+    .optional()
+    .describe(
+      'The id of the spatial weights for spatial diagnostics in classic model or spatial models'
+    ),
+});
 
 export type SpatialRegressionLlmResult = {
   success: boolean;
@@ -40,7 +45,7 @@ export type SpatialRegressionFunctionContext = {
 };
 
 /**
- * ## spatialRegression Tool
+ * ## SpatialRegressionTool
  *
  * This tool is used to perform regression analysis with spatial data.
  *
@@ -65,60 +70,62 @@ export type SpatialRegressionFunctionContext = {
  *
  * ### Code example
  * ```typescript
- * import { spatialRegression, SpatialRegressionTool } from '@openassistant/geoda';
- * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { SpatialRegressionTool } from '@openassistant/geoda';
  * import { generateText } from 'ai';
  *
- * const spatialRegressionTool: SpatialRegressionTool = {
- *   ...spatialRegression,
- *   context: {
+ * // Simple usage with defaults
+ * const spatialRegressionTool = new SpatialRegressionTool();
+ *
+ * // Or with custom context
+ * const spatialRegressionTool = new SpatialRegressionTool(
+ *   undefined, // use default description
+ *   undefined, // use default parameters
+ *   {
  *     getValues: (datasetName, variableName) => {
- *     return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
- *   },
- * };
+ *       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
+ *     },
+ *   }
+ * );
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Can you run a spatial regression analysis of "revenue ~ population + income" on the data?',
- *   tools: {spatialRegression: convertToVercelAiTool(spatialRegressionTool)},
+ *   tools: {spatialRegression: spatialRegressionTool.toVercelAiTool()},
  * });
  * ```
  */
-export const spatialRegression = extendedTool<
-  SpatialRegressionFunctionArgs,
-  SpatialRegressionLlmResult,
-  SpatialRegressionAdditionalData,
-  SpatialRegressionFunctionContext
->({
-  description: `Apply spatial regression analysis.
+export class SpatialRegressionTool extends OpenAssistantTool<typeof SpatialRegressionArgs> {
+  protected readonly defaultDescription = `Apply spatial regression analysis.
 Note:
 - please only use the knowledge from Luc Anselin's GeoDa book and the GeoDa documentation to answer the question
 - you can run spatial diagnostics with OLS model if you need to determine if spatial regression model is needed
 - do NOT run global Moran's I with independent variables to determine if spatial regression model is needed
 - you can run spatial models if you need to account for spatial effects in the model
 - please provide suggestions for improving the model and the results
-  `,
-  parameters: z.object({
-    datasetName: z.string(),
-    dependentVariable: z.string(),
-    independentVariables: z.array(z.string()),
-    modelType: z.enum(['classic', 'spatial-lag', 'spatial-error']),
-    weightsId: z
-      .string()
-      .optional()
-      .describe(
-        'The id of the spatial weights for spatial diagnostics in classic model or spatial models'
-      ),
-  }),
-  execute: executeSpatialRegression,
-  context: {
-    getValues: () => {
-      throw new Error('getValues not implemented.');
-    },
-  },
-});
+  `;
+  protected readonly defaultParameters = SpatialRegressionArgs;
 
-export type SpatialRegressionTool = typeof spatialRegression;
+  constructor(options: OpenAssistantToolOptions<typeof SpatialRegressionArgs> = {}) {
+    super({
+      ...options,
+      context: options.context || {
+        getValues: () => {
+          throw new Error('getValues not implemented.');
+        },
+      },
+    });
+  }
+
+  async execute(
+    args: z.infer<typeof SpatialRegressionArgs>,
+    options?: { context?: Record<string, unknown> }
+  ): Promise<{
+    llmResult: SpatialRegressionLlmResult;
+    additionalData?: SpatialRegressionAdditionalData;
+  }> {
+    return executeSpatialRegression(args, options);
+  }
+}
 
 type SpatialRegressionArgs = {
   datasetName: string;

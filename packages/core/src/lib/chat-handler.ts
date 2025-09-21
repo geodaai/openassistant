@@ -5,11 +5,10 @@ import {
   CoreMessage,
   LanguageModel,
   streamText,
-  ToolCall,
-  ToolInvocation,
   ToolSet,
 } from 'ai';
-import { Message } from '@ai-sdk/ui-utils';
+import { ToolCall } from '@ai-sdk/provider-utils';
+import { Message, generateId } from '@ai-sdk/ui-utils';
 import { tiktokenCounterPerMessage } from '../utils/token-counter';
 import { trimMessages } from '../utils/trim-messages';
 import { executeToolCall } from '../utils/toolcall';
@@ -94,10 +93,9 @@ export class ChatHandler {
       system: this.instructions,
       messages: this.messageHistory as CoreMessage[],
       tools: combinedTools,
-      onFinish: async ({ text, toolCalls, response }) => {
+      onFinish: async ({ text, toolCalls }) => {
         // handle server side tool calls
-        const responseMsg = response.messages[response.messages.length - 1];
-        const toolInvocations: ToolInvocation[] = [];
+        const toolInvocations: ToolCall<string, unknown>[] = [];
 
         for (const toolCall of toolCalls) {
           const toolInvocation = await this.handleToolCall(toolCall);
@@ -109,8 +107,8 @@ export class ChatHandler {
         if (toolInvocations.length > 0 || text.length > 0) {
           // add final message to history messages array
           const message: Message = {
-            id: responseMsg.id,
-            role: responseMsg.role as 'assistant',
+            id: generateId(),
+            role: 'assistant',
             content: text,
             toolInvocations,
           };
@@ -119,7 +117,12 @@ export class ChatHandler {
       },
     });
 
-    return result.toDataStreamResponse();
+    return new Response(result.textStream, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Transfer-Encoding': 'chunked',
+      },
+    });
   }
 
   async addMessageToHistory(message: Message | CoreMessage) {
@@ -129,7 +132,7 @@ export class ChatHandler {
 
   async handleToolCall(
     toolCall: ToolCall<string, unknown>
-  ): Promise<ToolInvocation | null> {
+  ): Promise<ToolCall<string, unknown> | null> {
     // handle server side tool call
     // check if tool call is registered at server side
     const functionName = toolCall.toolName;

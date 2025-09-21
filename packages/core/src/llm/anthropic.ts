@@ -6,9 +6,9 @@ import {
   VercelAiClientConfigureProps,
 } from './vercelai-client';
 import { testConnection } from '../utils/connection-test';
-import { LanguageModelV1 } from 'ai';
+import { LanguageModel } from 'ai';
 
-type AnthropicProvider = (model: string) => LanguageModelV1;
+type AnthropicProvider = (model: string) => LanguageModel;
 interface Module {
   createAnthropic: (options: {
     apiKey: string;

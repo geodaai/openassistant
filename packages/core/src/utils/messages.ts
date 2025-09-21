@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { Message, generateId } from 'ai';
+import { CoreMessage, generateId } from 'ai';
 import { StreamMessage, StreamMessageSchema } from '../types';
 import { z } from 'zod';
 
@@ -40,8 +40,8 @@ export const ConversationSchema = z.object({
  * @param conversations The conversations to rebuild the messages from
  * @returns The messages used in the Vercel AI SDK
  */
-export function rebuildMessages(conversations: Conversation[]): Message[] {
-  const result: Message[] = [];
+export function rebuildMessages(conversations: Conversation[]): CoreMessage[] {
+  const result: CoreMessage[] = [];
 
   for (const msg of conversations) {
     // Handle user messages

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { extendedTool } from '@openassistant/utils';
+import { OpenAssistantTool, OpenAssistantToolOptions } from '@openassistant/utils';
 import { z } from 'zod';
 import { WeightsMeta } from '@geoda/core';
 import { spatialLag } from '@geoda/lisa';
@@ -18,11 +18,16 @@ export type SpatialWeights = {
   weightsMeta: WeightsMeta;
 };
 
-export type MoranScatterPlotFunctionArgs = z.ZodObject<{
-  datasetName: z.ZodString;
-  variableName: z.ZodString;
-  weightsId: z.ZodOptional<z.ZodString>;
-}>;
+export const GlobalMoranArgs = z.object({
+  datasetName: z.string(),
+  variableName: z.string(),
+  weightsId: z
+    .string()
+    .optional()
+    .describe(
+      'The id of a spatial weights. It can be created using function tool "spatialWeights". If not provided, please try to create a weights first.'
+    ),
+});
 
 export type MoranScatterPlotLlmResult = {
   success: boolean;
@@ -48,7 +53,7 @@ export type MoranScatterPlotFunctionContext = {
 };
 
 /**
- * ## globalMoran Tool
+ * ## GlobalMoranTool
  * 
  * This tool is used to calculate Global Moran's I for a given variable to check if the variable is spatially clustered or dispersed.
  *
@@ -69,33 +74,39 @@ export type MoranScatterPlotFunctionContext = {
  *
  * @example
  * ```typescript
- * import { globalMoran, GlobalMoranTool, spatialWeights, SpatialWeightsTool } from "@openassistant/geoda";
- * import { convertToVercelAiTool } from "@openassistant/utils";
+ * import { GlobalMoranTool, SpatialWeightsTool } from "@openassistant/geoda";
  *
- * const spatialWeightsTool: SpatialWeightsTool = {
- *   ...spatialWeights,
- *   context: {
+ * // Simple usage with defaults
+ * const spatialWeightsTool = new SpatialWeightsTool();
+ * const moranTool = new GlobalMoranTool();
+ *
+ * // Or with custom context
+ * const spatialWeightsTool = new SpatialWeightsTool(
+ *   undefined, // use default description
+ *   undefined, // use default parameters
+ *   {
  *     getGeometries: async (datasetName) => {
  *       return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
  *     },
- *   },
- * });
+ *   }
+ * );
  *
- * const moranTool: GlobalMoranTool = {
- *   ...globalMoran,
- *   context: {
+ * const moranTool = new GlobalMoranTool(
+ *   undefined, // use default description
+ *   undefined, // use default parameters
+ *   {
  *     getValues: async (datasetName, variableName) => {
  *       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
  *     },
- *   },
- * });
+ *   }
+ * );
  *
  * const result = await generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Can you calculate the Global Moran\'s I for the population data?',
  *   tools: {
- *     globalMoran: convertToVercelAiTool(moranTool),
- *     spatialWeights: convertToVercelAiTool(spatialWeightsTool),
+ *     globalMoran: moranTool.toVercelAiTool(),
+ *     spatialWeights: spatialWeightsTool.toVercelAiTool(),
  *   },
  * });
  * ```
@@ -107,32 +118,31 @@ export type MoranScatterPlotFunctionContext = {
  *
  * For a more complete example, see the [Geoda Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_geoda_example).
  */
-export const globalMoran = extendedTool<
-  MoranScatterPlotFunctionArgs,
-  MoranScatterPlotLlmResult,
-  MoranScatterPlotAdditionalData,
-  MoranScatterPlotFunctionContext
->({
-  description: "Calculate Global Moran's I for a given variable",
-  parameters: z.object({
-    datasetName: z.string(),
-    variableName: z.string(),
-    weightsId: z
-      .string()
-      .optional()
-      .describe(
-        'The id of a spatial weights. It can be created using function tool "spatialWeights". If not provided, please try to create a weights first.'
-      ),
-  }),
-  execute: executeGlobalMoran,
-  context: {
-    getValues: () => {
-      throw new Error('getValues not implemented.');
-    },
-  },
-});
+export class GlobalMoranTool extends OpenAssistantTool<typeof GlobalMoranArgs> {
+  protected readonly defaultDescription = "Calculate Global Moran's I for a given variable";
+  protected readonly defaultParameters = GlobalMoranArgs;
 
-export type GlobalMoranTool = typeof globalMoran;
+  constructor(options: OpenAssistantToolOptions<typeof GlobalMoranArgs> = {}) {
+    super({
+      ...options,
+      context: options.context || {
+        getValues: () => {
+          throw new Error('getValues not implemented.');
+        },
+      },
+    });
+  }
+
+  async execute(
+    args: z.infer<typeof GlobalMoranArgs>,
+    options?: { context?: Record<string, unknown> }
+  ): Promise<{
+    llmResult: MoranScatterPlotLlmResult;
+    additionalData?: MoranScatterPlotAdditionalData;
+  }> {
+    return executeGlobalMoran(args, options);
+  }
+}
 
 type GlobalMoranArgs = {
   datasetName: string;

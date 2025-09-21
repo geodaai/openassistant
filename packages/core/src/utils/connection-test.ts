@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { generateText, LanguageModelV1 } from 'ai';
+import { generateText, LanguageModel } from 'ai';
 
-export async function testConnection(llm: LanguageModelV1): Promise<boolean> {
+export async function testConnection(llm: LanguageModel): Promise<boolean> {
   const { finishReason } = await generateText({
     model: llm,
     prompt: 'Hello, world!',

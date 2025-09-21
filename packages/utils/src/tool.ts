@@ -40,27 +40,3 @@ export type ExecuteFunction<
   }
 ) => PromiseLike<ExecuteFunctionResult<RETURN_TYPE, ADDITIONAL_DATA>>;
 
-export type ExtendedTool<
-  PARAMETERS extends Parameters = never,
-  RETURN_TYPE = never,
-  ADDITIONAL_DATA = never,
-  CONTEXT = unknown,
-> = {
-  description: string;
-  parameters: PARAMETERS;
-  execute: ExecuteFunction<PARAMETERS, RETURN_TYPE, ADDITIONAL_DATA, CONTEXT>;
-  context?: CONTEXT;
-  component?: React.ElementType;
-  onToolCompleted?: OnToolCompleted;
-};
-
-export function extendedTool<
-  PARAMETERS extends Parameters = never,
-  RETURN_TYPE = never,
-  ADDITIONAL_DATA = never,
-  CONTEXT = never,
->(
-  tool: ExtendedTool<PARAMETERS, RETURN_TYPE, ADDITIONAL_DATA, CONTEXT>
-): ExtendedTool<PARAMETERS, RETURN_TYPE, ADDITIONAL_DATA, CONTEXT> {
-  return tool;
-}

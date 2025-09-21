@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { CoreMessage, ToolCall, ToolSet } from 'ai';
+import { CoreMessage, ToolSet } from 'ai';
+import { ToolCall } from '@ai-sdk/provider-utils';
 
 export async function executeToolCall(
   toolCall: ToolCall<string, unknown>,

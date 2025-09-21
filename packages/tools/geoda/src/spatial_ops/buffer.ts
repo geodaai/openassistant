@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { extendedTool, generateId } from '@openassistant/utils';
+import { OpenAssistantTool, OpenAssistantToolOptions, generateId } from '@openassistant/utils';
 import { z } from 'zod';
 import { getBuffers } from '@geoda/core';
 import { Feature } from 'geojson';
@@ -9,13 +9,26 @@ import { Feature } from 'geojson';
 import { isSpatialToolContext } from '../utils';
 import { SpatialToolContext } from '../types';
 
-export type BufferFunctionArgs = z.ZodObject<{
-  geojson: z.ZodOptional<z.ZodString>;
-  datasetName: z.ZodOptional<z.ZodString>;
-  distance: z.ZodNumber;
-  distanceUnit: z.ZodEnum<['KM', 'Mile']>;
-  pointsPerCircle: z.ZodOptional<z.ZodNumber>;
-}>;
+export const BufferArgs = z.object({
+  geojson: z
+    .string()
+    .optional()
+    .describe(
+      'GeoJSON string of the geometry to be buffered. Important: it needs to be wrapped in a FeatureCollection object!'
+    ),
+  datasetName: z
+    .string()
+    .optional()
+    .describe('Name of the dataset with geometries to be buffered'),
+  distance: z.number(),
+  distanceUnit: z.enum(['KM', 'Mile']),
+  pointsPerCircle: z
+    .number()
+    .optional()
+    .describe(
+      'Smoothness of the buffer: 20 points per circle is smooth, 10 points per circle is rough'
+    ),
+});
 
 export type BufferLlmResult = {
   success: boolean;
@@ -32,7 +45,7 @@ export type BufferAdditionalData = {
 };
 
 /**
- * ## buffer Tool
+ * ## BufferTool
  *
  * This tool is used to create buffer zones around geometries.
  *
@@ -58,62 +71,58 @@ export type BufferAdditionalData = {
  *
  * ### Code example
  * ```typescript
- * import { buffer, BufferTool } from '@openassistant/geoda';
- * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { BufferTool } from '@openassistant/geoda';
  * import { generateText } from 'ai';
  *
- * const bufferTool: BufferTool = {
- *   ...buffer,
- *   context: {
+ * // Simple usage with defaults
+ * const bufferTool = new BufferTool();
+ *
+ * // Or with custom context and callbacks
+ * const bufferTool = new BufferTool(
+ *   undefined, // use default description
+ *   undefined, // use default parameters
+ *   {
  *     getGeometries: (datasetName) => {
  *       return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
  *     },
  *   },
- *   onToolCompleted: (toolCallId, additionalData) => {
+ *   undefined, // component
+ *   (toolCallId, additionalData) => {
  *     console.log(toolCallId, additionalData);
  *     // do something like save the buffer result in additionalData
- *   },
- * };
+ *   }
+ * );
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Can you create a 5km buffer around these roads?',
- *   tools: {buffer: convertToVercelAiTool(bufferTool)},
+ *   tools: {buffer: bufferTool.toVercelAiTool()},
  * });
  * ```
  *
  * You can also use this tool with other tools, e.g. geocoding, so you don't need to provide the `getGeometries` function.
  * The geometries from geocoding tool will be used as the input for this tool.
  */
-export const buffer = extendedTool<
-  BufferFunctionArgs,
-  BufferLlmResult,
-  BufferAdditionalData,
-  SpatialToolContext
->({
-  description:
-    'Buffer geometries. Please convert the distance to the unit of the distanceUnit. For example, if user provides distance is 1 meter and the distanceUnit is KM, the distance should be converted to 0.001.',
-  parameters: z.object({
-    geojson: z
-      .string()
-      .optional()
-      .describe(
-        'GeoJSON string of the geometry to be buffered. Important: it needs to be wrapped in a FeatureCollection object!'
-      ),
-    datasetName: z
-      .string()
-      .optional()
-      .describe('Name of the dataset with geometries to be buffered'),
-    distance: z.number(),
-    distanceUnit: z.enum(['KM', 'Mile']),
-    pointsPerCircle: z
-      .number()
-      .optional()
-      .describe(
-        'Smoothness of the buffer: 20 points per circle is smooth, 10 points per circle is rough'
-      ),
-  }),
-  execute: async (args, options) => {
+export class BufferTool extends OpenAssistantTool<typeof BufferArgs> {
+  protected readonly defaultDescription = 'Buffer geometries. Please convert the distance to the unit of the distanceUnit. For example, if user provides distance is 1 meter and the distanceUnit is KM, the distance should be converted to 0.001.';
+  protected readonly defaultParameters = BufferArgs;
+
+  constructor(options: OpenAssistantToolOptions<typeof BufferArgs> = {}) {
+    super({
+      ...options,
+      context: options.context || {
+        getGeometries: async () => null,
+      },
+    });
+  }
+
+  async execute(
+    args: z.infer<typeof BufferArgs>,
+    options?: { context?: Record<string, unknown> }
+  ): Promise<{
+    llmResult: BufferLlmResult;
+    additionalData?: BufferAdditionalData;
+  }> {
     const {
       datasetName,
       geojson,
@@ -178,10 +187,5 @@ export const buffer = extendedTool<
         pointsPerCircle,
       },
     };
-  },
-  context: {
-    getGeometries: async () => null,
-  },
-});
-
-export type BufferTool = typeof buffer;
+  }
+}

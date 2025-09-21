@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { extendedTool, generateId } from '@openassistant/utils';
+import { OpenAssistantTool, OpenAssistantToolOptions, generateId } from '@openassistant/utils';
 import { z } from 'zod';
 import { spatialDissolve } from '@geoda/core';
 import { Feature, Geometry } from 'geojson';
@@ -10,21 +10,38 @@ import { isSpatialToolContext } from '../utils';
 import { SpatialToolContext } from '../types';
 import { applyJoin } from '../spatial_join/apply-join';
 
-export type DissolveFunctionArgs = z.ZodObject<{
-  geojson: z.ZodOptional<z.ZodString>;
-  datasetName: z.ZodOptional<z.ZodString>;
-  dissolveBy: z.ZodOptional<z.ZodString>;
-  aggregateVariables: z.ZodOptional<
-    z.ZodArray<
-      z.ZodObject<{
-        variableName: z.ZodString;
-        operator: z.ZodEnum<
-          ['sum', 'mean', 'min', 'max', 'median', 'count', 'unique']
-        >;
-      }>
-    >
-  >;
-}>;
+export const DissolveArgs = z.object({
+  geojson: z
+    .string()
+    .optional()
+    .describe(
+      'GeoJSON string of the geometry to be dissolved. Important: it needs to be wrapped in a FeatureCollection object!'
+    ),
+  datasetName: z
+    .string()
+    .optional()
+    .describe('Name of the dataset with geometries to be dissolved'),
+  dissolveBy: z.string().optional().describe(`The variable to dissolve by.
+For example, when dissolving a county dataset into a state dataset, the dissolveBy could be the state name or the state code.
+If not provided, the entire dataset will be dissolved.
+`),
+  aggregateVariables: z
+    .array(
+      z.object({
+        variableName: z.string(),
+        operator: z.enum([
+          'sum',
+          'mean',
+          'min',
+          'max',
+          'median',
+          'count',
+          'unique',
+        ]),
+      })
+    )
+    .optional(),
+});
 
 export type DissolveLlmResult = {
   success: boolean;
@@ -39,7 +56,7 @@ export type DissolveAdditionalData = {
 };
 
 /**
- * ## dissolve Tool
+ * ## DissolveTool
  *
  * This tool is used to merge multiple geometries into a single geometry.
  *
@@ -63,70 +80,54 @@ export type DissolveAdditionalData = {
  *
  * ### Code example
  * ```typescript
- * import { dissolve, DissolveTool } from '@openassistant/geoda';
- * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { DissolveTool } from '@openassistant/geoda';
  * import { generateText } from 'ai';
  *
- * const dissolveTool: DissolveTool = {
- *   ...dissolve,
- *   context: {
+ * // Simple usage with defaults
+ * const dissolveTool = new DissolveTool();
+ *
+ * // Or with custom context and callbacks
+ * const dissolveTool = new DissolveTool(
+ *   undefined, // use default description
+ *   undefined, // use default parameters
+ *   {
  *     getGeometries: (datasetName) => {
  *       return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
  *     },
  *   },
- *   onToolCompleted: (toolCallId, additionalData) => {
+ *   undefined, // component
+ *   (toolCallId, additionalData) => {
  *     console.log(toolCallId, additionalData);
  *     // do something like save the dissolve result in additionalData
- *   },
- * };
+ *   }
+ * );
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Can you merge these counties into a single region?',
- *   tools: {dissolve: convertToVercelAiTool(dissolveTool)},
+ *   tools: {dissolve: dissolveTool.toVercelAiTool()},
  * });
  * ```
  */
-export const dissolve = extendedTool<
-  DissolveFunctionArgs,
-  DissolveLlmResult,
-  DissolveAdditionalData,
-  SpatialToolContext
->({
-  description: `Dissolve geometries by merging neighboring geometries into a single geometry.`,
-  parameters: z.object({
-    geojson: z
-      .string()
-      .optional()
-      .describe(
-        'GeoJSON string of the geometry to be dissolved. Important: it needs to be wrapped in a FeatureCollection object!'
-      ),
-    datasetName: z
-      .string()
-      .optional()
-      .describe('Name of the dataset with geometries to be dissolved'),
-    dissolveBy: z.string().optional().describe(`The variable to dissolve by.
-For example, when dissolving a county dataset into a state dataset, the dissolveBy could be the state name or the state code.
-If not provided, the entire dataset will be dissolved.
-`),
-    aggregateVariables: z
-      .array(
-        z.object({
-          variableName: z.string(),
-          operator: z.enum([
-            'sum',
-            'mean',
-            'min',
-            'max',
-            'median',
-            'count',
-            'unique',
-          ]),
-        })
-      )
-      .optional(),
-  }),
-  execute: async (args, options) => {
+export class DissolveTool extends OpenAssistantTool<typeof DissolveArgs> {
+  protected readonly defaultDescription = 'Dissolve geometries by merging neighboring geometries into a single geometry.';
+  protected readonly defaultParameters = DissolveArgs;
+
+  constructor(options: OpenAssistantToolOptions<typeof DissolveArgs> = {}) {
+    super({
+      ...options,
+      context: options.context || {
+        getGeometries: async () => null,
+      },
+    });
+  }
+  async execute(
+    args: z.infer<typeof DissolveArgs>,
+    options?: { context?: Record<string, unknown> }
+  ): Promise<{
+    llmResult: DissolveLlmResult;
+    additionalData?: DissolveAdditionalData;
+  }> {
     const { datasetName, geojson, dissolveBy, aggregateVariables } = args;
     if (!options?.context || !isSpatialToolContext(options.context)) {
       throw new Error(
@@ -236,10 +237,5 @@ If not provided, the entire dataset will be dissolved.
         },
       },
     };
-  },
-  context: {
-    getGeometries: async () => null,
-  },
-});
-
-export type DissolveTool = typeof dissolve;
+  }
+}

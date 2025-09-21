@@ -2,16 +2,16 @@
 // Copyright contributors to the openassistant project
 
 import { getCartogram } from '@geoda/core';
-import { extendedTool, generateId } from '@openassistant/utils';
+import { OpenAssistantTool, OpenAssistantToolOptions, generateId, z } from '@openassistant/utils';
 import { isSpatialToolContext } from '../utils';
-import { z } from 'zod';
 import { Feature } from 'geojson';
 import { SpatialToolContext } from '../types';
 
 /**
- * ## cartogram Tool
+ * ## CartogramTool Class
  *
- * This tool is used to create a dorling cartogram from a given geometries and a variable.
+ * The CartogramTool class creates dorling cartograms from given geometries and variables.
+ * This tool extends OpenAssistantTool and provides a class-based approach for cartogram creation.
  *
  * ### Cartogram Creation
  *
@@ -21,43 +21,70 @@ import { SpatialToolContext } from '../types';
  *
  * ## Example
  * ```ts
- * import { cartogram, CartogramTool } from '@openassistant/geoda';
- * import { convertToVercelAiTool } from '@openassistant/utils';
+ * import { CartogramTool } from '@openassistant/geoda';
  * import { generateText } from 'ai';
  *
- * const cartogramTool: CartogramTool = {
- *   ...cartogram,
- *   context: {
+ * // Simple usage with defaults
+ * const cartogramTool = new CartogramTool();
+ *
+ * // Or with custom context
+ * const cartogramTool = new CartogramTool(
+ *   undefined, // use default description
+ *   undefined, // use default parameters
+ *   {
  *     getGeometries: (datasetName) => {
  *       return SAMPLE_DATASETS[datasetName].map((item) => item.geometry);
  *     },
  *     getValues: (datasetName, variableName) => {
  *       return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
  *     },
- *   },
- * });
+ *   }
+ * );
  *
  * generateText({
  *   model: openai('gpt-4o-mini', { apiKey: key }),
  *   prompt: 'Create a dorling cartogram from the geometries and the variable "population"',
- *   tools: { cartogram: convertToVercelAiTool(cartogramTool) },
+ *   tools: { cartogram: cartogramTool.toVercelAiTool() },
  * });
  * ```
  */
-export const cartogram = extendedTool<
-  CartogramFunctionArgs,
-  CartogramLlmResult,
-  CartogramAdditionalData,
-  SpatialToolContext
->({
-  description:
-    'Create a dorling cartogram from a given geometries and a variable',
-  parameters: z.object({
-    datasetName: z.string(),
-    variableName: z.string(),
-    iterations: z.number().optional(),
-  }),
-  execute: async (args, options) => {
+export const CartogramArgs = z.object({
+  datasetName: z.string(),
+  variableName: z.string(),
+  iterations: z.number().optional(),
+});
+
+export type CartogramLlmResult = {
+  success: boolean;
+  result: string;
+};
+
+export type CartogramAdditionalData = {
+  datasetName?: string;
+  [outputDatasetName: string]: unknown;
+};
+
+export class CartogramTool extends OpenAssistantTool<typeof CartogramArgs> {
+  protected readonly defaultDescription = 'Create a dorling cartogram from given geometries and a variable';
+  protected readonly defaultParameters = CartogramArgs;
+
+  constructor(options: OpenAssistantToolOptions<typeof CartogramArgs> = {}) {
+    super({
+      ...options,
+      context: options.context || {
+        getGeometries: async () => null,
+        getValues: async () => [],
+      },
+    });
+  }
+
+  async execute(
+    args: z.infer<typeof CartogramArgs>,
+    options?: { context?: Record<string, unknown> }
+  ): Promise<{
+    llmResult: CartogramLlmResult;
+    additionalData?: CartogramAdditionalData;
+  }> {
     const { datasetName, variableName, iterations } = args;
     if (!options?.context || !isSpatialToolContext(options.context)) {
       throw new Error(
@@ -114,27 +141,5 @@ export const cartogram = extendedTool<
         },
       },
     };
-  },
-  context: {
-    getGeometries: async () => null,
-    getValues: async () => [],
-  },
-});
-
-export type CartogramFunctionArgs = z.ZodObject<{
-  datasetName: z.ZodString;
-  variableName: z.ZodString;
-  iterations: z.ZodOptional<z.ZodNumber>;
-}>;
-
-export type CartogramLlmResult = {
-  success: boolean;
-  result: string;
-};
-
-export type CartogramAdditionalData = {
-  datasetName?: string;
-  [outputDatasetName: string]: unknown;
-};
-
-export type CartogramTool = typeof cartogram;
+  }
+}

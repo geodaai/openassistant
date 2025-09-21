@@ -9,7 +9,8 @@ import {
   TextUIPart,
   ToolInvocationUIPart,
 } from '@ai-sdk/ui-utils';
-import { CoreMessage, Message, Tool } from 'ai';
+import { CoreMessage, Tool } from 'ai';
+import { Message } from '@ai-sdk/ui-utils';
 import { ReactNode } from 'react';
 import { z } from 'zod';
 
