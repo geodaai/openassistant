@@ -18,53 +18,35 @@ jobs:
         with:
           fetch-depth: 0 # Required for Lerna to access tags
 
-      - name: Install Volta
-        run: |
-          curl https://get.volta.sh | bash
-          export VOLTA_HOME="$HOME/.volta"
-          export PATH="$VOLTA_HOME/bin:$PATH"
-          volta install node@22.11.0
-          volta install yarn@4.0.0
-          volta pin node@22.11.0
-          volta pin yarn@4.0.0
+      - name: Setup Node.js with Volta
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
 
-      - name: Setup Volta environment
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Verify versions
         run: |
-          export VOLTA_HOME="$HOME/.volta"
-          export PATH="$VOLTA_HOME/bin:$PATH"
           node --version
           yarn --version
 
       - name: Install dependencies
-        run: |
-          export VOLTA_HOME="$HOME/.volta"
-          export PATH="$VOLTA_HOME/bin:$PATH"
-          yarn --version
-          yarn install --immutable
+        run: yarn install --immutable
 
       - name: Lint
-        run: |
-          export VOLTA_HOME="$HOME/.volta"
-          export PATH="$VOLTA_HOME/bin:$PATH"
-          yarn lint
+        run: yarn lint
 
       - name: Build packages
-        run: |
-          export VOLTA_HOME="$HOME/.volta"
-          export PATH="$VOLTA_HOME/bin:$PATH"
-          yarn build-slow
+        run: yarn build-slow
 
       # - name: Test
-      #   run: |
-      #     export VOLTA_HOME="$HOME/.volta"
-      #     export PATH="$VOLTA_HOME/bin:$PATH"
-      #     yarn test
+      #   run: yarn test
 
       - name: Publish packages
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
         run: |
-          export VOLTA_HOME="$HOME/.volta"
-          export PATH="$VOLTA_HOME/bin:$PATH"
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
           yarn publish-release
         env:
