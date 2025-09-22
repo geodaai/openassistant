@@ -59,8 +59,13 @@ import { isEChartsToolContext, OnSelected } from '../../types';
  * - get the values of **income** from dataset: getValues('myVenues', 'income')
  */
 export class ScatterplotTool extends OpenAssistantTool<typeof ScatterplotArgs> {
-  protected readonly defaultDescription = 'Create scatter plots for data visualization using ECharts';
-  protected readonly defaultParameters = ScatterplotArgs;
+  protected getDefaultDescription(): string {
+    return 'Create scatter plots for data visualization using ECharts';
+  }
+  
+  protected getDefaultParameters() {
+    return ScatterplotArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof ScatterplotArgs> = {}) {
     super({

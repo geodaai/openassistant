@@ -53,8 +53,13 @@ import {
  * ```
  */
 export class BoxplotTool extends OpenAssistantTool<typeof BoxplotArgs> {
-  protected readonly defaultDescription = 'Create box plots for data visualization using ECharts';
-  protected readonly defaultParameters = BoxplotArgs;
+  protected getDefaultDescription(): string {
+    return 'Create box plots for data visualization using ECharts';
+  }
+
+  protected getDefaultParameters() {
+    return BoxplotArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof BoxplotArgs> = {}) {
     super({

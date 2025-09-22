@@ -109,8 +109,13 @@ export type DissolveAdditionalData = {
  * ```
  */
 export class DissolveTool extends OpenAssistantTool<typeof DissolveArgs> {
-  protected readonly defaultDescription = 'Dissolve geometries by merging neighboring geometries into a single geometry.';
-  protected readonly defaultParameters = DissolveArgs;
+  protected getDefaultDescription(): string {
+    return 'Dissolve geometries by merging neighboring geometries into a single geometry.';
+  }
+  
+  protected getDefaultParameters() {
+    return DissolveArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof DissolveArgs> = {}) {
     super({

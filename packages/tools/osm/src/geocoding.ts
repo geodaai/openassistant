@@ -66,8 +66,13 @@ export type GeocodingAdditionalData = {
  * ```
  */
 export class GeocodingTool extends OpenAssistantTool<typeof GeocodingArgs> {
-  protected readonly defaultDescription = 'Convert addresses to geographic coordinates using OpenStreetMap Nominatim';
-  protected readonly defaultParameters = GeocodingArgs;
+  protected getDefaultDescription(): string {
+    return 'Convert addresses to geographic coordinates using OpenStreetMap Nominatim';
+  }
+  
+  protected getDefaultParameters() {
+    return GeocodingArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof GeocodingArgs> = {}) {
     super({

@@ -89,8 +89,13 @@ export type ExecuteGetUsCountyGeojsonResult = {
  * ```
  */
 export class GetUsCountyGeojsonTool extends OpenAssistantTool<typeof GetUsCountyGeojsonArgs> {
-  protected readonly defaultDescription = 'Get GeoJSON data for all counties in a US state by its state code';
-  protected readonly defaultParameters = GetUsCountyGeojsonArgs;
+  protected getDefaultDescription(): string {
+    return 'Get GeoJSON data for all counties in a US state by its state code';
+  }
+  
+  protected getDefaultParameters() {
+    return GetUsCountyGeojsonArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof GetUsCountyGeojsonArgs> = {}) {
     super({

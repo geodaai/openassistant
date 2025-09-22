@@ -119,8 +119,13 @@ export type RoadsAdditionalData = {
  * ```
  */
 export class RoadsTool extends OpenAssistantTool<typeof RoadsArgs> {
-  protected readonly defaultDescription = 'Query road networks from OpenStreetMap based on boundary and road type';
-  protected readonly defaultParameters = RoadsArgs;
+  protected getDefaultDescription(): string {
+    return 'Query road networks from OpenStreetMap based on boundary and road type';
+  }
+  
+  protected getDefaultParameters() {
+    return RoadsArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof RoadsArgs> = {}) {
     super({

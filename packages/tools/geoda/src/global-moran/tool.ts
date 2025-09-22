@@ -119,8 +119,13 @@ export type MoranScatterPlotFunctionContext = {
  * For a more complete example, see the [Geoda Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_geoda_example).
  */
 export class GlobalMoranTool extends OpenAssistantTool<typeof GlobalMoranArgs> {
-  protected readonly defaultDescription = "Calculate Global Moran's I for a given variable";
-  protected readonly defaultParameters = GlobalMoranArgs;
+  protected getDefaultDescription(): string {
+    return "Calculate Global Moran's I for a given variable";
+  }
+  
+  protected getDefaultParameters() {
+    return GlobalMoranArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof GlobalMoranArgs> = {}) {
     super({

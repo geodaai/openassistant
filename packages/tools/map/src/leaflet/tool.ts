@@ -115,14 +115,19 @@ export const LeafletToolArgs = z.object({
  * ```
  */
 export class LeafletTool extends OpenAssistantTool<typeof LeafletToolArgs> {
-  protected readonly defaultDescription = `Create a leaflet map from GeoJSON data. For basic map visualization, you can omit color related parameters.
+  protected getDefaultDescription(): string {
+    return `Create a leaflet map from GeoJSON data. For basic map visualization, you can omit color related parameters.
 - When creating a map for a variable, please use dataClassify tool to classify the data into bins or unique values first.
 - Colors are required when colorBy is provided (e.g. ['#f7fcb9', '#addd8e', '#31a354'].
 - For colorType 'breaks', the number of colors must equal to the number of breaks + 1.
 - For colorType 'unique', the number of colors must equal to the number of unique values. Please try to use colorbrewer divergent colors (e.g. BrBG).
 - Please use colorBrewer colors (e.g. YlGn) if user does not provide colors.
 `;
-  protected readonly defaultParameters = LeafletToolArgs;
+  }
+  
+  protected getDefaultParameters() {
+    return LeafletToolArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof LeafletToolArgs> = {}) {
     super({

@@ -192,8 +192,13 @@ function spatialGeometryToGeoJSON(
  * ```
  */
 export class GridTool extends OpenAssistantTool<typeof GridArgs> {
-  protected readonly defaultDescription = 'Create a grid of polygons that divides a map boundary into rows and columns. The map boundary can be the boundary of a given dataset or the current map view bounds.';
-  protected readonly defaultParameters = GridArgs;
+  protected getDefaultDescription(): string {
+    return 'Create a grid of polygons that divides a map boundary into rows and columns. The map boundary can be the boundary of a given dataset or the current map view bounds.';
+  }
+  
+  protected getDefaultParameters() {
+    return GridArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof GridArgs> = {}) {
     super({

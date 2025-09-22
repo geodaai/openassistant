@@ -108,8 +108,13 @@ export const StandardizeVariableArgs = z.object({
 });
 
 export class StandardizeVariableTool extends OpenAssistantTool<typeof StandardizeVariableArgs> {
-  protected readonly defaultDescription = 'Standardize the data of a variable using one of the following methods: deviation from mean, standardize MAD, range adjust, range standardize, standardize (Z-score)';
-  protected readonly defaultParameters = StandardizeVariableArgs;
+  protected getDefaultDescription(): string {
+    return 'Standardize the data of a variable using one of the following methods: deviation from mean, standardize MAD, range adjust, range standardize, standardize (Z-score)';
+  }
+  
+  protected getDefaultParameters() {
+    return StandardizeVariableArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof StandardizeVariableArgs> = {}) {
     super({

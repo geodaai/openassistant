@@ -115,8 +115,13 @@ export type DataClassifyFunctionContext = {
  * For a more complete example, see the [Geoda Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_geoda_example).
  */
 export class DataClassifyTool extends OpenAssistantTool<typeof DataClassifyArgs> {
-  protected readonly defaultDescription = 'Classify the data into k bins or categories, and return k-1 or k (for unique values) break values.';
-  protected readonly defaultParameters = DataClassifyArgs;
+  protected getDefaultDescription(): string {
+    return 'Classify the data into k bins or categories, and return k-1 or k (for unique values) break values.';
+  }
+  
+  protected getDefaultParameters() {
+    return DataClassifyArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof DataClassifyArgs> = {}) {
     super({

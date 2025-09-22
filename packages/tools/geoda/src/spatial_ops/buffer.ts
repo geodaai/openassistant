@@ -103,8 +103,13 @@ export type BufferAdditionalData = {
  * The geometries from geocoding tool will be used as the input for this tool.
  */
 export class BufferTool extends OpenAssistantTool<typeof BufferArgs> {
-  protected readonly defaultDescription = 'Buffer geometries. Please convert the distance to the unit of the distanceUnit. For example, if user provides distance is 1 meter and the distanceUnit is KM, the distance should be converted to 0.001.';
-  protected readonly defaultParameters = BufferArgs;
+  protected getDefaultDescription(): string {
+    return 'Buffer geometries. Please convert the distance to the unit of the distanceUnit. For example, if user provides distance is 1 meter and the distanceUnit is KM, the distance should be converted to 0.001.';
+  }
+  
+  protected getDefaultParameters() {
+    return BufferArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof BufferArgs> = {}) {
     super({

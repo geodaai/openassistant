@@ -76,8 +76,13 @@ export type LengthAdditionalData = {
  * ```
  */
 export class LengthTool extends OpenAssistantTool<typeof LengthArgs> {
-  protected readonly defaultDescription = 'Calculate length of geometries';
-  protected readonly defaultParameters = LengthArgs;
+  protected getDefaultDescription(): string {
+    return 'Calculate length of geometries';
+  }
+  
+  protected getDefaultParameters() {
+    return LengthArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof LengthArgs> = {}) {
     super({

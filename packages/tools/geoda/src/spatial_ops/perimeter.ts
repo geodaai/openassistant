@@ -79,8 +79,13 @@ export type PerimeterAdditionalData = {
  * ```
  */
 export class PerimeterTool extends OpenAssistantTool<typeof PerimeterArgs> {
-  protected readonly defaultDescription = 'Calculate perimeter of geometries';
-  protected readonly defaultParameters = PerimeterArgs;
+  protected getDefaultDescription(): string {
+    return 'Calculate perimeter of geometries';
+  }
+  
+  protected getDefaultParameters() {
+    return PerimeterArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof PerimeterArgs> = {}) {
     super({

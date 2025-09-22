@@ -121,7 +121,8 @@ export const KeplerGlArgs = z.object({
  * ```
  */
 export class KeplerglTool extends OpenAssistantTool<typeof KeplerGlArgs> {
-  protected readonly defaultDescription = `Create a map using kepler.gl. You can create basic maps without color styling, or enhanced maps with color visualization.
+  protected getDefaultDescription(): string {
+    return `Create a map using kepler.gl. You can create basic maps without color styling, or enhanced maps with color visualization.
 
 For basic maps:
 - Simply use datasetName, geometryColumn (if needed), latitudeColumn/longitudeColumn (for point maps), and mapType
@@ -138,7 +139,11 @@ For geojson datasets:
 - Use geometryColumn: '_geojson' and mapType: 'geojson' even for point collections
 
 Proceed directly with map creation unless user specifically asks for guidance on variable selection.`;
-  protected readonly defaultParameters = KeplerGlArgs;
+  }
+  
+  protected getDefaultParameters() {
+    return KeplerGlArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof KeplerGlArgs> = {}) {
     super({

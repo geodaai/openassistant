@@ -146,8 +146,13 @@ export type LisaFunctionContext = {
  * ```
  */
 export class LisaTool extends OpenAssistantTool<typeof LisaArgs> {
-  protected readonly defaultDescription = 'Apply local indicators of spatial association (LISA) statistics to identify local clusters and spatial outliers.';
-  protected readonly defaultParameters = LisaArgs;
+  protected getDefaultDescription(): string {
+    return 'Apply local indicators of spatial association (LISA) statistics to identify local clusters and spatial outliers.';
+  }
+  
+  protected getDefaultParameters() {
+    return LisaArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof LisaArgs> = {}) {
     super({

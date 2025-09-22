@@ -56,8 +56,13 @@ import {
  * ```
  */
 export class PCPTool extends OpenAssistantTool<typeof PCPArgs> {
-  protected readonly defaultDescription = 'Create parallel coordinates plots for data visualization using ECharts';
-  protected readonly defaultParameters = PCPArgs;
+  protected getDefaultDescription(): string {
+    return 'Create parallel coordinates plots for data visualization using ECharts';
+  }
+  
+  protected getDefaultParameters() {
+    return PCPArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof PCPArgs> = {}) {
     super({

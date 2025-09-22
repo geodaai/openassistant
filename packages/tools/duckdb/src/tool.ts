@@ -136,8 +136,13 @@ import { Feature } from 'geojson';
  * ```
  */
 export class LocalQueryTool extends OpenAssistantTool<typeof LocalQueryArgs> {
-  protected readonly defaultDescription = 'Execute SQL queries against local datasets using DuckDB';
-  protected readonly defaultParameters = LocalQueryArgs;
+  protected getDefaultDescription(): string {
+    return 'Execute SQL queries against local datasets using DuckDB';
+  }
+  
+  protected getDefaultParameters() {
+    return LocalQueryArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof LocalQueryArgs> = {}) {
     super({

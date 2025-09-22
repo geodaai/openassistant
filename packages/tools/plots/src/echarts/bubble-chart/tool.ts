@@ -47,8 +47,13 @@ import { isEChartsToolContext, OnSelected } from '../../types';
  * ```
  */
 export class BubbleChartTool extends OpenAssistantTool<typeof BubbleChartArgs> {
-  protected readonly defaultDescription = 'Create bubble charts for data visualization using ECharts';
-  protected readonly defaultParameters = BubbleChartArgs;
+  protected getDefaultDescription(): string {
+    return 'Create bubble charts for data visualization using ECharts';
+  }
+  
+  protected getDefaultParameters() {
+    return BubbleChartArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof BubbleChartArgs> = {}) {
     super({

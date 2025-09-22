@@ -86,8 +86,13 @@ export type ExecuteGetUsZipcodeGeojsonResult = {
  *
  */
 export class GetUsZipcodeGeojsonTool extends OpenAssistantTool<typeof GetUsZipcodeGeojsonArgs> {
-  protected readonly defaultDescription = 'Get the GeoJSON data of one or more United States zipcodes';
-  protected readonly defaultParameters = GetUsZipcodeGeojsonArgs;
+  protected getDefaultDescription(): string {
+    return 'Get the GeoJSON data of one or more United States zipcodes';
+  }
+  
+  protected getDefaultParameters() {
+    return GetUsZipcodeGeojsonArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof GetUsZipcodeGeojsonArgs> = {}) {
     super({

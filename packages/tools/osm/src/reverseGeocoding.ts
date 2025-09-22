@@ -59,8 +59,13 @@ export type ReverseGeocodingAdditionalData = {
  * ```
  */
 export class ReverseGeocodingTool extends OpenAssistantTool<typeof ReverseGeocodingArgs> {
-  protected readonly defaultDescription = 'Reverse geocode coordinates to get the address and location information for a given latitude and longitude';
-  protected readonly defaultParameters = ReverseGeocodingArgs;
+  protected getDefaultDescription(): string {
+    return 'Reverse geocode coordinates to get the address and location information for a given latitude and longitude';
+  }
+  
+  protected getDefaultParameters() {
+    return ReverseGeocodingArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof ReverseGeocodingArgs> = {}) {
     super({

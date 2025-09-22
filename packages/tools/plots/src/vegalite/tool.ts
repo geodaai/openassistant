@@ -77,8 +77,13 @@ export type VegaLitePlotAdditionalData = {
  * ```
  */
 export class VegaLitePlotTool extends OpenAssistantTool<typeof VegaLitePlotArgs> {
-  protected readonly defaultDescription = 'Create Vega-Lite plots from datasets and variables using Vega-Lite specification';
-  protected readonly defaultParameters = VegaLitePlotArgs;
+  protected getDefaultDescription(): string {
+    return 'Create Vega-Lite plots from datasets and variables using Vega-Lite specification';
+  }
+  
+  protected getDefaultParameters() {
+    return VegaLitePlotArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof VegaLitePlotArgs> = {}) {
     super({

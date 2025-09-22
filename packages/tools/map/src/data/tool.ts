@@ -82,8 +82,13 @@ export type DownloadMapAdditionalData = {
  * });
  */
 export class DownloadMapDataTool extends OpenAssistantTool<typeof DownloadMapDataArgs> {
-  protected readonly defaultDescription = 'Download map data from a url';
-  protected readonly defaultParameters = DownloadMapDataArgs;
+  protected getDefaultDescription(): string {
+    return 'Download map data from a url';
+  }
+  
+  protected getDefaultParameters() {
+    return DownloadMapDataArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof DownloadMapDataArgs> = {}) {
     super({

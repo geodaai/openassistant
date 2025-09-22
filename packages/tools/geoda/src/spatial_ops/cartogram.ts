@@ -64,8 +64,13 @@ export type CartogramAdditionalData = {
 };
 
 export class CartogramTool extends OpenAssistantTool<typeof CartogramArgs> {
-  protected readonly defaultDescription = 'Create a dorling cartogram from given geometries and a variable';
-  protected readonly defaultParameters = CartogramArgs;
+  protected getDefaultDescription(): string {
+    return 'Create a dorling cartogram from given geometries and a variable';
+  }
+  
+  protected getDefaultParameters() {
+    return CartogramArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof CartogramArgs> = {}) {
     super({

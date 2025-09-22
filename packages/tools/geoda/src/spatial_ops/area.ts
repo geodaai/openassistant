@@ -86,8 +86,13 @@ export const AreaArgs = z.object({
 });
 
 export class AreaTool extends OpenAssistantTool<typeof AreaArgs> {
-  protected readonly defaultDescription = 'Calculate area of geometries in a GeoJSON dataset';
-  protected readonly defaultParameters = AreaArgs;
+  protected getDefaultDescription(): string {
+    return 'Calculate area of geometries in a GeoJSON dataset';
+  }
+  
+  protected getDefaultParameters() {
+    return AreaArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof AreaArgs> = {}) {
     super({

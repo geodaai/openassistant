@@ -49,8 +49,13 @@ import {
  * ```
  */
 export class HistogramTool extends OpenAssistantTool<typeof HistogramArgs> {
-  protected readonly defaultDescription = 'Create histogram charts for data visualization';
-  protected readonly defaultParameters = HistogramArgs;
+  protected getDefaultDescription(): string {
+    return 'Create histogram charts for data visualization';
+  }
+  
+  protected getDefaultParameters() {
+    return HistogramArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof HistogramArgs> = {}) {
     super({

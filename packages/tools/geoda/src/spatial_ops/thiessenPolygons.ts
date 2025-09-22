@@ -63,8 +63,13 @@ export const ThiessenPolygonsArgs = z.object({
 });
 
 export class ThiessenPolygonsTool extends OpenAssistantTool<typeof ThiessenPolygonsArgs> {
-  protected readonly defaultDescription = 'Generate thiessen polygons or voronoi diagrams';
-  protected readonly defaultParameters = ThiessenPolygonsArgs;
+  protected getDefaultDescription(): string {
+    return 'Generate thiessen polygons or voronoi diagrams';
+  }
+  
+  protected getDefaultParameters() {
+    return ThiessenPolygonsArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof ThiessenPolygonsArgs> = {}) {
     super({

@@ -155,8 +155,13 @@ export type ExecuteWebSearchResult = {
  * ```
  */
 export class WebSearchTool extends OpenAssistantTool<typeof WebSearchArgs> {
-  protected readonly defaultDescription = 'Search the web using Google search engine via SearchAPI';
-  protected readonly defaultParameters = WebSearchArgs;
+  protected getDefaultDescription(): string {
+    return 'Search the web using Google search engine via SearchAPI';
+  }
+  
+  protected getDefaultParameters() {
+    return WebSearchArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof WebSearchArgs> = {}) {
     super({

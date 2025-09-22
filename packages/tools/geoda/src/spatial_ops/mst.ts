@@ -64,8 +64,13 @@ export const MinimumSpanningTreeArgs = z.object({
 });
 
 export class MinimumSpanningTreeTool extends OpenAssistantTool<typeof MinimumSpanningTreeArgs> {
-  protected readonly defaultDescription = 'Generate the minimum spanning tree';
-  protected readonly defaultParameters = MinimumSpanningTreeArgs;
+  protected getDefaultDescription(): string {
+    return 'Generate the minimum spanning tree';
+  }
+  
+  protected getDefaultParameters() {
+    return MinimumSpanningTreeArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof MinimumSpanningTreeArgs> = {}) {
     super({

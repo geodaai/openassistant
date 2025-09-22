@@ -128,8 +128,13 @@ export const SpatialWeightsArgs = z.object({
 });
 
 export class SpatialWeightsTool extends OpenAssistantTool<typeof SpatialWeightsArgs> {
-  protected readonly defaultDescription = 'Create spatial weights matrices for spatial analysis';
-  protected readonly defaultParameters = SpatialWeightsArgs;
+  protected getDefaultDescription(): string {
+    return 'Create spatial weights matrices for spatial analysis';
+  }
+  
+  protected getDefaultParameters() {
+    return SpatialWeightsArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof SpatialWeightsArgs> = {}) {
     super({

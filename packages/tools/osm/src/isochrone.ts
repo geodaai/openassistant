@@ -134,8 +134,13 @@ export type ExecuteIsochroneResult = {
  * For a more complete example, see the [OSM Tools Example using Next.js + Vercel AI SDK](https://github.com/openassistant/openassistant/tree/main/examples/vercel_osm_example).
  */
 export class IsochroneTool extends OpenAssistantTool<typeof IsochroneArgs> {
-  protected readonly defaultDescription = 'Get isochrone polygons showing reachable areas within a given time limit from a starting point using Mapbox Isochrone API';
-  protected readonly defaultParameters = IsochroneArgs;
+  protected getDefaultDescription(): string {
+    return 'Get isochrone polygons showing reachable areas within a given time limit from a starting point using Mapbox Isochrone API';
+  }
+  
+  protected getDefaultParameters() {
+    return IsochroneArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof IsochroneArgs> = {}) {
     super({

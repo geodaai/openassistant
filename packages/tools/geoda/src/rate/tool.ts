@@ -45,8 +45,13 @@ import { getWeights } from '../utils';
  * ```
  */
 export class RateTool extends OpenAssistantTool<typeof RateArgs> {
-  protected readonly defaultDescription = 'Calculate the rates from a base variable and an event variable.';
-  protected readonly defaultParameters = RateArgs;
+  protected getDefaultDescription(): string {
+    return 'Calculate the rates from a base variable and an event variable.';
+  }
+  
+  protected getDefaultParameters() {
+    return RateArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof RateArgs> = {}) {
     super({

@@ -95,7 +95,8 @@ export type SpatialRegressionFunctionContext = {
  * ```
  */
 export class SpatialRegressionTool extends OpenAssistantTool<typeof SpatialRegressionArgs> {
-  protected readonly defaultDescription = `Apply spatial regression analysis.
+  protected getDefaultDescription(): string {
+    return `Apply spatial regression analysis.
 Note:
 - please only use the knowledge from Luc Anselin's GeoDa book and the GeoDa documentation to answer the question
 - you can run spatial diagnostics with OLS model if you need to determine if spatial regression model is needed
@@ -103,7 +104,11 @@ Note:
 - you can run spatial models if you need to account for spatial effects in the model
 - please provide suggestions for improving the model and the results
   `;
-  protected readonly defaultParameters = SpatialRegressionArgs;
+  }
+  
+  protected getDefaultParameters() {
+    return SpatialRegressionArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof SpatialRegressionArgs> = {}) {
     super({

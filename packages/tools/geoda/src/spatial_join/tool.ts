@@ -128,13 +128,18 @@ export type SpatialJoinFunctionContext = {
  * ```
  */
 export class SpatialJoinTool extends OpenAssistantTool<typeof SpatialJoinArgs> {
-  protected readonly defaultDescription = `Spatial join geometries two geometric datasets. For example:
+  protected getDefaultDescription(): string {
+    return `Spatial join geometries two geometric datasets. For example:
 1. to get the number of points in polygons, "right dataset = points" and "left dataset = polygons"
 2. to check which point belongs to which polygon, "right dataset = polygons" and "left dataset = points"
 IMPORTANT:
 1. left dataset and right dataset should be different.
 2. joinVariables should come from the right dataset.`;
-  protected readonly defaultParameters = SpatialJoinArgs;
+  }
+  
+  protected getDefaultParameters() {
+    return SpatialJoinArgs;
+  }
 
   constructor(options: OpenAssistantToolOptions<typeof SpatialJoinArgs> = {}) {
     super({
