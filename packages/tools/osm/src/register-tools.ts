@@ -2,6 +2,7 @@
 // Copyright contributors to the openassistant project
 
 import { getTool, OnToolCompleted } from '@openassistant/utils';
+import { getUsCityGeojson } from './us/city';
 import { getUsStateGeojson } from './us/state';
 import { getUsCountyGeojson } from './us/county';
 import { getUsZipcodeGeojson } from './us/zipcode';
@@ -14,6 +15,7 @@ import { roads } from './roads';
 
 // export the enum of tool names, so users can use it to check if a tool is available
 export enum OsmToolNames {
+  getUsCityGeojson = 'getUsCityGeojson',
   getUsStateGeojson = 'getUsStateGeojson',
   getUsCountyGeojson = 'getUsCountyGeojson',
   getUsZipcodeGeojson = 'getUsZipcodeGeojson',
@@ -53,6 +55,7 @@ export function isMapboxToolContext(
 
 export function registerTools() {
   return {
+    getUsCityGeojson,
     getUsStateGeojson,
     getUsCountyGeojson,
     getUsZipcodeGeojson,

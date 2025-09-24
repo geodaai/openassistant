@@ -6579,6 +6579,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@openassistant/h3@workspace:*, @openassistant/h3@workspace:packages/tools/h3":
+  version: 0.0.0-use.local
+  resolution: "@openassistant/h3@workspace:packages/tools/h3"
+  dependencies:
+    "@openassistant/utils": "workspace:*"
+    h3-js: "npm:^4.1.0"
+    zod: "npm:^3.24.4"
+  languageName: unknown
+  linkType: soft
+
 "@openassistant/hooks@workspace:*, @openassistant/hooks@workspace:packages/components/hooks":
   version: 0.0.0-use.local
   resolution: "@openassistant/hooks@workspace:packages/components/hooks"
@@ -16514,6 +16524,13 @@ __metadata:
   version: 3.7.2
   resolution: "h3-js@npm:3.7.2"
   checksum: 313d7cf97e073feec72db291f04a666e1646b8052dcc31beb7a9923d4c626f74c5cbf8f05928131c4d4f4a929659dfacf92ad1a5323354780755c08e17e38298
+  languageName: node
+  linkType: hard
+
+"h3-js@npm:^4.1.0":
+  version: 4.3.0
+  resolution: "h3-js@npm:4.3.0"
+  checksum: 29fa413374a36f32927e7352247e3267ca4295e2c22c1af4baa9013e9bcb5302239c1b37c8bbdf0e5199544edcd542aea9fca9a39c3839d3015c9b38c4aca957
   languageName: node
   linkType: hard
 
@@ -26949,6 +26966,33 @@ __metadata:
     "@next/bundle-analyzer": "npm:^15.3.2"
     "@openassistant/duckdb": "workspace:*"
     "@openassistant/echarts": "workspace:*"
+    "@openassistant/utils": "workspace:*"
+    "@types/node": "npm:^20.0.0"
+    "@types/react": "npm:^19.0.0"
+    "@types/react-dom": "npm:^19.0.0"
+    ai: "npm:^5.0.22"
+    autoprefixer: "npm:^10.4.16"
+    dotenv: "npm:^16.4.5"
+    next: "npm:14.1.0"
+    postcss: "npm:^8.4.31"
+    react: "npm:^19.0.0"
+    react-dom: "npm:^19.0.0"
+    tailwindcss: "npm:^3.3.5"
+    typescript: "npm:^5.0.0"
+    worker-loader: "npm:^3.0.8"
+    zod: "npm:^3.25.76"
+  languageName: unknown
+  linkType: soft
+
+"vercel-v5-h3hub@workspace:examples/vercel_v5_h3hub":
+  version: 0.0.0-use.local
+  resolution: "vercel-v5-h3hub@workspace:examples/vercel_v5_h3hub"
+  dependencies:
+    "@ai-sdk/openai": "npm:^2.0.19"
+    "@ai-sdk/react": "npm:^2.0.22"
+    "@next/bundle-analyzer": "npm:^15.3.2"
+    "@openassistant/h3": "workspace:*"
+    "@openassistant/osm": "workspace:*"
     "@openassistant/utils": "workspace:*"
     "@types/node": "npm:^20.0.0"
     "@types/react": "npm:^19.0.0"

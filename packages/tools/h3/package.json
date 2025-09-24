@@ -1,0 +1,38 @@
+{
+  "name": "@openassistant/h3",
+  "version": "0.5.18",
+  "author": "Xun Li<lixun910@gmail.com>",
+  "description": "The H3Hub tools for OpenAssistant",
+  "main": "dist/index.cjs.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.esm.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs.js"
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.config.mjs",
+    "watch": "node esbuild.config.mjs --watch",
+    "prepublishOnly": "yarn build",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "package.json"
+  ],
+  "dependencies": {
+    "@openassistant/utils": "workspace:*",
+    "h3-js": "^4.1.0",
+    "zod": "^3.24.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -78,7 +78,7 @@ export const buildFormat = async (config, format, outfile) => {
   const result = await esbuild.build({
     ...config,
     format,
-    ...(format === 'cjs' ? { platform: 'node', target: ['es2017'] } : {}),
+    ...(format === 'cjs' ? { platform: 'node', target: ['es2020'] } : {}),
     define: {
       ...config.define,
       // Ensure consistent module loading behavior
