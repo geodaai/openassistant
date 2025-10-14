@@ -7,7 +7,7 @@ This package provides several tools for querying your data using DuckDB in brows
 | Tool Name                                       | Description                                                                  |
 | ----------------------------------------------- | ---------------------------------------------------------------------------- |
 | [localQuery](/docs/duckdb/variables/localQuery) | Query any data that has been loaded in your application using user's prompt. |
-| [dbQuery](/docs/duckdb/variables/dbQuery)       | Query any database that you want to query.                                   |
+| [mergeTables](/docs/duckdb/variables/mergeTables) | Merge multiple tables into one table.                                        |
 
 ## Installation
 
@@ -136,39 +136,4 @@ const { messages, input, handleInputChange, handleSubmit } = useChat({
     }
   },
 });
-```
-
-### Use the tool with @openassistant/ui
-
-Here is an example of using @openassistant/ui to query the data using the localQuery tool and display the result in a QueryResult component.
-
-```typescript
-import { localQuery } from '@openassistant/duckdb';
-import { convertToVercelAiTool } from '@openassistent/utils';
-
-const localQueryTool: LocalQueryTool = {
-  ...localQuery,
-  context: {
-    ...localQuery.context,
-    getValues: async (datasetName: string, variableName: string) => {
-      // get the values of the variable from your dataset, e.g.
-      return SAMPLE_DATASETS[datasetName].map((item) => item[variableName]);
-    },
-  },
-};
-
-export function App() {
-  return (
-    <AiAssistant
-      apiKey={process.env.OPENAI_API_KEY || ''}
-      modelProvider="openai"
-      model="gpt-4o"
-      welcomeMessage="Hello! I'm your assistant."
-      instructions={systemPrompt}
-      tools={{localQuery: localQueryTool}}
-      useMarkdown={true}
-      theme="dark"
-    />
-  );
-}
 ```

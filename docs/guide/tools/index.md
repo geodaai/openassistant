@@ -16,7 +16,7 @@ Execute SQL queries directly in the browser using DuckDB WASM. Perfect for analy
 - Integration with spatial data
 - Merge tables functionality
 
-[Learn more →](/guide/tools/duckdb) | [API Reference →](/api/tools/duckdb/)
+[Learn more →](/guide/tools/duckdb) | [API Reference →](/api/@openassistant/duckdb/README)
 
 ### Spatial Analysis Tools
 
@@ -32,7 +32,7 @@ Comprehensive spatial statistics and analysis tools powered by GeoDa algorithms.
 - Spatial weights creation
 - Spatial operations (buffer, dissolve, centroid, etc.)
 
-[Learn more →](/guide/tools/geoda) | [API Reference →](/api/tools/geoda/)
+[Learn more →](/guide/tools/geoda) | [API Reference →](/api/@openassistant/geoda/README)
 
 ### Map Tools
 
@@ -46,7 +46,7 @@ Tools for creating and manipulating map visualizations with support for Kepler.g
 - Data layer management
 - Map state serialization
 
-[Learn more →](/guide/tools/map) | [API Reference →](/api/tools/map/)
+[Learn more →](/guide/tools/map) | [API Reference →](/api/@openassistant/map/README)
 
 ### Location Services
 
@@ -60,7 +60,7 @@ Access OpenStreetMap data and services including geocoding, routing, and more.
 - Isochrone analysis
 - US location data (cities, counties, ZIP codes)
 
-[Learn more →](/guide/tools/osm) | [API Reference →](/api/tools/osm/)
+[Learn more →](/guide/tools/osm) | [API Reference →](/api/@openassistant/osm/README)
 
 #### Places (@openassistant/places)
 
@@ -71,7 +71,7 @@ Location intelligence with place search and geotagging capabilities.
 - Geotagging
 - Web search with location context
 
-[Learn more →](/guide/tools/places) | [API Reference →](/api/tools/places/)
+[Learn more →](/guide/tools/places) | [API Reference →](/api/@openassistant/places/README)
 
 ### Visualization Tools
 
@@ -87,7 +87,7 @@ Create statistical visualizations using ECharts and Vega-Lite.
 - Parallel coordinate plots
 - Statistical computations
 
-[Learn more →](/guide/tools/plots) | [API Reference →](/api/tools/plots/)
+[Learn more →](/guide/tools/plots) | [API Reference →](/api/@openassistant/plots/README)
 
 ### Spatial Indexing
 
@@ -101,7 +101,7 @@ Hexagonal spatial indexing using Uber's H3 library.
 - Spatial aggregation
 - Multi-resolution analysis
 
-[Learn more →](/guide/tools/h3) | [API Reference →](/api/tools/h3/)
+[Learn more →](/guide/tools/h3) | [API Reference →](/api/@openassistant/h3/README)
 
 ## Common Usage Patterns
 

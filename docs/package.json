@@ -9,9 +9,9 @@
     "build": "yarn typedoc && yarn convert-admonitions && yarn fix-links && yarn fix-version && vitepress build",
     "preview": "vitepress preview",
     "typedoc": "typedoc",
-    "convert-admonitions": "find api -name '*.md' -type f -exec sed -i '' -e 's/^:::note$/:::info/g' -e 's/^:::caution$/:::warning/g' {} \\;",
-    "fix-links": "find api -name '*.md' -type f -exec sed -i '' -E 's|\\(/docs/([^/]+)/|(/api/@openassistant/\\2/|g' {} \\;",
-    "fix-version": "find api -name '*.md' -type f -exec sed -i '' 's/Documentation v0\\.0\\.0/Documentation v1.0.0/g' {} \\;"
+    "convert-admonitions": "find api -name '*.md' -type f -exec sed -i.bak -e 's/^:::note$/:::info/g' -e 's/^:::caution$/:::warning/g' {} \\; && find api -name '*.bak' -type f -delete",
+    "fix-links": "find api -name '*.md' -type f -exec sed -i.bak -E 's|/docs/([^)]+)|/api/@openassistant/\\1|g' {} \\; && find api -name '*.bak' -type f -delete",
+    "fix-version": "find api -name '*.md' -type f -exec sed -i.bak 's/Documentation v0\\.0\\.0/Documentation v1.0.0/g' {} \\; && find api -name '*.bak' -type f -delete"
   },
   "devDependencies": {
     "typedoc": "^0.28.0",

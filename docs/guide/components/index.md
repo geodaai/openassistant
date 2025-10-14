@@ -4,7 +4,7 @@ OpenAssistant provides React components for building interactive data visualizat
 
 ## Available Components
 
-### Chat Components (@openassistant/chat)
+### Chat Components (@openassistant/assistant)
 
 Full-featured chat interface components for building AI-powered chat applications.
 
@@ -16,7 +16,7 @@ Full-featured chat interface components for building AI-powered chat application
 - Settings panel
 - Conversation management
 
-[API Reference →](/api/@openassistant/chat/README)
+[API Reference →](/api/@openassistant/assistant/README)
 
 ### Visualization Components
 

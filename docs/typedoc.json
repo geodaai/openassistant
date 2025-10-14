@@ -10,7 +10,7 @@
     "../packages/tools/osm",
     "../packages/tools/places",
     "../packages/tools/plots",
-    "../packages/components/chat",
+    "../packages/components/assistant",
     "../packages/components/common",
     "../packages/components/echarts",
     "../packages/components/hooks",

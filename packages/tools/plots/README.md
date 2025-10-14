@@ -6,15 +6,15 @@ The plot tools for OpenAssistant provides powerful visualization capabilities us
 
 ## Features
 
-| Tool Name                                                        | Description                                                                                                                                                                |
-| ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [vegaLitePlot](/docs/plots/variables/vegaLitePlot)               | create a Vega-Lite plot, e.g. bar chart, line chart, scatter plot, etc. from a dataset. The vega-lite plots are listed [here](https://vega.github.io/vega-lite/examples/). |
-| **Interactive Plots**                                            | create a eCharts plot that can be interactive with other components e.g. map, table, etc.                                                                                  |
-| [histogram](/docs/plots/variables/histogram)                     | create a histogram plot from a dataset                                                                                                                                     |
-| [scatterplot](/docs/plots/variables/scatterplot)                 | create a scatter plot from a dataset                                                                                                                                       |
-| [parallelCoordinates](/docs/plots/variables/parallelCoordinates) | create a parallel coordinates plot from a dataset                                                                                                                          |
-| [boxplot](/docs/plots/variables/boxplot)                         | create a box plot from a dataset                                                                                                                                           |
-| [bubblechart](/docs/plots/variables/bubblechart)                 | create a bubble chart from a dataset                                                                                                                                       |
+| Tool Name                                          | Description                                                                                                                                                                |
+| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [vegaLitePlot](/docs/plots/variables/vegaLitePlot) | create a Vega-Lite plot, e.g. bar chart, line chart, scatter plot, etc. from a dataset. The vega-lite plots are listed [here](https://vega.github.io/vega-lite/examples/). |
+| **Interactive Plots**                              | create a eCharts plot that can be interactive with other components e.g. map, table, etc.                                                                                  |
+| [histogram](/docs/plots/variables/histogram)       | create a histogram plot from a dataset                                                                                                                                     |
+| [scatterplot](/docs/plots/variables/scatterplot)   | create a scatter plot from a dataset                                                                                                                                       |
+| [pcp](/docs/plots/variables/pcp)                   | create a parallel coordinates plot from a dataset                                                                                                                          |
+| [boxplot](/docs/plots/variables/boxplot)           | create a box plot from a dataset                                                                                                                                           |
+| [bubbleChart](/docs/plots/variables/bubbleChart)   | create a bubble chart from a dataset                                                                                                                                       |
 
 ## Installation
 
@@ -106,7 +106,7 @@ import {
   HistogramComponent,
   ScatterplotComponent,
 } from '@openassistant/echarts';
-import { AiAssistant } from '@openassistant/ui';
+import { Assistant, type AssistantOptions } from '@openassistant/assistant';
 
 const histogramTool: HistogramTool = {
   ...histogram,
@@ -136,15 +136,25 @@ const scatterplotTool: ScatterplotTool = {
   component: ScatterplotComponent,
 };
 
-// use the tool in the chat component
-<AiAssistant
-  modelProvider="openai"
-  model="gpt-4o"
-  apiKey={process.env.OPENAI_API_KEY || ''}
-  welcomeMessage="Hello! How can I help you today?"
-  system={systemPrompt}
-  functions={{ histogram: histogramTool, scatterplot: scatterplotTool }}
-/>;
+const config: AssistantOptions = {
+  ai: {
+    getInstructions: () => 'You are a helpful assistant.',
+    tools: {
+      histogram: histogramTool,
+      scatterplot: scatterplotTool,
+    },
+  },
+};
+
+export function App() {
+  return (
+    <div className="flex h-screen w-screen items-center justify-center p-4">
+      <div className="w-full max-w-[900px] h-full">
+        <Assistant options={config} />
+      </div>
+    </div>
+  );
+}
 ```
 
 Once set up, you can create histograms through natural language prompts:
@@ -154,26 +164,26 @@ Once set up, you can create histograms through natural language prompts:
 
 The assistant will automatically understand your request and use the appropriate visualization function.
 
-See the [example](https://github.com/geodaopenjs/openassistant/tree/main/examples/echarts_plugin) for more details.
-
-### With TailwindCSS
-
-If you are using TailwindCSS, make sure to include the package's CSS in your project:
+Using TailwindCSS, make sure to include the package's CSS in your project:
 
 ```typescript
-import { heroui } from '@hero-ui/react';
+import { sqlroomsTailwindPreset } from '@sqlrooms/ui';
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+const preset = sqlroomsTailwindPreset();
+const config = {
+  ...preset,
   content: [
-    './src/**/*.{js,ts,jsx,tsx}',
-    './node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}',
+    'src/**/*.{ts,tsx}',
     './node_modules/@openassistant/echarts/dist/**/*.{js,ts,jsx,tsx}',
+    '../../node_modules/@sqlrooms/*/dist/**/*.js'
   ],
   theme: {
-    extend: {},
+    ...preset.theme,
+    extend: {
+      ...preset.theme?.extend,
+    },
   },
-  darkMode: 'class',
-  plugins: [heroui()],
 };
+
+export default config;
 ```
