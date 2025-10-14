@@ -90,7 +90,7 @@ const aiTool = tool(convertToVercelAiTool(keplerMapTool));
 
 <div>
 
-![kepler tool screenshot](./kepler-tool-demo-1.gif)
+![kepler tool screenshot](/kepler-tool-demo-1.gif)
 
 </div>
 

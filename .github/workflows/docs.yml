@@ -45,6 +45,9 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
+      - name: Build packages
+        run: yarn build
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
