@@ -46,7 +46,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Build packages
-        run: yarn build
+        run: yarn build-slow
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

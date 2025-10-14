@@ -12,5 +12,5 @@
     }
   },
   "packages": ["packages/*", "packages/tools/*", "packages/components/*"],
-  "ignore": ["@openassistant/core", "@openassistant/ui", "playground"]
+  "ignore": ["@openassistant/ui", "playground"]
 }
