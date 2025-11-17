@@ -2,16 +2,53 @@
 // Copyright contributors to the openassistant project
 
 import * as duckdb from '@duckdb/duckdb-wasm';
+import { createStore } from 'zustand/vanilla';
+import {
+  createWasmDuckDbConnector,
+  type WasmDuckDbConnector,
+  type DuckDbConnector,
+} from '@sqlrooms/duckdb';
 
-const JSDELIVR_BUNDLES = duckdb.getJsDelivrBundles();
+/**
+ * DuckDB store state interface
+ */
+interface DuckDBStore {
+  db: {
+    connector: DuckDbConnector | null;
+    getConnector: () => Promise<DuckDbConnector>;
+  };
+}
 
 /**
  * @internal
  * The duckdb instance if not provided by the user.
  */
 export let db: duckdb.AsyncDuckDB | null = null;
+let connector: WasmDuckDbConnector | null = null;
 let initializationPromise: Promise<void> | null = null;
 
+/**
+ * Create a Zustand store for DuckDB management
+ */
+export const duckDBStore = createStore<DuckDBStore>((set, get) => ({
+  db: {
+    connector: null,
+    getConnector: async () => {
+      await initDuckDB();
+      const currentConnector = get().db.connector;
+      if (!currentConnector) {
+        throw new Error('Failed to initialize DuckDB connector');
+      }
+      return currentConnector;
+    },
+  },
+}));
+
+/**
+ * Get the DuckDB instance
+ * @param externalDB - Optional external DuckDB instance to use
+ * @returns The DuckDB instance
+ */
 export async function getDuckDB(externalDB?: duckdb.AsyncDuckDB) {
   if (externalDB) {
     db = externalDB;
@@ -21,6 +58,10 @@ export async function getDuckDB(externalDB?: duckdb.AsyncDuckDB) {
   return db;
 }
 
+/**
+ * Initialize the DuckDB instance and connector
+ * @param externalDB - Optional external DuckDB instance to use
+ */
 export async function initDuckDB(externalDB?: duckdb.AsyncDuckDB) {
   // If already initializing, wait for that to complete
   if (initializationPromise) {
@@ -30,30 +71,55 @@ export async function initDuckDB(externalDB?: duckdb.AsyncDuckDB) {
 
   if (externalDB) {
     db = externalDB;
+    // Create a connector wrapper for the external DB
+    connector = createWasmDuckDbConnector({
+      path: ':memory:',
+      logging: true,
+    });
+    
+    // Initialize the connector
+    await connector.initialize();
+    
+    duckDBStore.setState({
+      db: {
+        ...duckDBStore.getState().db,
+        connector,
+      },
+    });
     return;
   }
 
   // If already initialized, return
-  if (db !== null) {
+  if (db !== null && connector !== null) {
     return;
   }
 
   // Create a new initialization promise
   initializationPromise = (async () => {
     try {
-      // Select a bundle based on browser checks
-      const bundle = await duckdb.selectBundle(JSDELIVR_BUNDLES);
-      const worker_url = URL.createObjectURL(
-        new Blob([`importScripts("${bundle.mainWorker!}");`], {
-          type: 'text/javascript',
-        })
-      );
-      const worker = new Worker(worker_url);
-      const logger = new duckdb.ConsoleLogger();
-      db = new duckdb.AsyncDuckDB(logger, worker);
-      await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+      // Create a WASM DuckDB connector using SQLRooms
+      // Keep initialization minimal - specific tools can load extensions as needed
+      connector = createWasmDuckDbConnector({
+        path: ':memory:',
+        logging: false,
+      });
+
+      // Initialize the connector (this handles bundle loading, worker creation, etc.)
+      await connector.initialize();
+
+      // Get the underlying DuckDB instance for backward compatibility
+      db = connector.getDb();
+
+      // Update the store with the connector
+      duckDBStore.setState({
+        db: {
+          ...duckDBStore.getState().db,
+          connector,
+        },
+      });
     } catch (error) {
       console.error('Failed to initialize DuckDB', error);
+      throw error;
     } finally {
       // Clear the initialization promise
       initializationPromise = null;
@@ -61,6 +127,14 @@ export async function initDuckDB(externalDB?: duckdb.AsyncDuckDB) {
   })();
 
   await initializationPromise;
+}
+
+/**
+ * Get the DuckDB connector (SQLRooms connector)
+ * @returns The DuckDB connector instance
+ */
+export async function getConnector(): Promise<DuckDbConnector> {
+  return duckDBStore.getState().db.getConnector();
 }
 
 /**

@@ -1,21 +1,21 @@
-import { AiSliceState, createAiSlice } from '@sqlrooms/ai-core';
-import type { AiSliceTool } from '@sqlrooms/ai-core';
+import { AiSliceConfig, AiSliceState, createAiSlice } from '@sqlrooms/ai-core';
 import {
+  AiSettingsSliceConfig,
   AiSettingsSliceState,
   createAiSettingsSlice,
 } from '@sqlrooms/ai-settings';
-import type { AiSettingsSliceConfig } from '@sqlrooms/ai-config';
 import {
-  BaseRoomConfig,
-  createRoomSlice,
+  createBaseRoomSlice,
+  createPersistHelpers,
   createRoomStore,
-  RoomState,
+  BaseRoomStoreState,
   StateCreator,
 } from '@sqlrooms/room-store';
 import { persist } from 'zustand/middleware';
+import { OpenAssistantToolSet } from '@openassistant/utils';
 import { AI_SETTINGS } from './config';
 
-type CombinedState = RoomState<BaseRoomConfig> & AiSliceState & AiSettingsSliceState;
+type State = BaseRoomStoreState & AiSliceState & AiSettingsSliceState;
 
 export type AssistantOptions = {
   aiSettings?: {
@@ -34,58 +34,47 @@ export type AssistantOptions = {
 export function createAssistantStore(options: AssistantOptions) {
   const persistKey = options.persistKey || 'openassistant-ai-state-storage';
   const initialSettings =
-    options.aiSettings?.initialSettings || (AI_SETTINGS as Pick<AiSettingsSliceConfig, 'providers'>);
+    options.aiSettings?.initialSettings ||
+    (AI_SETTINGS as Pick<AiSettingsSliceConfig, 'providers'>);
 
   // Convert tools to proper format by adding name from key
-  const convertedTools = Object.entries(options.ai.tools || {}).reduce((acc, [name, tool]) => {
-    acc[name] = {
-      name,
-      ...tool,
-    } as unknown as AiSliceTool;
-    return acc;
-  }, {} as Record<string, AiSliceTool>);
-
-  const creator: StateCreator<CombinedState> = (set, get, store) => ({
-    // Base room slice
-    ...createRoomSlice<BaseRoomConfig>()(set, get, store),
-
-    // AI model configuration slice
-    ...createAiSettingsSlice({ config: initialSettings })(set, get, store),
-
-    // AI slice
-    ...createAiSlice({
-      getInstructions: options.ai.getInstructions,
-      tools: convertedTools,
-    })(set, get, store),
-  });
-
-  const persistedCreator = persist(creator, {
-    name: persistKey,
-    partialize: (state) => ({
-      // Persist raw config objects without schema parsing to avoid cross-version zod issues
-      ai: state.ai.config,
-      aiSettings: state.aiSettings.config,
-    }),
-    merge: (persistedState: unknown, currentState) => {
-      const safe = (persistedState as { ai?: unknown; aiSettings?: unknown }) || {};
-      return {
-        ...currentState,
-        ai: {
-          ...currentState.ai,
-          // Trust persisted config structure; validation can be added by consumers if needed
-          config: (safe.ai as CombinedState['ai']['config']) ?? currentState.ai.config,
-        },
-        aiSettings: {
-          ...currentState.aiSettings,
-          config:
-            (safe.aiSettings as CombinedState['aiSettings']['config']) ??
-            currentState.aiSettings.config,
-        },
+  const convertedTools = Object.entries(options.ai.tools || {}).reduce(
+    (acc, [name, tool]) => {
+      acc[name] = {
+        name,
+        ...tool,
       };
+      return acc;
     },
-  }) as StateCreator<CombinedState>;
+    {} as Record<string, unknown>
+  );
 
-  return createRoomStore<BaseRoomConfig, CombinedState>(persistedCreator);
+  return createRoomStore<State>(
+    persist(
+      (set, get, store) => ({
+        // Base room slice
+        ...createBaseRoomSlice()(set, get, store),
+
+        // AI model configuration slice
+        ...createAiSettingsSlice({ config: initialSettings })(set, get, store),
+
+        // AI slice
+        ...createAiSlice({
+          getInstructions: options.ai.getInstructions,
+          tools: convertedTools as unknown as OpenAssistantToolSet,
+        })(set, get, store),
+      }),
+
+      // Persist settings
+      {
+        // Local storage key
+        name: persistKey,
+        // Helper to extract and merge slice configs
+        ...createPersistHelpers({
+          ai: AiSliceConfig,
+          aiSettings: AiSettingsSliceConfig,
+        }),
+      }
+    ) as StateCreator<State>
+  );
 }
-
-
