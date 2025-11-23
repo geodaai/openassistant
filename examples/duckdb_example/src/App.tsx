@@ -1,26 +1,80 @@
-import React from 'react';
-import { Assistant, type AssistantOptions } from '@openassistant/assistant';
+import React, { useCallback } from 'react';
 import {
-  overtureQueryTool,
-  getStateOrProvinceBoundariesTool,
-} from '@openassistant/duckdb';
-import { z } from 'zod';
+  Assistant,
+  MainView,
+  useAssistantActions,
+  type AssistantOptions,
+} from '@openassistant/assistant';
+import { getStateOrProvinceBoundariesTool } from '@openassistant/duckdb';
+import { useFileDrop } from './utils/useFileDrop';
+
+const getInstructionsWithTablesInfo = () => {
+  const baseInstructions =
+    'You are a helpful assistant with access to a DuckDB database. Users can drag and drop files (like GeoJSON, CSV, etc.) to load them into the database, and you can help them query the data.';
+  // const tablesInfo = await getTablesInfoFromDatabase();
+  return baseInstructions;
+};
 
 const config: AssistantOptions = {
   ai: {
-    getInstructions: () => 'You are a helpful assistant.',
+    getInstructions: getInstructionsWithTablesInfo,
     tools: {
       getStateOrProvinceBoundaries: getStateOrProvinceBoundariesTool,
     },
   },
 };
 
+// Component that uses the assistant actions - must be inside Assistant
+function AppContent() {
+  const { sendMessage } = useAssistantActions();
+
+  const handleFileLoaded = useCallback(
+    (fileName: string, tableName: string, tableInfo: string) => {
+      const message = `A new file "${fileName}" has been added in duckdb with table info: ${tableInfo}. The data is now available in table "${tableName}".`;
+      sendMessage(message);
+    },
+    [sendMessage]
+  );
+
+  const { isDragOver, dragHandlers } = useFileDrop({
+    onFileLoaded: handleFileLoaded,
+  });
+
+  return (
+    <div
+      className={`w-full max-w-[900px] h-full relative transition-all duration-200 ${
+        isDragOver ? 'ring-4 ring-blue-500 ring-opacity-50 bg-blue-50' : ''
+      }`}
+      {...dragHandlers}
+    >
+      {isDragOver && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-blue-100 bg-opacity-90 border-2 border-dashed border-blue-500 rounded-lg">
+          <div className="text-center">
+            <div className="text-2xl text-blue-600 mb-2">📁</div>
+            <div className="text-lg font-semibold text-blue-800">
+              Drop files here
+            </div>
+            <div className="text-sm text-blue-600">
+              Supports GeoJSON, CSV, Parquet, and more
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="flex h-full">
+        <div className="flex-1">
+          <MainView />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function App() {
   return (
     <div className="flex h-screen w-screen items-center justify-center p-4">
-      <div className="w-full max-w-[900px] h-full">
-        <Assistant options={config} />
-      </div>
+      <Assistant options={config}>
+        <AppContent />
+      </Assistant>
     </div>
   );
 }

@@ -54,7 +54,7 @@ export async function getDuckDB(externalDB?: duckdb.AsyncDuckDB) {
     db = externalDB;
     return db;
   }
-  await initDuckDB(externalDB);
+  await initDuckDB();
   return db;
 }
 
@@ -62,30 +62,10 @@ export async function getDuckDB(externalDB?: duckdb.AsyncDuckDB) {
  * Initialize the DuckDB instance and connector
  * @param externalDB - Optional external DuckDB instance to use
  */
-export async function initDuckDB(externalDB?: duckdb.AsyncDuckDB) {
+export async function initDuckDB() {
   // If already initializing, wait for that to complete
   if (initializationPromise) {
     await initializationPromise;
-    return;
-  }
-
-  if (externalDB) {
-    db = externalDB;
-    // Create a connector wrapper for the external DB
-    connector = createWasmDuckDbConnector({
-      path: ':memory:',
-      logging: true,
-    });
-    
-    // Initialize the connector
-    await connector.initialize();
-    
-    duckDBStore.setState({
-      db: {
-        ...duckDBStore.getState().db,
-        connector,
-      },
-    });
     return;
   }
 
@@ -136,30 +116,3 @@ export async function initDuckDB(externalDB?: duckdb.AsyncDuckDB) {
 export async function getConnector(): Promise<DuckDbConnector> {
   return duckDBStore.getState().db.getConnector();
 }
-
-/**
- * The callback function when the user selects values.
- * @param datasetName - The name of the dataset.
- * @param columnName - The name of the column.
- * @param selectedValues - The selected values, which is an array of the key values of the selected rows. The key is one of the variable names in the dataset.
- */
-type OnSelectedCallback = (
-  datasetName: string,
-  columnName: string,
-  selectedValues: unknown[]
-) => void;
-
-/**
- * The context of the queryDuckDB function.
- * @property getValues - Get the values of a variable from the dataset.
- * @property duckDB - The duckdb instance. It's optional. If not provided, the function will initialize a new duckdb instance, and create a new table using {@link getValues}.
- * @property onSelected - The callback function can be used to sync the selections of the query result table with the original dataset. See {@link OnSelectedCallback} for more details.
- */
-export type QueryDuckDBFunctionContext = {
-  getValues: (datasetName: string, variableName: string) => Promise<unknown[]>;
-  duckDB?: duckdb.AsyncDuckDB;
-  onSelected?: OnSelectedCallback;
-  config: {
-    isDraggable?: boolean;
-  };
-};

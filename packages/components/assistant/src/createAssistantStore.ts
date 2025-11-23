@@ -49,7 +49,7 @@ export function createAssistantStore(options: AssistantOptions) {
     {} as Record<string, unknown>
   );
 
-  return createRoomStore<State>(
+  const storeResult = createRoomStore<State>(
     persist(
       (set, get, store) => ({
         // Base room slice
@@ -77,4 +77,57 @@ export function createAssistantStore(options: AssistantOptions) {
       }
     ) as StateCreator<State>
   );
+
+  // Extract the store and hook from the result
+  const { roomStore, useRoomStore } = storeResult;
+
+  // Create a custom hook for actions that works with this store instance
+  const useAssistantActions = () => {
+    const ai = useRoomStore((state) => (state as State).ai);
+
+    // Simple wrapper functions without complex typing
+    const sendMessage = (message: string) => {
+      if (!ai) {
+        throw new Error(
+          'AI slice not initialized. Make sure the Assistant component is properly configured with options.'
+        );
+      }
+      
+      if (!ai.chatSendMessage) {
+        throw new Error(
+          'chatSendMessage not available. The chat system may not be fully initialized yet.'
+        );
+      }
+      
+      if (!ai.setAnalysisPrompt || !ai.startAnalysis) {
+        throw new Error(
+          'Analysis functions not available. The AI slice may not be properly configured.'
+        );
+      }
+
+      try {
+        // Set the analysis prompt first
+        ai.setAnalysisPrompt(message);
+        // Start analysis - this will use the analysisPrompt from the AI slice state
+        ai.startAnalysis(ai.chatSendMessage);
+      } catch (error) {
+        throw new Error(
+          `Failed to send message: ${error instanceof Error ? error.message : String(error)}`
+        );
+      }
+    };
+
+    return {
+      // Actions
+      sendMessage,
+      // Raw store access for advanced use cases
+      store: useRoomStore((state) => state),
+    };
+  };
+
+  return {
+    roomStore,
+    useRoomStore,
+    useAssistantActions,
+  };
 }

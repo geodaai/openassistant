@@ -6126,12 +6126,12 @@ __metadata:
     "@ai-sdk/openai-compatible": "npm:^1.0.19"
     "@ai-sdk/react": "npm:^2.0.56"
     "@openassistant/utils": "workspace:*"
-    "@sqlrooms/ai-core": "npm:0.26.0-rc.6"
-    "@sqlrooms/ai-settings": "npm:0.26.0-rc.6"
-    "@sqlrooms/room-config": "npm:0.26.0-rc.6"
-    "@sqlrooms/room-store": "npm:0.26.0-rc.6"
-    "@sqlrooms/ui": "npm:0.26.0-rc.6"
-    "@sqlrooms/utils": "npm:0.26.0-rc.6"
+    "@sqlrooms/ai-core": "npm:0.26.0"
+    "@sqlrooms/ai-settings": "npm:0.26.0"
+    "@sqlrooms/room-config": "npm:0.26.0"
+    "@sqlrooms/room-store": "npm:0.26.0"
+    "@sqlrooms/ui": "npm:0.26.0"
+    "@sqlrooms/utils": "npm:0.26.0"
     ai: "npm:5.0.93"
     esbuild-plugin-polyfill-node: "npm:^0.3.0"
     lucide-react: "npm:^0.544.0"
@@ -10129,31 +10129,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sqlrooms/ai-config@npm:0.26.0-rc.6":
-  version: 0.26.0-rc.6
-  resolution: "@sqlrooms/ai-config@npm:0.26.0-rc.6"
+"@sqlrooms/ai-config@npm:0.26.0":
+  version: 0.26.0
+  resolution: "@sqlrooms/ai-config@npm:0.26.0"
   dependencies:
     "@paralleldrive/cuid2": "npm:^2.2.2"
     zod: "npm:^4.1.8"
-  checksum: a5026565431d7065397834190c66e42a4813a74edf9dcd9e39cdb5c367e1892dcaffccd1bd905491d3bae1f2c610f4984b6ff21837080134a2294246b83bea9a
+  checksum: 5bd8e4e807111ea8b62c0a4108de491358685647b19654de628d7ce0ce9777df301c3739c6bf0ebe20c7b703a10315a8286e7e406d51feaffd61ac55df83dd60
   languageName: node
   linkType: hard
 
-"@sqlrooms/ai-core@npm:0.26.0-rc.6":
-  version: 0.26.0-rc.6
-  resolution: "@sqlrooms/ai-core@npm:0.26.0-rc.6"
+"@sqlrooms/ai-core@npm:0.26.0":
+  version: 0.26.0
+  resolution: "@sqlrooms/ai-core@npm:0.26.0"
   dependencies:
     "@ai-sdk/openai": "npm:^2.0.32"
     "@ai-sdk/openai-compatible": "npm:^1.0.18"
     "@ai-sdk/react": "npm:^2.0.44"
     "@openassistant/utils": "npm:1.0.0-alpha.0"
     "@paralleldrive/cuid2": "npm:^2.2.2"
-    "@sqlrooms/ai-config": "npm:0.26.0-rc.6"
-    "@sqlrooms/monaco-editor": "npm:0.26.0-rc.6"
-    "@sqlrooms/room-config": "npm:0.26.0-rc.6"
-    "@sqlrooms/room-store": "npm:0.26.0-rc.6"
-    "@sqlrooms/ui": "npm:0.26.0-rc.6"
-    "@sqlrooms/utils": "npm:0.26.0-rc.6"
+    "@sqlrooms/ai-config": "npm:0.26.0"
+    "@sqlrooms/monaco-editor": "npm:0.26.0"
+    "@sqlrooms/room-config": "npm:0.26.0"
+    "@sqlrooms/room-store": "npm:0.26.0"
+    "@sqlrooms/ui": "npm:0.26.0"
+    "@sqlrooms/utils": "npm:0.26.0"
     ai: "npm:^5.0.44"
     immer: "npm:^10.1.1"
     lucide-react: "npm:^0.475.0"
@@ -10164,22 +10164,22 @@ __metadata:
   peerDependencies:
     react: ">=18"
     react-dom: ">=18"
-  checksum: df18fd2735bfb45e336e7a5e37708f18e4cdf21627e3fe2ce043640d5c09106777770d934cee0ba866a0ae738caa7003861f630e75c9ab91976f6c424d6e0bff
+  checksum: 01675ffb40cd756664e73702c51919b06a6f82d32d3d64806ed4362f26f2927489d6ff70a303c2bce987f0873561b632b806c1ca153ac94aa884038533e77b0a
   languageName: node
   linkType: hard
 
-"@sqlrooms/ai-settings@npm:0.26.0-rc.6":
-  version: 0.26.0-rc.6
-  resolution: "@sqlrooms/ai-settings@npm:0.26.0-rc.6"
+"@sqlrooms/ai-settings@npm:0.26.0":
+  version: 0.26.0
+  resolution: "@sqlrooms/ai-settings@npm:0.26.0"
   dependencies:
     "@ai-sdk/provider": "npm:^1.1.3"
-    "@sqlrooms/ai-config": "npm:0.26.0-rc.6"
-    "@sqlrooms/ai-core": "npm:0.26.0-rc.6"
-    "@sqlrooms/recharts": "npm:0.26.0-rc.6"
-    "@sqlrooms/room-config": "npm:0.26.0-rc.6"
-    "@sqlrooms/room-store": "npm:0.26.0-rc.6"
-    "@sqlrooms/ui": "npm:0.26.0-rc.6"
-    "@sqlrooms/utils": "npm:0.26.0-rc.6"
+    "@sqlrooms/ai-config": "npm:0.26.0"
+    "@sqlrooms/ai-core": "npm:0.26.0"
+    "@sqlrooms/recharts": "npm:0.26.0"
+    "@sqlrooms/room-config": "npm:0.26.0"
+    "@sqlrooms/room-store": "npm:0.26.0"
+    "@sqlrooms/ui": "npm:0.26.0"
+    "@sqlrooms/utils": "npm:0.26.0"
     ai: "npm:^5.0.44"
     immer: "npm:^10.1.1"
     lucide-react: "npm:^0.475.0"
@@ -10191,7 +10191,7 @@ __metadata:
   peerDependencies:
     react: ">=18"
     react-dom: ">=18"
-  checksum: 467b2d88440caad98d3b31ebcaa5455c3fb3b7ca3bbe450b932ae94550cf6b40c2c632547566ba1f0e91d82c3d041359fdf75492b9d74123f0efa8f6fc89501d
+  checksum: 4a16fe71c417917344e940abde6ba1faa610859ec29b7f7f244eb96a3e26ddddffc927effb420f9df39490853e15ab046dccc255f8a6f7d4b200ef128b3fb00b
   languageName: node
   linkType: hard
 
@@ -10213,6 +10213,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sqlrooms/layout-config@npm:0.26.0":
+  version: 0.26.0
+  resolution: "@sqlrooms/layout-config@npm:0.26.0"
+  dependencies:
+    zod: "npm:^4.1.8"
+  checksum: 11baea2ebf621be098a390eb8884e6488b0fffdd7da4616cefd7685275104693668ce15ef56849d0e722d7b0ddd6cdbd36b9d5c61b5acd45c10a5ba75fdc07ec
+  languageName: node
+  linkType: hard
+
 "@sqlrooms/layout-config@npm:0.26.0-rc.6":
   version: 0.26.0-rc.6
   resolution: "@sqlrooms/layout-config@npm:0.26.0-rc.6"
@@ -10222,30 +10231,43 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sqlrooms/monaco-editor@npm:0.26.0-rc.6":
-  version: 0.26.0-rc.6
-  resolution: "@sqlrooms/monaco-editor@npm:0.26.0-rc.6"
+"@sqlrooms/monaco-editor@npm:0.26.0":
+  version: 0.26.0
+  resolution: "@sqlrooms/monaco-editor@npm:0.26.0"
   dependencies:
     "@monaco-editor/react": "npm:^4.7.0"
-    "@sqlrooms/ui": "npm:0.26.0-rc.6"
+    "@sqlrooms/ui": "npm:0.26.0"
     monaco-editor: "npm:^0.52.2"
   peerDependencies:
     react: ">=18"
     react-dom: ">=18"
-  checksum: 71425a700214f11d9f4e20968346ebd81ee6efeb6b62ba9a239b45c1b18366c6cb3bd609f6a9b33023f4cbe69d1d465281064791b0f2de04b86ee9acd48288b7
+  checksum: 7e3e16e65ae268d8b3d2916504417e380f6e8b97f510d9413367b9a8939a4663eb03b0091cd7e6610b4d27e5912f07ae835ddaaa65409feda7e35b3989cb5f28
   languageName: node
   linkType: hard
 
-"@sqlrooms/recharts@npm:0.26.0-rc.6":
-  version: 0.26.0-rc.6
-  resolution: "@sqlrooms/recharts@npm:0.26.0-rc.6"
+"@sqlrooms/recharts@npm:0.26.0":
+  version: 0.26.0
+  resolution: "@sqlrooms/recharts@npm:0.26.0"
   dependencies:
-    "@sqlrooms/ui": "npm:0.26.0-rc.6"
+    "@sqlrooms/ui": "npm:0.26.0"
     recharts: "npm:^2.15.4"
   peerDependencies:
     react: ">=18"
     react-dom: ">=18"
-  checksum: faa0b1e98cf7cc2357000ec9885cfb8ddbe6804bf2247574861c78f153e2e1c9186dcc8b1d7fd0f3f3f4563a64a87245a1c43c1bc514144516a9990fd30ea58c
+  checksum: 1a96a3a490d1e57a912d1bd1ab9d9f7c2e6e51553ae750824a3abd2821778cfbb3f6e3d3378fd756b587ef1ad3f141ecde96f429bd58be10817c59b504c21ac7
+  languageName: node
+  linkType: hard
+
+"@sqlrooms/room-config@npm:0.26.0":
+  version: 0.26.0
+  resolution: "@sqlrooms/room-config@npm:0.26.0"
+  dependencies:
+    "@sqlrooms/layout-config": "npm:0.26.0"
+    zod: "npm:^4.1.8"
+  peerDependencies:
+    react: ">=18"
+    react-dom: ">=18"
+  checksum: d9b27d3cd74ec3b9aa91ad5e1ff7cedc403990deef66a3fc7af725675020ed93853cec2446aba79196c7ef10953ef0990da03e19c174b72dd1b7d7c1e63aa01b
   languageName: node
   linkType: hard
 
@@ -10259,6 +10281,20 @@ __metadata:
     react: ">=18"
     react-dom: ">=18"
   checksum: f9c3ce7ce192e76fc8a7dc340d2bf14bc0025580128a9a974d0c27cd3cbdf140ff1c7b2e88b99b358a906a74077a4514a8eb04cb852996a0f7b37985a3f61033
+  languageName: node
+  linkType: hard
+
+"@sqlrooms/room-store@npm:0.26.0":
+  version: 0.26.0
+  resolution: "@sqlrooms/room-store@npm:0.26.0"
+  dependencies:
+    "@sqlrooms/room-config": "npm:0.26.0"
+    immer: "npm:^10.1.3"
+    zod: "npm:^4.1.8"
+    zustand: "npm:^5.0.8"
+  peerDependencies:
+    react: ">=18"
+  checksum: cd1cd18ea1d39e56ad99fe639c16a6b425614a73f1c958b292b954a516ef3ffb9d8b272fc2675623bf9cfd1271748d177d623b558e33f72491213bc768d0240c
   languageName: node
   linkType: hard
 
@@ -10276,9 +10312,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sqlrooms/ui@npm:0.26.0-rc.6":
-  version: 0.26.0-rc.6
-  resolution: "@sqlrooms/ui@npm:0.26.0-rc.6"
+"@sqlrooms/ui@npm:0.26.0":
+  version: 0.26.0
+  resolution: "@sqlrooms/ui@npm:0.26.0"
   dependencies:
     "@hookform/resolvers": "npm:^3.10.0"
     "@radix-ui/react-accordion": "npm:^1.2.12"
@@ -10321,7 +10357,22 @@ __metadata:
   peerDependencies:
     autoprefixer: ^10.4.20
     tailwindcss: ^3.4.17
-  checksum: 3e94692f3f9f0a636ef598e92e24e817c7f20a142d1664674e87124210b7751a48bc077003bdb3803403cf86182496f0d07cdfc371cebf61b313cff080b49853
+  checksum: 258d63bbc0326fd7f365e7d8e3530965a8abda56fef42b0c06a76b565abbea991c4a89ca4437a7dfe63c92ec2320f1fa86b2da87422ed9375497a0afdb2202b5
+  languageName: node
+  linkType: hard
+
+"@sqlrooms/utils@npm:0.26.0":
+  version: 0.26.0
+  resolution: "@sqlrooms/utils@npm:0.26.0"
+  dependencies:
+    d3-color: "npm:^3.1.0"
+    d3-format: "npm:^3.1.0"
+    d3-time-format: "npm:^4.1.0"
+    dayjs: "npm:^1.11.18"
+  peerDependencies:
+    react: ">=18"
+    react-dom: ">=18"
+  checksum: a198a513ef5df8c920b04f61f8a59612a7e8c17c194eb98478c5d840600bccfe6b6c8a281fe6ac6467110ff4ff0a1f8edb5d49520e741eb28e37d916685f6e72
   languageName: node
   linkType: hard
 
