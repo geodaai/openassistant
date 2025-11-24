@@ -4,6 +4,7 @@ import {
   AiSettingsSliceState,
   createAiSettingsSlice,
 } from '@sqlrooms/ai-settings';
+import { createDuckDbSlice, type DuckDbSliceState } from '@sqlrooms/duckdb';
 import {
   createBaseRoomSlice,
   createPersistHelpers,
@@ -15,7 +16,7 @@ import { persist } from 'zustand/middleware';
 import { OpenAssistantToolSet } from '@openassistant/utils';
 import { AI_SETTINGS } from './config';
 
-type State = BaseRoomStoreState & AiSliceState & AiSettingsSliceState;
+type State = BaseRoomStoreState & AiSliceState & AiSettingsSliceState & DuckDbSliceState;
 
 export type AssistantOptions = {
   aiSettings?: {
@@ -55,6 +56,9 @@ export function createAssistantStore(options: AssistantOptions) {
         // Base room slice
         ...createBaseRoomSlice()(set, get, store),
 
+        // DuckDB slice
+        ...createDuckDbSlice()(set, get, store),
+
         // AI model configuration slice
         ...createAiSettingsSlice({ config: initialSettings })(set, get, store),
 
@@ -92,13 +96,13 @@ export function createAssistantStore(options: AssistantOptions) {
           'AI slice not initialized. Make sure the Assistant component is properly configured with options.'
         );
       }
-      
+
       if (!ai.chatSendMessage) {
         throw new Error(
           'chatSendMessage not available. The chat system may not be fully initialized yet.'
         );
       }
-      
+
       if (!ai.setAnalysisPrompt || !ai.startAnalysis) {
         throw new Error(
           'Analysis functions not available. The AI slice may not be properly configured.'
@@ -122,6 +126,8 @@ export function createAssistantStore(options: AssistantOptions) {
       sendMessage,
       // Raw store access for advanced use cases
       store: useRoomStore((state) => state),
+      // Raw store instance with getState() method for tools
+      roomStore,
     };
   };
 

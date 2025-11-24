@@ -6,8 +6,8 @@ import {
   OpenAssistantExecuteFunctionResult,
 } from '@openassistant/utils';
 import { z } from 'zod';
-import { getDuckDB } from './query';
-import { AsyncDuckDB } from '@duckdb/duckdb-wasm';
+import { duckDBStore } from './query';
+import type { DuckDbConnector } from '@sqlrooms/duckdb';
 
 export type OvertureQueryArgs = z.ZodObject<{
   query: z.ZodString;
@@ -25,9 +25,9 @@ export type OvertureQueryResult = {
 
 export type OvertureQueryContext = {
   /**
-   * Optional DuckDB instance for querying
+   * Optional DuckDB connector for querying
    */
-  getDuckDB?: () => Promise<AsyncDuckDB | null>;
+  getConnector?: () => Promise<DuckDbConnector | null>;
 };
 
 export const overtureQueryTool: OpenAssistantTool<
@@ -61,19 +61,14 @@ async function executeOvertureQuery(
   >
 > {
   try {
-    const { getDuckDB: getUserDuckDB } =
+    const { getConnector: getUserConnector } =
       (options?.context as OvertureQueryContext) || {};
 
-    // Initialize DuckDB with external instance if provided
-    const userDuckDB = await getUserDuckDB?.();
-    const db = await getDuckDB(userDuckDB ?? undefined);
-    if (!db) {
-      throw new Error('DuckDB instance is not initialized');
+    // Get the connector (either user-provided or default)
+    const connector = (await getUserConnector?.()) || (await duckDBStore.getState().db.getConnector());
+    if (!connector) {
+      throw new Error('DuckDB connector is not initialized');
     }
-
-    // Get the connector for better query execution
-    const { getConnector } = await import('./query');
-    const connector = await getConnector();
 
     // await connector.query(`INSTALL httpfs;`);
     // await connector.query(`LOAD httpfs;`);
@@ -87,16 +82,9 @@ async function executeOvertureQuery(
       signal: options?.abortSignal,
     });
 
-    // Get the connection to insert the result
-    const conn = await db.connect();
-
-    // save the arrow result as a table in duckdb
-    await conn.insertArrowTable(arrowResult, {
-      name: tableName,
-      create: true,
-    });
-
-    await conn.close();
+    // Save the arrow result as a table in duckdb using the SQLRooms store
+    const addTable = duckDBStore.getState().db.addTable;
+    await addTable(tableName, arrowResult);
 
     return {
       llmResult: {

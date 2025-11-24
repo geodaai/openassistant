@@ -11,6 +11,14 @@ export default defineConfig({
       'use-sync-external-store/shim/index.js',
     ],
   },
+  // Disable sourcemaps to avoid Vite internal errors like
+  // "Cannot read properties of undefined (reading 'map')" when combining sourcemaps.
+  build: {
+    sourcemap: false,
+  },
+  css: {
+    devSourcemap: false,
+  },
 });
 
 

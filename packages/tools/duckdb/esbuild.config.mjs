@@ -20,7 +20,9 @@ const baseConfig = createBaseConfig({
     '@duckdb/duckdb-wasm',
     'apache-arrow',
     '@openassistant/utils',
+    '@sqlrooms/duckdb',
     'zod',
+    'zustand',
   ],
 });
 

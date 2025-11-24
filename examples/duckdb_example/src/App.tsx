@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Assistant,
   MainView,
@@ -7,6 +7,8 @@ import {
 } from '@openassistant/assistant';
 import { getStateOrProvinceBoundariesTool } from '@openassistant/duckdb';
 import { useFileDrop } from './utils/useFileDrop';
+import { queryTool } from './tools/queryTool';
+import { createQueryTool, QueryToolResult } from '@sqlrooms/ai';
 
 const getInstructionsWithTablesInfo = () => {
   const baseInstructions =
@@ -15,18 +17,18 @@ const getInstructionsWithTablesInfo = () => {
   return baseInstructions;
 };
 
-const config: AssistantOptions = {
-  ai: {
-    getInstructions: getInstructionsWithTablesInfo,
-    tools: {
-      getStateOrProvinceBoundaries: getStateOrProvinceBoundariesTool,
-    },
-  },
-};
-
 // Component that uses the assistant actions - must be inside Assistant
-function AppContent() {
-  const { sendMessage } = useAssistantActions();
+function AppContentWithStore({
+  storeRef,
+}: {
+  storeRef: React.MutableRefObject<any>;
+}) {
+  const { sendMessage, roomStore } = useAssistantActions();
+
+  // Update the ref with the roomStore
+  React.useEffect(() => {
+    storeRef.current = roomStore;
+  }, [roomStore, storeRef]);
 
   const handleFileLoaded = useCallback(
     (fileName: string, tableName: string, tableInfo: string) => {
@@ -70,10 +72,42 @@ function AppContent() {
 }
 
 export function App() {
+  // Create a ref to hold the roomStore
+  const storeRef = React.useRef<any>(null);
+
+  // Create the config dynamically to access the tool with lazy-loaded store
+  const config: AssistantOptions = useMemo(() => {
+    // Create a lazy wrapper that will get the tool when store is available
+    const lazyQueryTool = {
+      name: 'query',
+      description:
+        'A tool for running SQL queries on the tables in the database.',
+      parameters: queryTool.parameters,
+      execute: async (params: any, options: any) => {
+        if (!storeRef.current) {
+          throw new Error('Store is not yet initialized');
+        }
+        const tool = createQueryTool(storeRef.current);
+        return tool.execute(params, options);
+      },
+      component: QueryToolResult,
+    };
+
+    return {
+      ai: {
+        getInstructions: getInstructionsWithTablesInfo,
+        tools: {
+          getStateOrProvinceBoundaries: getStateOrProvinceBoundariesTool,
+          queryTool: lazyQueryTool,
+        },
+      },
+    };
+  }, []);
+
   return (
     <div className="flex h-screen w-screen items-center justify-center p-4">
       <Assistant options={config}>
-        <AppContent />
+        <AppContentWithStore storeRef={storeRef} />
       </Assistant>
     </div>
   );

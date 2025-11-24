@@ -10,7 +10,7 @@
  * @module connector-utils
  */
 
-import { getConnector } from './query';
+import { duckDBStore } from './query';
 import type { DuckDbConnector } from '@sqlrooms/duckdb';
 
 /**
@@ -29,7 +29,7 @@ export async function queryCancellable(
   sql: string,
   signal?: AbortSignal
 ) {
-  const connector = await getConnector();
+  const connector = await duckDBStore.getState().db.getConnector();
   const queryHandle = connector.query(sql, { signal });
   
   // The handle is Promise-like, so you can await it directly
@@ -56,7 +56,7 @@ export async function executeMultipleQueries(
   queries: string[],
   signal?: AbortSignal
 ) {
-  const connector = await getConnector();
+  const connector = await duckDBStore.getState().db.getConnector();
   const handles = queries.map(query => connector.query(query, { signal }));
   
   // Wait for all queries to complete
@@ -85,7 +85,7 @@ export async function queryWithTimeout(
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
   
   try {
-    const connector = await getConnector();
+    const connector = await duckDBStore.getState().db.getConnector();
     const result = await connector.query(sql, { signal: controller.signal });
     return result;
   } finally {
@@ -110,7 +110,7 @@ export async function loadDataToTable(
   data: File | Record<string, unknown>[],
   tableName: string
 ) {
-  const connector = await getConnector();
+  const connector = await duckDBStore.getState().db.getConnector();
   
   if (data instanceof File) {
     await connector.loadFile(data, tableName, { 
@@ -141,7 +141,7 @@ export async function queryToJson<T = Record<string, unknown>>(
   sql: string,
   signal?: AbortSignal
 ): Promise<T[]> {
-  const connector = await getConnector();
+  const connector = await duckDBStore.getState().db.getConnector();
   const handle = connector.queryJson<T>(sql, { signal });
   const iterable = await handle;
   return Array.from(iterable);
@@ -152,7 +152,7 @@ export async function queryToJson<T = Record<string, unknown>>(
  */
 export async function isConnectorReady(): Promise<boolean> {
   try {
-    const connector = await getConnector();
+    const connector = await duckDBStore.getState().db.getConnector();
     return connector !== null;
   } catch {
     return false;
@@ -166,6 +166,6 @@ export async function isConnectorReady(): Promise<boolean> {
  * See https://sqlrooms.org for full API documentation.
  */
 export async function getRawConnector(): Promise<DuckDbConnector> {
-  return await getConnector();
+  return await duckDBStore.getState().db.getConnector();
 }
 

@@ -5,7 +5,7 @@ import { OpenAssistantTool, generateId } from '@openassistant/utils';
 import { z } from 'zod';
 import { tableFromArrays } from 'apache-arrow';
 
-import { getDuckDB } from './query';
+import { duckDBStore } from './query';
 import { LocalQueryContext } from './types';
 
 export function convertArrowRowToObject(row) {
@@ -89,7 +89,7 @@ IMPORTANT:
     options
   ): Promise<MergeTablesToolResult> => {
     try {
-      const { getValues, getDuckDB: getUserDuckDB } =
+      const { getValues, getConnector: getUserConnector } =
         options?.context as LocalQueryContext;
 
       if (mergeType !== 'horizontal' && mergeType !== 'vertical') {
@@ -124,30 +124,23 @@ IMPORTANT:
       const arrowTableA = tableFromArrays(columnDataA);
       const arrowTableB = tableFromArrays(columnDataB);
 
-      // Initialize DuckDB with external instance if provided
-      const userDuckDB = await getUserDuckDB?.();
-      const db = await getDuckDB(userDuckDB ?? undefined);
-      if (!db) {
-        throw new Error('DuckDB instance is not initialized');
+      // Get the connector (either user-provided or default)
+      const connector = (await getUserConnector?.()) || (await duckDBStore.getState().db.getConnector());
+      if (!connector) {
+        throw new Error('DuckDB connector is not initialized');
       }
 
       // create table A and B
-      const conn = await db.connect();
-      await conn.query(`DROP TABLE IF EXISTS ${dbTableNameA}`);
-      await conn.insertArrowTable(arrowTableA, {
-        name: dbTableNameA,
-        create: true,
-      });
-      await conn.query(`DROP TABLE IF EXISTS ${dbTableNameB}`);
-      await conn.insertArrowTable(arrowTableB, {
-        name: dbTableNameB,
-        create: true,
-      });
+      await connector.query(`DROP TABLE IF EXISTS ${dbTableNameA}`);
+      await connector.query(`DROP TABLE IF EXISTS ${dbTableNameB}`);
+      
+      // Use SQLRooms store for Arrow table insertion
+      const addTable = duckDBStore.getState().db.addTable;
+      await addTable(dbTableNameA, arrowTableA);
+      await addTable(dbTableNameB, arrowTableB);
 
       // run merge query
-      const arrowResult = await conn.query(sql);
-
-      await conn.close();
+      const arrowResult = await connector.query(sql);
 
       // convert arrowResult to a JSON object
       const jsonResult: Record<string, unknown>[] = arrowResult

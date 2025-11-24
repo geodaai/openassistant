@@ -36,6 +36,7 @@
     "@openassistant/utils": "workspace:*",
     "@sqlrooms/ai-core": "0.26.0",
     "@sqlrooms/ai-settings": "0.26.0",
+    "@sqlrooms/duckdb": "0.26.0",
     "@sqlrooms/room-config": "0.26.0",
     "@sqlrooms/room-store": "0.26.0",
     "@sqlrooms/ui": "0.26.0",

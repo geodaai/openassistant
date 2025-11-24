@@ -6128,6 +6128,7 @@ __metadata:
     "@openassistant/utils": "workspace:*"
     "@sqlrooms/ai-core": "npm:0.26.0"
     "@sqlrooms/ai-settings": "npm:0.26.0"
+    "@sqlrooms/duckdb": "npm:0.26.0"
     "@sqlrooms/room-config": "npm:0.26.0"
     "@sqlrooms/room-store": "npm:0.26.0"
     "@sqlrooms/ui": "npm:0.26.0"
@@ -7551,6 +7552,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@reach/observe-rect@npm:^1.1.0":
+  version: 1.2.0
+  resolution: "@reach/observe-rect@npm:1.2.0"
+  checksum: 7dd903eeaad0e22c6d973bd26265d91eadba56ab5134701ceb3e85214db75339fae94aa7e8b88a65e8daa64bc7cf1b915d4ffcdfd324466b561dc6adc3c6e070
+  languageName: node
+  linkType: hard
+
 "@react-aria/breadcrumbs@npm:3.5.23":
   version: 3.5.23
   resolution: "@react-aria/breadcrumbs@npm:3.5.23"
@@ -8452,6 +8460,27 @@ __metadata:
     react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
     react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
   checksum: dfa35599c52b60fb4d6ca14ee69c796452cae7855fa863a97b5d2a06438ca479957ca97ba0769d7614d32da0cc3c8e431ff6e5e26849116a5b7eb101dfd2886a
+  languageName: node
+  linkType: hard
+
+"@react-dnd/asap@npm:^5.0.1":
+  version: 5.0.2
+  resolution: "@react-dnd/asap@npm:5.0.2"
+  checksum: a75039720b89da11bc678c2b61b1d2840c8349023ef2b8f8ca9099e7ece6953e9be704bf393bf799eae83d245f62115eb5302499612c2aa009c1d91caa9462df
+  languageName: node
+  linkType: hard
+
+"@react-dnd/invariant@npm:^4.0.1":
+  version: 4.0.2
+  resolution: "@react-dnd/invariant@npm:4.0.2"
+  checksum: b638e9643e6e93da03ef463be3c1b92055daadc391fc08e4ce8639ef8c7738f91058ec83ee52a0d0df0d3a6dd2811a7703e1450737708f043c2e909c0a99dd31
+  languageName: node
+  linkType: hard
+
+"@react-dnd/shallowequal@npm:^4.0.1":
+  version: 4.0.2
+  resolution: "@react-dnd/shallowequal@npm:4.0.2"
+  checksum: 7f21d691bddbfd4d2830948cbeefecca1600b2b46bcb1934926795f07ae8a1fa60a3dfd3a2112be5ef682c3820c80a99711e9fa15843f7e300acb25a4ecb70ab
   languageName: node
   linkType: hard
 
@@ -10195,6 +10224,72 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sqlrooms/ai@npm:0.26.0":
+  version: 0.26.0
+  resolution: "@sqlrooms/ai@npm:0.26.0"
+  dependencies:
+    "@openassistant/utils": "npm:1.0.0-alpha.0"
+    "@sqlrooms/ai-config": "npm:0.26.0"
+    "@sqlrooms/ai-core": "npm:0.26.0"
+    "@sqlrooms/ai-settings": "npm:0.26.0"
+    "@sqlrooms/data-table": "npm:0.26.0"
+    "@sqlrooms/duckdb": "npm:0.26.0"
+    "@sqlrooms/room-shell": "npm:0.26.0"
+    "@sqlrooms/ui": "npm:0.26.0"
+    "@sqlrooms/utils": "npm:0.26.0"
+    ai: "npm:^5.0.44"
+    immer: "npm:^10.1.3"
+    lucide-react: "npm:^0.544.0"
+    react-markdown: "npm:^10.1.0"
+    recharts: "npm:^2.12.7"
+    rehype-raw: "npm:^7.0.0"
+    remark-gfm: "npm:^4.0.0"
+    zod: "npm:^4.1.8"
+  peerDependencies:
+    apache-arrow: 17.0.0
+    react: ">=18"
+    react-dom: ">=18"
+  checksum: 7e43b41d6c6e7a4a50340f9cf0165669551044f02b4fd76b9a86b7c924d1650b4b8ede267f7d7809a8f11a60b3b5a5f9a885030af9e93e0ffa844a74b8c2743f
+  languageName: node
+  linkType: hard
+
+"@sqlrooms/data-table@npm:0.26.0":
+  version: 0.26.0
+  resolution: "@sqlrooms/data-table@npm:0.26.0"
+  dependencies:
+    "@sqlrooms/duckdb": "npm:0.26.0"
+    "@sqlrooms/ui": "npm:0.26.0"
+    "@sqlrooms/utils": "npm:0.26.0"
+    "@tanstack/react-table": "npm:^8.21.3"
+    "@tanstack/table-core": "npm:^8.21.3"
+    lucide-react: "npm:^0.544.0"
+    react-virtual: "npm:2.10.4"
+  peerDependencies:
+    apache-arrow: ">=17"
+    react: ">=18"
+    react-dom: ">=18"
+  checksum: e21fccfeb2f7721feffdc47fe1ed4dd6fc75e760921e6dc4a723991e3f368c4a0e8c6630aed8c7aff49998cfae863240041a4a02a59f19f8d88c401a9f217ed6
+  languageName: node
+  linkType: hard
+
+"@sqlrooms/duckdb@npm:0.26.0":
+  version: 0.26.0
+  resolution: "@sqlrooms/duckdb@npm:0.26.0"
+  dependencies:
+    "@duckdb/duckdb-wasm": "npm:1.30.0"
+    "@sqlrooms/room-config": "npm:0.26.0"
+    "@sqlrooms/room-store": "npm:0.26.0"
+    "@sqlrooms/utils": "npm:0.26.0"
+    fast-deep-equal: "npm:^3.1.3"
+    immer: "npm:^10.1.3"
+    zod: "npm:^4.1.8"
+    zustand: "npm:^5.0.8"
+  peerDependencies:
+    apache-arrow: 17.0.0
+  checksum: 90ddb6f1aaedd733163527abb14679592f8d065a7b9b37bb11b76f7fab8ea7a50e56828da646f5dca62b9adc4cfa42b9abcbe274c06523ca69f1ff14d8c821ef
+  languageName: node
+  linkType: hard
+
 "@sqlrooms/duckdb@npm:0.26.0-rc.6":
   version: 0.26.0-rc.6
   resolution: "@sqlrooms/duckdb@npm:0.26.0-rc.6"
@@ -10228,6 +10323,25 @@ __metadata:
   dependencies:
     zod: "npm:^4.1.8"
   checksum: 0453184e181983345164cb3e100be1d92c7a0c24f3740ce9e6c09b69e388221bcdab4bcb8ed2a2f753129b7d2ba1e6d344b0844141bd5f94cb2b6ec1c8676b02
+  languageName: node
+  linkType: hard
+
+"@sqlrooms/layout@npm:0.26.0":
+  version: 0.26.0
+  resolution: "@sqlrooms/layout@npm:0.26.0"
+  dependencies:
+    "@sqlrooms/layout-config": "npm:0.26.0"
+    "@sqlrooms/room-config": "npm:0.26.0"
+    "@sqlrooms/room-store": "npm:0.26.0"
+    "@sqlrooms/ui": "npm:0.26.0"
+    immer: "npm:^10.1.3"
+    zod: "npm:^4.1.8"
+    zustand: "npm:^5.0.8"
+  peerDependencies:
+    react: ">=18"
+    react-dom: ">=18"
+    react-mosaic-component: ^6.1.1
+  checksum: 0acb1df0be8b82785293451841c270650843c6a5a1d896d6ea342199b7b3e9ff232d1a2752fa772f95c029bdc89a4a0a971bd7f00236a0dc80b18a898de895fc
   languageName: node
   linkType: hard
 
@@ -10281,6 +10395,31 @@ __metadata:
     react: ">=18"
     react-dom: ">=18"
   checksum: f9c3ce7ce192e76fc8a7dc340d2bf14bc0025580128a9a974d0c27cd3cbdf140ff1c7b2e88b99b358a906a74077a4514a8eb04cb852996a0f7b37985a3f61033
+  languageName: node
+  linkType: hard
+
+"@sqlrooms/room-shell@npm:0.26.0":
+  version: 0.26.0
+  resolution: "@sqlrooms/room-shell@npm:0.26.0"
+  dependencies:
+    "@sqlrooms/data-table": "npm:0.26.0"
+    "@sqlrooms/duckdb": "npm:0.26.0"
+    "@sqlrooms/layout": "npm:0.26.0"
+    "@sqlrooms/layout-config": "npm:0.26.0"
+    "@sqlrooms/room-config": "npm:0.26.0"
+    "@sqlrooms/room-store": "npm:0.26.0"
+    "@sqlrooms/ui": "npm:0.26.0"
+    "@sqlrooms/utils": "npm:0.26.0"
+    apache-arrow: "npm:17.0.0"
+    immer: "npm:^10.1.3"
+    lucide-react: "npm:^0.544.0"
+    react-mosaic-component: "npm:^6.1.1"
+    zod: "npm:^4.1.8"
+    zustand: "npm:^5.0.8"
+  peerDependencies:
+    react: ">=18"
+    react-dom: ">=18"
+  checksum: 6952213de333f1754d51b4321d23d97baa0c911f2ed04cd532da6fcb04541191b1d98185eb60b9096230ecc673203596bad4e8802cdf42eb311dcb3048d218a8
   languageName: node
   linkType: hard
 
@@ -10427,6 +10566,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/react-table@npm:^8.21.3":
+  version: 8.21.3
+  resolution: "@tanstack/react-table@npm:8.21.3"
+  dependencies:
+    "@tanstack/table-core": "npm:8.21.3"
+  peerDependencies:
+    react: ">=16.8"
+    react-dom: ">=16.8"
+  checksum: a32217ebe64d24e71dea6a6742bc288dcabf389657b16805a1ab3f347d3dca8262759c45c604a1f65bd97925d5cbdfb66d1be7637100a12eb5b279bdd420962d
+  languageName: node
+  linkType: hard
+
 "@tanstack/react-virtual@npm:3.11.3":
   version: 3.11.3
   resolution: "@tanstack/react-virtual@npm:3.11.3"
@@ -10436,6 +10587,13 @@ __metadata:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   checksum: eb39f8a015f4dc98070f0c18bbb1f9c094b7182133554ef3ee31d2678cd3a66edd28ce854d533e830f88f1f0ad1d5b065de184438a08fe774a9acc1dc62da436
+  languageName: node
+  linkType: hard
+
+"@tanstack/table-core@npm:8.21.3, @tanstack/table-core@npm:^8.21.3":
+  version: 8.21.3
+  resolution: "@tanstack/table-core@npm:8.21.3"
+  checksum: aa05e5f80110f0f56d66161e950668ea6ef3e2ea4f3a2ccd5d5980b39b4feea987245b20531aee2c6743e6edd12c0361503413b63090c807f88a61b19bfd04f3
   languageName: node
   linkType: hard
 
@@ -13680,7 +13838,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"classnames@npm:*, classnames@npm:^2.2.1":
+"classnames@npm:*, classnames@npm:^2.2.1, classnames@npm:^2.3.2":
   version: 2.5.1
   resolution: "classnames@npm:2.5.1"
   checksum: 58eb394e8817021b153bb6e7d782cfb667e4ab390cb2e9dac2fc7c6b979d1cc2b2a733093955fc5c94aa79ef5c8c89f11ab77780894509be6afbb91dddd79d15
@@ -15177,6 +15335,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dnd-core@npm:^16.0.1":
+  version: 16.0.1
+  resolution: "dnd-core@npm:16.0.1"
+  dependencies:
+    "@react-dnd/asap": "npm:^5.0.1"
+    "@react-dnd/invariant": "npm:^4.0.1"
+    redux: "npm:^4.2.0"
+  checksum: 711dc30f88f7c5cb5308f105b337f6a4db7ad098e985d2e120189f17a3d1865d283aadef1641dc129706e0399746835a90e2a92ef65f0cdcf5aa0d0cb8c79265
+  languageName: node
+  linkType: hard
+
+"dnd-multi-backend@npm:^8.1.2":
+  version: 8.1.2
+  resolution: "dnd-multi-backend@npm:8.1.2"
+  peerDependencies:
+    dnd-core: ^16.0.1
+  checksum: 456b0e51e53bbdb340b7afc414af0e63e964a5bbc54e24bf2304e2bc2c1dc5e053a34f1eaced8a013a8eff5e43958e5b2d55a66c3582395ffec5faa6a6eaf3e4
+  languageName: node
+  linkType: hard
+
 "doctrine@npm:^2.1.0":
   version: 2.1.0
   resolution: "doctrine@npm:2.1.0"
@@ -15283,6 +15461,7 @@ __metadata:
   dependencies:
     "@openassistant/assistant": "workspace:*"
     "@openassistant/duckdb": "workspace:*"
+    "@sqlrooms/ai": "npm:0.26.0"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
     "@vitejs/plugin-react": "npm:^5.0.4"
@@ -15293,8 +15472,8 @@ __metadata:
     react-dom: "npm:^18.3.1"
     tailwindcss: "npm:^3.4.14"
     typescript: "npm:^5.6.2"
-    vite: "npm:^6.3.5"
-    zod: "npm:^3.23.8"
+    vite: "npm:6.3.5"
+    zod: "npm:^4.0.8"
   languageName: unknown
   linkType: soft
 
@@ -17555,6 +17734,13 @@ __metadata:
   version: 9.0.21
   resolution: "immer@npm:9.0.21"
   checksum: 8455d6b4dc8abfe40f06eeec9bcc944d147c81279424c0f927a4d4905ae34e5af19ab6da60bcc700c14f51c452867d7089b3b9236f5a9a2248e39b4a09ee89de
+  languageName: node
+  linkType: hard
+
+"immutability-helper@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "immutability-helper@npm:3.1.1"
+  checksum: f5cbbd3c39341f6119c0533618dc282c828a752994670f459eebb2ac35f051255963ba1480031230800b19eb05acdd09d2e757e7804d7494eb024eed065a33b5
   languageName: node
   linkType: hard
 
@@ -22421,6 +22607,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rdndmb-html5-to-touch@npm:^8.0.0":
+  version: 8.1.2
+  resolution: "rdndmb-html5-to-touch@npm:8.1.2"
+  dependencies:
+    dnd-multi-backend: "npm:^8.1.2"
+    react-dnd-html5-backend: "npm:^16.0.1"
+    react-dnd-touch-backend: "npm:^16.0.1"
+  checksum: 411264f86449f7b5ee0a023ea1d9e191cc135efcaad627d01d5e2d606310aae0ae3d63fe05ce6d30a587545af58a020027c02c281985057be1f29925a0db72c1
+  languageName: node
+  linkType: hard
+
 "re-resizable@npm:^6.10.3":
   version: 6.11.2
   resolution: "re-resizable@npm:6.11.2"
@@ -22529,6 +22726,75 @@ __metadata:
     date-fns: ^2.28.0 || ^3.0.0
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
   checksum: 374056dca7fed70a154a3b0e98c6c746c26b4fc868548fa8f285ef3cab9679537e84c0c21ba7b6db67b3f7f54cc562f5d83efba2c7f2c7bd3705ac8992869607
+  languageName: node
+  linkType: hard
+
+"react-dnd-html5-backend@npm:^16.0.1":
+  version: 16.0.1
+  resolution: "react-dnd-html5-backend@npm:16.0.1"
+  dependencies:
+    dnd-core: "npm:^16.0.1"
+  checksum: fa0feacc01ba8c923fc21461cc5919a856f09384f9a684b4c70ab9cdddc4a6ec64f0de4f65946a8061284ed92c5e3104caca56ae58884235604898a909d82e90
+  languageName: node
+  linkType: hard
+
+"react-dnd-multi-backend@npm:^8.0.0":
+  version: 8.1.2
+  resolution: "react-dnd-multi-backend@npm:8.1.2"
+  dependencies:
+    dnd-multi-backend: "npm:^8.1.2"
+    react-dnd-preview: "npm:^8.1.2"
+  peerDependencies:
+    dnd-core: ^16.0.1
+    react: ^16.14.0 || ^17.0.2 || ^18.0.0
+    react-dnd: ^16.0.1
+    react-dom: ^16.14.0 || ^17.0.2 || ^18.0.0
+  checksum: 8166a0bf6f24881a02e91d3ed2e2d209f63c33de4fcadf3c00a8d0acd030f54bceb1e6b3db3e79e63659abc10027a0d9a44be2bc530085828354ce2b858065e2
+  languageName: node
+  linkType: hard
+
+"react-dnd-preview@npm:^8.1.2":
+  version: 8.1.2
+  resolution: "react-dnd-preview@npm:8.1.2"
+  peerDependencies:
+    react: ^16.14.0 || ^17.0.2 || ^18.0.0
+    react-dnd: ^16.0.1
+  checksum: bb266b75aa7cc4ff0e16b540b1c55be0bb1d6f0d11c5bde493f03e2e9525ee579a723145b902e3e0160772103ac75b447193496acbedb4a358f20d353687512a
+  languageName: node
+  linkType: hard
+
+"react-dnd-touch-backend@npm:^16.0.1":
+  version: 16.0.1
+  resolution: "react-dnd-touch-backend@npm:16.0.1"
+  dependencies:
+    "@react-dnd/invariant": "npm:^4.0.1"
+    dnd-core: "npm:^16.0.1"
+  checksum: 449a6d0a63426fcd166124ce1575248c4ca83e2b1e1317fe8dd17dcc49ecb80ef1eb62d113b4200920970acd448423f1601c320b4dd0856a2e7c95f56560344b
+  languageName: node
+  linkType: hard
+
+"react-dnd@npm:^16.0.1":
+  version: 16.0.1
+  resolution: "react-dnd@npm:16.0.1"
+  dependencies:
+    "@react-dnd/invariant": "npm:^4.0.1"
+    "@react-dnd/shallowequal": "npm:^4.0.1"
+    dnd-core: "npm:^16.0.1"
+    fast-deep-equal: "npm:^3.1.3"
+    hoist-non-react-statics: "npm:^3.3.2"
+  peerDependencies:
+    "@types/hoist-non-react-statics": ">= 3.3.1"
+    "@types/node": ">= 12"
+    "@types/react": ">= 16"
+    react: ">= 16.14"
+  peerDependenciesMeta:
+    "@types/hoist-non-react-statics":
+      optional: true
+    "@types/node":
+      optional: true
+    "@types/react":
+      optional: true
+  checksum: e27cf5156c306d183585099854c597266eda014c51e7dfca657f7099d5db0a09a4fe07e4c8cbc3b04ca613b805878a8f97f23cc8e13887dbfb1f05efbe5a12e7
   languageName: node
   linkType: hard
 
@@ -22705,6 +22971,26 @@ __metadata:
     react: ^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18 || ^19
     react-dom: ^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18 || ^19
   checksum: 2882ced4ede7af4c1e8bab5b556b61c05525639200e3d332b001c7a97b9e9e0db9129fc9d93761b32c8351a3a474490904584bac9e5a84f068596c620d22a209
+  languageName: node
+  linkType: hard
+
+"react-mosaic-component@npm:^6.1.1":
+  version: 6.1.1
+  resolution: "react-mosaic-component@npm:6.1.1"
+  dependencies:
+    classnames: "npm:^2.3.2"
+    immutability-helper: "npm:^3.1.1"
+    lodash: "npm:^4.17.21"
+    prop-types: "npm:^15.8.1"
+    rdndmb-html5-to-touch: "npm:^8.0.0"
+    react-dnd: "npm:^16.0.1"
+    react-dnd-html5-backend: "npm:^16.0.1"
+    react-dnd-multi-backend: "npm:^8.0.0"
+    react-dnd-touch-backend: "npm:^16.0.1"
+    uuid: "npm:^9.0.0"
+  peerDependencies:
+    react: ">=16"
+  checksum: b8657724ab5f0130c41dd128475dc6cbf3ae4144470d4d63663a463ed909f62c782eb82093c352a9c01a9ffd5b24cdecb27f3e316e6cd7e0ac5bb3cd6036b58d
   languageName: node
   linkType: hard
 
@@ -23019,6 +23305,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-virtual@npm:2.10.4":
+  version: 2.10.4
+  resolution: "react-virtual@npm:2.10.4"
+  dependencies:
+    "@reach/observe-rect": "npm:^1.1.0"
+  peerDependencies:
+    react: ^16.6.3 || ^17.0.0
+  checksum: 44629ff867110007dd527eee3a60fd35363946a55d5fa3d5f690ae3acf587a4492d9acb96f36105b675db48df64e7caf2d1375ccc53a6ae1c41be42530887c83
+  languageName: node
+  linkType: hard
+
 "react-virtualized-auto-sizer@npm:^1.0.25":
   version: 1.0.26
   resolution: "react-virtualized-auto-sizer@npm:1.0.26"
@@ -23262,7 +23559,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redux@npm:^4.0.0, redux@npm:^4.2.1":
+"redux@npm:^4.0.0, redux@npm:^4.2.0, redux@npm:^4.2.1":
   version: 4.2.1
   resolution: "redux@npm:4.2.1"
   dependencies:
@@ -26066,6 +26363,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"uuid@npm:^9.0.0":
+  version: 9.0.1
+  resolution: "uuid@npm:9.0.1"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 9d0b6adb72b736e36f2b1b53da0d559125ba3e39d913b6072f6f033e0c87835b414f0836b45bcfaf2bdf698f92297fea1c3cc19b0b258bc182c9c43cc0fab9f2
+  languageName: node
+  linkType: hard
+
 "v8-compile-cache-lib@npm:^3.0.1":
   version: 3.0.1
   resolution: "v8-compile-cache-lib@npm:3.0.1"
@@ -26673,6 +26979,61 @@ __metadata:
     "@babel/runtime": "npm:^7.0.0"
     gl-matrix: "npm:^3.0.0"
   checksum: b1aa4363d59df51f75295b095646a80824e09092475da378e49423b92ff2d1ee30fa63843280e6ec1a7705b281c87e36ffa95a19148808eb94d524a8b3df450c
+  languageName: node
+  linkType: hard
+
+"vite@npm:6.3.5":
+  version: 6.3.5
+  resolution: "vite@npm:6.3.5"
+  dependencies:
+    esbuild: "npm:^0.25.0"
+    fdir: "npm:^6.4.4"
+    fsevents: "npm:~2.3.3"
+    picomatch: "npm:^4.0.2"
+    postcss: "npm:^8.5.3"
+    rollup: "npm:^4.34.9"
+    tinyglobby: "npm:^0.2.13"
+  peerDependencies:
+    "@types/node": ^18.0.0 || ^20.0.0 || >=22.0.0
+    jiti: ">=1.21.0"
+    less: "*"
+    lightningcss: ^1.21.0
+    sass: "*"
+    sass-embedded: "*"
+    stylus: "*"
+    sugarss: "*"
+    terser: ^5.16.0
+    tsx: ^4.8.1
+    yaml: ^2.4.2
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  peerDependenciesMeta:
+    "@types/node":
+      optional: true
+    jiti:
+      optional: true
+    less:
+      optional: true
+    lightningcss:
+      optional: true
+    sass:
+      optional: true
+    sass-embedded:
+      optional: true
+    stylus:
+      optional: true
+    sugarss:
+      optional: true
+    terser:
+      optional: true
+    tsx:
+      optional: true
+    yaml:
+      optional: true
+  bin:
+    vite: bin/vite.js
+  checksum: 7bc3a1c5ef79413ad70daeeaf69b76cd1218d16aa18ed8ee08d74648ef17284f4a17c11f5cf42b573b6dc5e3d5f115110b67b1d23c2c699cfe404757764a634a
   languageName: node
   linkType: hard
 

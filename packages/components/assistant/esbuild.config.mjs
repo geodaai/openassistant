@@ -24,6 +24,7 @@ const baseConfig = createBaseConfig({
     '@openassistant/utils',
     '@sqlrooms/ai-core',
     '@sqlrooms/ai-settings',
+    '@sqlrooms/duckdb',
     '@sqlrooms/room-config',
     '@sqlrooms/room-store',
     '@sqlrooms/ui',
