@@ -31,7 +31,7 @@
     "package.json"
   ],
   "dependencies": {
-    "@duckdb/duckdb-wasm": "1.29.0",
+    "@duckdb/duckdb-wasm": "1.31.0",
     "@heroui/button": "^2.2.19",
     "@heroui/checkbox": "^2.3.18",
     "@heroui/pagination": "^2.2.17",

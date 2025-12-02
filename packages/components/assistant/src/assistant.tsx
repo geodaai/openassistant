@@ -13,7 +13,7 @@ type AssistantProps = {
 };
 
 // Context to provide the actions hook to child components
-const AssistantActionsContext = React.createContext<(() => ReturnType<ReturnType<typeof createAssistantStore>['useAssistantActions']>) | null>(null);
+const AssistantActionsContext = React.createContext<(() => ReturnType<ReturnType<typeof createAssistantStore>['useAssistant']>) | null>(null);
 
 export const Assistant: React.FC<AssistantProps> = ({ options, children }) => {
   // Lazy initialization: create store once and preserve across re-renders
@@ -23,7 +23,7 @@ export const Assistant: React.FC<AssistantProps> = ({ options, children }) => {
     storeRef.current = createAssistantStore(options);
   }
   const effectiveStore = storeRef.current?.roomStore ?? defaultRoomStore;
-  const useAssistantActions = storeRef.current?.useAssistantActions ?? null;
+  const useAssistant = storeRef.current?.useAssistant ?? null;
 
   // Cast provider to a valid JSX component type (library types return ReactNode)
   const RoomProvider = RoomStateProvider as unknown as React.ComponentType<
@@ -33,7 +33,7 @@ export const Assistant: React.FC<AssistantProps> = ({ options, children }) => {
   >;
 
   return (
-    <AssistantActionsContext.Provider value={useAssistantActions}>
+    <AssistantActionsContext.Provider value={useAssistant}>
       <RoomProvider roomStore={effectiveStore}>
         {children ?? <MainView />}
       </RoomProvider>
@@ -48,7 +48,7 @@ export const Assistant: React.FC<AssistantProps> = ({ options, children }) => {
  * @example
  * ```tsx
  * function MyComponent() {
- *   const { sendMessage, sendPrompt, isProcessing } = useAssistantActions();
+ *   const { sendMessage, sendPrompt, isProcessing } = useAssistant();
  *   
  *   const handleClick = () => {
  *     sendMessage("Analyze the data");
@@ -58,10 +58,10 @@ export const Assistant: React.FC<AssistantProps> = ({ options, children }) => {
  * }
  * ```
  */
-export const useAssistantActions = () => {
+export const useAssistant = () => {
   const useActionsHook = React.useContext(AssistantActionsContext);
   if (!useActionsHook) {
-    throw new Error('useAssistantActions must be used within an Assistant component with options provided');
+    throw new Error('useAssistant must be used within an Assistant component with options provided');
   }
   return useActionsHook();
 };

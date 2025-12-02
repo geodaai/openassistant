@@ -17,6 +17,7 @@ const baseConfig = createBaseConfig({
   external: [
     'react',
     'react-dom',
+    'apache-arrow',
     '@heroui/button',
     '@heroui/checkbox',
     '@heroui/pagination',

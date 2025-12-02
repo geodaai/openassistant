@@ -12,11 +12,16 @@ import {
   BaseRoomStoreState,
   StateCreator,
 } from '@sqlrooms/room-store';
+import { createKeplerSlice, KeplerSliceState } from '@sqlrooms/kepler';
 import { persist } from 'zustand/middleware';
 import { OpenAssistantToolSet } from '@openassistant/utils';
 import { AI_SETTINGS } from './config';
 
-type State = BaseRoomStoreState & AiSliceState & AiSettingsSliceState & DuckDbSliceState;
+type State = BaseRoomStoreState &
+  AiSliceState &
+  AiSettingsSliceState &
+  DuckDbSliceState &
+  KeplerSliceState;
 
 export type AssistantOptions = {
   aiSettings?: {
@@ -53,6 +58,15 @@ export function createAssistantStore(options: AssistantOptions) {
   const storeResult = createRoomStore<State>(
     persist(
       (set, get, store) => ({
+        initialize: async () => {
+          // create a default map
+        },
+
+        // Kepler slice
+        ...createKeplerSlice({
+          actionLogging: true,
+        })(set, get, store),
+
         // Base room slice
         ...createBaseRoomSlice()(set, get, store),
 
@@ -85,9 +99,19 @@ export function createAssistantStore(options: AssistantOptions) {
   // Extract the store and hook from the result
   const { roomStore, useRoomStore } = storeResult;
 
+  // Ensure Kepler slice is initialized on the client so that kepler.map
+  // and the underlying kepler.gl redux store are ready before tools run.
+  if (typeof window !== 'undefined') {
+    const { kepler } = roomStore.getState() as State;
+    if (kepler && Object.keys(kepler.map || {}).length === 0) {
+      void kepler.initialize();
+    }
+  }
+
   // Create a custom hook for actions that works with this store instance
-  const useAssistantActions = () => {
+  const useAssistant = () => {
     const ai = useRoomStore((state) => (state as State).ai);
+    const kepler = useRoomStore((state) => (state as State).kepler);
 
     // Simple wrapper functions without complex typing
     const sendMessage = (message: string) => {
@@ -121,9 +145,27 @@ export function createAssistantStore(options: AssistantOptions) {
       }
     };
 
+    const addTableToMap = async (tableName: string) => {
+      const mapId = kepler?.getCurrentMap()?.id;
+      if (mapId) {
+        await kepler?.addTableToMap(mapId, tableName, {
+          autoCreateLayers: true,
+          centerMap: true,
+        });
+      }
+      return mapId;
+    };
+
+    const createMap = async (mapName: string) => {
+      const mapId = await kepler?.createMap(mapName);
+      return mapId;
+    };
+    
     return {
       // Actions
       sendMessage,
+      addTableToMap,
+      createMap,
       // Raw store access for advanced use cases
       store: useRoomStore((state) => state),
       // Raw store instance with getState() method for tools
@@ -134,6 +176,6 @@ export function createAssistantStore(options: AssistantOptions) {
   return {
     roomStore,
     useRoomStore,
-    useAssistantActions,
+    useAssistant,
   };
 }

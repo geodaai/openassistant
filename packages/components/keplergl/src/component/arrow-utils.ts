@@ -3,6 +3,7 @@
 
 import { DATA_TYPES as AnalyzerDATA_TYPES } from 'type-analyzer';
 import * as arrow from 'apache-arrow';
+import { vectorFromArray } from 'apache-arrow/factories';
 
 // Replicate ALL_FIELD_TYPES from @kepler.gl/constants to avoid importing the entire package
 const ALL_FIELD_TYPES = {
@@ -19,7 +20,6 @@ const ALL_FIELD_TYPES = {
   geoarrow: 'geoarrow',
 } as const;
 
-// import { Field } from '@kepler.gl/types';
 type Field = {
   analyzerType: string;
   id?: string;
@@ -34,17 +34,13 @@ type Field = {
   displayFormat?: string;
 };
 
-
 export function arrowDataTypeToFieldType(arrowType: arrow.DataType): string {
-  // Note: this function doesn't return ALL_FIELD_TYPES.geojson or ALL_FIELD_TYPES.array, which
-  // should be further detected by caller
   if (arrow.DataType.isDate(arrowType)) {
     return ALL_FIELD_TYPES.date;
   } else if (
     arrow.DataType.isTimestamp(arrowType) ||
     arrow.DataType.isTime(arrowType)
   ) {
-    // return ALL_FIELD_TYPES.timestamp;
     return ALL_FIELD_TYPES.string;
   } else if (arrow.DataType.isFloat(arrowType)) {
     return ALL_FIELD_TYPES.real;
@@ -135,33 +131,74 @@ export function arrowDataTypeToAnalyzerDataType(
 }
 
 /**
- * Recursively converts any BigInt values to Numbers to make data JSON-serializable.
- * This is necessary because JSON.stringify cannot serialize BigInt values.
+ * Check if the value is an Arrow Table
  */
-export function sanitizeForJson(value: unknown): unknown {
-  if (value === null || value === undefined) {
-    return value;
-  }
-  if (typeof value === 'bigint') {
-    return Number(value);
-  }
-  if (Array.isArray(value)) {
-    return value.map(sanitizeForJson);
-  }
-  if (value instanceof arrow.Vector) {
-    // Convert Arrow Vector to plain array with BigInt values converted
-    const result: unknown[] = [];
-    for (let i = 0; i < value.length; i++) {
-      result.push(sanitizeForJson(value.get(i)));
-    }
-    return result;
-  }
-  if (typeof value === 'object') {
-    const result: Record<string, unknown> = {};
-    for (const [key, val] of Object.entries(value)) {
-      result[key] = sanitizeForJson(val);
-    }
-    return result;
-  }
-  return value;
+export function isArrowTable(value: unknown): value is arrow.Table {
+  return value instanceof arrow.Table;
 }
+
+/**
+ * Convert an Arrow-like table to row objects (fallback for non-Arrow data)
+ */
+export function arrowTableToRows(
+  arrowTable: arrow.Table
+): Record<string, unknown>[] {
+  return arrowTable.toArray().map((row) => {
+    if (typeof row.toJSON === 'function') {
+      return row.toJSON();
+    }
+    return row as unknown as Record<string, unknown>;
+  });
+}
+
+/**
+ * Create a kepler.gl compatible Arrow dataset
+ * Pass the Arrow table directly for native Arrow support
+ */
+export function createKeplerArrowDataset(
+  arrowTable: arrow.Table,
+  datasetName: string
+): {
+  data: {
+    fields: Field[];
+    rows: never[];
+    cols: (arrow.Vector | null)[];
+  };
+  info: {
+    id: string;
+    label: string;
+    format: 'arrow';
+  };
+} {
+  const fields = arrowSchemaToFields(arrowTable.schema);
+
+  // Normalize columns to Vectors created by this apache-arrow instance.
+  // This avoids issues when upstream data was created by a different
+  // copy of the Arrow library (which breaks instanceof/Data checks
+  // inside kepler.gl's ArrowDataContainer / Vector constructors).
+  const cols = arrowTable.schema.fields.map((field, index) => {
+    const originalCol = arrowTable.getChildAt(index);
+    if (!originalCol) {
+      return null;
+    }
+
+    // Rebuild the column as a new Vector from plain values
+    // using the current apache-arrow module.
+    const values = originalCol.toArray();
+    return vectorFromArray(values, field.type) as arrow.Vector;
+  });
+
+  return {
+    data: {
+      fields,
+      rows: [],
+      cols,
+    },
+    info: {
+      id: datasetName,
+      label: datasetName,
+      format: 'arrow',
+    },
+  };
+}
+

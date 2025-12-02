@@ -1,41 +1,56 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { MutableRefObject, useCallback, useEffect } from 'react';
 import {
   Assistant,
   MainView,
-  useAssistantActions,
+  useAssistant,
   type AssistantOptions,
 } from '@openassistant/assistant';
 import { getStateOrProvinceBoundariesTool } from '@openassistant/duckdb';
+import { encode } from '@toon-format/toon';
 import { useFileDrop } from './utils/useFileDrop';
-import { queryTool } from './tools/queryTool';
-import { createQueryTool, QueryToolResult } from '@sqlrooms/ai';
+import { createLazyQueryTool } from './tools/lazyQueryTool';
+import { createLazyMapTool } from './tools/mapTool';
 
-const getInstructionsWithTablesInfo = () => {
-  const baseInstructions =
-    'You are a helpful assistant with access to a DuckDB database. Users can drag and drop files (like GeoJSON, CSV, etc.) to load them into the database, and you can help them query the data.';
-  // const tablesInfo = await getTablesInfoFromDatabase();
-  return baseInstructions;
-};
-
-// Component that uses the assistant actions - must be inside Assistant
 function AppContentWithStore({
   storeRef,
+  tableInfoRef,
 }: {
-  storeRef: React.MutableRefObject<any>;
+  storeRef: MutableRefObject<any>;
+  tableInfoRef: MutableRefObject<Record<string, object>>;
 }) {
-  const { sendMessage, roomStore } = useAssistantActions();
+  const { sendMessage, roomStore } = useAssistant();
 
-  // Update the ref with the roomStore
-  React.useEffect(() => {
+  useEffect(() => {
     storeRef.current = roomStore;
   }, [roomStore, storeRef]);
 
   const handleFileLoaded = useCallback(
-    (fileName: string, tableName: string, tableInfo: string) => {
-      const message = `A new file "${fileName}" has been added in duckdb with table info: ${tableInfo}. The data is now available in table "${tableName}".`;
+    async (
+      fileName: string,
+      tableName: string,
+      tableInfo: Record<string, unknown> | null
+    ) => {
+      if (tableInfo === null) {
+        const message = `Error loading file "${fileName}". The file may be invalid or corrupted.`;
+        sendMessage(message);
+        return;
+      }
+      // Update the table info ref directly
+      tableInfoRef.current = {
+        ...tableInfoRef.current,
+        [tableName]: tableInfo,
+      };
+
+      // Sync table with kepler.gl
+      const kepler = storeRef.current.getState().kepler;
+      await kepler.syncKeplerDatasets();
+      const currentMapId = kepler.getCurrentMap()?.id || '';
+      await kepler.addTableToMap(currentMapId, tableName);
+
+      const message = `A new file "${fileName}" has been added successfully. The data is now available in table "${tableName}".`;
       sendMessage(message);
     },
-    [sendMessage]
+    [sendMessage, tableInfoRef]
   );
 
   const { isDragOver, dragHandlers } = useFileDrop({
@@ -72,42 +87,31 @@ function AppContentWithStore({
 }
 
 export function App() {
-  // Create a ref to hold the roomStore
+  // Create refs to hold the roomStore and table info
   const storeRef = React.useRef<any>(null);
+  const tableInfoRef = React.useRef<Record<string, object>>({});
 
-  // Create the config dynamically to access the tool with lazy-loaded store
-  const config: AssistantOptions = useMemo(() => {
-    // Create a lazy wrapper that will get the tool when store is available
-    const lazyQueryTool = {
-      name: 'query',
-      description:
-        'A tool for running SQL queries on the tables in the database.',
-      parameters: queryTool.parameters,
-      execute: async (params: any, options: any) => {
-        if (!storeRef.current) {
-          throw new Error('Store is not yet initialized');
-        }
-        const tool = createQueryTool(storeRef.current);
-        return tool.execute(params, options);
-      },
-      component: QueryToolResult,
-    };
+  const config: AssistantOptions = {
+    ai: {
+      getInstructions: () => {
+        return `You are a helpful assistant with access to a DuckDB database in memory.
+Users can drag and drop files (like GeoJSON, CSV, etc.) to load them into the database, and you can help them query and analyze the data.
 
-    return {
-      ai: {
-        getInstructions: getInstructionsWithTablesInfo,
-        tools: {
-          getStateOrProvinceBoundaries: getStateOrProvinceBoundariesTool,
-          queryTool: lazyQueryTool,
-        },
+Here are the tables in the database:
+${encode(tableInfoRef.current)}`;
       },
-    };
-  }, []);
+      tools: {
+        getStateOrProvinceBoundaries: getStateOrProvinceBoundariesTool,
+        queryTool: createLazyQueryTool(storeRef),
+        keplergl: createLazyMapTool(storeRef),
+      },
+    },
+  };
 
   return (
     <div className="flex h-screen w-screen items-center justify-center p-4">
       <Assistant options={config}>
-        <AppContentWithStore storeRef={storeRef} />
+        <AppContentWithStore storeRef={storeRef} tableInfoRef={tableInfoRef} />
       </Assistant>
     </div>
   );

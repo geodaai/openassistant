@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { Provider } from 'react-redux';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,11 +12,18 @@ import { addDataToMap, addLayer } from '@kepler.gl/actions';
 import { RootContext } from '@kepler.gl/components';
 import { Layer } from '@kepler.gl/layers';
 import { messages } from '@kepler.gl/localization';
-import { FileCacheItem } from '@kepler.gl/processors';
+import {
+  FileCacheItem,
+  processFileData,
+  ProcessFileDataContent,
+} from '@kepler.gl/processors';
 import { theme as keplerTheme } from '@kepler.gl/styles';
+import { Table as ArrowTable } from 'apache-arrow';
 
 import { KeplerMiniMap } from './keplergl-mini-map';
 import { KeplerState, MAP_ID, store } from './keplergl-provider';
+import { isArrowTable, createKeplerArrowDataset } from './arrow-utils';
+import { datasetRegistry } from './dataset-registry';
 
 type ColorMap = {
   value: string | number | null;
@@ -24,13 +31,25 @@ type ColorMap = {
   label?: string;
 }[];
 
+/**
+ * Function to fetch dataset from DuckDB or other data sources
+ * Returns an Arrow Table that can be used directly by Kepler.gl
+ */
+export type GetDatasetFunction = (tableName: string) => Promise<unknown>;
+
 export type CreateMapOutputData = {
   id?: string;
   datasetId: string;
   layerId: string;
-  datasetForKepler: FileCacheItem[];
+  /** Pre-fetched dataset for Kepler.gl (will be ignored if tableName and getDataset are provided) */
+  datasetForKepler?: FileCacheItem[];
+  /** Table name to fetch data from (used with getDataset for lazy loading) */
+  tableName?: string;
+  /** Function to fetch dataset lazily (e.g., from DuckDB) */
+  getDataset?: GetDatasetFunction;
   theme?: string;
-  layerConfig?: string;
+  /** Layer configuration - can be a JSON string or an object */
+  layerConfig?: string | Record<string, unknown>;
   colorBy?: string;
   colorType?: 'breaks' | 'unique';
   colorMap?: ColorMap;
@@ -45,7 +64,7 @@ export function isCreateMapOutputData(
     typeof data === 'object' &&
     data !== null &&
     'datasetId' in data &&
-    'datasetForKepler' in data
+    ('datasetForKepler' in data || ('tableName' in data && 'getDataset' in data))
   );
 }
 
@@ -181,14 +200,78 @@ function MapLegend(props: {
 export function KeplerGlMiniComponent(props: CreateMapOutputData) {
   const dispatch = useDispatch();
   const dataAddedRef = useRef(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const { datasetForKepler, layerConfig } = props;
+  const { datasetForKepler, tableName, getDataset, layerConfig, datasetId } = props;
 
   const keplerMessages = messages['en'];
 
   const keplerState = useSelector(
     (state: KeplerState) => state?.keplerGl[MAP_ID]
   );
+
+  /**
+   * Fetch dataset from DuckDB or other data source
+   * Uses Arrow format directly for best performance with Kepler.gl
+   */
+  const fetchDataset = useCallback(async (): Promise<FileCacheItem[] | null> => {
+    // If no tableName, use pre-fetched data
+    if (!tableName) {
+      return datasetForKepler || null;
+    }
+
+    // Try to get the getDataset function from props or from the registry
+    const datasetFetcher = getDataset || datasetRegistry.get(datasetId || tableName);
+    
+    if (!datasetFetcher) {
+      console.warn('No getDataset function provided or registered, falling back to datasetForKepler');
+      return datasetForKepler || null;
+    }
+
+    try {
+      const fetchedData = await datasetFetcher(tableName);
+      const name = datasetId || tableName;
+
+      // If it's an Arrow table, normalize it to a kepler.gl-compatible Arrow
+      // dataset using this app's apache-arrow instance. This lets kepler.gl
+      // use its native ArrowDataContainer path without row conversion.
+      if (isArrowTable(fetchedData)) {
+        const arrowDataset = createKeplerArrowDataset(
+          fetchedData as ArrowTable,
+          name
+        );
+        return [arrowDataset as FileCacheItem];
+      }
+
+      // If it's already row data, process it through Kepler.gl's processor
+      if (Array.isArray(fetchedData)) {
+        const processDataContent: ProcessFileDataContent = {
+          data: fetchedData,
+          fileName: name,
+        };
+
+        const processedData = await processFileData({
+          content: processDataContent,
+          fileCache: [],
+        });
+
+        if (processedData && processedData.length > 0) {
+          processedData[0].info.id = name;
+        }
+
+        return processedData;
+      }
+
+      console.warn(
+        'getDataset returned unexpected data type, falling back to datasetForKepler'
+      );
+      return datasetForKepler || null;
+    } catch (err) {
+      console.error('Failed to create table', err);
+      throw err;
+    }
+  }, [tableName, getDataset, datasetForKepler, datasetId]);
 
   useEffect(() => {
     let isMounted = true;
@@ -198,52 +281,77 @@ export function KeplerGlMiniComponent(props: CreateMapOutputData) {
         return;
       }
 
-      // parse layerConfig
-      const layerConfigObj = layerConfig
-        ? typeof layerConfig === 'string'
-          ? JSON.parse(layerConfig)
-          : layerConfig
-        : {};
+      setIsLoading(true);
+      setError(null);
 
-      // check if layer already exists
-      const layerExists = keplerState?.visState?.layers.find(
-        (layer: Layer) =>
-          layer.config.dataId ===
-          layerConfigObj?.config?.visState?.layers?.[0]?.id
-      );
-      if (layerExists || !isMounted) {
-        return;
-      }
+      try {
+        // Fetch dataset (either from DuckDB or use pre-fetched data)
+        const datasets = await fetchDataset();
+        
+        if (!datasets || datasets.length === 0) {
+          throw new Error('No dataset available');
+        }
 
-      // check if dataset already exists
-      const newDatasetId = datasetForKepler[0].info.id || '';
-      const datasetExists = Object.keys(
-        keplerState?.visState?.datasets || {}
-      ).includes(newDatasetId);
+        if (!isMounted) {
+          return;
+        }
 
-      if (datasetExists) {
-        // add new layer
-        dispatch(
-          addLayer(layerConfigObj.config.visState.layers[0], newDatasetId)
+        // parse layerConfig
+        const layerConfigObj = layerConfig
+          ? typeof layerConfig === 'string'
+            ? JSON.parse(layerConfig)
+            : layerConfig
+          : {};
+
+        // check if layer already exists
+        const layerExists = keplerState?.visState?.layers.find(
+          (layer: Layer) =>
+            layer.config.dataId ===
+            layerConfigObj?.config?.visState?.layers?.[0]?.id
         );
-      } else {
-        // add new dataset and layer
-        dispatch(
-          addDataToMap({
-            datasets: datasetForKepler,
-            options: {
-              centerMap: true,
-              readOnly: false,
-              autoCreateLayers: true,
-              autoCreateTooltips: true,
-              keepExistingConfig:
-                Object.keys(keplerState?.visState?.datasets || {}).length > 0,
-            },
-            config: layerConfigObj,
-          })
-        );
+        if (layerExists) {
+          setIsLoading(false);
+          return;
+        }
+
+        // check if dataset already exists
+        const newDatasetId = datasets[0].info.id || '';
+        const datasetExists = Object.keys(
+          keplerState?.visState?.datasets || {}
+        ).includes(newDatasetId);
+
+        if (datasetExists) {
+          // add new layer
+          dispatch(
+            addLayer(layerConfigObj.config.visState.layers[0], newDatasetId)
+          );
+        } else {
+          // add new dataset and layer
+          dispatch(
+            addDataToMap({
+              datasets: datasets,
+              options: {
+                centerMap: true,
+                readOnly: false,
+                autoCreateLayers: true,
+                autoCreateTooltips: true,
+                keepExistingConfig:
+                  Object.keys(keplerState?.visState?.datasets || {}).length > 0,
+              },
+              config: layerConfigObj,
+            })
+          );
+        }
+        dataAddedRef.current = true;
+      } catch (err) {
+        if (isMounted) {
+          setError(err instanceof Error ? err.message : String(err));
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
-      dataAddedRef.current = true;
     };
 
     addData();
@@ -257,6 +365,42 @@ export function KeplerGlMiniComponent(props: CreateMapOutputData) {
   const layerId = keplerState?.visState?.layers.find(
     (layer: Layer) => layer.id === props.layerId
   )?.id;
+
+  if (error) {
+    return (
+      <div
+        style={{
+          width: `${props.width}px`,
+          height: `${props.height ? props.height - 20 : 180}px`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#ff4444',
+          fontSize: '14px',
+        }}
+      >
+        Error: {error}
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          width: `${props.width}px`,
+          height: `${props.height ? props.height - 20 : 180}px`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#666',
+          fontSize: '14px',
+        }}
+      >
+        Loading map data...
+      </div>
+    );
+  }
 
   return (
     <>

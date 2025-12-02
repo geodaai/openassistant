@@ -9,7 +9,7 @@ import {
   ProcessFileDataContent,
 } from '@kepler.gl/processors';
 import * as arrow from 'apache-arrow';
-import { arrowSchemaToFields } from './utils';
+import { arrowSchemaToFields, sanitizeForJson } from './utils';
 import { MapToolContext, isMapToolContext } from '../types';
 
 const keplerGlParameters = z.object({
@@ -168,6 +168,12 @@ export type KeplerGlToolLlmResult = {
   instruction?: string;
 };
 
+/**
+ * Function to fetch dataset from DuckDB or other data sources
+ * Returns an Arrow Table that can be used directly by Kepler.gl
+ */
+export type GetDatasetFunction = (tableName: string) => Promise<unknown>;
+
 export type KeplerGlToolAdditionalData = {
   datasetId: string;
   layerId: string;
@@ -175,7 +181,12 @@ export type KeplerGlToolAdditionalData = {
   latitudeColumn?: string;
   longitudeColumn?: string;
   mapType?: string;
-  datasetForKepler: FileCacheItem[];
+  /** Pre-fetched dataset for Kepler.gl (used for non-Arrow data) */
+  datasetForKepler?: FileCacheItem[];
+  /** Table name for lazy loading (used when data is an Arrow table) */
+  tableName?: string;
+  /** Function to fetch dataset lazily - will be injected by the tool user */
+  getDataset?: GetDatasetFunction;
   layerConfig?: Record<string, unknown>;
   colorBy?: string;
   colorType?: 'breaks' | 'unique';
@@ -254,26 +265,26 @@ async function executeCreateMap(
     }
 
     let datasetForKepler: FileCacheItem[] = [];
+    let isArrowTable = false;
 
     // check if dataContent is an Arrow Table
     if (dataContent instanceof arrow.Table) {
+      isArrowTable = true;
+      // For Arrow tables, we use lazy loading in the component
+      // The component will fetch the data directly from DuckDB to avoid serialization issues
+      // We still need fields for layer config
       const fields = arrowSchemaToFields(dataContent.schema);
 
-      const cols = [...Array(dataContent.numCols).keys()].map((i) =>
-        dataContent.getChildAt(i)
-      );
-
-      const result = {
-        fields,
-        rows: [],
-        cols,
-        metadata: dataContent.schema.metadata,
-      };
-
-      // return empty rows and use raw arrow table to construct column-wise data container
+      // Create a minimal dataset info for layer configuration
+      // The actual data will be fetched by the component using getDataset
       datasetForKepler = [
         {
-          data: result,
+          data: {
+            fields,
+            rows: [],
+            cols: [],
+            metadata: dataContent.schema.metadata,
+          },
           info: {
             id: datasetName,
             label: datasetName,
@@ -373,6 +384,13 @@ async function executeCreateMap(
       };
     }
 
+    // For non-Arrow data, sanitize to convert BigInt values to Numbers
+    // This is necessary because JSON.stringify (used by zustand middleware) cannot serialize BigInt
+    // For Arrow data, we use lazy loading so no sanitization is needed
+    const sanitizedDatasetForKepler = isArrowTable
+      ? undefined
+      : (sanitizeForJson(datasetForKepler) as FileCacheItem[]);
+
     return {
       llmResult: {
         success: true,
@@ -391,7 +409,11 @@ async function executeCreateMap(
         longitudeColumn,
         mapType,
         layerId,
-        datasetForKepler,
+        // For Arrow data, pass tableName for lazy loading
+        // For non-Arrow data, pass the sanitized dataset
+        ...(isArrowTable
+          ? { tableName: datasetName }
+          : { datasetForKepler: sanitizedDatasetForKepler }),
         layerConfig,
         colorBy,
         colorType,

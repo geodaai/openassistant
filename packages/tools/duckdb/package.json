@@ -33,7 +33,7 @@
   "dependencies": {
     "@duckdb/duckdb-wasm": "1.31.0",
     "@openassistant/utils": "workspace:*",
-    "@sqlrooms/duckdb": "0.26.0-rc.6",
+    "@sqlrooms/duckdb": "0.26.1-rc.4",
     "apache-arrow": "^17.0.0",
     "zod": "^3.24.4",
     "zustand": "^5.0.2"

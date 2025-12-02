@@ -28,6 +28,7 @@ const baseConfig = createBaseConfig({
     '@sqlrooms/room-config',
     '@sqlrooms/room-store',
     '@sqlrooms/ui',
+    '@sqlrooms/kepler',
     '@sqlrooms/utils',
     'ai',
     'lucide-react',

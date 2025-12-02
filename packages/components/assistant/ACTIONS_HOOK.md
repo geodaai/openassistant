@@ -1,6 +1,6 @@
-# useAssistantActions Hook
+# useAssistant Hook
 
-The `useAssistantActions` hook allows you to programmatically interact with the AI assistant from within your React components. This is useful when you want to trigger assistant actions from custom UI elements or integrate the assistant functionality into your own components.
+The `useAssistant` hook allows you to programmatically interact with the AI assistant from within your React components. This is useful when you want to trigger assistant actions from custom UI elements or integrate the assistant functionality into your own components.
 
 ## Usage
 
@@ -8,7 +8,7 @@ The hook must be used within an `Assistant` component that has been configured w
 
 ```tsx
 import React from 'react';
-import { Assistant, useAssistantActions, type AssistantOptions } from '@openassistant/assistant';
+import { Assistant, useAssistant, type AssistantOptions } from '@openassistant/assistant';
 
 const config: AssistantOptions = {
   ai: {
@@ -30,7 +30,7 @@ function MyCustomComponent() {
     currentSessionId,
     messages,
     store
-  } = useAssistantActions();
+  } = useAssistant();
 
   const handleQuickQuery = () => {
     sendMessage("What data is available?");
