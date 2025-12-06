@@ -5,11 +5,14 @@ import {
   useAssistant,
   type AssistantOptions,
 } from '@openassistant/assistant';
-import { getStateOrProvinceBoundariesTool } from '@openassistant/duckdb';
 import { encode } from '@toon-format/toon';
 import { useFileDrop } from './utils/useFileDrop';
 import { createLazyQueryTool } from './tools/lazyQueryTool';
 import { createLazyMapTool } from './tools/mapTool';
+import { createGetCityBoundaryTool } from './tools/overtureTool';
+import { createGetBuildingTool } from './tools/buildingTool';
+import { createGetRoadTool } from './tools/roadTool';
+import { createGetPlacesTool } from './tools/placesTool';
 
 function AppContentWithStore({
   storeRef,
@@ -101,7 +104,10 @@ Here are the tables in the database:
 ${encode(tableInfoRef.current)}`;
       },
       tools: {
-        getStateOrProvinceBoundaries: getStateOrProvinceBoundariesTool,
+        getCityBoundaries: createGetCityBoundaryTool(storeRef),
+        getBuildings: createGetBuildingTool(storeRef),
+        getRoads: createGetRoadTool(storeRef),
+        getPlaces: createGetPlacesTool(storeRef),
         queryTool: createLazyQueryTool(storeRef),
         keplergl: createLazyMapTool(storeRef),
       },
