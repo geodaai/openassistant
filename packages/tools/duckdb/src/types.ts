@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import { AsyncDuckDB } from '@duckdb/duckdb-wasm';
 import { z } from 'zod';
+import type { DuckDbConnector } from '@sqlrooms/duckdb';
 
 /**
  * Parameters for the localQuery tool
@@ -31,9 +31,9 @@ export type LocalQueryContext = {
   getValues: (datasetName: string, variableName: string) => Promise<unknown[]>;
 
   /**
-   * Optional DuckDB instance for querying
+   * Optional DuckDB connector for querying
    */
-  getDuckDB?: () => Promise<AsyncDuckDB | null>;
+  getConnector?: () => Promise<DuckDbConnector | null>;
 
   /**
    * Optional function to get the maximum length of the query result that will be returned to the LLM

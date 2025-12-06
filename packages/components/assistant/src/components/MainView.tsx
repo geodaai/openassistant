@@ -5,7 +5,7 @@ import {
   SessionControls,
 } from '@sqlrooms/ai-core';
 import {AiSettingsPanel} from '@sqlrooms/ai-settings';
-import {Button, SkeletonPane, useDisclosure} from '@sqlrooms/ui';
+import {Button, useDisclosure} from '@sqlrooms/ui';
 import {Settings} from 'lucide-react';
 import {useRoomStore} from '../store';
 
@@ -45,11 +45,8 @@ export const MainView: React.FC = () => {
           <div className="flex-grow overflow-auto">
             <AnalysisResultsContainer
               key={currentSessionId} // will prevent scrolling to bottom after changing current session
+              enableReasoningBox={true}
             />
-            <div className="flex h-full w-full flex-col items-center justify-center">
-              <SkeletonPane className="p-4" />
-              <p className="text-muted-foreground mt-4">Loading database...</p>
-            </div>
           </div>
 
           <QueryControls placeholder="Type here what would you like to learn about the data? Something like 'What is the max magnitude of the earthquakes by year?'">

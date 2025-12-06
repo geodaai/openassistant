@@ -4,20 +4,20 @@
 import { DATA_TYPES as AnalyzerDATA_TYPES } from 'type-analyzer';
 import * as arrow from 'apache-arrow';
 
-// import { ALL_FIELD_TYPES } from '@kepler.gl/constants';
-declare const ALL_FIELD_TYPES: {
-  boolean: 'boolean';
-  date: 'date';
-  geojson: 'geojson';
-  integer: 'integer';
-  real: 'real';
-  string: 'string';
-  timestamp: 'timestamp';
-  point: 'point';
-  array: 'array';
-  object: 'object';
-  geoarrow: 'geoarrow';
-};
+// Replicate ALL_FIELD_TYPES from @kepler.gl/constants to avoid importing the entire package
+const ALL_FIELD_TYPES = {
+  boolean: 'boolean',
+  date: 'date',
+  geojson: 'geojson',
+  integer: 'integer',
+  real: 'real',
+  string: 'string',
+  timestamp: 'timestamp',
+  point: 'point',
+  array: 'array',
+  object: 'object',
+  geoarrow: 'geoarrow',
+} as const;
 
 // import { Field } from '@kepler.gl/types';
 type Field = {
@@ -78,7 +78,6 @@ export function arrowSchemaToFields(schema: arrow.Schema): Field[] {
       .get('ARROW:extension:name')
       ?.startsWith('geoarrow');
     return {
-      ...field,
       name: field.name,
       id: field.name,
       displayName: field.name,
@@ -133,4 +132,36 @@ export function arrowDataTypeToAnalyzerDataType(
   }
   console.warn(`Unsupported arrow type: ${arrowType}`);
   return AnalyzerDATA_TYPES.STRING;
+}
+
+/**
+ * Recursively converts any BigInt values to Numbers to make data JSON-serializable.
+ * This is necessary because JSON.stringify cannot serialize BigInt values.
+ */
+export function sanitizeForJson(value: unknown): unknown {
+  if (value === null || value === undefined) {
+    return value;
+  }
+  if (typeof value === 'bigint') {
+    return Number(value);
+  }
+  if (Array.isArray(value)) {
+    return value.map(sanitizeForJson);
+  }
+  if (value instanceof arrow.Vector) {
+    // Convert Arrow Vector to plain array with BigInt values converted
+    const result: unknown[] = [];
+    for (let i = 0; i < value.length; i++) {
+      result.push(sanitizeForJson(value.get(i)));
+    }
+    return result;
+  }
+  if (typeof value === 'object') {
+    const result: Record<string, unknown> = {};
+    for (const [key, val] of Object.entries(value)) {
+      result[key] = sanitizeForJson(val);
+    }
+    return result;
+  }
+  return value;
 }

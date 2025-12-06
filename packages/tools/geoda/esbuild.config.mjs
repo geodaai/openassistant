@@ -22,6 +22,7 @@ const baseConfig = createBaseConfig({
     '@geoda/core',
     '@geoda/lisa',
     '@geoda/regression',
+    'internmap',
   ],
 });
 

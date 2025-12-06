@@ -8,7 +8,7 @@ import {
 } from '@openassistant/utils';
 import { Table as ArrowTable, tableFromArrays } from 'apache-arrow';
 import { z } from 'zod';
-import { getDuckDB } from './query';
+import { duckDBStore } from './query';
 import { LocalQueryArgs, LocalQueryContext, LocalQueryResult } from './types';
 import { convertArrowRowToObject } from './merge-tool';
 import { Feature } from 'geojson';
@@ -123,7 +123,7 @@ async function executeLocalQuery(
   try {
     const {
       getValues,
-      getDuckDB: getUserDuckDB,
+      getConnector: getUserConnector,
       getMaxQueryResultLength,
     } = (options?.context as LocalQueryContext) || {};
 
@@ -136,7 +136,7 @@ async function executeLocalQuery(
 
       // for values of Features, we need to normalize the Polygon to MultiPolygon
       // because when you use tableFromArrays() with a mix of Polygon and MultiPolygon GeoJSON Features,
-      // you’re running into a schema inference limitation: tableFromArrays() infers array nesting based on the first element.
+      // you're running into a schema inference limitation: tableFromArrays() infers array nesting based on the first element.
       const firstValue = values[0];
       // check if firstValue is a Feature
       if (
@@ -173,29 +173,27 @@ async function executeLocalQuery(
     // Create Arrow Table from column data with explicit type
     const arrowTable: ArrowTable = tableFromArrays(columnData);
 
-    // Initialize DuckDB with external instance if provided
-    const userDuckDB = await getUserDuckDB?.();
-    const db = await getDuckDB(userDuckDB ?? undefined);
-    if (!db) {
-      throw new Error('DuckDB instance is not initialized');
+    // Get the connector (either user-provided or default)
+    const connector = (await getUserConnector?.()) || (await duckDBStore.getState().db.getConnector());
+    if (!connector) {
+      throw new Error('DuckDB connector is not initialized');
     }
 
     // here we don't pass the arrowResult to LLM or additionalData which could be huge
 
-    const conn = await db.connect();
-    await conn.query(`DROP TABLE IF EXISTS ${dbTableName}`);
-    await conn.insertArrowTable(arrowTable, {
-      name: dbTableName,
-      create: true,
-    });
+    await connector.query(`DROP TABLE IF EXISTS ${dbTableName}`);
+    
+    // Use SQLRooms store for Arrow table insertion
+    const addTable = duckDBStore.getState().db.addTable;
+    await addTable(dbTableName, arrowTable);
 
     // query all table names in duckdb
-    // const tableNamesResult = await conn.query('SHOW TABLES');
+    // const tableNamesResult = await connector.query('SHOW TABLES');
     // const tableNames = tableNamesResult.toArray().map(row => row.toJSON());
     // console.log(tableNames);
-    const arrowResult = await conn.query(sql);
-
-    await conn.close();
+    const arrowResult = await connector.query(sql, {
+      signal: options?.abortSignal,
+    });
 
     // convert arrowResult to a JSON object
     const jsonResult: Record<string, unknown>[] = arrowResult

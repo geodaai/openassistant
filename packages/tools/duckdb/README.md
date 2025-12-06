@@ -2,12 +2,22 @@
 
 This package provides several tools for querying your data using DuckDB in browser.
 
+> **New**: Now powered by [SQLRooms DuckDB](https://github.com/sqlrooms/sqlrooms) for enhanced query management, cancellation support, and better performance. See [SQLROOMS_MIGRATION.md](./SQLROOMS_MIGRATION.md) for details.
+
 ## Features
 
 | Tool Name                                       | Description                                                                  |
 | ----------------------------------------------- | ---------------------------------------------------------------------------- |
 | [localQuery](/docs/duckdb/variables/localQuery) | Query any data that has been loaded in your application using user's prompt. |
 | [mergeTables](/docs/duckdb/variables/mergeTables) | Merge multiple tables into one table.                                        |
+
+### Advanced Features (via SQLRooms)
+
+- **Query Cancellation**: Cancel long-running queries with AbortController
+- **Query Timeout**: Automatically timeout queries after a specified duration
+- **Coordinated Cancellation**: Cancel multiple queries together
+- **Type Safety**: Full TypeScript support with typed query results
+- **Modern API**: Promise-like QueryHandle interface
 
 ## Installation
 
@@ -137,3 +147,91 @@ const { messages, input, handleInputChange, handleSubmit } = useChat({
   },
 });
 ```
+
+## Advanced Usage with SQLRooms
+
+### Query Cancellation
+
+Cancel long-running queries using AbortController:
+
+```typescript
+import { getConnector } from '@openassistant/duckdb';
+
+const connector = await getConnector();
+const controller = new AbortController();
+
+// Start a query with cancellation support
+const queryHandle = connector.query('SELECT * FROM large_table', {
+  signal: controller.signal,
+});
+
+// Cancel the query after 5 seconds
+setTimeout(() => controller.abort(), 5000);
+
+try {
+  const result = await queryHandle;
+  console.log('Query completed successfully');
+} catch (error) {
+  if (error.name === 'AbortError') {
+    console.log('Query was cancelled');
+  }
+}
+```
+
+### Query with Timeout
+
+Use the built-in timeout utility:
+
+```typescript
+import { queryWithTimeout } from '@openassistant/duckdb';
+
+try {
+  const result = await queryWithTimeout(
+    'SELECT * FROM huge_table',
+    10000 // 10 second timeout
+  );
+} catch (error) {
+  if (error.name === 'AbortError') {
+    console.log('Query timed out');
+  }
+}
+```
+
+### Load Data
+
+Load data from files or JavaScript objects:
+
+```typescript
+import { loadDataToTable } from '@openassistant/duckdb';
+
+// Load from a CSV file
+await loadDataToTable(csvFile, 'my_table');
+
+// Load from JavaScript objects
+const data = [
+  { id: 1, name: 'Alice', email: 'alice@example.com' },
+  { id: 2, name: 'Bob', email: 'bob@example.com' },
+];
+await loadDataToTable(data, 'users');
+```
+
+### Query to JSON
+
+Execute queries and get results as JSON:
+
+```typescript
+import { queryToJson } from '@openassistant/duckdb';
+
+const users = await queryToJson('SELECT * FROM users LIMIT 10');
+for (const user of users) {
+  console.log(`${user.name}: ${user.email}`);
+}
+```
+
+For more advanced usage examples and migration guide, see [SQLROOMS_MIGRATION.md](./SQLROOMS_MIGRATION.md).
+
+## References
+
+- [SQLRooms Documentation](https://sqlrooms.org)
+- [SQLRooms DuckDB Package](https://github.com/sqlrooms/sqlrooms/blob/main/packages/duckdb/README.md)
+- [Query Cancellation Guide](https://sqlrooms.org/query-cancellation)

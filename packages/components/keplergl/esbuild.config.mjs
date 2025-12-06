@@ -37,6 +37,7 @@ const baseConfig = createBaseConfig({
     'redux-logger',
     'react-virtualized-auto-sizer',
     'styled-components',
+    'type-analyzer',
     'use-sync-external-store',
     'hoist-non-react-statics',
     '@kepler.gl/actions',

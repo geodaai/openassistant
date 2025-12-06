@@ -1,33 +1,67 @@
 import React from 'react';
-import {ThemeProvider} from '@sqlrooms/ui';
-import {RoomStateProvider, type RoomStateProviderProps, type BaseRoomConfig} from '@sqlrooms/room-store';
-import {MainView} from './components/MainView';
-import {roomStore as defaultRoomStore} from './store';
-import {createAssistantStore, AssistantOptions} from './createAssistantStore';
+import {
+  RoomStateProvider,
+  type RoomStateProviderProps,
+} from '@sqlrooms/room-store';
+import { MainView } from './components/MainView';
+import { roomStore as defaultRoomStore } from './store';
+import { createAssistantStore, AssistantOptions } from './createAssistantStore';
 
 type AssistantProps = {
   options?: AssistantOptions;
   children?: React.ReactNode;
 };
 
-export const Assistant: React.FC<AssistantProps> = ({options, children}) => {
+// Context to provide the actions hook to child components
+const AssistantActionsContext = React.createContext<(() => ReturnType<ReturnType<typeof createAssistantStore>['useAssistant']>) | null>(null);
+
+export const Assistant: React.FC<AssistantProps> = ({ options, children }) => {
+  // Lazy initialization: create store once and preserve across re-renders
+  // Falls back to defaultRoomStore if no options provided
   const storeRef = React.useRef<ReturnType<typeof createAssistantStore>>();
   if (!storeRef.current && options) {
     storeRef.current = createAssistantStore(options);
   }
   const effectiveStore = storeRef.current?.roomStore ?? defaultRoomStore;
+  const useAssistant = storeRef.current?.useAssistant ?? null;
 
   // Cast provider to a valid JSX component type (library types return ReactNode)
   const RoomProvider = RoomStateProvider as unknown as React.ComponentType<
-    RoomStateProviderProps<BaseRoomConfig>
+    RoomStateProviderProps<
+      typeof effectiveStore extends { getState: () => infer S } ? S : never
+    >
   >;
 
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="sqlrooms-ui-theme">
+    <AssistantActionsContext.Provider value={useAssistant}>
       <RoomProvider roomStore={effectiveStore}>
         {children ?? <MainView />}
       </RoomProvider>
-    </ThemeProvider>
+    </AssistantActionsContext.Provider>
   );
 };
 
+/**
+ * Hook to access assistant actions from within the Assistant component tree.
+ * This allows child components to programmatically interact with the assistant.
+ * 
+ * @example
+ * ```tsx
+ * function MyComponent() {
+ *   const { sendMessage, sendPrompt, isProcessing } = useAssistant();
+ *   
+ *   const handleClick = () => {
+ *     sendMessage("Analyze the data");
+ *   };
+ *   
+ *   return <button onClick={handleClick} disabled={isProcessing}>Send Message</button>;
+ * }
+ * ```
+ */
+export const useAssistant = () => {
+  const useActionsHook = React.useContext(AssistantActionsContext);
+  if (!useActionsHook) {
+    throw new Error('useAssistant must be used within an Assistant component with options provided');
+  }
+  return useActionsHook();
+};

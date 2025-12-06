@@ -77,11 +77,10 @@
     "@deck.gl/layers": "8.9.36",
     "@deck.gl/react": "8.9.36",
     "@deck.gl/mesh-layers": "8.9.36",
-    "@duckdb/duckdb-wasm": "1.29.0",
+    "@duckdb/duckdb-wasm": "1.31.0",
     "apache-arrow": "^17.0.0",
     "typescript": "5.0.4",
-    "zod": "^3.23.8",
-    "ai": "4.3.19"
+    "zod": "^3.23.8"
   },
   "packageManager": "yarn@4.0.0+sha512.955259c0370ab8c06d013faa7d5e7addb6914251029695675f54e04c917ea6b092c379ba8d3521556d90b3874e5037759467072f01d2295341ead43cc259f14b"
 }

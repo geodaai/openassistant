@@ -1,91 +1,73 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the openassistant project
 
-import * as duckdb from '@duckdb/duckdb-wasm';
-
-const JSDELIVR_BUNDLES = duckdb.getJsDelivrBundles();
-
-/**
- * @internal
- * The duckdb instance if not provided by the user.
- */
-export let db: duckdb.AsyncDuckDB | null = null;
-let initializationPromise: Promise<void> | null = null;
-
-export async function getDuckDB(externalDB?: duckdb.AsyncDuckDB) {
-  if (externalDB) {
-    db = externalDB;
-    return db;
-  }
-  await initDuckDB(externalDB);
-  return db;
-}
-
-export async function initDuckDB(externalDB?: duckdb.AsyncDuckDB) {
-  // If already initializing, wait for that to complete
-  if (initializationPromise) {
-    await initializationPromise;
-    return;
-  }
-
-  if (externalDB) {
-    db = externalDB;
-    return;
-  }
-
-  // If already initialized, return
-  if (db !== null) {
-    return;
-  }
-
-  // Create a new initialization promise
-  initializationPromise = (async () => {
-    try {
-      // Select a bundle based on browser checks
-      const bundle = await duckdb.selectBundle(JSDELIVR_BUNDLES);
-      const worker_url = URL.createObjectURL(
-        new Blob([`importScripts("${bundle.mainWorker!}");`], {
-          type: 'text/javascript',
-        })
-      );
-      const worker = new Worker(worker_url);
-      const logger = new duckdb.ConsoleLogger();
-      db = new duckdb.AsyncDuckDB(logger, worker);
-      await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
-    } catch (error) {
-      console.error('Failed to initialize DuckDB', error);
-    } finally {
-      // Clear the initialization promise
-      initializationPromise = null;
-    }
-  })();
-
-  await initializationPromise;
-}
+import {
+  createDuckDbSlice,
+  type DuckDbSliceState,
+} from '@sqlrooms/duckdb';
+import {
+  createRoomStore,
+  createBaseRoomSlice,
+  type BaseRoomStoreState,
+} from '@sqlrooms/room-store';
 
 /**
- * The callback function when the user selects values.
- * @param datasetName - The name of the dataset.
- * @param columnName - The name of the column.
- * @param selectedValues - The selected values, which is an array of the key values of the selected rows. The key is one of the variable names in the dataset.
+ * DuckDB store state interface that combines base room state with DuckDB slice
  */
-type OnSelectedCallback = (
-  datasetName: string,
-  columnName: string,
-  selectedValues: unknown[]
-) => void;
+type DuckDBStore = BaseRoomStoreState & DuckDbSliceState;
+
 
 /**
- * The context of the queryDuckDB function.
- * @property getValues - Get the values of a variable from the dataset.
- * @property duckDB - The duckdb instance. It's optional. If not provided, the function will initialize a new duckdb instance, and create a new table using {@link getValues}.
- * @property onSelected - The callback function can be used to sync the selections of the query result table with the original dataset. See {@link OnSelectedCallback} for more details.
+ * Create a room store for DuckDB management using SQLRooms DuckDB slice
  */
-export type QueryDuckDBFunctionContext = {
-  getValues: (datasetName: string, variableName: string) => Promise<unknown[]>;
-  duckDB?: duckdb.AsyncDuckDB;
-  onSelected?: OnSelectedCallback;
-  config: {
-    isDraggable?: boolean;
+const storeResult = createRoomStore<DuckDBStore>((set, get, store) => {
+  const baseSlice = createBaseRoomSlice()(set, get, store);
+  const duckDbSlice = createDuckDbSlice()(set, get, store);
+
+  return {
+    // Base room slice
+    ...baseSlice,
+
+    // DuckDB slice
+    ...duckDbSlice,
   };
-};
+});
+
+export const { roomStore: duckDBStore, useRoomStore: useDuckDBStore } =
+  storeResult;
+
+/**
+ * Example usage of the SQLRooms DuckDB slice:
+ *
+ * ```typescript
+ * // In a React component:
+ * const createTableFromQuery = useDuckDBStore((state) => state.db.createTableFromQuery);
+ * const addTable = useDuckDBStore((state) => state.db.addTable);
+ * const dropTable = useDuckDBStore((state) => state.db.dropTable);
+ * const tables = useDuckDBStore((state) => state.db.tables);
+ * const refreshTableSchemas = useDuckDBStore((state) => state.db.refreshTableSchemas);
+ *
+ * // Additional utility methods for tools:
+ * const getConnector = useDuckDBStore((state) => state.db.getConnector);
+ *
+ * // Create a table from a query
+ * await createTableFromQuery('filtered_data', 'SELECT * FROM my_table WHERE condition = true');
+ *
+ * // Add a table from Arrow data
+ * await addTable('my_new_table', arrowTable);
+ *
+ * // Drop a table
+ * await dropTable('old_table');
+ *
+ * // Get current tables
+ * const currentTables = tables;
+ *
+ * // Refresh table schemas
+ * await refreshTableSchemas();
+ *
+ * // Use in tools:
+ * const connector = await duckDBStore.getState().db.getConnector();
+ * const result = await connector.query('SELECT * FROM table');
+ * ```
+ */
+

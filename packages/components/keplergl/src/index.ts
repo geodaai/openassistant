@@ -2,3 +2,4 @@
 // Copyright contributors to the openassistant project
 
 export * from './component/keplergl-component';
+export { datasetRegistry } from './component/dataset-registry';
