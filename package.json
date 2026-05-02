@@ -1,0 +1,114 @@
+{
+  "name": "openassistant",
+  "version": "1.0.0-alpha.1",
+  "description": "AI Assistant for spatial data analysis and visualization with kepler.gl",
+  "author": "Xun Li<lixun910@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup && tailwindcss -i ./src/styles/input.css -o ./dist/styles.css --minify",
+    "build:js": "tsup",
+    "build:css": "tailwindcss -i ./src/styles/input.css -o ./dist/styles.css --minify",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^1.2.11",
+    "@ai-sdk/deepseek": "^0.2.14",
+    "@ai-sdk/google": "^1.2.18",
+    "@ai-sdk/openai-compatible": "^1.0.18",
+    "@ai-sdk/react": "^3.0.118",
+    "@ai-sdk/xai": "^1.2.16",
+    "@sqlrooms/ai-config": "0.29.0-rc.2",
+    "@sqlrooms/ai-core": "0.29.0-rc.2",
+    "@sqlrooms/ai-settings": "0.29.0-rc.2",
+    "@sqlrooms/codemirror": "0.29.0-rc.2",
+    "@sqlrooms/duckdb": "0.29.0-rc.2",
+    "@sqlrooms/recharts": "0.29.0-rc.2",
+    "@sqlrooms/room-config": "0.29.0-rc.2",
+    "@sqlrooms/room-store": "0.29.0-rc.2",
+    "@sqlrooms/ui": "0.29.0-rc.2",
+    "@sqlrooms/utils": "0.29.0-rc.2",
+    "ai": "^6.0.154",
+    "color-interpolate": "^1.0.5",
+    "echarts": "^5.6.0",
+    "echarts-for-react": "^3.0.2",
+    "lucide-react": "^0.556.0",
+    "ollama-ai-provider-v2": "^0.0.5",
+    "zod": "^4.1.8"
+  },
+  "peerDependencies": {
+    "@kepler.gl/actions": ">=3.3.0-alpha.0",
+    "@kepler.gl/components": ">=3.3.0-alpha.0",
+    "@kepler.gl/constants": ">=3.3.0-alpha.0",
+    "@kepler.gl/layers": ">=3.3.0-alpha.0",
+    "@kepler.gl/localization": ">=3.3.0-alpha.0",
+    "@kepler.gl/processors": ">=3.3.0-alpha.0",
+    "@kepler.gl/reducers": ">=3.3.0-alpha.0",
+    "@kepler.gl/schemas": ">=3.3.0-alpha.0",
+    "@kepler.gl/table": ">=3.3.0-alpha.0",
+    "@kepler.gl/types": ">=3.3.0-alpha.0",
+    "@kepler.gl/utils": ">=3.3.0-alpha.0",
+    "apache-arrow": ">=15.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-redux": "^8.0.5",
+    "redux": "^4.2.1"
+  },
+  "devDependencies": {
+    "@kepler.gl/actions": "3.3.0-alpha.0",
+    "@kepler.gl/components": "3.3.0-alpha.0",
+    "@kepler.gl/constants": "3.3.0-alpha.0",
+    "@kepler.gl/layers": "3.3.0-alpha.0",
+    "@kepler.gl/localization": "3.3.0-alpha.0",
+    "@kepler.gl/processors": "3.3.0-alpha.0",
+    "@kepler.gl/reducers": "3.3.0-alpha.0",
+    "@kepler.gl/schemas": "3.3.0-alpha.0",
+    "@kepler.gl/table": "3.3.0-alpha.0",
+    "@kepler.gl/types": "3.3.0-alpha.0",
+    "@kepler.gl/utils": "3.3.0-alpha.0",
+    "@tailwindcss/cli": "^4.1.0",
+    "@types/geojson": "^7946.0.16",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "apache-arrow": ">=15.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-redux": "^8.0.5",
+    "redux": "^4.2.1",
+    "tailwindcss": "^4.1.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0"
+  },
+  "resolutions": {
+    "apache-arrow": ">=15.0.0",
+    "@sqlrooms/ui": "0.29.0-rc.2",
+    "@sqlrooms/utils": "0.29.0-rc.2"
+  },
+  "overrides": {
+    "@sqlrooms/ui": "0.29.0-rc.2",
+    "@sqlrooms/utils": "0.29.0-rc.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "@sqlrooms/ui": "0.29.0-rc.2",
+      "@sqlrooms/utils": "0.29.0-rc.2"
+    }
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

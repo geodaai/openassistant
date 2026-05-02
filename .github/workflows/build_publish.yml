@@ -36,7 +36,7 @@ jobs:
         run: yarn lint
 
       - name: Build packages
-        run: yarn build-slow
+        run: yarn build
 
       # - name: Test
       #   run: yarn test

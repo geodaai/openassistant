@@ -20,3 +20,8 @@ packages/.DS_Store
 node_modules/
 .vscode/
 docs/api
+node_modules/
+dist/
+*.tsbuildinfo
+.env
+.env.*
