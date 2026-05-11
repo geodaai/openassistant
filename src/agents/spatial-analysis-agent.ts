@@ -3,10 +3,11 @@ import {z} from 'zod';
 import {streamSubAgent, AiSliceState} from '@sqlrooms/ai-core';
 import {StoreApi} from '@sqlrooms/room-store';
 import {KeplerContext} from '../types';
-import {getLisaTools} from '../tools/lisa-tool';
+import {getSpatialAnalysisTools} from '../tools/spatial-analysis-tools';
+import {getDuckdbTableContext} from '../tools/duckdb-cache';
 import {getModel} from './model-utils';
 
-const LISA_AGENT_INSTRUCTIONS = `You are a spatial statistics assistant specializing in spatial autocorrelation, clustering analysis, and spatial regression.
+const SPATIAL_ANALYSIS_AGENT_INSTRUCTIONS = `You are a spatial statistics assistant specializing in spatial autocorrelation, clustering analysis, and spatial regression.
 
 For clustering analysis:
 1. Always perform a spatial statistical test (e.g., Local Moran's I)
@@ -34,7 +35,7 @@ For colocation maps:
 3. Create unique values visualization
 `;
 
-export function lisaAgentTool(store: StoreApi<AiSliceState>, ctx: KeplerContext) {
+export function spatialAnalysisAgentTool(store: StoreApi<AiSliceState>, ctx: KeplerContext) {
   return tool({
     description:
       'An agent for spatial statistics: LISA (Local Moran, Geary, Gi*), global Moran\'s I, spatial weights creation, spatial regression, and data classification.',
@@ -43,10 +44,15 @@ export function lisaAgentTool(store: StoreApi<AiSliceState>, ctx: KeplerContext)
       prompt: z.string().describe('The spatial statistics request')
     }),
     execute: async ({prompt}, options?: {toolCallId?: string; abortSignal?: AbortSignal}) => {
-      const tools = getLisaTools(ctx);
+      const tools = getSpatialAnalysisTools(ctx);
+      const tableContext = await getDuckdbTableContext();
+      const instructions = tableContext
+        ? `${SPATIAL_ANALYSIS_AGENT_INSTRUCTIONS}\n${tableContext}`
+        : SPATIAL_ANALYSIS_AGENT_INSTRUCTIONS;
+
       const agent = new ToolLoopAgent({
         model: getModel(store),
-        instructions: LISA_AGENT_INSTRUCTIONS,
+        instructions,
         tools,
         stopWhen: stepCountIs(10)
       });

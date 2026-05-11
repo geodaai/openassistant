@@ -16,11 +16,12 @@ import {Dispatch} from 'redux';
 import {AI_SETTINGS} from './config/models';
 import {INSTRUCTIONS} from './constants';
 import {getDatasetContext, highlightRows} from './tools/utils';
+import {getDuckdbTableContextSync} from './tools/duckdb-cache';
 import {KeplerContext, VisState} from './types';
-import {keplerAgentTool} from './agents/KeplerAgent';
-import {echartsAgentTool} from './agents/EchartsAgent';
-import {geoAgentTool} from './agents/GeoAgent';
-import {lisaAgentTool} from './agents/LisaAgent';
+import {keplerAgentTool} from './agents/kepler-agent';
+import {echartsAgentTool} from './agents/echarts-agent';
+import {geoAgentTool} from './agents/geo-agent';
+import {spatialAnalysisAgentTool} from './agents/spatial-analysis-agent';
 import {
   HistogramRenderer,
   BoxplotRenderer,
@@ -81,13 +82,15 @@ export function createAiAssistantStore(keplerBridge: KeplerBridge) {
           getInstructions: () => {
             const visState = keplerBridge.getVisState();
             const datasetContext = getDatasetContext(visState?.datasets, visState?.layers);
-            return `${INSTRUCTIONS}\n\n${datasetContext}`;
+            const tableContext = getDuckdbTableContextSync();
+            const parts = [INSTRUCTIONS, datasetContext, tableContext].filter(Boolean);
+            return parts.join('\n\n');
           },
           tools: {
             'agent-kepler': keplerAgentTool(store, ctx),
             'agent-echarts': echartsAgentTool(store, ctx),
             'agent-geo': geoAgentTool(store, ctx),
-            'agent-lisa': lisaAgentTool(store, ctx)
+            'agent-spatial-analysis': spatialAnalysisAgentTool(store, ctx)
           },
           toolRenderers: {
             histogramTool: HistogramRenderer,

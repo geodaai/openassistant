@@ -6,7 +6,7 @@ import {FETCH_TIMEOUT_MS, combineSignals, mapboxRateLimiter} from './utils';
 
 export function getRoutingTool(
   ctx: KeplerContext,
-  onToolCompleted: (toolName: string, result: any) => void
+  onToolCompleted: (toolName: string, result: any) => Promise<void>
 ) {
   return tool({
     description: 'Get routing directions between two coordinates using Mapbox Directions API.',
@@ -39,7 +39,7 @@ export function getRoutingTool(
             }
           ]
         };
-        onToolCompleted(datasetName, {type: 'geojson', content: geojson});
+        await onToolCompleted(datasetName, {type: 'geojson', content: geojson});
         return {
           success: true,
           datasetName,

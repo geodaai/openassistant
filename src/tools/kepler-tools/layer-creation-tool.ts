@@ -7,17 +7,6 @@ import {addLayer as addLayerAction} from '@kepler.gl/actions';
 import {KeplerContext} from '../../types';
 
 export function guessDefaultLayer(dataset: KeplerTable, layerType: string) {
-  if (layerType === 'hexagon') {
-    if (dataset.fieldPairs && dataset.fieldPairs.length > 0) {
-      const props = dataset.fieldPairs.map(fieldPair => ({
-        isVisible: true,
-        label: 'Hexbin',
-        columns: fieldPair.pair
-      }));
-      const layer = new LayerClasses.hexagon(props[0]);
-      return layer;
-    }
-  }
   if (layerType === 'heatmap') {
     if (dataset.fieldPairs && dataset.fieldPairs.length > 0) {
       const props = dataset.fieldPairs.map(fieldPair => ({
@@ -28,8 +17,17 @@ export function guessDefaultLayer(dataset: KeplerTable, layerType: string) {
       const layer = new LayerClasses.heatmap(props[0]);
       return layer;
     }
-  }
-  if (layerType === 'cluster') {
+  } else if (layerType === 'hexagon') {
+    if (dataset.fieldPairs && dataset.fieldPairs.length > 0) {
+      const props = dataset.fieldPairs.map(fieldPair => ({
+        isVisible: true,
+        label: 'Hexbin',
+        columns: fieldPair.pair
+      }));
+      const layer = new LayerClasses.hexagon(props[0]);
+      return layer;
+    }
+  } else if (layerType === 'cluster') {
     if (dataset.fieldPairs && dataset.fieldPairs.length > 0) {
       const props = dataset.fieldPairs.map(fieldPair => ({
         isVisible: true,
@@ -39,8 +37,7 @@ export function guessDefaultLayer(dataset: KeplerTable, layerType: string) {
       const layer = new LayerClasses.cluster(props[0]);
       return layer;
     }
-  }
-  if (layerType === 'trip') {
+  } else if (layerType === 'trip') {
     const layers = findDefaultLayer(dataset, [LayerClasses.trip] as any);
     const layer = layers.find(l => l.type === layerType);
     if (layer) return layer;
@@ -53,20 +50,121 @@ export function guessDefaultLayer(dataset: KeplerTable, layerType: string) {
   return layer || (defaultLayers.length > 0 ? defaultLayers[0] : null);
 }
 
+function buildLayerConfig(
+  layer: any,
+  datasetId: string,
+  layerName: string | undefined,
+  sourceName: string,
+  layerType: string
+) {
+  const layerId = layer.id || `layer_${Date.now()}`;
+  const columns = layer.config?.columns || {};
+
+  return {
+    id: layerId,
+    type: layer.type,
+    config: {
+      ...layer.config,
+      dataId: datasetId,
+      isVisible: true,
+      label: layerName || `${sourceName}-${layerType}`,
+      columns: Object.keys(columns).reduce<Record<string, any>>((acc, key) => {
+        const column = columns[key];
+        if (column) {
+          acc[key] = column.value;
+        }
+        return acc;
+      }, {}),
+      visConfig: {
+        ...layer.config?.visConfig
+      }
+    }
+  };
+}
+
+function applyColorConfig(
+  newLayer: any,
+  dataset: KeplerTable,
+  args: {
+    simpleColor?: string;
+    colorBy?: string;
+    colorType?: 'breaks' | 'unique';
+    colorMap?: Array<{value: string | number | null; color: string}>;
+  }
+) {
+  if (args.simpleColor) {
+    const color = args.simpleColor
+      .replace(/[^\d,]/g, '')
+      .split(',')
+      .map(Number);
+    if (color.length === 3) {
+      newLayer.config.color = color;
+    }
+  }
+
+  const {colorBy, colorType, colorMap = [{value: null, color: '#333333'}]} = args;
+
+  if (colorBy) {
+    const colorField = dataset.fields.find(f => f.name === colorBy);
+    if (!colorField) {
+      throw new Error(`Field ${colorBy} not found.`);
+    }
+    const colorScale = colorType === 'breaks' ? 'custom' : 'customOrdinal';
+    const colors = colorMap.map(c => c.color);
+    const keplerColorMap = colorMap.map(c => [c.value, c.color]);
+    const colorRange = {
+      name: 'color.customPalette',
+      type: 'custom',
+      category: 'Custom',
+      colors,
+      colorMap: keplerColorMap
+    } as const;
+
+    if (newLayer.type === 'heatmap') {
+      if (colors.length > 1) {
+        newLayer.config.visConfig['colorRange'] = {...colorRange};
+      }
+    } else {
+      newLayer.config['colorScale'] = colorScale;
+      newLayer.config['colorField'] = colorField;
+      newLayer.config['strokeColorScale'] = colorScale;
+      newLayer.config['strokeColorField'] = colorField;
+      newLayer.config.visConfig['filled'] = true;
+      newLayer.config.visConfig['colorRange'] = colorRange;
+      newLayer.config.visConfig['strokeColorRange'] = colorRange;
+    }
+  }
+}
+
 export function getAddLayerTool(ctx: KeplerContext) {
   return tool({
     description: `Add a kepler.gl map layer from a dataset.
-You can create basic map layer without color styling, or enhanced map layer with color visualization.
+IMPORTANT: generated layer names must be unique.
 
-For basic maps:
-- Simply use datasetName, latitudeColumn/longitudeColumn (for point maps), and layerType
-- Omit color-related parameters for simple visualization
+LAYER TYPES:
+- point: Point markers (requires lat/lng columns)
+- h3: H3 hexagon cells (requires hexId column)
+- geojson: Polygon/geometry features (uses geometry column, usually auto-detected)
+- hexagon: Hexagonal binning of points
+- heatmap: Heat map visualization
+- cluster: Clustered point visualization
+- arc/line: Arc or line connections between points
+- grid: Grid binning
+- trip: Animated trip (flights, deliveries, vessels)
+- s2: S2 geometry cells
 
-For colored maps:
+BASIC MAP:
+- Use datasetName, latitudeColumn/longitudeColumn (for point maps), and layerType
+- Omit color-related parameters for simple visualization, use simpleColor instead.
+
+COLOR MAPPING:
 - If user requests color visualization, use available columns in the dataset
 - Use dataClassify tool to classify data into bins or unique values when needed
-- For colorType 'breaks': [{value: 0, color: '#fff7bc'}, {value: 3, color: '#fec44f'}, {value: null, color: '#d95f0e'}]
-- For colorType 'unique': [{value: 'a', color: '#1b9e77'}, {value: 'b', color: '#d95f02'}]
+- For continuous data (colorType 'breaks'):
+  [{value: 0, color: '#fee5d9'}, {value: 50, color: '#fcae91'}, {value: 100, color: '#fb6a4a'}, {value: null, color: '#de2d26'}]
+  The last entry with value: null represents the color for the highest values
+- For categorical data (colorType 'unique'):
+  [{value: 'category1', color: '#1f77b4'}, {value: 'category2', color: '#ff7f0e'}]
 - Generate colorBrewer colors automatically if user doesn't specify colors
 
 For geojson datasets:
@@ -93,6 +191,12 @@ For geojson datasets:
         'trip',
         's2'
       ]),
+      simpleColor: z
+        .string()
+        .optional()
+        .describe(
+          'The color of the layer e.g. [255, 0, 0]. Only used for simple map visualization (no colorBy, colorType, colorMap).'
+        ),
       colorBy: z.string().optional(),
       colorType: z.enum(['breaks', 'unique']).optional(),
       colorMap: z
@@ -113,6 +217,7 @@ For geojson datasets:
           latitudeColumn,
           longitudeColumn,
           layerType,
+          simpleColor,
           colorBy,
           colorType,
           colorMap
@@ -122,7 +227,7 @@ For geojson datasets:
         const datasets: Datasets = visState.datasets;
 
         const datasetId = Object.keys(datasets).find(
-          dataId => datasets[dataId].label === datasetName
+          dataId => datasets[dataId].label === datasetName || dataId === datasetName
         );
         if (!datasetId) {
           throw new Error(`Dataset ${datasetName} not found.`);
@@ -131,12 +236,10 @@ For geojson datasets:
         const dataset = datasets[datasetId];
         let layer = guessDefaultLayer(dataset, layerType);
 
-        const layerId = layer?.id || `layer_${Date.now()}`;
-
         if (!layer) {
           if (layerType === 'point' && latitudeColumn && longitudeColumn) {
             layer = {
-              id: layerId,
+              id: `layer_${Date.now()}`,
               type: 'point',
               config: {
                 dataId: datasetId,
@@ -150,65 +253,35 @@ For geojson datasets:
                     value: longitudeColumn,
                     fieldIdx: dataset.getColumnFieldIdx(longitudeColumn)
                   }
-                }
-              },
-              visConfig: {}
+                },
+                visConfig: {}
+              }
             } as any;
           }
         }
         if (!layer) {
-          throw new Error(`Invalid layer type: ${layerType}.`);
+          throw new Error(
+            `Could not create ${layerType} layer. Check that the dataset has the required columns.`
+          );
         }
 
-        const columns = layer?.config?.columns || {};
-        const newLayer = {
-          id: layerId,
-          type: layer.type,
-          config: {
-            ...layer.config,
-            dataId: datasetId,
-            label: layerName || `${datasetName}-${layerType}`,
-            columns: Object.keys(columns).reduce((acc, key) => {
-              const column = columns[key];
-              if (column) {
-                acc[key] = column.value;
-              }
-              return acc;
-            }, {} as Record<string, any>)
-          }
-        };
-
-        if (colorBy) {
-          const colorField = dataset.fields.find(f => f.name === colorBy);
-          if (!colorField) {
-            throw new Error(`Field ${colorBy} not found.`);
-          }
-          const colorScale = colorType === 'breaks' ? 'custom' : 'customOrdinal';
-          const colors = colorMap?.map(c => c.color);
-          const keplerColorMap = colorMap?.map(c => [c.value, c.color]);
-          const colorRange = {
-            name: 'color.customPalette',
-            type: 'custom',
-            category: 'Custom',
-            colors,
-            colorMap: keplerColorMap
-          };
-
-          (newLayer.config as any)['colorScale'] = colorScale;
-          (newLayer.config as any)['colorField'] = colorField;
-          (newLayer.config as any)['strokeColorScale'] = colorScale;
-          (newLayer.config as any)['strokeColorField'] = colorField;
-          if ((newLayer.config as any).visConfig) {
-            (newLayer.config as any).visConfig['colorRange'] = colorRange;
-            (newLayer.config as any).visConfig['strokeColorRange'] = colorRange;
-          }
-        }
+        const newLayer = buildLayerConfig(layer, datasetId, layerName, datasetName, layerType);
+        applyColorConfig(newLayer, dataset, {simpleColor, colorBy, colorType, colorMap});
 
         ctx.dispatch(addLayerAction(newLayer, datasetId));
 
+        const temporalFields = dataset.fields
+          ?.filter((f: any) => f.type === 'timestamp' || f.type === 'date')
+          .map((f: any) => f.name);
+        const hasTemporalFields = temporalFields && temporalFields.length > 0;
+
         return {
           success: true,
-          details: `Map layer ${layerId} has been added to the map.`
+          details: `Map layer ${newLayer.id} has been added to the map.`,
+          dateTimeColumns: hasTemporalFields ? temporalFields : undefined,
+          dateTimeHint: hasTemporalFields
+            ? `DateTime columns detected: ${temporalFields.join(', ')}. You can call addTimeFilter with one of these columns to enable time-range animation on the map.`
+            : undefined
         };
       } catch (error) {
         return {

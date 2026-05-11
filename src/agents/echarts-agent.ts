@@ -4,6 +4,7 @@ import {streamSubAgent, AiSliceState} from '@sqlrooms/ai-core';
 import {StoreApi} from '@sqlrooms/room-store';
 import {KeplerContext} from '../types';
 import {getEchartsTools} from '../tools/echarts-tools';
+import {getDuckdbTableContext} from '../tools/duckdb-cache';
 import {getModel} from './model-utils';
 
 const ECHARTS_AGENT_INSTRUCTIONS = `You are a data visualization assistant. You help users create charts and plots to explore their data.
@@ -31,9 +32,14 @@ export function echartsAgentTool(store: StoreApi<AiSliceState>, ctx: KeplerConte
     }),
     execute: async ({prompt}, options?: {toolCallId?: string; abortSignal?: AbortSignal}) => {
       const tools = getEchartsTools(ctx);
+      const tableContext = await getDuckdbTableContext();
+      const instructions = tableContext
+        ? `${ECHARTS_AGENT_INSTRUCTIONS}\n${tableContext}`
+        : ECHARTS_AGENT_INSTRUCTIONS;
+
       const agent = new ToolLoopAgent({
         model: getModel(store),
-        instructions: ECHARTS_AGENT_INSTRUCTIONS,
+        instructions,
         tools,
         stopWhen: stepCountIs(10)
       });

@@ -4,7 +4,7 @@ import {tableFromArrays, Table as ArrowTable} from 'apache-arrow';
 import {addDataToMap} from '@kepler.gl/actions';
 import {processFileData} from '@kepler.gl/processors';
 import {KeplerContext} from '../../types';
-import {getValuesFromDataset, getConnector} from '../utils';
+import {getValuesFromDataset, getConnector, datasetNameToTableName} from '../utils';
 
 function convertArrowRowToObject(row: any): Record<string, unknown> {
   if (row === null || typeof row !== 'object') return row;
@@ -35,21 +35,20 @@ export function getTableTool(ctx: KeplerContext) {
 Please note:
 1. Do not use * to select all columns, instead use all the column names in dataset.
 2. List all column names the new table or dataset will have.
-IMPORTANT: please use dbTableName instead of the datasetName in SQL query.`,
+IMPORTANT: Use __TABLE__ as the table name placeholder in SQL. It will be replaced with the actual DuckDB table name at runtime.`,
     inputSchema: z.object({
       datasetName: z.string().describe('The name of the source dataset'),
       variableNames: z
         .array(z.string())
         .describe('Only use variable names that already exist in the dataset.'),
-      sql: z.string().describe('The SQL query to execute. Use dbTableName as the table name.'),
-      dbTableName: z
-        .string()
-        .describe('Alias for the table. Use datasetName plus a 6-digit random number.'),
-      queryDatasetName: z.string().describe('The name for the new dataset')
+      sql: z.string().describe('The SQL query to execute. Use __TABLE__ as the table name placeholder.'),
+      resultDatasetName: z.string().describe('The name for the new dataset')
     }),
-    execute: async ({datasetName, variableNames, sql, dbTableName, queryDatasetName}, {abortSignal}) => {
+    execute: async ({datasetName, variableNames, sql, resultDatasetName}, {abortSignal}) => {
       try {
         abortSignal?.throwIfAborted();
+        const dbTableName = datasetNameToTableName(datasetName);
+        const resolvedSql = sql.replace(/__TABLE__/g, `"${dbTableName}"`);
         const visState = ctx.getVisState();
         const columnData: Record<string, unknown[]> = {};
         for (const varName of variableNames) {
@@ -67,14 +66,14 @@ IMPORTANT: please use dbTableName instead of the datasetName in SQL query.`,
         await db.execute(`DROP TABLE IF EXISTS "${dbTableName}"`);
         await db.loadArrow(arrowTable, dbTableName);
 
-        const arrowResult = await db.query(sql);
+        const arrowResult = await db.query(resolvedSql);
 
         const jsonResult: Record<string, unknown>[] = arrowResult
           .toArray()
           .map((row: any) => convertArrowRowToObject(row));
 
         const parsedData = await processFileData({
-          content: {data: jsonResult, fileName: queryDatasetName},
+          content: {data: jsonResult, fileName: resultDatasetName},
           fileCache: []
         });
 
@@ -87,8 +86,8 @@ IMPORTANT: please use dbTableName instead of the datasetName in SQL query.`,
 
         return {
           success: true as const,
-          details: `Table created as ${queryDatasetName} (${jsonResult.length} rows) and added to kepler.gl.`,
-          queryDatasetName,
+          details: `Table created as ${resultDatasetName} (${jsonResult.length} rows) and added to kepler.gl.`,
+          resultDatasetName,
           firstFiveRows: jsonResult.slice(0, 5)
         };
       } catch (error) {
@@ -105,7 +104,7 @@ IMPORTANT: please use dbTableName instead of the datasetName in SQL query.`,
       return {
         success: output.success,
         details: output.details,
-        queryDatasetName: output.queryDatasetName,
+        resultDatasetName: output.resultDatasetName,
         firstFiveRows: output.firstFiveRows
       };
     }

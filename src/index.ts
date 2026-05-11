@@ -14,18 +14,37 @@ export type {AiAssistantStoreState, KeplerBridge} from './store';
 export type {KeplerContext} from './types';
 
 // Agents
-export {keplerAgentTool} from './agents/KeplerAgent';
-export {echartsAgentTool} from './agents/EchartsAgent';
-export {geoAgentTool} from './agents/GeoAgent';
-export {lisaAgentTool} from './agents/LisaAgent';
+export {keplerAgentTool} from './agents/kepler-agent';
+export {echartsAgentTool} from './agents/echarts-agent';
+export {geoAgentTool} from './agents/geo-agent';
+export {spatialAnalysisAgentTool} from './agents/spatial-analysis-agent';
 
 // Tools
 export {getAllTools} from './tools/tools';
 export {getKeplerTools} from './tools/kepler-tools';
 export {getEchartsTools} from './tools/echarts-tools';
 export {getGeoTools} from './tools/geo-tools';
-export {getLisaTools} from './tools/lisa-tool';
+export {getSpatialAnalysisTools} from './tools/spatial-analysis-tools';
 export {getQueryTools} from './tools/query-tool';
+export {datasetNameToTableName} from './tools/utils';
+
+// DuckDB
+export {
+  saveToDuckdb,
+  saveGeojsonToDuckdb,
+  saveRowsToDuckdb,
+  saveColumnsToDuckdb,
+  tableExists,
+  dropTable,
+  queryTable,
+  getTableAsGeoJSON,
+  hasGeometryColumn,
+  loadTableToKepler,
+  getDuckdbTableNames,
+  getDuckdbTableContext,
+  getDuckdbTableContextSync
+} from './tools/duckdb-cache';
+export type {DuckdbTableInfo} from './tools/duckdb-cache';
 
 // Config
 export {AI_SETTINGS, PROVIDER_DEFAULT_BASE_URLS, LLM_MODELS} from './config/models';

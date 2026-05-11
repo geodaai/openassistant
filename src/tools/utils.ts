@@ -18,6 +18,15 @@ export async function getConnector(): Promise<WasmDuckDbConnector> {
   return connector;
 }
 
+let spatialExtensionLoaded = false;
+
+export async function ensureSpatialExtension(): Promise<void> {
+  if (spatialExtensionLoaded) return;
+  const db = await getConnector();
+  await db.execute(`INSTALL spatial; LOAD spatial;`);
+  spatialExtensionLoaded = true;
+}
+
 export function interpolateColor(originalColors: string[], numberOfColors: number) {
   if (originalColors.length === numberOfColors) {
     return originalColors;
@@ -349,3 +358,20 @@ export class RateLimiter {
 
 export const mapboxRateLimiter = new RateLimiter(1000);
 export const nominatimRateLimiter = new RateLimiter(1000);
+export const overpassRateLimiter = new RateLimiter(1000);
+export const githubRateLimiter = new RateLimiter(1000);
+
+/**
+ * Deterministically convert a dataset name into a valid DuckDB table name.
+ * Replaces non-alphanumeric characters (except underscores) with underscores,
+ * collapses consecutive underscores, trims leading/trailing underscores,
+ * lowercases the result, and prepends 'tbl_' to avoid reserved-word collisions.
+ */
+export function datasetNameToTableName(datasetName: string): string {
+  const sanitized = datasetName
+    .replace(/[^a-zA-Z0-9_]/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_|_$/g, '')
+    .toLowerCase();
+  return `tbl_${sanitized || 'unnamed'}`;
+}

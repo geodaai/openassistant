@@ -4,6 +4,7 @@ import {streamSubAgent, AiSliceState} from '@sqlrooms/ai-core';
 import {StoreApi} from '@sqlrooms/room-store';
 import {KeplerContext} from '../types';
 import {getKeplerTools} from '../tools/kepler-tools';
+import {getDuckdbTableContext} from '../tools/duckdb-cache';
 import {getModel} from './model-utils';
 
 const KEPLER_AGENT_INSTRUCTIONS = `You are a kepler.gl map operations assistant. You help users with map visualization tasks.
@@ -25,9 +26,14 @@ export function keplerAgentTool(store: StoreApi<AiSliceState>, ctx: KeplerContex
     }),
     execute: async ({prompt}, options?: {toolCallId?: string; abortSignal?: AbortSignal}) => {
       const tools = getKeplerTools(ctx);
+      const tableContext = await getDuckdbTableContext();
+      const instructions = tableContext
+        ? `${KEPLER_AGENT_INSTRUCTIONS}\n${tableContext}`
+        : KEPLER_AGENT_INSTRUCTIONS;
+
       const agent = new ToolLoopAgent({
         model: getModel(store),
-        instructions: KEPLER_AGENT_INSTRUCTIONS,
+        instructions,
         tools,
         stopWhen: stepCountIs(10)
       });
